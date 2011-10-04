@@ -25,7 +25,7 @@ let string s = lexbuf stdout "" (Lexing.from_string s) (* 文字列をコンパイルして
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)
   let inchan = open_in (f ^ ".ml") in
-  let outchan = open_out (f ^ "_tmp.s") in
+  let outchan = open_out (f ^ ".s") in
   try
     lexbuf outchan f (Lexing.from_channel inchan);
     close_in inchan;

@@ -56,11 +56,12 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 (*  | NonTail(x), Set(i) -> Printf.fprintf oc "\tset\t%d, %s\n" i x*)
 (* %r0は常に0 *)
   | NonTail(x), Set(i) ->
-  	Printf.fprintf oc "\taddi\t%s, %%g0, %d\n" x (i lsr 16)
+  	Printf.fprintf oc "\tmvhi\t%s, %d\n" x (i lsr 16);
+  	Printf.fprintf oc "\tmvlo\t%s, %d\n" x (i mod (1 lsl 16))
 
 (*  | NonTail(x), SetL(Id.L(y)) -> Printf.fprintf oc "\tset\t%s, %s\n" y x*) (* ラベルのコピー *)
   | NonTail(x), SetL(Id.L(y)) ->
-  		Printf.fprintf oc "setL %s, %s" x y (* ラベルのコピー *)
+  		Printf.fprintf oc "\tsetL %s, %s\n" x y (* ラベルのコピー *)
 
   | NonTail(x), Mov(y) when x = y -> ()
   | NonTail(x), Mov(y) -> Printf.fprintf oc "\tmov\t%s, %s\n" x y
@@ -79,10 +80,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 
 (*  | NonTail(x), SLL(y, z') -> Printf.fprintf oc "\tsll\t%s, %s, %s\n" y (pp_id_or_imm z') x*)
   | NonTail(x), SLL(y, V(z)) -> Printf.fprintf oc "\tsll\t%s, %s, %s\n" x (pp_id_or_imm (V(z))) y
-(* Simm.mlの変更により、これは出ないはず *)
   | NonTail(x), SLL(y, C(z)) ->
-      Printf.fprintf oc "! IfEq(即値)。バグってるよ！\n"
-	 (* Printf.fprintf oc "\tsll\t%s, %s, %s\n" x (pp_id_or_imm (C(z))) y	(*即値 *)*)
+	 Printf.fprintf oc "\tslli\t%s, %s, %s\n" x y (pp_id_or_imm (C(z))) (*即値 *)
 
   | NonTail(x), Ld(y, V z) -> let z' = V z in Printf.fprintf oc "\tld\t%s, [%s + %s]\n" x y (pp_id_or_imm z')
   | NonTail(x), Ld(y, C z) -> let z' = C z in Printf.fprintf oc "\tld\t%s, [%s + %s]\n" x y (pp_id_or_imm z')
@@ -93,11 +92,11 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 (* なんで二回fmovsを呼ぶのは倍精度で計算しているから *)
 (* ちょっとあやしい *)
   | NonTail(x), FMovD(y) ->
-      Printf.fprintf oc "\tfaddi\t%s, %s, 0\n" x y
+      Printf.fprintf oc "\tfmov\t%s, %s\n" x y
 (*      Printf.fprintf oc "\tfmovs\t%s, %s\n" x y;
       Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg x) (co_freg y)*)
   | NonTail(x), FNegD(y) ->
-      Printf.fprintf oc "\tfmuli\t%s, %s, -1\n" x y
+      Printf.fprintf oc "\tfneg\t%s, %s\n" x y
 (*      Printf.fprintf oc "\tfnegs\t%s, %s\n" y x;*)
 (*      if x <> y then Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg x) (co_freg y)*)
 
@@ -184,22 +183,22 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "beq" "bne"
 (* Simm.mlの変更により、これは出ないはず *)
   | Tail, IfEq(x, C(y), e1, e2) ->
-      Printf.fprintf oc "! IfEq(即値)。バグってるよ！\n"
+      Printf.fprintf oc "! Tail IfEq(即値)。バグってるよ！\n"
       (*g'_tail_if oc x (pp_id_or_imm (C y)) e1 e2 "beq" "bne" *)
       
   | Tail, IfLE(x, V(y), e1, e2) ->
-      g'_tail_if oc (pp_id_or_imm (V y)) x e1 e2 "ble" "ble"
+      g'_tail_if oc (pp_id_or_imm (V y)) x e1 e2 "ble" "blt"
 (* Simm.mlの変更により、これは出ないはず *)
   | Tail, IfLE(x, C(y), e1, e2) ->
-      Printf.fprintf oc "! IfLE(即値)。バグってるよ！\n"
-      (*g'_tail_if oc (pp_id_or_imm (C y)) x e1 e2 "ble" "ble"*)
+      Printf.fprintf oc "! Tail IfLE(即値)。バグってるよ！\n"
+      (*g'_tail_if oc (pp_id_or_imm (C y)) x e1 e2 "ble" "blt"*)
       
   | Tail, IfGE(x, V(y), e1, e2) ->
-      g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "bge" "ble"
+      g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "bge" "blt"
 (* Simm.mlの変更により、これは出ないはず *)
   | Tail, IfGE(x, C(y), e1, e2) ->
-      Printf.fprintf oc "! IfGE(即値)。バグってるよ！\n"
-      (*g'_tail_if oc x (pp_id_or_imm (C y))  e1 e2 "bge" "ble" *)
+      Printf.fprintf oc "! Tail IfGE(即値)。バグってるよ！\n"
+      (*g'_tail_if oc x (pp_id_or_imm (C y))  e1 e2 "bge" "blt" *)
       
 (*
   | Tail, IfFEq(x, y, e1, e2) ->
@@ -240,22 +239,22 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "beq" "bne"
 (* Simm.mlの変更により、これは出ないはず *)
   | NonTail(z), IfEq(x, C(y), e1, e2) ->
-      Printf.fprintf oc "! IfEq(即値)。バグってるよ！\n"
+      Printf.fprintf oc "! NonTail IfEq(即値)。バグってるよ！\n"
       (*g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (C y)) e1 e2 "beq" "bne"*)
 
   | NonTail(z), IfLE(x, V(y), e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (V y)) x e1 e2 "ble" "ble"
+      g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (V y)) x e1 e2 "ble" "blt"
 (* Simm.mlの変更により、これは出ないはず *)
   | NonTail(z), IfLE(x, C(y), e1, e2) ->
-      Printf.fprintf oc "! IfLE(即値)。バグってるよ！\n"
-      (*g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (C y)) x e1 e2 "ble" "ble"*)
+      Printf.fprintf oc "! NonTail IfLE(即値)。バグってるよ！\n"
+      (*g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (C y)) x e1 e2 "ble" "blt"*)
 
   | NonTail(z), IfGE(x, V(y), e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "bge" "ble"
+      g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "bge" "blt"
 (* Simm.mlの変更により、これは出ないはず *)
   | NonTail(z), IfGE(x, C(y), e1, e2) ->
-      Printf.fprintf oc "! IfGE(即値)。バグってるよ！\n"
-      (*g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (C y)) e1 e2 "bge" "ble"*)
+      Printf.fprintf oc "! NonTail IfGE(即値)。バグってるよ！\n"
+      (*g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (C y)) e1 e2 "bge" "blt"*)
 (*
   | NonTail(z), IfFEq(x, y, e1, e2) ->
       Printf.fprintf oc "\tfcmpd\t%s, %s\n" x y;
@@ -269,7 +268,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(z), IfFEq(x, y, e1, e2) ->
       g'_non_tail_if oc (NonTail(z)) x y e1 e2 "fbe" "fbne"
   | NonTail(z), IfFLE(x, y, e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) x y e2 e1 "fble" "fble"
+      g'_non_tail_if oc (NonTail(z)) y x e2 e1 "fble" "fblt"
 
   (* 関数呼び出しの仮想命令の実装 (caml2html: emit_call) *)
 (*jmp : 即値でジャンプ先を指定*)
@@ -298,7 +297,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       if List.mem a allregs && a <> regs.(0) then
 	  Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
       else if List.mem a allfregs && a <> fregs.(0) then
-	  (Printf.fprintf oc "\tfaddi\t%s, %s, 0\n" a fregs.(0))
+	  (Printf.fprintf oc "\tfmov\t%s, %s\n" a fregs.(0))
 (*	  (Printf.fprintf oc "\tfmovs\t%s, %s\n" a fregs.(0);
 	  Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg fregs.(0)) (co_freg a))
 *)  | NonTail(a), CallDir(Id.L(x), ys, zs) ->
@@ -312,7 +311,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       if List.mem a allregs && a <> regs.(0) then
    	  	Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
       else if List.mem a allfregs && a <> fregs.(0) then
-	  (Printf.fprintf oc "\tfaddi\t%s, %s, 0\n" a fregs.(0))
+	  (Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
 (*	  (Printf.fprintf oc "\tfmovs\t%s, %s\n" a fregs.(0);
 	  Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg fregs.(0)) (co_freg a))
 *)
@@ -361,7 +360,7 @@ and g'_args oc x_reg_cl ys zs =
       zs in
   List.iter
     (fun (z, fr) ->
-      Printf.fprintf oc "\tfaddi\t%s, %s, 0\n" fr z)
+      Printf.fprintf oc "\tfmov\t%s, %s\n" fr z)
 (*      Printf.fprintf oc "\tfmovs\t%s, %s\n" z fr;
       Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg z) (co_freg fr))
 *)    (shuffle reg_fsw zfrs)
@@ -375,14 +374,18 @@ let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
 let f oc (Prog(data, fundefs, e)) =
   Format.eprintf "generating assembly...@.";
 (*  Printf.fprintf oc ".section\t\".rodata\"\n";
-  Printf.fprintf oc ".align\t8\n";
+  Printf.fprintf oc ".align\t8\n";*)
   List.iter
-    (fun (Id.L(x), d) ->
+    (*TODO:fun (Id.L(x), d) ->
       Printf.fprintf oc "%s:\t! %f\n" x d;
       Printf.fprintf oc "\t.long\t0x%lx\n" (gethi d);
-      Printf.fprintf oc "\t.long\t0x%lx\n" (getlo d))
+      Printf.fprintf oc "\t.long\t0x%lx\n" (getlo d)*)
+    (fun (Id.L(x), f) ->
+      Printf.fprintf oc "%s:\t! %f\n" x f;
+      Printf.fprintf oc "\t.long\t0x%lx\n" (gethi f);
+      Printf.fprintf oc "\t.long\t0x%lx\n" (getlo f))
     data;
-  Printf.fprintf oc ".section\t\".text\"\n";*)
+  Printf.fprintf oc ".section\t\".text\"\n";
   List.iter (fun fundef -> h oc fundef) fundefs;
 (*  Printf.fprintf oc ".global\tmin_caml_start\n";*)
   Printf.fprintf oc "min_caml_start:\n";

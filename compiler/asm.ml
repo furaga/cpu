@@ -52,7 +52,7 @@ let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
      "%l0"; "%l1"; "%l2"; "%l3"; "%l4"; "%l5"; "%l6"; "%l7";
      "%o0"; "%o1"; "%o2"; "%o3"; "%o4"; "%o5" |]
 *)
-let fregs = Array.init 16 (fun i -> Printf.sprintf "%%f%d" (i * 2))
+let fregs = Array.init 32 (fun i -> Printf.sprintf "%%f%d" i)
 let allregs = Array.to_list regs
 let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
