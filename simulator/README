@@ -1,0 +1,8 @@
+実行例
+make
+./simulate
+
+
+simulate.c内の関数programに実行命令列を入力してmakeする。
+コメントアウトしてあるgetchar()をいれると、命令毎に入力待ちになる。
+マクロをいろいろつかってみた。マクロについてはsetup.hにある。
