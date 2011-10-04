@@ -5,7 +5,7 @@ TARGET = simulate
 
 
 all: $(TARGET)
-simulate: simulate.o
+simulate: simulate.o program.o
 simulate.o: setup.h
 test: test.o setup.h
 
