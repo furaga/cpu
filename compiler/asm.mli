@@ -1,4 +1,5 @@
 type id_or_imm = V of Id.t | C of int
+(*type id_or_imm' = V' of Id.t | C' of Id.t * int*)
 type t =
   | Ans of exp
   | Let of (Id.t * Type.t) * exp * t
@@ -50,7 +51,7 @@ val reg_ra : Id.t
 val reg_hp : Id.t
 val reg_sp : Id.t
 val is_reg : Id.t -> bool
-val co_freg : Id.t -> Id.t
+(*val co_freg : Id.t -> Id.t*)
 
 val fv : t -> Id.t list
 val concat : t -> Id.t * Type.t -> t -> t

@@ -86,6 +86,7 @@ let add x r regenv =
 (* auxiliary functions for g' *)
 exception NoReg of Id.t * Type.t
 let find x t regenv =
+  print_endline ("find: x = " ^ x);
   if is_reg x then x else
   try M.find x regenv
   with Not_found -> raise (NoReg(x, t))
