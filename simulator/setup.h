@@ -1,3 +1,6 @@
+#ifndef _SIM_SETUP
+#define _SIM_SETUP
+
 #include <stdint.h>
 // Instruction Set ////////////////////////////////////
 enum InstSet {
@@ -15,12 +18,12 @@ REG8,REG9,REG10,REG11,REG12,REG13,REG14,REG15,
 REG16,REG17,REG18,REG19,REG20,REG21,REG22,REG23,
 REG24,REG25,REG26,REG27,REG28,REG29,REG30,REG31
 };
-uint32_t reg[REG_NUM];
+extern uint32_t reg[];
 
 // Memory ////////////////////////////////////////////
 #define MEM_NUM 256
-uint32_t rom[MEM_NUM];
-uint32_t ram[MEM_NUM];
+extern uint32_t rom[];
+extern uint32_t ram[];
 
 // DEFINE Instrucion ////////////////////////////////
 // USAGE 
@@ -47,3 +50,4 @@ uint32_t ram[MEM_NUM];
 		return ((ir >> shift) & mask);\
 	}
 
+#endif
