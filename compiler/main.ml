@@ -19,24 +19,13 @@ let lexbuf outchan file l = (* バッファをコンパイルしてチャンネルへ出力する (cam
 		   (Alpha.f
 		      (KNormal.f
 			 (Typing.f
-			    (Parser.exp Lexer.token l)))))))));
-  if file <> "" then		    
-	  let pid = Unix.fork () in
-		if pid = 0 then (* child process *)
-		  Unix.execvp "sleep" [|"sleep"; "1"|]
-		else begin (* parent process *)
-		  print_string "PID="; print_int pid; print_newline ();
-		  while fst (Unix.waitpid [Unix.WNOHANG] pid) = 0 do
-		  	()
-		  done;
-		  print_endline "The child process has finished."
-		end
+			    (Parser.exp Lexer.token l)))))))))
 
 let string s = lexbuf stdout "" (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)
   let inchan = open_in (f ^ ".ml") in
-  let outchan = open_out (f ^ "_tmp.s") in
+  let outchan = open_out (f ^ ".s") in
   try
     lexbuf outchan f (Lexing.from_channel inchan);
     close_in inchan;
