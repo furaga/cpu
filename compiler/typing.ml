@@ -27,6 +27,7 @@ let rec deref_term = function
   | Neg(e) -> Neg(deref_term e)
   | Add(e1, e2) -> Add(deref_term e1, deref_term e2)
   | Sub(e1, e2) -> Sub(deref_term e1, deref_term e2)
+  | SLL(e1, e2) -> SLL(deref_term e1, deref_term e2)
   | Eq(e1, e2) -> Eq(deref_term e1, deref_term e2)
   | LE(e1, e2) -> LE(deref_term e1, deref_term e2)
   | FNeg(e) -> FNeg(deref_term e)
@@ -63,22 +64,22 @@ let rec unify t1 t2 = (* 型が合うように、型変数への代入をする (caml2html: typing
   | Type.Unit, Type.Unit | Type.Bool, Type.Bool | Type.Int, Type.Int | Type.Float, Type.Float -> ()
   | Type.Fun(t1s, t1'), Type.Fun(t2s, t2') ->
       (try List.iter2 unify t1s t2s
-      with Invalid_argument("List.iter2") -> raise (Unify(t1, t2)));
+      with Invalid_argument("List.iter2") -> print_endline "1"; raise (Unify(t1, t2)));
       unify t1' t2'
   | Type.Tuple(t1s), Type.Tuple(t2s) ->
       (try List.iter2 unify t1s t2s
-      with Invalid_argument("List.iter2") -> raise (Unify(t1, t2)))
+      with Invalid_argument("List.iter2") -> print_endline "2"; raise (Unify(t1, t2)))
   | Type.Array(t1), Type.Array(t2) -> unify t1 t2
   | Type.Var(r1), Type.Var(r2) when r1 == r2 -> ()
   | Type.Var({ contents = Some(t1') }), _ -> unify t1' t2
   | _, Type.Var({ contents = Some(t2') }) -> unify t1 t2'
   | Type.Var({ contents = None } as r1), _ -> (* 一方が未定義の型変数の場合 (caml2html: typing_undef) *)
-      if occur r1 t2 then raise (Unify(t1, t2));
+      if occur r1 t2 then begin print_endline "3"; raise (Unify(t1, t2)) end;
       r1 := Some(t2)
   | _, Type.Var({ contents = None } as r2) ->
-      if occur r2 t1 then raise (Unify(t1, t2));
+      if occur r2 t1 then begin print_endline "4"; raise (Unify(t1, t2)) end;
       r2 := Some(t1)
-  | _, _ -> raise (Unify(t1, t2))
+  | _, _ -> print_endline "5"; raise (Unify(t1, t2))
 
 let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
   try
@@ -93,7 +94,8 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
     | Neg(e) ->
 	unify Type.Int (g env e);
 	Type.Int
-    | Add(e1, e2) | Sub(e1, e2) -> (* 足し算（と引き算）の型推論 (caml2html: typing_add) *)
+    | Add(e1, e2) | Sub(e1, e2) | SLL(e1,e2) ->
+	  (* 足し算（と引き算とシフト演算）の型推論 (caml2html: typing_add) *)
 	unify Type.Int (g env e1);
 	unify Type.Int (g env e2);
 	Type.Int
@@ -148,7 +150,7 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 	unify (Type.Array(t)) (g env e1);
 	unify Type.Int (g env e2);
 	Type.Unit
-  with Unify(t1, t2) -> raise (Error(deref_term e, deref_typ t1, deref_typ t2))
+  with Unify(t1, t2) -> print_endline "6"; raise (Error(deref_term e, deref_typ t1, deref_typ t2))
 
 let f e =
   extenv := M.empty;
@@ -157,7 +159,8 @@ let f e =
   | Type.Unit -> ()
   | _ -> Format.eprintf "warning: final result does not have type unit@.");
 *)
-  (try unify Type.Unit (g M.empty e)
-  with Unify _ -> failwith "top level does not have type unit");
+(*  (try unify Type.Unit (g M.empty e)
+  with Unify _ -> failwith "top level does not have type unit"); *)
+  ignore(g M.empty e);
   extenv := M.map deref_typ !extenv;
   deref_term e

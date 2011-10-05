@@ -9,7 +9,42 @@ let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 
 let lexbuf outchan file l = (* バッファをコンパイルしてチャンネルへ出力する (caml2html: main_lexbuf) *)
   Id.counter := 0;
+(*  
+  let extlist = [
+  	"sin", (Type.Fun ([Type.Float], Type.Float));
+  	"cos", (Type.Fun ([Type.Float], Type.Float));
+
+  	"int_of_float", (Type.Fun ([Type.Float], Type.Int));
+  	"float_of_int", (Type.Fun ([Type.Int], Type.Float));
+
+  	"fequal", (Type.Fun ([Type.Float; Type.Float], Type.Bool));
+  	"fless", (Type.Fun ([Type.Float; Type.Float], Type.Bool));
+
+  	"fispos", (Type.Fun ([Type.Float], Type.Bool));
+  	"fisneg", (Type.Fun ([Type.Float], Type.Bool));
+  	"fiszero", (Type.Fun ([Type.Float], Type.Bool));
+
+  	"xor", (Type.Fun ([Type.Bool; Type.Bool], Type.Bool));
+
+  	"abs_float", (Type.Fun ([Type.Float], Type.Float));
+  	"fabs", (Type.Fun ([Type.Float], Type.Float));
+  	"fneg", (Type.Fun ([Type.Float], Type.Float));
+  	"fsqr", (Type.Fun ([Type.Float], Type.Float));
+  	"sqrt", (Type.Fun ([Type.Float], Type.Float));
+  	"fhalf", (Type.Fun ([Type.Float], Type.Float));
+  	"floor", (Type.Fun ([Type.Float], Type.Float));
+
+  	"read_float", (Type.Fun ([Type.Unit], Type.Float));
+  	"read_int", (Type.Fun ([Type.Unit], Type.Int));
+	
+	"create_array", (Type.Fun ([Type.Int; Type.Var()], Type.Array(Type.Float)));
+
+  	"print_char", (Type.Fun ([Type.Int], Type.Unit));
+  	"print_int", (Type.Fun ([Type.Int], Type.Unit))] in
+*)
   Typing.extenv := M.empty;
+ (* List.iter (fun (name, t) -> Typing.extenv := M.add name t !Typing.extenv) extlist;*)
+(*external create_array : int -> 'a -> 'a array = "caml_make_vect"*)  
   Emit.f outchan
     (RegAlloc.f
        (Simm.f

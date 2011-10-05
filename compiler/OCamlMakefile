@@ -939,7 +939,7 @@ doc: htdoc ladoc psdoc pdfdoc
 $(REAL_RESULT):		$(REAL_IMPL_INTF) $(OBJ_LINK) $(EXTRADEPS) $(RESULTDEPS)
 			$(REAL_OCAMLFIND) $(REAL_OCAMLC) \
 				$(OCAML_FIND_PACKAGES) $(OCAML_FIND_LINKPKG) \
-				$(ALL_LDFLAGS) $(OBJS_LIBS) unix.cma -o $@$(EXE) \
+				$(ALL_LDFLAGS) $(OBJS_LIBS) -o $@$(EXE) \
 				$(REAL_IMPL)
 
 nolink:			$(REAL_IMPL_INTF) $(OBJ_LINK)
@@ -953,7 +953,7 @@ endif
 %$(TOPSUFFIX):		$(REAL_IMPL_INTF) $(OBJ_LINK) $(EXTRADEPS)
 			$(REAL_OCAMLFIND) $(OCAMLMKTOP) \
 				$(OCAML_FIND_PACKAGES) $(OCAML_FIND_LINKPKG) \
-				$(ALL_LDFLAGS) $(OBJS_LIBS) unix.cma -o $@$(EXE) \
+				$(ALL_LDFLAGS) $(OBJS_LIBS) -o $@$(EXE) \
 				$(REAL_IMPL)
 
 .SUFFIXES:		.mli .ml .cmi .cmo .cmx .cma .cmxa .$(EXT_OBJ) \

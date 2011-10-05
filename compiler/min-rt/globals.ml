@@ -1,85 +1,88 @@
-open MiniMLRuntime;;
-
 (**************** グローバル変数の宣言 ****************)
+
+(* オブジェクトの個数 *)
+let n_objects = create_array 1 0 in
 
 (* オブジェクトのデータを入れるベクトル（最大60個）*)
 let objects = 
-  let dummy = Array.create 0 0.0 in
-  Array.create (60) 
-    (0, 0, 0, 0, 
-     dummy, dummy,
-     false, dummy, dummy,
-     dummy)
+  let dummy = create_array 0 0.0 in
+  create_array 60 (0, 0, 0, 0, dummy, dummy, false, dummy, dummy, dummy, dummy) in
 
-(* [| x軸の走査線本数 , y軸の走査線本数 |] *)
-let size = Array.create 2 128
-
-(* 実行時オプション: デバッグ出力の有無 *)
-let dbg = Array.create 1 true
-(* Screen の座標 *)
-let screen = Array.create 3 0.0
-(* 視点の座標 (offset なし) *)
-let vp = Array.create 3 0.0
-(* 視点の座標 (screen 位置分の offset あり) *)
-let view = Array.create 3 0.0
+(* Screen の中心座標 *)
+let screen = create_array 3 0.0 in
+(* 視点の座標 *)
+let viewpoint = create_array 3 0.0 in
 (* 光源方向ベクトル (単位ベクトル) *)
-let light = Array.create 3 0.0
-(* スクリーンの回転方向: 三角関数の値で保持 *)
-let cos_v = Array.create 2 0.0
-let sin_v = Array.create 2 0.0
+let light = create_array 3 0.0 in
 (* 鏡面ハイライト強度 (標準=255) *)
-let beam = Array.create 1 255.0
+let beam = create_array 1 255.0 in
 (* AND ネットワークを保持 *)
-let and_net = Array.create 50 (Array.create 1 (-1))
+let and_net = create_array 50 (create_array 1 (-1)) in
 (* OR ネットワークを保持 *)
-let or_net = Array.create 1 (Array.create 1 (and_net.(0)))
+let or_net = create_array 1 (create_array 1 (and_net.(0))) in
 
-(* reader *)
-let temp = Array.create 14 0.0 (* read_nth_object 内の作業変数 *)
-let cs_temp = Array.create 16 0.0
-
-(* solver *)
-(**** Callee との通信用グローバル変数 ****)
-(* 交点 の t の値 *)
-let solver_dist = Array.create 1 0.0
-
-(* スキャンの方向 *)
-let vscan = Array.create 3 0.0
+(* 以下、交差判定ルーチンの返り値格納用 *)
+(* solver の交点 の t の値 *)
+let solver_dist = create_array 1 0.0 in
 (* 交点の直方体表面での方向 *)
-let intsec_rectside = Array.create 1 0
+let intsec_rectside = create_array 1 0 in
 (* 発見した交点の最小の t *)
-let tmin = Array.create 1 (1000000000.0)
+let tmin = create_array 1 (1000000000.0) in
 (* 交点の座標 *)
-let crashed_point = Array.create 3 0.0
-(* 衝突したオブジェクト *)
-let crashed_object = Array.create 1 0
-(* 1つの AND ネットワークについての終了フラグ *)
-let end_flag = Array.create 1 false
-(* トレース開始点 *)
-let viewpoint = Array.create 3 0.0
+let intersection_point = create_array 3 0.0 in
+(* 衝突したオブジェクト番号 *)
+let intersected_object_id = create_array 1 0 in
 (* 法線ベクトル *)
-let nvector = Array.create 3 0.0
-(* スクリーン上の点の明るさ *)
-let rgb = Array.create 3 0.0
+let nvector = create_array 3 0.0 in
 (* 交点の色 *)
-let texture_color = Array.create 3 0.0
+let texture_color = create_array 3 0.0 in
 
-(* オブジェクト中心を原点にした視点ベクトル *)
-let solver_w_vec = Array.create 3 0.0
+(* 計算中の間接受光強度を保持 *)
+let diffuse_ray = create_array 3 0.0 in
+(* スクリーン上の点の明るさ *)
+let rgb = create_array 3 0.0 in
 
-(* check_all_inside 用引数ベクトル *)
-let chkinside_p = Array.create 3 0.0
+(* 画像サイズ *)
+let image_size = create_array 2 0 in
+(* 画像の中心 = 画像サイズの半分 *)
+let image_center = create_array 2 0 in
+(* 3次元上のピクセル間隔 *)
+let scan_pitch = create_array 1 0.0 in
 
-(* is_outside 用内部利用 (中心差分) ベクトル *)
-let isoutside_q = Array.create 3 0.0
+(* judge_intersectionに与える光線始点 *)
+let startp = create_array 3 0.0 in
+(* judge_intersection_fastに与える光線始点 *)
+let startp_fast = create_array 3 0.0 in
 
-(* グローバルに切り出したローカル変数 *)
-(* nvector *)
-let nvector_w = Array.create 3 0.0
+(* 画面上のx,y,z軸の3次元空間上の方向 *)
+let screenx_dir = create_array 3 0.0 in
+let screeny_dir = create_array 3 0.0 in
+let screenz_dir = create_array 3 0.0 in
 
-(* main *)
-let scan_d = Array.create 1 0.0
-let scan_offset = Array.create 1 0.0
-let scan_sscany = Array.create 1 0.0
-let scan_met1 = Array.create 1 0.0
-let wscan = Array.create 3 0.0
+(* 直接光追跡で使う光方向ベクトル *)
+let ptrace_dirvec  = create_array 3 0.0 in
+
+(* 間接光サンプリングに使う方向ベクトル *)
+let dirvecs = 
+  let dummyf = create_array 0 0.0 in
+  let dummyff = create_array 0 dummyf in
+  let dummy_vs = create_array 0 (dummyf, dummyff) in
+  create_array 5 dummy_vs in
+
+(* 光源光の前処理済み方向ベクトル *)
+let light_dirvec =
+  let dummyf2 = create_array 0 0.0 in
+  let v3 = create_array 3 0.0 in
+  let consts = create_array 60 dummyf2 in
+  (v3, consts) in
+
+(* 鏡平面の反射情報 *)
+let reflections =
+  let dummyf3 = create_array 0 0.0 in
+  let dummyff3 = create_array 0 dummyf3 in
+  let dummydv = (dummyf3, dummyff3) in
+  create_array 180 (0, dummydv, 0.0) in
+
+(* reflectionsの有効な要素数 *) 
+
+let n_reflections = create_array 1 0 in
