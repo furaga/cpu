@@ -1,10 +1,12 @@
 実行例
 make
+./assemble
 ./simulate
 
 
-simulate.c内の関数programに実行命令列を入力してmakeする。
-コメントアウトしてあるgetchar()をいれると、命令毎に入力待ちになる。
-マクロをいろいろつかってみた。マクロについてはsetup.hにある。
+入力出力ファイルは固定してある
+simulate: バイトコード -> 実行
+assemble: アセンブリ -> バイトコード
 
-programはfib(10)を計算する
+
+

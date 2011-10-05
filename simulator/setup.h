@@ -3,37 +3,38 @@
 
 #include <stdint.h>
 // Instruction Set ////////////////////////////////////
+#define InstNum 42
 enum InstSet {
-MOV,MVHI,MVLO,
-ADD,SUB,MUL,DIV,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,AND,OR,
-NOT,SLL,SRL,J,JEQ,JNE,JLT,CALL,RETURN,LD,ST,FADD,FSUB,FMUL,
-FDIV,FLD,FST,NOP,HALT,
+NOP,MOV,MVHI,MVLO,ADD,SUB,MUL,DIV,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,AND,OR,NOT,SLL,SLLI,SRL,B,JMP,JEQ,JNE,JLT,JLE,CALL,RETURN,LD,ST,FADD,FSUB,FMUL,FDIV,FMOV,FNEG,FBEQ,FBLT,FLD,FST,HALT,SETL,
 };
 
 // Register ///////////////////////////////////////////
 #define REG_NUM 32
-enum Register {
-REG0,REG1,REG2,REG3,REG4,REG5,REG6,REG7,
-REG8,REG9,REG10,REG11,REG12,REG13,REG14,REG15,
-REG16,REG17,REG18,REG19,REG20,REG21,REG22,REG23,
-REG24,REG25,REG26,REG27,REG28,REG29,REG30,REG31
-};
 extern uint32_t reg[];
+extern uint32_t freg[];
+
 
 // Memory ////////////////////////////////////////////
-#define MEM_NUM 256
+#define MEM_NUM 512
 extern uint32_t rom[];
 extern uint32_t ram[];
 
 // DEFINE Instrucion ////////////////////////////////
 // USAGE 
 // DEFINE_R(add, ADD)
+// opcodeInit() is necessary
 ////////////////////////////////////////////////////
+#define PROTO_R(name, opcode) \
+	uint32_t name(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);
+#define PROTO_I(name, opcode) \
+	uint32_t name(uint8_t, uint8_t, uint16_t);
+#define PROTO_J(name, opcode) \
+	uint32_t name(uint32_t);
 
 #define DEFINE_R(name, opcode) \
-	uint32_t name(uint8_t rs, uint8_t rt, uint8_t rd,uint8_t shamt, uint8_t funct) {\
+	uint32_t name(uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shaft, uint8_t funct) {\
 		return (opcode << 26 | ((uint32_t)rs << 21) | ((uint32_t) rt << 16)\
-				| ((uint32_t) rd << 11) | ((uint32_t) shamt << 6) | funct);\
+				| ((uint32_t) rd << 11) | ((uint32_t) shaft << 6) |funct);\
 	}
 #define DEFINE_I(name, opcode) \
 	uint32_t name(uint8_t rs, uint8_t rt, uint16_t imm) {\
@@ -50,4 +51,39 @@ extern uint32_t ram[];
 		return ((ir >> shift) & mask);\
 	}
 
+
+PROTO_R(mov,MOV);
+PROTO_I(mvhi, MVHI);
+PROTO_I(mvlo, MVLO);
+PROTO_R(add,ADD);
+PROTO_R(sub,SUB);
+PROTO_R(mul,MUL);
+PROTO_R(div,DIV);
+PROTO_I(addi,ADDI);
+PROTO_I(subi,SUBI);
+PROTO_I(muli,MULI);
+PROTO_I(divi,DIVI);
+PROTO_R(input,INPUT);
+PROTO_R(output,OUTPUT);
+PROTO_R(_and,AND);
+PROTO_R(_or,OR);
+PROTO_R(_not,NOT);
+PROTO_R(sll,SLL);
+PROTO_R(srl,SRL);
+PROTO_J(jump,JMP);
+PROTO_I(jeq,JEQ);
+PROTO_I(jne,JNE);
+PROTO_I(jlt,JLT);
+PROTO_J(call,CALL);
+PROTO_J(_return,RETURN);
+PROTO_I(ld,LD);
+PROTO_I(st,ST);
+PROTO_R(fadd,FADD);
+PROTO_R(fsub,FSUB);
+PROTO_R(fmul,FMUL);
+PROTO_R(fdiv,FDIV);
+PROTO_R(fld,FLD);
+PROTO_R(fst,FST);
+PROTO_R(nop,NOP);
+PROTO_R(halt,HALT);
 #endif

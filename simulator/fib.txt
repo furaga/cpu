@@ -1,0 +1,27 @@
+     1	#.section	".text"
+     2	fib.10:
+     3		mvhi	%g4, 0
+     4		mvlo	%g4, 1
+     5		jlt	%g4, %g3, ble_else.24
+     6		return
+     7	ble_else.24:
+     8		subi	%g4, %g3, 1
+     9		st	%g3, [%g1 + 0]
+    10		mov	%g3, %g4
+    11		st	%g31, [%g1 + 4]
+    12		addi	%g1, %g1, 8
+    13		call	fib.10
+    14		subi	%g1, %g1, 8
+    15		ld	%g31, [%g1 + 4]
+    16		ld	%g4, [%g1 + 0]
+    17		subi	%g4, %g4, 2
+    18		st	%g3, [%g1 + 4]
+    19		mov	%g3, %g4
+    20		st	%g31, [%g1 + 12]
+    21		addi	%g1, %g1, 16
+    22		call	fib.10
+    23		subi	%g1, %g1, 16
+    24		ld	%g31, [%g1 + 12]
+    25		ld	%g4, [%g1 + 4]
+    26		add	%g3, %g4, %g3
+    27		return
