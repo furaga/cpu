@@ -1,12 +1,12 @@
-$B<B9TNc(B
+実行例
 make
 ./assemble
 ./simulate
 
 
-$BF~NO=PNO%U%!%$%k$O8GDj$7$F$"$k(B
-simulate: $B%P%$%H%3!<%I(B -> $B<B9T(B
-assemble: $B%"%;%s%V%j(B -> $B%P%$%H%3!<%I(B
+入力出力ファイルは固定してある
+simulate: バイトコード -> 実行
+assemble: アセンブリ -> バイトコード
 
 
 
