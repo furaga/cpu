@@ -1,5 +1,4 @@
 .init_heap_size	0
-	jmp	min_caml_start
 foo.12:
 	st	%g8, %g1, 0
 	st	%g7, %g1, 4

@@ -1,6 +1,7 @@
 CC = g++
 LD = g++
 CFLAGS = -Wall -O2
+CPPFLAGS = -Wall -O2
 LFLAGS = -Wall -O2
 TARGET = simulate assemble
 LOG = log binary output

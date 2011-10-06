@@ -12,7 +12,6 @@
 #include <fcntl.h>
 #include "setup.h"
 
-#define IN_FILENAME "others/fib.s"
 #define OUT_FILENAME "output"
 #define	LINE_MAX	2048	// asmの一行の長さの最大値
 #define DATA_NUM 1024
@@ -23,31 +22,30 @@ map<string, uint32_t> label_map;
 uint32_t call_opcode(char *, char *);
 int	encoder(int, char*);
 
-char	label_name[128][256];
+char	label_name[128][256];	
 uint32_t label_cnt;
-
  
-int	main(int argc, char** argv) {
-	if (argc < 2) {
-		cout << "usage: ./assemble [filename]" << endl;
-		return 1;
-	}
-
+int	main(int argc, char **argv) {
+    using namespace std; 
 	FILE	*fp;	
 	char	buf[LINE_MAX];	
 	uint32_t	output_data[DATA_NUM];	// 出力データの保存領域
 	uint32_t	input_line_cnt;	// 入力側の行数をカウント
 	uint32_t	output_line_cnt;	// 出力側の行数をカウント
 	uint32_t	ir;	
-	uint32_t	i,j;
+	uint32_t	i;
 	char	opcode[256];
-	char	output_tmpstr[16];
 	uint32_t	err_cnt;
-	uint32_t	label_num;
 	uint32_t	label_line;
 	char *tmp;
-	char tmp_str[256];
 	int fd,ret, num;
+
+	if (argc < 2) {
+		cout << "usage: ./assemble [filename]\n";
+		return 1;
+	}
+
+
 
 	input_line_cnt = 0;
 	output_line_cnt = 0;
@@ -64,13 +62,14 @@ int	main(int argc, char** argv) {
 		return -1;
 	}
 
-	printf("%sを読み込み中。\n", IN_FILENAME);
+	printf("%sを読み込み中。\n", argv[1]);
 
 	while(fgets(buf, LINE_MAX, fp) != NULL){
 		if(sscanf(buf, "%s", opcode) == 1){
  	 	 	if(strchr(buf,':')) {
  	 	 		// ラベル行の場合
- 	 	 		if(tmp = strtok(opcode, ":")) {
+ 	 	 		if((tmp = strtok(opcode, ":"))) {
+				
 					label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
 				} else {    // エラー処理
  	 	 		      printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
@@ -103,19 +102,38 @@ int	main(int argc, char** argv) {
 	}else{
 
 		for(i = 0; i < DATA_NUM; i++){
-			if((output_data[i] & 0xfc000000 ) == (JLT << 26)){
-				label_line = label_map[label_name[output_data[i] & 0x7FF]];
-				label_line -= i+1;
-				output_data[i] = (output_data[i] & 0xffff0000) | label_line;
+			switch ((output_data[i] & 0xfc000000) >> 26) {
+				case JLT:
+				case JNE:
+				case JEQ:
+					label_line = label_map[label_name[output_data[i] & 0x7FF]];
+					label_line -= i + 1;
+					output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
+					break;
+				case CALL:
+				case JMP:
+					label_line = label_map[label_name[output_data[i] & 0x7FF]];
+					output_data[i] = (output_data[i] & 0xfc000000) | label_line;
+					break;
+				default:
+					break;
 			}
-			if((output_data[i] & 0xfc000000 ) == (CALL << 26)){
+
+/*
+			if(tmp_op == (JLT << 26)){
+				label_line = label_map[label_name[output_data[i] & 0x7FF]];
+				label_line -= i + 1;
+				output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
+			}
+			if(tmp_op == (CALL << 26)){
 				label_line = label_map[label_name[output_data[i] & 0x7FF]];
 				output_data[i] = (CALL << 26) | label_line;
 			}
-			if((output_data[i] & 0xfc000000 ) == (JMP << 26)){
+			if(tmp_op == (JMP << 26)){
 				label_line = label_map[label_name[output_data[i] & 0x7FF]];
 				output_data[i] = (JMP << 26) | label_line;
 			}
+*/
 		}
 
 		fd = open("binary", O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
@@ -164,26 +182,23 @@ int	main(int argc, char** argv) {
 uint32_t call_opcode(char *opcode, char *op_data)
 {
     using namespace std; 
-	int rd,rs,rt,imm,funct,shaft,target,label_num;
+	int rd,rs,rt,imm,funct,shaft,target;
 	char tmp[256];
 	const char *format1 = "%s %%g%d, %d";
 	const char *format2 = "%s %%g%d, %%g%d";
 	const char *format3 = "%s %%g%d, %%g%d, %s";
 	const char *format4 = "%s";
 	const char *format5 = "%s %%g%d, %%g%d, %d";
-	const char *format6 = "%s %%g%d, [%%g%d + %d]";
 	const char *format7 = "%s %s";
 	const char *format8 = "%s %%g%d, %%g%d, %%g%d";
 	const char *format9 = "%s %%g%d";
-	const char *format10 = "%s %%g%d, %%g%d, %[a-zA-Z_.]%d";
-	const char *format11 = "%s %[a-zA-Z_.]%d";
 	char lname[256];
 
 	shaft = funct = target = 0;
 
 	if(strcmp(opcode, "mov") == 0){
 		if(sscanf(op_data, format2, tmp, &rd, &rs) == 3)
-		    return mov(rs,0,rd,shaft,funct);
+		    return mov(rs,0,rd,0,0);
 	} else
 	if(strcmp(opcode, "mvhi") == 0){
 		if(sscanf(op_data, format1, tmp, &rt, &imm) == 3)
@@ -197,6 +212,16 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		if(sscanf(op_data, format7, tmp, lname) == 2)
 			strcpy(label_name[label_cnt],lname);
 		    return jmp(label_cnt++);
+	} else
+	if(strcmp(opcode, "jeq") == 0){
+		if(sscanf(op_data, format3, tmp, &rs, &rt, lname) == 4)
+			strcpy(label_name[label_cnt],lname);
+		    return jeq(rs,rt,label_cnt++);
+	} else
+	if(strcmp(opcode, "jne") == 0){
+		if(sscanf(op_data, format3, tmp, &rs, &rt, lname) == 4)
+			strcpy(label_name[label_cnt],lname);
+		    return jne(rs,rt,label_cnt++);
 	} else
 	if(strcmp(opcode, "jlt") == 0){
 		if(sscanf(op_data, format3, tmp, &rs, &rt, lname) == 4)
@@ -228,6 +253,30 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
 		    return div(rs,rt,rd,shaft,funct);
 	} else
+	if(strcmp(opcode, "and") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return _and(rs,rt,rd,0,0);
+	} else
+	if(strcmp(opcode, "or") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return _or(rs,rt,rd,0,0);
+	} else
+	if(strcmp(opcode, "not") == 0){
+		if(sscanf(op_data, format2, tmp, &rd, &rs) == 3)
+		    return _not(rs,0,rd,0,0);
+	} else
+	if(strcmp(opcode, "sll") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return sll(rs,rt,rd,0,0);
+	} else
+	if(strcmp(opcode, "srl") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return srl(rs,rt,rd,0,0);
+	} else
+	if(strcmp(opcode, "slli") == 0){
+		if(sscanf(op_data, format5, tmp, &rt, &rs, &imm) == 4)
+		    return slli(rs,rt,imm);
+	} else
 	if(strcmp(opcode, "addi") == 0){
 		if(sscanf(op_data, format5, tmp, &rt, &rs, &imm) == 4)
 		    return addi(rs,rt,imm);
@@ -253,8 +302,10 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		    return ld(rs,rt,imm);
 	} else
 	if(strcmp(opcode, "halt") == 0){
-		if(sscanf(op_data, format4, tmp) == 1)
 		    return halt(0,0,0,0,0);
+	} else
+	if(strcmp(opcode, "nop") == 0){
+		    return nop(0,0,0,0,0);
 	} else
 	if(strcmp(opcode, "output") == 0){
 		if(sscanf(op_data, format9, tmp, &rs) == 2)

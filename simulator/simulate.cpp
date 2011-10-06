@@ -10,8 +10,8 @@
 int32_t reg[REG_NUM];
 //uint32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
-uint32_t rom[MEM_NUM + 1];
-uint32_t ram[MEM_NUM + 1];
+uint32_t rom[MEM_NUM];
+uint32_t ram[MEM_NUM];
 void IMapInit(void);
 extern const char *InstMap[];
 extern int InstTyMap[];
@@ -40,11 +40,10 @@ int main(int argc, char **argv)
 	uint32_t lr; 	// Link Register
 	uint32_t flag_eq;
 	uint32_t cnt;
-	uint32_t i;
-	int fd;
+	int fd,ret;
 
 	fd = open("binary", O_RDONLY);
-	read(fd, rom, MEM_NUM*4);
+	ret = read(fd, rom, MEM_NUM*4);
 
 	pc = 0;
 	flag_eq = 0;
@@ -55,20 +54,19 @@ int main(int argc, char **argv)
 	IMapInit();
 	do{
 		ir = rom[pc];
-		cnt++;
 		/*
 		switch (InstTyMap[opcode(ir)]) {
 			case 0:
 				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:%d\n", 
-						cnt++,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
+						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
 				break;
 			case 1:
 				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d imm:0x%X\n",
-						cnt++,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
+						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
 				break;
 			case 2:
 				printf("%3d PC:%3d LR:0x%X\n%s\ttarget:0x%X\n",
-						cnt++,pc,lr,InstMap[opcode(ir)],target(ir));
+						cnt,pc,lr,InstMap[opcode(ir)],target(ir));
 				break;
 			default: break;
 		}
@@ -86,8 +84,10 @@ int main(int argc, char **argv)
 		putchar('\n');
 		putchar('\n');
 		*/
+		cnt++;
 		pc++;
-int prev = reg[1];
+
+
 		switch(opcode(ir)){
 			case MOV: 
 				_RD = _RS;
@@ -142,6 +142,9 @@ int prev = reg[1];
 			case SRL:
 				_RD = _RS >> _RT;
 				break;
+			case SLLI:
+				_RT = _RS << _IMM;
+				break;
 			case JMP:
 				pc = imm(ir);
 				break;
@@ -155,29 +158,23 @@ int prev = reg[1];
 				break;
 			case JLT:
 				if (_RS < _RT)
-					pc += _IMM;
+					pc += (short int)_IMM;
 				break;
 			case CALL:
 				ram[reg[1]] = lr;
-//				reg[1] += 4;
 				reg[1] -= 4;
 				lr = pc;
 				pc = _IMM;
-//				printf("arg = %d ", reg[3]);
-//				fflush(stdout);
 				break;
 			case RETURN:
 				pc = lr;
-//				reg[1] -= 4;
 				reg[1] += 4;
 				lr = ram[reg[1]];
 				break;
 			case LD:
-//				_RS = ram[(_RT + _IMM)/4];
 				_RS = ram[(_RT - _IMM)/4];
 				break;
 			case ST:
-//				ram[(_RT + _IMM)/4] = _RS;
 				ram[(_RT - _IMM)/4] = _RS;
 				break;
 			case FADD:
@@ -193,10 +190,8 @@ int prev = reg[1];
 				_RD = _RS / _RT;
 				break;
 			case FLD:
-				_RS = ram[(_RT - _IMM)/4];
 				break;
 			case FST:
-				ram[(_RT - _IMM)/4] = _RS;
 				break;
 			case NOP:
 				break;
@@ -204,12 +199,6 @@ int prev = reg[1];
 				break;
 			default	:	break;
 		}
-		
-//		if (prev != reg[1]) {
-//			printf("pc=%d op=%s sp=%d reg[3] = %d reg[4] = %d\n", pc, InstMap[opcode(ir)], reg[1], reg[3], reg[4]);		fflush(stdout);
-	//	}
-		
-		prev = reg[3];
 	} while(opcode(ir) != HALT);
 
 	putchar('\n');

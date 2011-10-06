@@ -16,8 +16,7 @@ extern uint32_t freg[];
 
 
 // Memory ////////////////////////////////////////////
-// 8MByteあれば多分十分
-#define MEM_NUM (2 * 1000 * 1000)
+#define MEM_NUM (2 * 1024 * 1024)
 extern uint32_t rom[];
 extern uint32_t ram[];
 
@@ -53,39 +52,39 @@ extern uint32_t ram[];
 		return ((ir >> shift) & mask);\
 	}
 
-
-PROTO_R(mov,MOV);
-PROTO_I(mvhi, MVHI);
-PROTO_I(mvlo, MVLO);
-PROTO_R(add,ADD);
-PROTO_R(sub,SUB);
-PROTO_R(mul,MUL);
-PROTO_R(div,DIV);
-PROTO_I(addi,ADDI);
-PROTO_I(subi,SUBI);
-PROTO_I(muli,MULI);
-PROTO_I(divi,DIVI);
-PROTO_R(input,INPUT);
-PROTO_R(output,OUTPUT);
-PROTO_R(_and,AND);
-PROTO_R(_or,OR);
-PROTO_R(_not,NOT);
-PROTO_R(sll,SLL);
-PROTO_R(srl,SRL);
-PROTO_J(jmp,JMP);
+PROTO_R(mov,MOV);				//
+PROTO_I(mvhi, MVHI);				//
+PROTO_I(mvlo, MVLO);				//
+PROTO_R(add,ADD);				//
+PROTO_R(sub,SUB);				//
+PROTO_R(mul,MUL);				//
+PROTO_R(div,DIV);				//
+PROTO_I(addi,ADDI);				//
+PROTO_I(subi,SUBI);				//
+PROTO_I(muli,MULI);				//
+PROTO_I(divi,DIVI);				//
+PROTO_R(input,INPUT);				//
+PROTO_R(output,OUTPUT);				//
+PROTO_R(_and,AND);				//
+PROTO_R(_or,OR);				//
+PROTO_R(_not,NOT);				//
+PROTO_R(sll,SLL);				//
+PROTO_R(srl,SRL);				//
+PROTO_I(slli,SLLI);				//
+PROTO_J(jmp,JMP);				//
 PROTO_I(jeq,JEQ);
 PROTO_I(jne,JNE);
-PROTO_I(jlt,JLT);
-PROTO_J(call,CALL);
-PROTO_J(_return,RETURN);
-PROTO_I(ld,LD);
-PROTO_I(st,ST);
+PROTO_I(jlt,JLT);				//
+PROTO_J(call,CALL);				//
+PROTO_J(_return,RETURN);				//
+PROTO_I(ld,LD);				//
+PROTO_I(st,ST);				//
 PROTO_R(fadd,FADD);
 PROTO_R(fsub,FSUB);
 PROTO_R(fmul,FMUL);
 PROTO_R(fdiv,FDIV);
 PROTO_R(fld,FLD);
 PROTO_R(fst,FST);
-PROTO_R(nop,NOP);
-PROTO_R(halt,HALT);
+PROTO_R(nop,NOP);				//
+PROTO_R(halt,HALT);				//
 #endif

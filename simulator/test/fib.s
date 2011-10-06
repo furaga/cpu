@@ -1,5 +1,5 @@
 .init_heap_size	0
-	jmp	min_caml_start
+jmp min_caml_start
 fib.10:
 	mvhi	%g4, 0
 	mvlo	%g4, 1

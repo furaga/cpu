@@ -13,7 +13,6 @@ l.65:	! 1.000000
 	.long	0x3f800000
 l.63:	! 1000000.000000
 	.long	0x49742400
-	jmp	min_caml_start
 getx.23:
 	fld	%f0, %g3, 0
 	return

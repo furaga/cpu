@@ -1,7 +1,6 @@
 .init_heap_size	32
 l.5:	! 3.140000
 	.long	0x4048f5c2
-	jmp	min_caml_start
 f.2:
 	jmp	min_caml_print_float
 min_caml_start:

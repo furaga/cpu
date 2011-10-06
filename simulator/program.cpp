@@ -18,6 +18,7 @@ DEFINE_R(_or,OR);
 DEFINE_R(_not,NOT);
 DEFINE_R(sll,SLL);
 DEFINE_R(srl,SRL);
+DEFINE_I(slli,SLLI);
 DEFINE_J(jmp,JMP);
 DEFINE_I(jeq,JEQ);
 DEFINE_I(jne,JNE);
