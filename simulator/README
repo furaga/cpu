@@ -1,12 +1,9 @@
-実行例
-make
-./assemble
-./simulate
+assemble: アセンブラ -> バイトコード（binary）, デバッグ用ファイルouputの２ファイルを生成
+simulate: バイトコード（binary） -> 実行（標準出力）
 
+◇実行例
 
-入力出力ファイルは固定してある
-simulate: バイトコード -> 実行
-assemble: アセンブリ -> バイトコード
-
-
+	make
+	./assemble [アセンブラファイル名]
+	./simulate
 

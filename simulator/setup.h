@@ -10,12 +10,14 @@ NOP,MOV,MVHI,MVLO,ADD,SUB,MUL,DIV,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,AND,OR,NOT,SL
 
 // Register ///////////////////////////////////////////
 #define REG_NUM 32
-extern uint32_t reg[];
+//extern uint32_t reg[];
+extern int32_t reg[];
 extern uint32_t freg[];
 
 
 // Memory ////////////////////////////////////////////
-#define MEM_NUM 1024
+// 8MByteあれば多分十分
+#define MEM_NUM (2 * 1000 * 1000)
 extern uint32_t rom[];
 extern uint32_t ram[];
 

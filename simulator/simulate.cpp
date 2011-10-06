@@ -7,10 +7,11 @@
 #include "setup.h"
 
 
-uint32_t reg[REG_NUM];
+int32_t reg[REG_NUM];
+//uint32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
-uint32_t rom[MEM_NUM];
-uint32_t ram[MEM_NUM];
+uint32_t rom[MEM_NUM + 1];
+uint32_t ram[MEM_NUM + 1];
 void IMapInit(void);
 extern const char *InstMap[];
 extern int InstTyMap[];
@@ -49,6 +50,7 @@ int main(int argc, char **argv)
 	flag_eq = 0;
 	lr = 0;
 	cnt = 0;
+	reg[1] = reg[31] = MEM_NUM;
 
 	IMapInit();
 	do{
@@ -85,7 +87,7 @@ int main(int argc, char **argv)
 		putchar('\n');
 		*/
 		pc++;
-
+int prev = reg[1];
 		switch(opcode(ir)){
 			case MOV: 
 				_RD = _RS;
@@ -157,20 +159,26 @@ int main(int argc, char **argv)
 				break;
 			case CALL:
 				ram[reg[1]] = lr;
-				reg[1] += 4;
+//				reg[1] += 4;
+				reg[1] -= 4;
 				lr = pc;
 				pc = _IMM;
+//				printf("arg = %d ", reg[3]);
+//				fflush(stdout);
 				break;
 			case RETURN:
 				pc = lr;
-				reg[1] -= 4;
+//				reg[1] -= 4;
+				reg[1] += 4;
 				lr = ram[reg[1]];
 				break;
 			case LD:
-				_RS = ram[(_RT + _IMM)/4];
+//				_RS = ram[(_RT + _IMM)/4];
+				_RS = ram[(_RT - _IMM)/4];
 				break;
 			case ST:
-				ram[(_RT + _IMM)/4] = _RS;
+//				ram[(_RT + _IMM)/4] = _RS;
+				ram[(_RT - _IMM)/4] = _RS;
 				break;
 			case FADD:
 				_RD = _RS + _RT;
@@ -185,8 +193,10 @@ int main(int argc, char **argv)
 				_RD = _RS / _RT;
 				break;
 			case FLD:
+				_RS = ram[(_RT - _IMM)/4];
 				break;
 			case FST:
+				ram[(_RT - _IMM)/4] = _RS;
 				break;
 			case NOP:
 				break;
@@ -194,6 +204,12 @@ int main(int argc, char **argv)
 				break;
 			default	:	break;
 		}
+		
+//		if (prev != reg[1]) {
+//			printf("pc=%d op=%s sp=%d reg[3] = %d reg[4] = %d\n", pc, InstMap[opcode(ir)], reg[1], reg[3], reg[4]);		fflush(stdout);
+	//	}
+		
+		prev = reg[3];
 	} while(opcode(ir) != HALT);
 
 	putchar('\n');

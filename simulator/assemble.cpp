@@ -23,11 +23,16 @@ map<string, uint32_t> label_map;
 uint32_t call_opcode(char *, char *);
 int	encoder(int, char*);
 
-char	label_name[128][256];	
+char	label_name[128][256];
 uint32_t label_cnt;
+
  
-int	main() {
-    using namespace std; 
+int	main(int argc, char** argv) {
+	if (argc < 2) {
+		cout << "usage: ./assemble [filename]" << endl;
+		return 1;
+	}
+
 	FILE	*fp;	
 	char	buf[LINE_MAX];	
 	uint32_t	output_data[DATA_NUM];	// 出力データの保存領域
@@ -53,7 +58,7 @@ int	main() {
 		output_data[i] = 0;	 // NOP
 
 	// ソースファイルのopen
-	fp = fopen(IN_FILENAME, "r");
+	fp = fopen(argv[1], "r");
 	if(fp == NULL){
 		printf("ファイルが開けませんでした。\n");
 		return -1;
