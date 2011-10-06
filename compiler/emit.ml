@@ -180,25 +180,25 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 
 (* 中間言語と逆の意味の命令を出力 *)
   | Tail, IfEq(x, V(y), e1, e2) ->
-      g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "beq" "bne"
+      g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "jeq" "jne"
 (* Simm.mlの変更により、これは出ないはず *)
   | Tail, IfEq(x, C(y), e1, e2) ->
       Printf.fprintf oc "! Tail IfEq(即値)。バグってるよ！\n"
-      (*g'_tail_if oc x (pp_id_or_imm (C y)) e1 e2 "beq" "bne" *)
+      (*g'_tail_if oc x (pp_id_or_imm (C y)) e1 e2 "jeq" "jne" *)
       
   | Tail, IfLE(x, V(y), e1, e2) ->
-      g'_tail_if oc (pp_id_or_imm (V y)) x e1 e2 "ble" "blt"
+      g'_tail_if oc (pp_id_or_imm (V y)) x e1 e2 "jle" "jlt"
 (* Simm.mlの変更により、これは出ないはず *)
   | Tail, IfLE(x, C(y), e1, e2) ->
       Printf.fprintf oc "! Tail IfLE(即値)。バグってるよ！\n"
-      (*g'_tail_if oc (pp_id_or_imm (C y)) x e1 e2 "ble" "blt"*)
+      (*g'_tail_if oc (pp_id_or_imm (C y)) x e1 e2 "jle" "jlt"*)
       
   | Tail, IfGE(x, V(y), e1, e2) ->
-      g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "bge" "blt"
+      g'_tail_if oc x (pp_id_or_imm (V y)) e1 e2 "jge" "jlt"
 (* Simm.mlの変更により、これは出ないはず *)
   | Tail, IfGE(x, C(y), e1, e2) ->
       Printf.fprintf oc "! Tail IfGE(即値)。バグってるよ！\n"
-      (*g'_tail_if oc x (pp_id_or_imm (C y))  e1 e2 "bge" "blt" *)
+      (*g'_tail_if oc x (pp_id_or_imm (C y))  e1 e2 "jge" "jlt" *)
       
 (*
   | Tail, IfFEq(x, y, e1, e2) ->
@@ -211,10 +211,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_tail_if oc e1 e2 "fble" "fbg"
 *)
   | Tail, IfFEq(x, y, e1, e2) ->
-      g'_tail_if oc x y e1 e2 "fbeq" "fbne"
+      g'_tail_if oc x y e1 e2 "fjeq" "fjne"
 
   | Tail, IfFLE(x, y, e1, e2) ->
-      g'_tail_if oc x y e1 e2 "fble" "fbg"
+      g'_tail_if oc y x e1 e2 "fjle" "fjlt"
 
 (*
   | NonTail(z), IfEq(x, y', e1, e2) ->
@@ -236,21 +236,21 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_non_tail_if oc (NonTail(z)) e1 e2 "fble" "fbg"
 *)  
   | NonTail(z), IfEq(x, V(y), e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "beq" "bne"
+      g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "jeq" "jne"
 (* Simm.mlの変更により、これは出ないはず *)
   | NonTail(z), IfEq(x, C(y), e1, e2) ->
       Printf.fprintf oc "! NonTail IfEq(即値)。バグってるよ！\n"
-      (*g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (C y)) e1 e2 "beq" "bne"*)
+      (*g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (C y)) e1 e2 "jeq" "jne"*)
 
   | NonTail(z), IfLE(x, V(y), e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (V y)) x e1 e2 "ble" "blt"
+      g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (V y)) x e1 e2 "jle" "jlt"
 (* Simm.mlの変更により、これは出ないはず *)
   | NonTail(z), IfLE(x, C(y), e1, e2) ->
       Printf.fprintf oc "! NonTail IfLE(即値)。バグってるよ！\n"
-      (*g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (C y)) x e1 e2 "ble" "blt"*)
+      (*g'_non_tail_if oc (NonTail(z)) (pp_id_or_imm (C y)) x e1 e2 "jle" "jlt"*)
 
   | NonTail(z), IfGE(x, V(y), e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "bge" "blt"
+      g'_non_tail_if oc (NonTail(z)) x (pp_id_or_imm (V y)) e1 e2 "jge" "jlt"
 (* Simm.mlの変更により、これは出ないはず *)
   | NonTail(z), IfGE(x, C(y), e1, e2) ->
       Printf.fprintf oc "! NonTail IfGE(即値)。バグってるよ！\n"
@@ -266,9 +266,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_non_tail_if oc (NonTail(z)) e1 e2 "fble" "fbg"
 *)    
   | NonTail(z), IfFEq(x, y, e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) x y e1 e2 "fbe" "fbne"
+      g'_non_tail_if oc (NonTail(z)) x y e1 e2 "fje" "fjne"
   | NonTail(z), IfFLE(x, y, e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) y x e2 e1 "fble" "fblt"
+      g'_non_tail_if oc (NonTail(z)) y x e2 e1 "fjle" "fjlt"
 
   (* 関数呼び出しの仮想命令の実装 (caml2html: emit_call) *)
 (*jmp : 即値でジャンプ先を指定*)
