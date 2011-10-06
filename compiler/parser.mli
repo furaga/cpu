@@ -5,6 +5,8 @@ type token =
   | NOT
   | MINUS
   | PLUS
+  | AST
+  | SLASH
   | MINUS_DOT
   | PLUS_DOT
   | AST_DOT
