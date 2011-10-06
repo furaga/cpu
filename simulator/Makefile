@@ -13,4 +13,4 @@ program.o: setup.h
 assemble.o: setup.h
 
 clean:
-	rm -f *.o $(TARGET)  $(LOG)
+	rm -f *.o $(TARGET)  $(LOG) a.out

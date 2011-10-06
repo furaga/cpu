@@ -3,7 +3,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <unistd.h>
 #include "setup.h"
+
 
 uint32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
@@ -13,7 +15,6 @@ void IMapInit(void);
 extern const char *InstMap[];
 extern int InstTyMap[];
 
-void program(uint32_t*, int);
 DEF_ELE_ACC(opcode, 26, 0x3f);
 DEF_ELE_ACC(regs, 21, 0x1f);
 DEF_ELE_ACC(regt, 16, 0x1f);
@@ -37,41 +38,38 @@ int main(int argc, char **argv)
 	uint32_t ir;	// Instruction Register
 	uint32_t lr; 	// Link Register
 	uint32_t flag_eq;
-	uint32_t clock;
+	uint32_t cnt;
 	uint32_t i;
 	int fd;
 
 	fd = open("binary", O_RDONLY);
-	program(rom, fd);
+	read(fd, rom, MEM_NUM*4);
 
 	pc = 0;
 	flag_eq = 0;
-	lr = 235;
-	rom[244] = HALT << 26;
-	clock = 0;
-	reg[3] = 10;
+	lr = 0;
+	cnt = 0;
 
 	IMapInit();
 	do{
 		ir = rom[pc];
-
-
+		cnt++;
+		/*
 		switch (InstTyMap[opcode(ir)]) {
 			case 0:
-				printf("PC:%3d %s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:\n", 
-						pc,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
+				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:%d\n", 
+						cnt++,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
 				break;
 			case 1:
-				printf("PC:%3d %s\trs:GR%d rt:GR%d imm:0x%X\n",
-						pc,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
+				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d imm:0x%X\n",
+						cnt++,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
 				break;
 			case 2:
-				printf("PC:%3d %s\ttarget:0x%X\n",
-						pc,InstMap[opcode(ir)],target(ir));
+				printf("%3d PC:%3d LR:0x%X\n%s\ttarget:0x%X\n",
+						cnt++,pc,lr,InstMap[opcode(ir)],target(ir));
 				break;
 			default: break;
 		}
-
 		for (i = 0; i < REG_NUM; i++) {
 			if (reg[i] > 0) {
 				printf(" GR%d:0x%X", i, reg[i]);
@@ -85,8 +83,8 @@ int main(int argc, char **argv)
 		}
 		putchar('\n');
 		putchar('\n');
+		*/
 		pc++;
-		//getchar(); // pause
 
 		switch(opcode(ir)){
 			case MOV: 
@@ -125,6 +123,7 @@ int main(int argc, char **argv)
 			case INPUT:
 				break;
 			case OUTPUT:
+				printf("cnt:%d output:%d\n", cnt, _RS);
 				break;
 			case AND:
 				_RD = _RS & _RT;
@@ -157,11 +156,15 @@ int main(int argc, char **argv)
 					pc += _IMM;
 				break;
 			case CALL:
+				ram[reg[1]] = lr;
+				reg[1] += 4;
 				lr = pc;
 				pc = _IMM;
 				break;
 			case RETURN:
 				pc = lr;
+				reg[1] -= 4;
+				lr = ram[reg[1]];
 				break;
 			case LD:
 				_RS = ram[(_RT + _IMM)/4];
@@ -189,16 +192,12 @@ int main(int argc, char **argv)
 				break;
 			case HALT:
 				break;
-
-
 			default	:	break;
 		}
 	} while(opcode(ir) != HALT);
 
 	putchar('\n');
 	printf("CPU Simulator Results\n");
-	printf("ram[64] = %d\n", ram[64]);
-	//getchar(); // pause
 
 	return 0;
 } 

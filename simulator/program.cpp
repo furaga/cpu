@@ -1,6 +1,4 @@
 #include "setup.h"
-#include <unistd.h>
-#include <stdio.h>
 
 DEFINE_R(mov,MOV);
 DEFINE_I(mvhi, MVHI);
@@ -20,7 +18,7 @@ DEFINE_R(_or,OR);
 DEFINE_R(_not,NOT);
 DEFINE_R(sll,SLL);
 DEFINE_R(srl,SRL);
-DEFINE_J(jump,JMP);
+DEFINE_J(jmp,JMP);
 DEFINE_I(jeq,JEQ);
 DEFINE_I(jne,JNE);
 DEFINE_I(jlt,JLT);
@@ -36,9 +34,3 @@ DEFINE_R(fld,FLD);
 DEFINE_R(fst,FST);
 DEFINE_R(nop,NOP);
 DEFINE_R(halt,HALT);
-
-// romに命令実行列を書き込む
-void program(uint32_t *rom, int fd) {
-	int ret, i;
-	ret = read(fd, rom, MEM_NUM);
-}

@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <map>
 #include <string>
+#include <iostream>
+#include <fstream>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -13,12 +15,14 @@
 #define IN_FILENAME "others/fib.s"
 #define OUT_FILENAME "output"
 #define	LINE_MAX	2048	// asmの一行の長さの最大値
-#define DATA_NUM 256
+#define DATA_NUM 1024
+
+using namespace std;
+map<string, uint32_t> label_map;
 
 uint32_t call_opcode(char *, char *);
 int	encoder(int, char*);
-using namespace std;
-map<string, uint32_t> label_map;
+
 char	label_name[128][256];	
 uint32_t label_cnt;
  
@@ -30,23 +34,23 @@ int	main() {
 	uint32_t	input_line_cnt;	// 入力側の行数をカウント
 	uint32_t	output_line_cnt;	// 出力側の行数をカウント
 	uint32_t	ir;	
-	uint32_t	i;	
+	uint32_t	i,j;
 	char	opcode[256];
 	char	output_tmpstr[16];
 	uint32_t	err_cnt;
 	uint32_t	label_num;
+	uint32_t	label_line;
 	char *tmp;
+	char tmp_str[256];
 	int fd,ret, num;
 
 	input_line_cnt = 0;
 	output_line_cnt = 0;
 	err_cnt = 0;
 	label_cnt = 0;
-	label_num = 0;
 
 	for(i = 0; i < DATA_NUM; i++)
 		output_data[i] = 0;	 // NOP
-	output_data[DATA_NUM-1] = (HALT << 26);	 // HALT
 
 	// ソースファイルのopen
 	fp = fopen(IN_FILENAME, "r");
@@ -60,14 +64,15 @@ int	main() {
 	while(fgets(buf, LINE_MAX, fp) != NULL){
 		if(sscanf(buf, "%s", opcode) == 1){
  	 	 	if(strchr(buf,':')) {
- 	 	 		// : (ラベル番号) ラベル行の場合
- 	 	 		if((tmp = strtok(opcode,":"))){
+ 	 	 		// ラベル行の場合
+ 	 	 		if(tmp = strtok(opcode, ":")) {
 					label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
- 	 	 		}else{    // エラー処理
+				} else {    // エラー処理
  	 	 		      printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
  	 	 		      err_cnt++;
  	 	 		}
-			}else if(opcode[0] == '#'){
+			}else if(opcode[0] == '.'){
+			}else if(opcode[0] == '!'){
  	 	 		// -- コメントなので何もしない
  	 	 	}else{
  	 	 		// 命令行
@@ -94,46 +99,56 @@ int	main() {
 
 		for(i = 0; i < DATA_NUM; i++){
 			if((output_data[i] & 0xfc000000 ) == (JLT << 26)){
-				label_num = label_map[label_name[(output_data[i] & 0x7FF)]];
-				label_num -= i+1;
-				output_data[i] = (output_data[i] & 0xffff0000) | label_num;
+				label_line = label_map[label_name[output_data[i] & 0x7FF]];
+				label_line -= i+1;
+				output_data[i] = (output_data[i] & 0xffff0000) | label_line;
 			}
 			if((output_data[i] & 0xfc000000 ) == (CALL << 26)){
-				label_num = label_map[label_name[(output_data[i] & 0x7FF)]];
-				output_data[i] = (CALL << 26) | label_num;
+				label_line = label_map[label_name[output_data[i] & 0x7FF]];
+				output_data[i] = (CALL << 26) | label_line;
+			}
+			if((output_data[i] & 0xfc000000 ) == (JMP << 26)){
+				label_line = label_map[label_name[output_data[i] & 0x7FF]];
+				output_data[i] = (JMP << 26) | label_line;
 			}
 		}
 
-		//書き込みファイルをopen
-		fp = fopen(OUT_FILENAME, "w");
-		if(fp == NULL){
-			 printf("書き込みファイルが開けませんでした。\n");
-			 return -1;
-		}
-
-		//mifファイルを出力
-		/*
-		fprintf(fp, "DEPTH = 256;\nWIDTH = 15;\n");
-		fprintf(fp, "ADDRESS_RADIX = HEX;\nDATA_RADIX = BIN;\n");
-		fprintf(fp, "CONTENT\n\tBEGIN\n");
-		fprintf(fp, "[00..7F]\t:\t000000000000;\n");
-		*/
-
-		
-		fd = open("binary", O_WRONLY | O_TRUNC | O_CREAT);
-
-		num = DATA_NUM;
+		fd = open("binary", O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
+		num = DATA_NUM*4;
 		while ((ret = write(fd, output_data, num)) > 0) {
 			num -= ret;
 		}
 		close(fd);
 
-		for(i = 0; i < DATA_NUM; i++){
-			fprintf(fp, "%4d: %08X \n", i, output_data[i]);
-		}
-		fprintf(fp, "END;\n\n");
+		ofstream ofs("output");
 
-		fclose(fp);
+		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
+			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
+			<< "CONTENT\tBEGIN\n\n";
+
+
+		map<string,uint32_t>::iterator itr;
+
+		for(i = 0; i < DATA_NUM; i++){
+
+			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
+				if (itr->second == i) {
+					ofs << itr->first << ":\n";
+				}
+			}
+
+			if (output_data[i]) {
+				ofs.width(4);
+				ofs.fill(' ');
+				ofs << dec << i <<": ";
+				ofs.width(8);
+				ofs.fill('0');
+				ofs << hex << output_data[i] << endl;
+			}
+		}
+
+		ofs.close();
+
 		printf("コンパイルは正常に終了しました。\n");
 		printf("%sに書き出しました。\n", OUT_FILENAME);
 		printf("%sに書き出しました。\n", "binary");
@@ -144,7 +159,7 @@ int	main() {
 uint32_t call_opcode(char *opcode, char *op_data)
 {
     using namespace std; 
-	int rd,rs,rt,imm,funct,shaft,target;
+	int rd,rs,rt,imm,funct,shaft,target,label_num;
 	char tmp[256];
 	const char *format1 = "%s %%g%d, %d";
 	const char *format2 = "%s %%g%d, %%g%d";
@@ -154,6 +169,9 @@ uint32_t call_opcode(char *opcode, char *op_data)
 	const char *format6 = "%s %%g%d, [%%g%d + %d]";
 	const char *format7 = "%s %s";
 	const char *format8 = "%s %%g%d, %%g%d, %%g%d";
+	const char *format9 = "%s %%g%d";
+	const char *format10 = "%s %%g%d, %%g%d, %[a-zA-Z_.]%d";
+	const char *format11 = "%s %[a-zA-Z_.]%d";
 	char lname[256];
 
 	shaft = funct = target = 0;
@@ -170,10 +188,20 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		if(sscanf(op_data, format1, tmp, &rt, &imm) == 3)
 		    return mvlo(rs,rt,imm);
 	} else
+	if(strcmp(opcode, "jmp") == 0){
+		if(sscanf(op_data, format7, tmp, lname) == 2)
+			strcpy(label_name[label_cnt],lname);
+		    return jmp(label_cnt++);
+	} else
 	if(strcmp(opcode, "jlt") == 0){
 		if(sscanf(op_data, format3, tmp, &rs, &rt, lname) == 4)
 			strcpy(label_name[label_cnt],lname);
 		    return jlt(rs,rt,label_cnt++);
+	} else
+	if(strcmp(opcode, "call") == 0){
+		if(sscanf(op_data, format7, tmp, lname) == 2) 
+			strcpy(label_name[label_cnt],lname);
+		    return call(label_cnt++);
 	} else
 	if(strcmp(opcode, "return") == 0){
 		if(sscanf(op_data, format4, tmp) == 1) 
@@ -181,7 +209,19 @@ uint32_t call_opcode(char *opcode, char *op_data)
 	} else
 	if(strcmp(opcode, "add") == 0){
 		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
-		    return mov(rs,rt,rd,shaft,funct);
+		    return add(rs,rt,rd,shaft,funct);
+	} else
+	if(strcmp(opcode, "sub") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return sub(rs,rt,rd,shaft,funct);
+	} else
+	if(strcmp(opcode, "mul") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return mul(rs,rt,rd,shaft,funct);
+	} else
+	if(strcmp(opcode, "div") == 0){
+		if(sscanf(op_data, format8, tmp, &rd, &rs,&rt) == 4)
+		    return div(rs,rt,rd,shaft,funct);
 	} else
 	if(strcmp(opcode, "addi") == 0){
 		if(sscanf(op_data, format5, tmp, &rt, &rs, &imm) == 4)
@@ -191,18 +231,33 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		if(sscanf(op_data, format5, tmp, &rt, &rs, &imm) == 4)
 		    return subi(rs,rt,imm);
 	} else
+	if(strcmp(opcode, "muli") == 0){
+		if(sscanf(op_data, format5, tmp, &rt, &rs, &imm) == 4)
+		    return muli(rs,rt,imm);
+	} else
+	if(strcmp(opcode, "divi") == 0){
+		if(sscanf(op_data, format5, tmp, &rt, &rs, &imm) == 4)
+		    return divi(rs,rt,imm);
+	} else
 	if(strcmp(opcode, "st") == 0){
-		if(sscanf(op_data, format6, tmp, &rs, &rt, &imm) == 4)
+		if(sscanf(op_data, format5, tmp, &rs, &rt, &imm) == 4)
 		    return st(rs,rt,imm);
 	} else
-	if(strcmp(opcode, "call") == 0){
-		if(sscanf(op_data, format7, tmp, lname) == 2) 
-			strcpy(label_name[label_cnt],lname);
-		    return call(label_cnt++);
-	} else
 	if(strcmp(opcode, "ld") == 0){
-		if(sscanf(op_data, format6, tmp, &rs, &rt, &imm) == 4)
+		if(sscanf(op_data, format5, tmp, &rs, &rt, &imm) == 4)
 		    return ld(rs,rt,imm);
+	} else
+	if(strcmp(opcode, "halt") == 0){
+		if(sscanf(op_data, format4, tmp) == 1)
+		    return halt(0,0,0,0,0);
+	} else
+	if(strcmp(opcode, "output") == 0){
+		if(sscanf(op_data, format9, tmp, &rs) == 2)
+		    return output(rs,0,0,0,0);
+	} else
+	if(strcmp(opcode, "input") == 0){
+		if(sscanf(op_data, format9, tmp, &rd) == 2)
+		    return input(0,0,rd,0,0);
 	} else
 	{}
 

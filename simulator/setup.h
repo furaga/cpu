@@ -15,7 +15,7 @@ extern uint32_t freg[];
 
 
 // Memory ////////////////////////////////////////////
-#define MEM_NUM 512
+#define MEM_NUM 1024
 extern uint32_t rom[];
 extern uint32_t ram[];
 
@@ -70,7 +70,7 @@ PROTO_R(_or,OR);
 PROTO_R(_not,NOT);
 PROTO_R(sll,SLL);
 PROTO_R(srl,SRL);
-PROTO_J(jump,JMP);
+PROTO_J(jmp,JMP);
 PROTO_I(jeq,JEQ);
 PROTO_I(jne,JNE);
 PROTO_I(jlt,JLT);
