@@ -339,10 +339,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				  Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
 			(*      Printf.fprintf oc "\tld\t%s, 0, %s\n" reg_cl reg_sw;*)
 				  Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
-				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
+				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
 				  Printf.fprintf oc "\tcall\t%s\n" reg_sw;
 			(*      Printf.fprintf oc "\tadd\t%s, %d, %s\t! delay slot\n" reg_sp ss reg_sp;*)
-				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
+				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
 				  Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
 				  if List.mem a allregs && a <> regs.(0) then
 				  Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
@@ -372,9 +372,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				  g'_args oc [] ys zs;
 				  let ss = stacksize () in
 				  Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
-				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
-				  Printf.fprintf oc "\tcall\t%s\n" x;
 				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
+				  Printf.fprintf oc "\tcall\t%s\n" x;
+				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
 				  Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
 				  if List.mem a allregs && a <> regs.(0) then
 			   	  	Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
