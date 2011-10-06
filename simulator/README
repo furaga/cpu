@@ -1,12 +1,17 @@
+
+
 実行例
+
 make
 ./assemble
 ./simulate
 
+./assemble test/fib.s -o fib
+./simulate fib
 
-入力出力ファイルは固定してある
-simulate: バイトコード -> 実行
-assemble: アセンブリ -> バイトコード
+./assemble test/fib.s
+(o.out生成)
+./simulate
+(o.out実行)
 
-
-
+ack,gcd,fibはテスト済み

@@ -8,7 +8,6 @@
 
 
 int32_t reg[REG_NUM];
-//uint32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
 uint32_t rom[MEM_NUM];
 uint32_t ram[MEM_NUM];
@@ -35,14 +34,21 @@ DEF_ELE_ACC(target, 0, 0x3ffffff);
 int main(int argc, char **argv)
 { 
 	using namespace std;
-	uint32_t pc;	// Program Counter
-	uint32_t ir;	// Instruction Register
-	uint32_t lr; 	// Link Register
+	uint32_t pc, ir, lr;
 	uint32_t flag_eq;
 	uint32_t cnt;
 	int fd,ret;
+	char *sfile = "o.out";
 
-	fd = open("binary", O_RDONLY);
+	if (argc >= 2) {
+		sfile = argv[1];
+	}
+
+	fd = open(sfile, O_RDONLY);
+	if (fd < 0) {
+		printf("%s: No such file\n", sfile);
+		return 1;
+	}
 	ret = read(fd, rom, MEM_NUM*4);
 
 	pc = 0;
@@ -52,6 +58,7 @@ int main(int argc, char **argv)
 	reg[1] = reg[31] = MEM_NUM;
 
 	IMapInit();
+	printf("simulate %s\n", sfile);
 	do{
 		ir = rom[pc];
 		/*
@@ -201,9 +208,7 @@ int main(int argc, char **argv)
 		}
 	} while(opcode(ir) != HALT);
 
-	putchar('\n');
-	printf("CPU Simulator Results\n");
+	printf("\nCPU Simulator Results\n");
 
 	return 0;
 } 
-

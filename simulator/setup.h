@@ -10,7 +10,6 @@ NOP,MOV,MVHI,MVLO,ADD,SUB,MUL,DIV,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,AND,OR,NOT,SL
 
 // Register ///////////////////////////////////////////
 #define REG_NUM 32
-//extern uint32_t reg[];
 extern int32_t reg[];
 extern uint32_t freg[];
 

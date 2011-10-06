@@ -12,7 +12,7 @@
 #include <fcntl.h>
 #include "setup.h"
 
-#define OUT_FILENAME "output"
+#define OUT_FILENAME "aslog"
 #define	LINE_MAX	2048	// asmの一行の長さの最大値
 #define DATA_NUM 1024
 
@@ -29,34 +29,38 @@ int	main(int argc, char **argv) {
     using namespace std; 
 	FILE	*fp;	
 	char	buf[LINE_MAX];	
-	uint32_t	output_data[DATA_NUM];	// 出力データの保存領域
+	uint32_t	output_data[DATA_NUM] = {NOP};	// 出力データの保存領域
 	uint32_t	input_line_cnt;	// 入力側の行数をカウント
 	uint32_t	output_line_cnt;	// 出力側の行数をカウント
-	uint32_t	ir;	
-	uint32_t	i;
+	uint32_t	ir,err_cnt,label_line;
 	char	opcode[256];
-	uint32_t	err_cnt;
-	uint32_t	label_line;
-	char *tmp;
-	int fd,ret, num;
+	char *tmp,*sfile,*dfile = NULL;
+	int i,fd,ret,num;
 
 	if (argc < 2) {
-		cout << "usage: ./assemble [filename]\n";
+		cout << "usage: ./assemble [filename] [options]" << endl
+			 << "option:" << endl
+			 << "\t-o [binary filename] (default: 'o.out')" << endl;
 		return 1;
 	}
-
-
-
 	input_line_cnt = 0;
 	output_line_cnt = 0;
 	err_cnt = 0;
 	label_cnt = 0;
+	sfile = argv[1];
+	for (i = 1; i < argc; i++) {
+		// option handler
+		if (argv[i][0] == '-') {
+			if (argv[i][1] == 'o') {
+				dfile = argv[i+1];
+			}
+		}
+	}
+	if (!dfile) dfile = "o.out";
 
-	for(i = 0; i < DATA_NUM; i++)
-		output_data[i] = 0;	 // NOP
 
 	// ソースファイルのopen
-	fp = fopen(argv[1], "r");
+	fp = fopen(sfile, "r");
 	if(fp == NULL){
 		printf("ファイルが開けませんでした。\n");
 		return -1;
@@ -118,32 +122,16 @@ int	main(int argc, char **argv) {
 				default:
 					break;
 			}
-
-/*
-			if(tmp_op == (JLT << 26)){
-				label_line = label_map[label_name[output_data[i] & 0x7FF]];
-				label_line -= i + 1;
-				output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
-			}
-			if(tmp_op == (CALL << 26)){
-				label_line = label_map[label_name[output_data[i] & 0x7FF]];
-				output_data[i] = (CALL << 26) | label_line;
-			}
-			if(tmp_op == (JMP << 26)){
-				label_line = label_map[label_name[output_data[i] & 0x7FF]];
-				output_data[i] = (JMP << 26) | label_line;
-			}
-*/
 		}
 
-		fd = open("binary", O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
+		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRWXU);
 		num = DATA_NUM*4;
 		while ((ret = write(fd, output_data, num)) > 0) {
 			num -= ret;
 		}
 		close(fd);
 
-		ofstream ofs("output");
+		ofstream ofs(OUT_FILENAME);
 
 		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
 			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
@@ -174,7 +162,7 @@ int	main(int argc, char **argv) {
 
 		printf("コンパイルは正常に終了しました。\n");
 		printf("%sに書き出しました。\n", OUT_FILENAME);
-		printf("%sに書き出しました。\n", "binary");
+		printf("%sに書き出しました。\n", dfile);
 		return 0;
 	}
 }

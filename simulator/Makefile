@@ -4,7 +4,7 @@ CFLAGS = -Wall -O2
 CPPFLAGS = -Wall -O2
 LFLAGS = -Wall -O2
 TARGET = simulate assemble
-LOG = log binary output
+LOG = aslog log binary output o.out
 
 all: $(TARGET)
 simulate: simulate.o program.o iset.o
@@ -12,6 +12,5 @@ assemble: assemble.o program.o
 simulate.o: setup.h
 program.o: setup.h
 assemble.o: setup.h
-
 clean:
 	rm -f *.o $(TARGET)  $(LOG) a.out
