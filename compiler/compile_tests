@@ -1,0 +1,3 @@
+for n in test/*.ml; do
+	./min-caml ${n%.ml}
+done

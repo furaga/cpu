@@ -340,7 +340,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 			(*      Printf.fprintf oc "\tld\t%s, 0, %s\n" reg_cl reg_sw;*)
 				  Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
 				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
-				  Printf.fprintf oc "\tcall\t%s\n" reg_sw;
+				  Printf.fprintf oc "\tcallR\t%s\n" reg_sw;
 			(*      Printf.fprintf oc "\tadd\t%s, %d, %s\t! delay slot\n" reg_sp ss reg_sp;*)
 				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
 				  Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
