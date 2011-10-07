@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdint.h>
 #include "setup.h"
 
 
@@ -64,31 +65,8 @@ int main(int argc, char **argv)
 	}
 
 	printf("simulate %s\n", sfile);
-	IMapInit();
 	do{
 		ir = rom[pc];
-		/*
-		for (i = 0; i < MEM_NUM; i++) {
-			if (ram[i] > 0) {
-				printf(" RAM%d:0x%X", i, ram[i]);
-			}
-		}
-		*/
-		switch (InstTyMap[opcode(ir)]) {
-			case 0:
-				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:%d\n", 
-						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
-				break;
-			case 1:
-				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d imm:0x%X\n",
-						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
-				break;
-			case 2:
-				printf("%3d PC:%3d LR:0x%X\n%s\ttarget:0x%X\n",
-						cnt,pc,lr,InstMap[opcode(ir)],target(ir));
-				break;
-			default: break;
-		}
 
 		cnt++;
 		pc++;
