@@ -298,7 +298,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| _ ->
 		  		begin
 					g'_args oc [(x, reg_cl)] ys zs;
-					Printf.fprintf oc "\tld\t%s, 0, %s\n" reg_cl reg_sw;
+					Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
 					Printf.fprintf oc "\tb\t%s\n" reg_sw		(*指定されたレジスタが指す位置へ飛ぶ *)
 					(*      Printf.fprintf oc "\tnop\n"*)
 				end)
