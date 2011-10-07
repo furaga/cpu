@@ -44,7 +44,8 @@ let lexbuf outchan file l = (* バッファをコンパイルしてチャンネルへ出力する (cam
 *)
   Typing.extenv := M.empty;
  (* List.iter (fun (name, t) -> Typing.extenv := M.add name t !Typing.extenv) extlist;*)
-(*external create_array : int -> 'a -> 'a array = "caml_make_vect"*)  
+(*external create_array : int -> 'a -> 'a array = "caml_make_vect"*) 
+(*  Printf.printf "compile %s.ml\n" file;*)
   Emit.f outchan
     (RegAlloc.f
        (Simm.f
