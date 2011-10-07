@@ -1,9 +1,17 @@
-assemble: アセンブラ -> バイトコード（binary）, デバッグ用ファイルouputの２ファイルを生成
-simulate: バイトコード（binary） -> 実行（標準出力）
 
-◇実行例
+heapはまだこれからです。
 
-	make
-	./assemble [アセンブラファイル名]
-	./simulate
 
+ASTargetでファイルを指定([ \t\n]区切り)すると、
+$make asm
+でバイナリファイルを生成する。
+名前は後ろの二文字(".s")をきりとったもの。
+
+$make clean
+でバイナリファイルは全て消える。
+
+
+その他実行例
+./occho test/fib.s -o fib
+./simulate fib
+./simulate  (=> simulate o.out)

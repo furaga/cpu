@@ -5,7 +5,6 @@ l.37:	! 4.500000
 	.long	0x40900000
 l.35:	! -12.300000
 	.long	0xc0c4ccc4
-	jmp	min_caml_start
 min_caml_start:
 	setL %g3, l.35
 	fld	%f0, %g3, 0

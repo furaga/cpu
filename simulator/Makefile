@@ -1,16 +1,24 @@
 CC = g++
+CXX = g++
 LD = g++
-CFLAGS = -Wall -O2
+CPPFLAGS = -Wall -O2
 LFLAGS = -Wall -O2
-TARGET = simulate assemble
-LOG = log binary output
+TARGET = simulate occho 
+#TARGET = simulate occho asm
 
 all: $(TARGET)
-simulate: simulate.o program.o iset.o
-assemble: assemble.o program.o
+simulate: simulate.o inst_map.o sim_out.o
+occho: occho.o assemble.o call_opcode.o
+occho.o: setup.h
+call_opcode: setup.h
 simulate.o: setup.h
-program.o: setup.h
+sim_out.o: setup.h
+ir.o: setup.h
 assemble.o: setup.h
+inst_map.o: setup.h inst_map.o
 
+asm:
+	./occho -all
 clean:
+	./occho -clean
 	rm -f *.o $(TARGET)  $(LOG) a.out

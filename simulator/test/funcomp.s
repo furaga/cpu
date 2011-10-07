@@ -1,5 +1,4 @@
 .init_heap_size	0
-	jmp	min_caml_start
 composed.22:
 	ld	%g4, %g30, 8
 	ld	%g30, %g30, 4
