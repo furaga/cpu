@@ -1,17 +1,17 @@
 
+heapはまだこれからです。
 
-実行例
 
-make
-./assemble
-./simulate
+ASTargetでファイルを指定([ \t\n]区切り)すると、
+$make asm
+でバイナリファイルを生成する。
+名前は後ろの二文字(".s")をきりとったもの。
 
-./assemble test/fib.s -o fib
+$make clean
+でバイナリファイルは全て消える。
+
+
+その他実行例
+./occho test/fib.s -o fib
 ./simulate fib
-
-./assemble test/fib.s
-(o.out生成)
-./simulate
-(o.out実行)
-
-ack,gcd,fibはテスト済み
+./simulate  (=> simulate o.out)

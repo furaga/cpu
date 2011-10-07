@@ -31,20 +31,6 @@ extern uint32_t ram[];
 #define PROTO_J(name, opcode) \
 	uint32_t name(uint32_t);
 
-#define DEFINE_R(name, opcode) \
-	uint32_t name(uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shaft, uint8_t funct) {\
-		return (opcode << 26 | ((uint32_t)rs << 21) | ((uint32_t) rt << 16)\
-				| ((uint32_t) rd << 11) | ((uint32_t) shaft << 6) |funct);\
-	}
-#define DEFINE_I(name, opcode) \
-	uint32_t name(uint8_t rs, uint8_t rt, uint16_t imm) {\
-		return (opcode << 26 | ((uint32_t)rs << 21) | ((uint32_t) rt << 16) | imm);\
-	}
-#define DEFINE_J(name, opcode) \
-	uint32_t name(uint32_t target) {\
-		return (opcode << 26 | target);\
-	}
-
 // define element access
 #define DEF_ELE_ACC(name, shift, mask) \
 	uint32_t name(uint32_t ir) {\

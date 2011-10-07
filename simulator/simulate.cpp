@@ -57,7 +57,7 @@ int main(int argc, char **argv)
 	cnt = 0;
 	reg[1] = reg[31] = MEM_NUM;
 
-	IMapInit();
+	//IMapInit();
 	printf("simulate %s\n", sfile);
 	do{
 		ir = rom[pc];
@@ -91,6 +91,7 @@ int main(int argc, char **argv)
 		putchar('\n');
 		putchar('\n');
 		*/
+
 		cnt++;
 		pc++;
 
