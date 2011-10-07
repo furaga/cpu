@@ -1,7 +1,5 @@
-.init_heap_size	32
-f.5:
-	.long 0x11111111
-jmp min_caml_start
+.init_heap_size	0
+	jmp	min_caml_start
 ack.15:
 	mvhi	%g5, 0
 	mvlo	%g5, 0

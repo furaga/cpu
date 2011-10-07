@@ -6,7 +6,7 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "setup.h"
+#include "asm.h"
 
 #define ALL_FLAG 1
 #define CLEAN_FLAG 2
@@ -26,7 +26,7 @@ int main(int argc, char **argv, char **envp) {
 	char *rm_argv[FILE_MAX+2];
 
 	if (argc < 2) {
-		puts("usage: ./assemble [filename] [options]");
+		puts("usage: ./occho [filename] [options]");
 		puts("[option]:");
 		puts("\t-o [binary filename] (default: 'o.out')");
 		return 1;
@@ -72,10 +72,10 @@ int main(int argc, char **argv, char **envp) {
 			}
 		} else if (flag == CLEAN_FLAG) {
 			if ((pid = fork()) == 0) {
-				rm_argv[0] = "/bin/rm";
-				rm_argv[1] = "-f";
-				rm_argv[2] = "o.out";
-				rm_argv[3] = "aslog";
+				rm_argv[0] = (char*)"/bin/rm";
+				rm_argv[1] = (char*)"-f";
+				rm_argv[2] = (char*)"o.out";
+				rm_argv[3] = (char*)"aslog";
 				for (i = 0; i < asmcnt; i++) {
 					rm_argv[i+4] = dfile[i];
 				}

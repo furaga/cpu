@@ -10,10 +10,8 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "setup.h"
+#include "asm.h"
 
-#define OUT_FILENAME "aslog"
-#define DEFAULT_BIN "o.out"
 #define	LINE_MAX	2048	// asmの一行の長さの最大値
 #define DATA_NUM 1024
 
@@ -44,8 +42,6 @@ int	assemble(char *sfile, char *dfile) {
 	label_cnt = 0;
 	label_map.empty();
 	heap_size = 0;
-
-	if (!dfile) dfile = DEFAULT_BIN;
 
 
 	// ソースファイルのopen
@@ -142,7 +138,7 @@ int	assemble(char *sfile, char *dfile) {
 			}
 		}
 
-		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
+		fd = open((dfile)?dfile:DEFAULT_BIN, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
 		num = DATA_NUM*4;
 		while ((ret = write(fd, output_data, num)) > 0) {
 			num -= ret;
@@ -157,7 +153,7 @@ int	assemble(char *sfile, char *dfile) {
 		map<string,uint32_t>::iterator itr;
 		for(i = 0; i < DATA_NUM; i++){
 			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
-				if (itr->second == i) {
+				if (itr->second == (uint32_t)i) {
 					ofs << itr->first << ":\n";
 				}
 			}
@@ -171,7 +167,7 @@ int	assemble(char *sfile, char *dfile) {
 			}
 		}
 		ofs.close();
-printf("output:\n\t%s\n\t%s\n", OUT_FILENAME, dfile);
+printf("output:\n\t%s\n\t%s\n", OUT_FILENAME, (dfile)?dfile:DEFAULT_BIN);
 
 		printf("done\n");
 

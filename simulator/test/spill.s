@@ -1,4 +1,5 @@
 .init_heap_size	0
+	jmp	min_caml_start
 f.43:
 	add	%g7, %g3, %g4
 	add	%g8, %g3, %g5

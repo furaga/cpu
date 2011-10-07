@@ -1,4 +1,5 @@
 .init_heap_size	0
+	jmp	min_caml_start
 f.6:
 	addi	%g3, %g3, 123
 	return

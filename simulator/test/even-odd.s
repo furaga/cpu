@@ -1,4 +1,5 @@
 .init_heap_size	0
+	jmp	min_caml_start
 odd.21:
 	mvhi	%g4, 0
 	mvlo	%g4, 0

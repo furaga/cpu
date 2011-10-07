@@ -1,4 +1,5 @@
 .init_heap_size	0
+	jmp	min_caml_start
 adder.11:
 	ld	%g4, %g30, 4
 	add	%g3, %g4, %g3

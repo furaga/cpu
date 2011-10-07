@@ -1,2 +1,4 @@
-test/heap_test.s
+test/ack.s
+test/fib.s
+test/gcd.s
 

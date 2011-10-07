@@ -1,4 +1,5 @@
 .init_heap_size	0
+	jmp	min_caml_start
 f.8:
 	ld	%g4, %g30, 4
 	mvhi	%g5, 0

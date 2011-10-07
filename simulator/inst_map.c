@@ -1,4 +1,4 @@
-#include "setup.h"
+#include "sim.h"
 const char *InstMap[InstNum];
 int InstTyMap[InstNum];
 
@@ -40,8 +40,8 @@ void IMapInit(void) {
 	InstMap[FDIV] = "fdiv";
 	InstMap[FMOV] = "fmov";
 	InstMap[FNEG] = "fneg";
-	InstMap[FBEQ] = "fbeq";
-	InstMap[FBLT] = "fblt";
+	InstMap[FJEQ] = "fbeq";
+	InstMap[FJLT] = "fblt";
 	InstMap[FLD] = "fld";
 	InstMap[FST] = "fst";
 	InstMap[HALT] = "halt";
@@ -83,8 +83,8 @@ void IMapInit(void) {
 	InstTyMap[FDIV] = 0;
 	InstTyMap[FMOV] = 0;
 	InstTyMap[FNEG] = 0;
-	InstTyMap[FBEQ] = 0;
-	InstTyMap[FBLT] = 0;
+	InstTyMap[FJEQ] = 1;
+	InstTyMap[FJLT] = 1;
 	InstTyMap[FLD] = 0;
 	InstTyMap[FST] = 0;
 	InstTyMap[HALT] = 0;

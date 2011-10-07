@@ -1,7 +1,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdio.h>
-#include "setup.h"
+#include "asm.h"
 extern char label_name[128][256];
 extern uint32_t label_cnt;
 
@@ -227,4 +227,9 @@ DEFINE_I(fld,FLD);
 DEFINE_I(fst,FST);
 DEFINE_R(nop,NOP);
 DEFINE_R(halt,HALT);
+///////////////////////////////
 DEFINE_I(setl,SETL);
+DEFINE_R(fmov,FMOV);
+DEFINE_R(fneg,FNEG);
+DEFINE_I(fjeq,FJEQ);
+DEFINE_I(fneg,FJLT);
