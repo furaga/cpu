@@ -4,27 +4,29 @@ LD = g++
 CFLAGS = -Wall -O2 -I ./include/
 CXXFLAGS = -Wall -O2 -I ./include/
 LDFLAGS = -Wall -O2
-TARGET = simulate occho 
-#TARGET = simulate occho asm
+TARGET = simcho asmcho 
+#TARGET = simulate asmcho asm
 SIMH = common.h sim.h
 ASMH = common.h asm.h
 
 vpath %.h ./include
 
 all: $(TARGET)
-simulate: simulate.o inst_map.o
-occho: occho.o assemble.o call_opcode.o
+simcho: simcho.o simulate.o
+asmcho: asmcho.o assemble.o call_opcode.o
 
-simulate.o: $(SIMH) inst_map.o
+simcho.o: $(SIMH) simulate.o
+simulate.o: $(SIMH) 
 inst_map.o: $(SIMH)
 
-occho.o: $(ASMH) assemble.o
+asmcho.o: $(ASMH) assemble.o
 assemble.o: $(ASMH) call_opcode.o
 call_opcode.o: $(ASMH)
 
 asm:
-	./occho -all
+	./asmcho -all
+
 clean:
-	./occho -clean
-	rm -f *.o $(TARGET)  $(LOG) a.out
+	./asmcho -clean
+	rm -f *.o $(TARGET)
 

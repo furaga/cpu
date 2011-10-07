@@ -12,9 +12,9 @@ int32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
 uint32_t rom[ROM_NUM];
 uint32_t ram[RAM_NUM];
-void IMapInit(void);
-extern const char *InstMap[];
-extern int InstTyMap[];
+//void IMapInit(void);
+//extern const char *InstMap[];
+//extern int InstTyMap[];
 
 // define fetch functions ////////////////////
 DEF_ELE_ACC(opcode, 26, 0x3f);		
@@ -33,16 +33,10 @@ DEF_ELE_ACC(target, 0, 0x3ffffff);
 #define _IMM imm(ir)
 
 // rom の命令実行列(バイナリ)に従いシミュレートする
-int main(int argc, char **argv)
+int simulate(char *sfile)
 { 
 	uint32_t pc, ir, lr, flag_eq, cnt, heap_size;
 	int fd,ret,i;
-	char *sfile;
-
-	if (argc < 2) {
-		puts("usage: ./simulate [filename]");
-	}
-	sfile = argv[1];
 
 	fd = open(sfile, O_RDONLY);
 	if (fd < 0) {
@@ -50,6 +44,7 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	ret = read(fd, rom, ROM_NUM*4);
+	close(fd);
 
 	pc = 0;
 	flag_eq = 0;
@@ -57,7 +52,6 @@ int main(int argc, char **argv)
 	cnt = 0;
 	reg[1] = reg[31] = RAM_NUM;
 
-	puts("heap allocate");
 	heap_size = rom[0]; 
 	pc++;
 	for (i = 0; heap_size > 0; i++,pc++) {
@@ -106,6 +100,8 @@ int main(int argc, char **argv)
 				_RT = _RS / _IMM;
 				break;
 			case INPUT:
+				///////////////////////////////////////
+				ret = scanf("%d", &_RD);
 				break;
 			case OUTPUT:
 				printf("cnt:%d output:%d\n", cnt, _RS);
@@ -151,6 +147,12 @@ int main(int argc, char **argv)
 				reg[1] -= 4;
 				lr = pc;
 				pc = _IMM;
+				break;
+			case CALLR:
+				ram[reg[1]] = lr;
+				reg[1] -= 4;
+				lr = pc;
+				pc = _RS;
 				break;
 			case RETURN:
 				pc = lr;

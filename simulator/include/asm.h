@@ -7,7 +7,7 @@
 // DEFINE_R(add, ADD)
 // PROTO_R(add, ADD)
 ////////////////////////////////////////////////////
-#define OUT_FILENAME "aslog"
+#define ASM_LOG "aslog"
 #define DEFAULT_BIN "o.out"
 
 #define PROTO_R(name, opcode) \
@@ -65,6 +65,7 @@ PROTO_R(fmov,FMOV);
 PROTO_R(fneg,FNEG);
 PROTO_I(fjeq,FJEQ);
 PROTO_I(fneg,FJLT);
+PROTO_R(callr,CALLR);
 
 
 

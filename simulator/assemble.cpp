@@ -51,7 +51,7 @@ int	assemble(char *sfile, char *dfile) {
 		return -1;
 	}
 
-	printf("\nassemble %s\n", sfile);
+	printf("assemble %s ==>\t", sfile);
 
 	if (fgets(buf, LINE_MAX, fp) != NULL) {
 		sscanf(buf, ".init_heap_size %d", &heap_size);
@@ -145,7 +145,7 @@ int	assemble(char *sfile, char *dfile) {
 		}
 		close(fd);
 
-		ofstream ofs(OUT_FILENAME);
+		ofstream ofs(ASM_LOG);
 		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
 			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
 			<< "CONTENT\tBEGIN\n\n";
@@ -167,9 +167,8 @@ int	assemble(char *sfile, char *dfile) {
 			}
 		}
 		ofs.close();
-printf("output:\n\t%s\n\t%s\n", OUT_FILENAME, (dfile)?dfile:DEFAULT_BIN);
 
-		printf("done\n");
+		printf("%s\n", (dfile)?dfile:DEFAULT_BIN);
 
 		return 0;
 	}

@@ -13,3 +13,5 @@ min_caml_start:
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	halt
+min_caml_print_float:
+	return

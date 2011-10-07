@@ -17,6 +17,7 @@ foo.12:
 	output	%g3
 	ld	%g3, %g1, 0
 	output	%g3
+	return
 bar.19:
 	mov	%g29, %g8
 	mov	%g8, %g5

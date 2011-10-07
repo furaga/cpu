@@ -70,11 +70,15 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		if(sscanf(op_data, fl, tmp, lname) == 2)  {
 			strcpy(label_name[label_cnt],lname);
 		    return call(label_cnt++);
+		}
+	}
+	if(strcmp(opcode, "callR") == 0){
+		if(sscanf(op_data, fg, tmp, &rs) == 2)
+		    return callr(rs,0,0,0,0);
+	}
 	if(strcmp(opcode, "output") == 0){
 		if(sscanf(op_data, fg, tmp, &rs) == 2)
 		    return output(rs,0,0,0,0);
-	}
-		}
 	}
 	if(strcmp(opcode, "return") == 0){
 		    return _return(0);
@@ -233,3 +237,4 @@ DEFINE_R(fmov,FMOV);
 DEFINE_R(fneg,FNEG);
 DEFINE_I(fjeq,FJEQ);
 DEFINE_I(fneg,FJLT);
+DEFINE_R(callr,CALLR);
