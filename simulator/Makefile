@@ -8,7 +8,7 @@ TARGET = simulate occho
 
 all: $(TARGET)
 simulate: simulate.o inst_map.o
-occho: occho.o assemble.o call_opcode.o ir.o
+occho: occho.o assemble.o call_opcode.o
 occho.o: setup.h
 call_opcode: setup.h
 simulate.o: setup.h

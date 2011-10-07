@@ -45,7 +45,6 @@ void IMapInit(void) {
 	InstMap[FLD] = "fld";
 	InstMap[FST] = "fst";
 	InstMap[HALT] = "halt";
-	InstMap[SETL] = "setl";
 
 // 0 = R, 1 = I, 2 = J;
 	InstTyMap[NOP] = 0;
@@ -89,5 +88,4 @@ void IMapInit(void) {
 	InstTyMap[FLD] = 0;
 	InstTyMap[FST] = 0;
 	InstTyMap[HALT] = 0;
-	InstTyMap[SETL] = 0;
 }

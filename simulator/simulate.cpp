@@ -34,10 +34,8 @@ DEF_ELE_ACC(target, 0, 0x3ffffff);
 int main(int argc, char **argv)
 { 
 	using namespace std;
-	uint32_t pc, ir, lr;
-	uint32_t flag_eq;
-	uint32_t cnt;
-	int fd,ret;
+	uint32_t pc, ir, lr, flag_eq, cnt, heap_size;
+	int fd,ret,i;
 	char *sfile = "o.out";
 
 	if (argc >= 2) {
@@ -57,11 +55,25 @@ int main(int argc, char **argv)
 	cnt = 0;
 	reg[1] = reg[31] = MEM_NUM;
 
-	//IMapInit();
+	puts("heap allocate");
+	heap_size = rom[0]; 
+	pc++;
+	for (i = 0; heap_size > 0; i++,pc++) {
+		ram[i] = rom[pc];
+		heap_size -= 32;
+	}
+
 	printf("simulate %s\n", sfile);
+	IMapInit();
 	do{
 		ir = rom[pc];
 		/*
+		for (i = 0; i < MEM_NUM; i++) {
+			if (ram[i] > 0) {
+				printf(" RAM%d:0x%X", i, ram[i]);
+			}
+		}
+		*/
 		switch (InstTyMap[opcode(ir)]) {
 			case 0:
 				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:%d\n", 
@@ -77,25 +89,9 @@ int main(int argc, char **argv)
 				break;
 			default: break;
 		}
-		for (i = 0; i < REG_NUM; i++) {
-			if (reg[i] > 0) {
-				printf(" GR%d:0x%X", i, reg[i]);
-			}
-		}
-		putchar('\n');
-		for (i = 0; i < MEM_NUM; i++) {
-			if (ram[i] > 0) {
-				printf(" RAM%d:0x%X", i, ram[i]);
-			}
-		}
-		putchar('\n');
-		putchar('\n');
-		*/
 
 		cnt++;
 		pc++;
-
-
 		switch(opcode(ir)){
 			case MOV: 
 				_RD = _RS;
@@ -153,6 +149,9 @@ int main(int argc, char **argv)
 			case SLLI:
 				_RT = _RS << _IMM;
 				break;
+			case B:
+				pc = _RS;
+				break;
 			case JMP:
 				pc = imm(ir);
 				break;
@@ -179,6 +178,12 @@ int main(int argc, char **argv)
 				reg[1] += 4;
 				lr = ram[reg[1]];
 				break;
+			case FLD:
+				freg[regs(ir)] = ram[(_RT - _IMM)/4];
+				break;
+			case FST:
+				ram[(_RT - _IMM)/4] = freg[regs(ir)];
+				break;
 			case LD:
 				_RS = ram[(_RT - _IMM)/4];
 				break;
@@ -196,10 +201,6 @@ int main(int argc, char **argv)
 				break;
 			case FDIV:
 				_RD = _RS / _RT;
-				break;
-			case FLD:
-				break;
-			case FST:
 				break;
 			case NOP:
 				break;

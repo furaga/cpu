@@ -5,7 +5,7 @@
 // Instruction Set ////////////////////////////////////
 #define InstNum 42
 enum InstSet {
-NOP,MOV,MVHI,MVLO,ADD,SUB,MUL,DIV,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,AND,OR,NOT,SLL,SLLI,SRL,B,JMP,JEQ,JNE,JLT,JLE,CALL,RETURN,LD,ST,FADD,FSUB,FMUL,FDIV,FMOV,FNEG,FBEQ,FBLT,FLD,FST,HALT,SETL,
+NOP,MOV,MVHI,MVLO,ADD,SUB,MUL,DIV,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,AND,OR,NOT,SLL,SLLI,SRL,B,JMP,JEQ,JNE,JLT,JLE,CALL,RETURN,LD,ST,FADD,FSUB,FMUL,FDIV,FMOV,FNEG,FBEQ,FBLT,FLD,FST,HALT,SETL
 };
 
 // Register ///////////////////////////////////////////
@@ -37,6 +37,7 @@ extern uint32_t ram[];
 		return ((ir >> shift) & mask);\
 	}
 
+PROTO_R(nop,NOP);				//
 PROTO_R(mov,MOV);				//
 PROTO_I(mvhi, MVHI);				//
 PROTO_I(mvlo, MVLO);				//
@@ -54,11 +55,12 @@ PROTO_R(_and,AND);				//
 PROTO_R(_or,OR);				//
 PROTO_R(_not,NOT);				//
 PROTO_R(sll,SLL);				//
-PROTO_R(srl,SRL);				//
 PROTO_I(slli,SLLI);				//
+PROTO_R(srl,SRL);				//
+PROTO_R(b,B);
 PROTO_J(jmp,JMP);				//
-PROTO_I(jeq,JEQ);
-PROTO_I(jne,JNE);
+PROTO_I(jeq,JEQ);				//
+PROTO_I(jne,JNE);			//
 PROTO_I(jlt,JLT);				//
 PROTO_J(call,CALL);				//
 PROTO_J(_return,RETURN);				//
@@ -68,8 +70,14 @@ PROTO_R(fadd,FADD);
 PROTO_R(fsub,FSUB);
 PROTO_R(fmul,FMUL);
 PROTO_R(fdiv,FDIV);
-PROTO_R(fld,FLD);
-PROTO_R(fst,FST);
-PROTO_R(nop,NOP);				//
+PROTO_I(fld,FLD);
+PROTO_I(fst,FST);
 PROTO_R(halt,HALT);				//
+////////////////////////////////////
+PROTO_I(setl,SETL);				//
+
+//PROTO_X(fmov,FMOV);
+//PROTO_X(fneg,FNEG);
+//PROTO_X(fneg,FBEQ);
+//PROTO_X(fneg,FBLT);
 #endif

@@ -18,7 +18,7 @@ int assemble(char*,char*);
 int main(int argc, char **argv, char **envp) {
 	char *sfile[FILE_MAX] = {NULL};
 	char *dfile[FILE_MAX] = {NULL};
-	char buf[BUF_SIZE];
+	char buf[BUF_SIZE] = {0};
 	char *ptr;
 	int i,asmcnt,fd,ret,len,pid;
 	int flag = 0;
@@ -27,7 +27,7 @@ int main(int argc, char **argv, char **envp) {
 
 	if (argc < 2) {
 		puts("usage: ./assemble [filename] [options]");
-		puts("optione");
+		puts("[option]:");
 		puts("\t-o [binary filename] (default: 'o.out')");
 		return 1;
 	}
@@ -69,7 +69,6 @@ int main(int argc, char **argv, char **envp) {
 		if (flag == ALL_FLAG) {
 			for (i = 0; i < asmcnt; i++) {
 				assemble(sfile[i], dfile[i]);
-				free(dfile[i]);
 			}
 		} else if (flag == CLEAN_FLAG) {
 			if ((pid = fork()) == 0) {
