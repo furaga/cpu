@@ -3,6 +3,43 @@ open Asm
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
 
+(* create_arrayなどのライブラリ関数をハードコーディング *)
+let define_library oc =
+Printf.fprintf oc "
+!#####################################################################
+! * ここからライブラリ関数
+!#####################################################################
+
+! * create_array
+min_caml_create_array:
+	add %%g5, %%g3, %%g2
+	mov %%g3, %%g2
+CREATE_ARRAY_LOOP:
+	jlt %%g5, %%g2, CREATE_ARRAY_END
+	st %%g4, %%g2, 0
+	addi %%g2, %%g2, 4
+	jmp CREATE_ARRAY_LOOP
+CREATE_ARRAY_END:
+	return
+
+! * create_float_array
+min_caml_create_float_array:
+	add %%g4, %%g3, %%g2
+	mov %%g3, %%g2
+CREATE_FLOAT_ARRAY_LOOP:
+	jlt %%g4, %%g2, CREATE_FLOAT_ARRAY_END
+	st %%f0, %%g2, 0
+	addi %%g2, %%g2, 4
+	jmp CREATE_FLOAT_ARRAY_LOOP
+CREATE_FLOAT_ARRAY_END:
+	return
+
+!#####################################################################
+! * ここまでライブラリ関数
+!#####################################################################
+
+";;
+
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
 let save x =
@@ -391,7 +428,7 @@ and g'_non_tail_if oc dest x y e1 e2 b bn =
   let stackset_back = !stackset in
   g oc (dest, e1);
   let stackset1 = !stackset in
-  Printf.fprintf oc "\tb\t%s\n" b_cont;
+  Printf.fprintf oc "\tjmp\t%s\n" b_cont;
 (*  Printf.fprintf oc "\tnop\n";*)
   Printf.fprintf oc "%s:\n" b_else;
   stackset := stackset_back;
@@ -454,6 +491,7 @@ let f oc (Prog(data, fundefs, e)) =
     data;
   (*Printf.fprintf oc ".section\t\".text\"\n";*)
   Printf.fprintf oc "\tjmp\tmin_caml_start\n";
+  define_library oc;
   List.iter (fun fundef -> h oc fundef) fundefs;
 (*  Printf.fprintf oc ".global\tmin_caml_start\n";*)
   Printf.fprintf oc "min_caml_start:\n";
@@ -462,6 +500,7 @@ let f oc (Prog(data, fundefs, e)) =
   stackmap := [];
   g oc (NonTail("%g0"), e);
   Printf.fprintf oc "\thalt\n";
+    
 (*  Printf.fprintf oc "\tret\n";
   Printf.fprintf oc "\trestore\n"*)
   
