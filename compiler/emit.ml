@@ -325,6 +325,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Printf.fprintf oc "\toutput\t%%g3\n";
 					Printf.fprintf oc "\treturn\n"
 		  		end
+		  	| "min_caml_print_float" ->(* TODO *) 
+		  		begin
+					Printf.fprintf oc "\toutput\t%%f0\n";
+				end
 		  	| "min_caml_print_int" 
 		  	| "min_caml_print_byte"
 		  	| "min_caml_prerr_int" 
@@ -365,13 +369,15 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| "min_caml_print_newline" ->
 		  		begin
 					g'_args oc [] ys zs;
-					Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
-					Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
 					Printf.fprintf oc "\toutput\t%%g3\n";
 					if List.mem a allregs && a <> regs.(0) then
 					Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 					else if List.mem a allfregs && a <> fregs.(0) then
 					(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
+				end
+		  	| "min_caml_print_float" ->(* TODO *) 
+		  		begin
+					Printf.fprintf oc "\toutput\t%%f0\n";
 				end
 		  	| "min_caml_print_int" 
 		  	| "min_caml_print_byte"
