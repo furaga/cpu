@@ -128,7 +128,7 @@ int simulate(char *sfile)
 				break;
 			case INPUT:
 				///////////////////////////////////////
-				ret = scanf("%d", &_RD);
+				ret = scanf("%c", &_RD);
 				break;
 			case OUTPUT:
 				printf("cnt:%d output:%d\n", cnt, _RS);

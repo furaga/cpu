@@ -6,6 +6,39 @@ l.30:	! 4.560000
 l.28:	! 1.230000
 	.long	0x3f9d70a3
 	jmp	min_caml_start
+
+!#####################################################################
+! * ここからライブラリ関数
+!#####################################################################
+
+! * create_array
+min_caml_create_array:
+	add %g5, %g3, %g2
+	mov %g3, %g2
+CREATE_ARRAY_LOOP:
+	jlt %g5, %g2, CREATE_ARRAY_END
+	st %g4, %g2, 0
+	addi %g2, %g2, 4
+	jmp CREATE_ARRAY_LOOP
+CREATE_ARRAY_END:
+	return
+
+! * create_float_array
+min_caml_create_float_array:
+	add %g4, %g3, %g2
+	mov %g3, %g2
+CREATE_FLOAT_ARRAY_LOOP:
+	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
+	st %f0, %g2, 0
+	addi %g2, %g2, 4
+	jmp CREATE_FLOAT_ARRAY_LOOP
+CREATE_FLOAT_ARRAY_END:
+	return
+
+!#####################################################################
+! * ここまでライブラリ関数
+!#####################################################################
+
 min_caml_start:
 	setL %g3, l.28
 	fld	%f0, %g3, 0
@@ -34,7 +67,7 @@ min_caml_start:
 	mvlo	%g4, 0
 	jlt	%g3, %g4, jle_else.37
 	ld	%g4, %g1, 0
-	b	jle_cont.38
+	jmp	jle_cont.38
 jle_else.37:
 	ld	%g4, %g1, 4
 jle_cont.38:
@@ -43,7 +76,7 @@ jle_cont.38:
 	ld	%g6, %g1, 0
 	jlt	%g5, %g6, jle_else.39
 	ld	%g5, %g1, 4
-	b	jle_cont.40
+	jmp	jle_cont.40
 jle_else.39:
 	mov	%g5, %g3
 jle_cont.40:
@@ -52,7 +85,7 @@ jle_cont.40:
 	mvlo	%g5, 0
 	ld	%g7, %g1, 4
 	jlt	%g7, %g5, jle_else.41
-	b	jle_cont.42
+	jmp	jle_cont.42
 jle_else.41:
 	mov	%g3, %g6
 jle_cont.42:

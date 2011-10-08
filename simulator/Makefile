@@ -10,8 +10,10 @@ ASMH = common.h asm.h
 vpath %.h ./include
 
 
-ASMTARGET = test/gcd.s test/fib.s test/ack.s test/adder.s test/even-odd.s test/heap_test.s test/sum.s
-SIMTARGET = test/gcd test/fib test/ack test/adder test/even-odd test/sum test/heap_test 
+#ASMTARGET = test/gcd.s test/fib.s test/ack.s test/adder.s test/even-odd.s test/heap_test.s test/sum.s
+#SIMTARGET = test/gcd test/fib test/ack test/adder test/even-odd test/sum test/heap_test 
+ASMTARGET = test/cls-bug.s
+SIMTARGET = test/cls-bug
 
 all: $(TARGET)
 simcho: simcho.o simulate.o inst_map.o
