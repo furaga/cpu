@@ -131,7 +131,7 @@ int simulate(char *sfile)
 				ret = scanf("%c", &_RD);
 				break;
 			case OUTPUT:
-				printf("cnt:%d output:%d\n", cnt, _RS);
+				printf("cnt:%d output:%c\n", cnt, _RS);
 				break;
 			case AND:
 				_RD = _RS & _RT;
