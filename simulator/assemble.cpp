@@ -73,7 +73,7 @@ int	assemble(char *sfile) {
 		if (strchr(buf, ':')) {
 			// l.X: ------------------------ label
 			tmp = strtok(buf,":");
-			label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
+			label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt*4));
 		} else {
 			// .xxxx 0xXXXXXXXX ------------------------- data
 			sscanf(buf, "%s 0x%x", tmp, &num);

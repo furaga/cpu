@@ -40,6 +40,10 @@ int simulate(char *sfile)
 { 
 	uint32_t pc, ir, lr, flag_eq, cnt, heap_size;
 	int fd,ret,i;
+	union {
+		uint32_t i;
+		float f;
+	} a, b, ans;
 
 	fd = open(sfile, O_RDONLY);
 	if (fd < 0) {
@@ -57,40 +61,17 @@ int simulate(char *sfile)
 
 	heap_size = rom[0]; 
 	pc++;
-	for (i = 0; heap_size > 0; i++,pc++) {
+	for (i = 1; heap_size > 0; i++,pc++) {
 		ram[i] = rom[pc];
 		heap_size -= 32;
 	}
 
-	//IMapInit();
 	printf("simulate %s\n", sfile);
 	do{
 		ir = rom[pc];
 
 		cnt++;
 		pc++;
-		/*
-		switch (InstTyMap[opcode(ir)]) {
-			case 0:
-				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:%d\n", 
-						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
-				break;
-			case 1:
-				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d imm:0x%X\n",
-						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
-				break;
-			case 2:
-				printf("%3d PC:%3d LR:0x%X\n%s\ttarget:0x%X\n",
-						cnt,pc,lr,InstMap[opcode(ir)],target(ir));
-				break;
-			default: break;
-		}
-		for (i = 0; i < REG_NUM; i++) {
-			if (reg[i] > 0) {
-				printf(" GR%d:0x%X", i, reg[i]);
-			}
-		}
-		*/
 
 		switch(opcode(ir)){
 			case MOV: 
@@ -195,21 +176,34 @@ int simulate(char *sfile)
 				break;
 			case FLD:
 				freg[regs(ir)] = ram[(_RT - _IMM)/4];
+				//printf("fld:%d\n", (_RT - _IMM)/4);
 				break;
 			case FST:
 				ram[(_RT - _IMM)/4] = freg[regs(ir)];
 				break;
 			case FADD:
-				_RD = _RS + _RT;
+				a.i = freg[regs(ir)];
+				b.i = freg[regt(ir)];
+				ans.f = a.f + b.f;
+				_RD = ans.i;
 				break;
 			case FSUB:
-				_RD = _RS - _RT;
+				a.i = freg[regs(ir)];
+				b.i = freg[regt(ir)];
+				ans.f = a.f - b.f;
+				_RD = ans.i;
 				break;
 			case FMUL:
-				_RD = _RS * _RT;
+				a.i = freg[regs(ir)];
+				b.i = freg[regt(ir)];
+				ans.f = a.f * b.f;
+				_RD = ans.i;
 				break;
 			case FDIV:
-				_RD = _RS / _RT;
+				a.i = freg[regs(ir)];
+				b.i = freg[regt(ir)];
+				ans.f = a.f / b.f;
+				_RD = ans.i;
 				break;
 			case FMOV:
 				freg[regd(ir)] = freg[regs(ir)];
@@ -220,12 +214,21 @@ int simulate(char *sfile)
 								 (freg[regs(ir)] | 0x80000000) ; // plus
 				break;
 			case FJEQ:
-				if (freg[regs(ir)] == freg[regt(ir)])
+				a.i = freg[regs(ir)];
+				b.i = freg[regt(ir)];
+				printf("debug:a:%f b:%f\n", a.f, b.f);
+				printf("DEBUG:a:%x b:%x\n", a.i, b.i);
+				if (a.f == b.f) 
 					pc += _IMM;
 				break;
 			case FJLT:
-				if (freg[regs(ir)] < freg[regt(ir)])
+				a.i = freg[regs(ir)];
+				b.i = freg[regt(ir)];
+				printf("debug:a:%f b:%f\n", a.f, b.f);
+				printf("DEBUG:a:%x b:%x\n\n", a.i, b.i);
+				if (a.f < b.f) {
 					pc += _IMM;
+				}
 				break;
 			case NOP:
 				break;

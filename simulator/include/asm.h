@@ -63,7 +63,7 @@ PROTO_I(setl,SETL);				//
 PROTO_R(fmov,FMOV);
 PROTO_R(fneg,FNEG);
 PROTO_I(fjeq,FJEQ);
-PROTO_I(fneg,FJLT);
+PROTO_I(fjlt,FJLT);
 PROTO_R(callr,CALLR);
 
 
