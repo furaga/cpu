@@ -129,6 +129,7 @@ int simulate(char *sfile)
 			case INPUT:
 				///////////////////////////////////////
 				ret = scanf("%c", &_RD);
+				_RD = _RD & 0xff;
 				break;
 			case OUTPUT:
 				printf("cnt:%d output:(int dec)%d (char)%c\n", cnt, _RS, _RS);
