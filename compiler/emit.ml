@@ -274,9 +274,15 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 (*jmp : 即値でジャンプ先を指定*)
 (*b : レジスタでジャンプ先を指定*)
   | Tail, CallCls(x, ys, zs) -> (* 末尾呼び出し (caml2html: emit_tailcall) *)
-	  	(match x with
+		g'_args oc [(x, reg_cl)] ys zs;
+		Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
+		Printf.fprintf oc "\tb\t%s\n" reg_sw		(*指定されたレジスタが指す位置へ飛ぶ *)
+
+  | Tail, CallDir(Id.L(x), ys, zs) -> (* 末尾呼び出し *)
+		(match x with
 		  	| "min_caml_print_newline" ->
-		  		begin
+				begin
+					g'_args oc [] ys zs;
 					Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
 					Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
 					Printf.fprintf oc "\toutput\t%%g3\n";
@@ -287,41 +293,13 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| "min_caml_prerr_int" 
 		  	| "min_caml_prerr_byte" ->
 		  		begin
+					g'_args oc [] ys zs;
 				  	Printf.fprintf oc "\toutput\t%%g3\n";
 					Printf.fprintf oc "\treturn\n"
 		  		end
 			| "min_caml_read_int" ->
 		  		begin
-				  	Printf.fprintf oc "\tinput\t%%g3\n";
-					Printf.fprintf oc "\treturn\n"
-		  		end
-		  	| _ ->
-		  		begin
-					g'_args oc [(x, reg_cl)] ys zs;
-					Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
-					Printf.fprintf oc "\tb\t%s\n" reg_sw		(*指定されたレジスタが指す位置へ飛ぶ *)
-					(*      Printf.fprintf oc "\tnop\n"*)
-				end)
-
-  | Tail, CallDir(Id.L(x), ys, zs) -> (* 末尾呼び出し *)
-	  	(match x with
-		  	| "min_caml_print_newline" ->
-		  		begin
-				  Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
-				  Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
-				  Printf.fprintf oc "\toutput\t%%g3\n";
-					Printf.fprintf oc "\treturn\n"
-		  		end
-		  	| "min_caml_print_int" 
-		  	| "min_caml_print_byte"
-		  	| "min_caml_prerr_int" 
-		  	| "min_caml_prerr_byte" ->
-		  		begin
-				  	Printf.fprintf oc "\toutput\t%%g3\n";
-					Printf.fprintf oc "\treturn\n"
-		  		end
-			| "min_caml_read_int" ->
-		  		begin
+					g'_args oc [] ys zs;
 				  	Printf.fprintf oc "\tinput\t%%g3\n";
 					Printf.fprintf oc "\treturn\n"
 		  		end
@@ -332,55 +310,53 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 			(*      Printf.fprintf oc "\tnop\n"*)
 				end)
   | NonTail(a), CallCls(x, ys, zs) -> (* レジスタで飛ぶジャンプ *)
-	  	(match x with
-		  	| "min_caml_print_newline" ->
-		  		begin
-				  Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
-				  Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
-				  Printf.fprintf oc "\toutput\t%%g3\n"
-		  		end
-		  	| "min_caml_print_int" 
-		  	| "min_caml_print_byte"
-		  	| "min_caml_prerr_int" 
-		  	| "min_caml_prerr_byte" ->
-			  	Printf.fprintf oc "\toutput\t%%g3\n"
-			| "min_caml_read_int" ->
-			  	Printf.fprintf oc "\tinput\t%%g3\n"
-		  	| _ ->
-		  		begin
-				  g'_args oc [(x, reg_cl)] ys zs;
-				  let ss = stacksize () in
-				  Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
-			(*      Printf.fprintf oc "\tld\t%s, 0, %s\n" reg_cl reg_sw;*)
-				  Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
-				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
-				  Printf.fprintf oc "\tcallR\t%s\n" reg_sw;
-			(*      Printf.fprintf oc "\tadd\t%s, %d, %s\t! delay slot\n" reg_sp ss reg_sp;*)
-				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
-				  Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
-				  if List.mem a allregs && a <> regs.(0) then
-				  Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
-				  else if List.mem a allfregs && a <> fregs.(0) then
-				  (Printf.fprintf oc "\tfmov\t%s, %s\n" a fregs.(0))
-			(*	  (Printf.fprintf oc "\tfmovs\t%s, %s\n" a fregs.(0);
-				  Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg fregs.(0)) (co_freg a))
-			*)
-				end)
+		g'_args oc [(x, reg_cl)] ys zs;
+		let ss = stacksize () in
+		Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
+		Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
+		Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
+		Printf.fprintf oc "\tcallR\t%s\n" reg_sw;
+		Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
+		Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
+		if List.mem a allregs && a <> regs.(0) then
+		Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
+		else if List.mem a allfregs && a <> fregs.(0) then
+		(Printf.fprintf oc "\tfmov\t%s, %s\n" a fregs.(0))
+
   | NonTail(a), CallDir(Id.L(x), ys, zs) -> (* ラベルで飛ぶジャンプ *)
 	  	(match x with
 		  	| "min_caml_print_newline" ->
 		  		begin
-				  Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
-				  Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
-				  Printf.fprintf oc "\toutput\t%%g3\n"
-		  		end
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
+					Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
+					Printf.fprintf oc "\toutput\t%%g3\n";
+					if List.mem a allregs && a <> regs.(0) then
+					Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
+					else if List.mem a allfregs && a <> fregs.(0) then
+					(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
+				end
 		  	| "min_caml_print_int" 
 		  	| "min_caml_print_byte"
 		  	| "min_caml_prerr_int" 
 		  	| "min_caml_prerr_byte" ->
-			  	Printf.fprintf oc "\toutput\t%%g3\n"
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\toutput\t%%g3\n";
+					if List.mem a allregs && a <> regs.(0) then
+					Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
+					else if List.mem a allfregs && a <> fregs.(0) then
+					(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
+				end
 			| "min_caml_read_int" ->
-			  	Printf.fprintf oc "\tinput\t%%g3\n"
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tinput\t%%g3\n";
+					if List.mem a allregs && a <> regs.(0) then
+					Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
+					else if List.mem a allfregs && a <> fregs.(0) then
+					(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
+				end
 		  	| _ ->
 		  		begin
 				  g'_args oc [] ys zs;
@@ -394,9 +370,6 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 			   	  	Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 				  else if List.mem a allfregs && a <> fregs.(0) then
 				  (Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
-			(*	  (Printf.fprintf oc "\tfmovs\t%s, %s\n" a fregs.(0);
-				  Printf.fprintf oc "\tfmovs\t%s, %s\n" (co_freg fregs.(0)) (co_freg a))
-			*)
 				end)
   | _ -> 
 		Printf.fprintf oc "unmatched\n"
