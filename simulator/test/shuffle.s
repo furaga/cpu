@@ -19,14 +19,14 @@ foo.12:
 	output	%g3
 	return
 bar.19:
-	mov	%g29, %g8
+	mov	%g28, %g8
 	mov	%g8, %g5
 	mov	%g5, %g6
 	mov	%g6, %g7
-	mov	%g7, %g29
-	mov	%g29, %g4
+	mov	%g7, %g28
+	mov	%g28, %g4
 	mov	%g4, %g3
-	mov	%g3, %g29
+	mov	%g3, %g28
 	jmp	foo.12
 min_caml_start:
 	mvhi	%g3, 0

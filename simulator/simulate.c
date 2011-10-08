@@ -12,9 +12,9 @@ int32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
 uint32_t rom[ROM_NUM];
 uint32_t ram[RAM_NUM];
-//void IMapInit(void);
-//extern const char *InstMap[];
-//extern int InstTyMap[];
+void IMapInit(void);
+extern const char *InstMap[];
+extern int InstTyMap[];
 
 // define fetch functions ////////////////////
 DEF_ELE_ACC(opcode, 26, 0x3f);		
@@ -23,10 +23,13 @@ DEF_ELE_ACC(regt, 16, 0x1f);
 DEF_ELE_ACC(regd, 11, 0x1f);
 DEF_ELE_ACC(shamt, 6, 0x1f);
 DEF_ELE_ACC(funct, 0, 0x3f);
-DEF_ELE_ACC(imm, 0, 0xffff);
 DEF_ELE_ACC(target, 0, 0x3ffffff);
+int32_t imm(uint32_t ir) {
+	return (ir & (1 << 15)) ?
+		   (0xffff0000 | (ir & 0xffff)):
+		   (ir & 0xffff);
+}
 //////////////////////////////////////////////
-
 #define _RS reg[regs(ir)]
 #define _RD reg[regd(ir)]
 #define _RT reg[regt(ir)]
@@ -59,12 +62,36 @@ int simulate(char *sfile)
 		heap_size -= 32;
 	}
 
+	//IMapInit();
 	printf("simulate %s\n", sfile);
 	do{
 		ir = rom[pc];
 
 		cnt++;
 		pc++;
+		/*
+		switch (InstTyMap[opcode(ir)]) {
+			case 0:
+				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d rd:GR%d shamt:%d funct:%d\n", 
+						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),regd(ir),shamt(ir),funct(ir));
+				break;
+			case 1:
+				printf("%3d PC:%3d LR:0x%X\n%s\trs:GR%d rt:GR%d imm:0x%X\n",
+						cnt,pc,lr,InstMap[opcode(ir)],regs(ir),regt(ir),imm(ir));
+				break;
+			case 2:
+				printf("%3d PC:%3d LR:0x%X\n%s\ttarget:0x%X\n",
+						cnt,pc,lr,InstMap[opcode(ir)],target(ir));
+				break;
+			default: break;
+		}
+		for (i = 0; i < REG_NUM; i++) {
+			if (reg[i] > 0) {
+				printf(" GR%d:0x%X", i, reg[i]);
+			}
+		}
+		*/
+
 		switch(opcode(ir)){
 			case MOV: 
 				_RD = _RS;
@@ -132,15 +159,15 @@ int simulate(char *sfile)
 				break;
 			case JEQ:
 				if (_RS == _RT)
-					pc += (short int)_IMM;
+					pc += _IMM;
 				break;
 			case JNE:
 				if (_RS != _RT)
-					pc += (short int)_IMM;
+					pc += _IMM;
 				break;
 			case JLT:
 				if (_RS < _RT)
-					pc += (short int)_IMM;
+					pc += _IMM;
 				break;
 			case CALL:
 				ram[reg[1]] = lr;
@@ -193,11 +220,11 @@ int simulate(char *sfile)
 				break;
 			case FJEQ:
 				if (freg[regs(ir)] == freg[regt(ir)])
-					pc += (short int)_IMM;
+					pc += _IMM;
 				break;
 			case FJLT:
 				if (freg[regs(ir)] < freg[regt(ir)])
-					pc += (short int)_IMM;
+					pc += _IMM;
 				break;
 			case NOP:
 				break;
@@ -207,7 +234,7 @@ int simulate(char *sfile)
 		}
 	} while(opcode(ir) != HALT);
 
-	printf("\nCPU Simulator Results\n");
+	printf("CPU Simulator Results\n");
 
 	return 0;
 } 

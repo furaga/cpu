@@ -24,29 +24,30 @@ f.43:
 	add	%g27, %g11, %g12
 	add	%g28, %g13, %g14
 	add	%g29, %g13, %g15
-	add	%g30, %g13, %g16
-	st	%g30, %g1, 0
-	add	%g30, %g13, %g17
-	st	%g30, %g1, 4
-	add	%g30, %g13, %g18
-	st	%g30, %g1, 8
-	add	%g30, %g13, %g19
-	st	%g30, %g1, 12
-	add	%g30, %g13, %g20
-	st	%g30, %g1, 16
-	add	%g30, %g13, %g21
-	st	%g30, %g1, 20
-	add	%g30, %g13, %g22
-	st	%g30, %g1, 24
-	add	%g30, %g13, %g23
-	st	%g30, %g1, 28
-	add	%g30, %g13, %g24
-	st	%g30, %g1, 32
-	add	%g30, %g13, %g25
-	st	%g30, %g1, 36
-	add	%g30, %g13, %g26
-	st	%g30, %g1, 40
-	add	%g30, %g13, %g27
+	st	%g29, %g1, 0
+	add	%g29, %g13, %g16
+	st	%g29, %g1, 4
+	add	%g29, %g13, %g17
+	st	%g29, %g1, 8
+	add	%g29, %g13, %g18
+	st	%g29, %g1, 12
+	add	%g29, %g13, %g19
+	st	%g29, %g1, 16
+	add	%g29, %g13, %g20
+	st	%g29, %g1, 20
+	add	%g29, %g13, %g21
+	st	%g29, %g1, 24
+	add	%g29, %g13, %g22
+	st	%g29, %g1, 28
+	add	%g29, %g13, %g23
+	st	%g29, %g1, 32
+	add	%g29, %g13, %g24
+	st	%g29, %g1, 36
+	add	%g29, %g13, %g25
+	st	%g29, %g1, 40
+	add	%g29, %g13, %g26
+	st	%g29, %g1, 44
+	add	%g29, %g13, %g27
 	add	%g3, %g3, %g4
 	add	%g3, %g3, %g5
 	add	%g3, %g3, %g6
@@ -72,7 +73,6 @@ f.43:
 	add	%g3, %g3, %g26
 	add	%g3, %g3, %g27
 	add	%g3, %g3, %g28
-	add	%g3, %g3, %g29
 	ld	%g4, %g1, 0
 	add	%g3, %g3, %g4
 	ld	%g4, %g1, 4
@@ -95,7 +95,9 @@ f.43:
 	add	%g3, %g3, %g4
 	ld	%g4, %g1, 40
 	add	%g3, %g3, %g4
-	add	%g3, %g3, %g30
+	ld	%g4, %g1, 44
+	add	%g3, %g3, %g4
+	add	%g3, %g3, %g29
 	muli	%g3, %g3, -1
 	return
 min_caml_start:

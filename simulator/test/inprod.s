@@ -18,10 +18,10 @@ getx.23:
 	fld	%f0, %g3, 0
 	return
 gety.25:
-	fld	%f0, %g3, 8
+	fld	%f0, %g3, -8
 	return
 getz.27:
-	fld	%f0, %g3, 16
+	fld	%f0, %g3, -16
 	return
 inprod.29:
 	st	%g3, %g1, 0
@@ -88,8 +88,8 @@ min_caml_start:
 	fld	%f3, %g3, 0
 	mov	%g3, %g2
 	addi	%g2, %g2, 24
-	fst	%f3, %g3, 16
-	fst	%f2, %g3, 8
+	fst	%f3, %g3, -16
+	fst	%f2, %g3, -8
 	fst	%f1, %g3, 0
 	setL %g4, l.75
 	fld	%f1, %g4, 0
@@ -99,8 +99,8 @@ min_caml_start:
 	fld	%f3, %g4, 0
 	mov	%g4, %g2
 	addi	%g2, %g2, 24
-	fst	%f3, %g4, 16
-	fst	%f2, %g4, 8
+	fst	%f3, %g4, -16
+	fst	%f2, %g4, -8
 	fst	%f1, %g4, 0
 	std	%f0, %g1, 0
 	st	%g31, %g1, 12

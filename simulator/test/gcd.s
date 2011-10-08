@@ -12,9 +12,9 @@ jeq_else.17:
 	jmp	gcd.7
 jle_else.18:
 	sub	%g3, %g3, %g4
-	mov	%g29, %g4
+	mov	%g28, %g4
 	mov	%g4, %g3
-	mov	%g3, %g29
+	mov	%g3, %g28
 	jmp	gcd.7
 min_caml_start:
 	mvhi	%g3, 0

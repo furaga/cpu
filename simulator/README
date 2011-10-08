@@ -1,17 +1,4 @@
 
-heapはまだこれからです。
-
-
-ASTargetでファイルを指定([ \t\n]区切り)すると、
-$make asm
-でバイナリファイルを生成する。
-名前は後ろの二文字(".s")をきりとったもの。
-
-$make clean
-でバイナリファイルは全て消える。
-
-
-その他実行例
-./occho test/fib.s -o fib
-./simulate fib
-./simulate  (=> simulate o.out)
+オプション一旦廃止。
+Makefileでなんでもできると判断。
+今後はdebug支援とかを考えてる。

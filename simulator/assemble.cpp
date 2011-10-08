@@ -23,7 +23,7 @@ int	encoder(int, char*);
 char	label_name[128][256];	
 uint32_t label_cnt;
  
-int	assemble(char *sfile, char *dfile) {
+int	assemble(char *sfile) {
 	char	buf[LINE_MAX];	
 	uint32_t	output_data[DATA_NUM] = {0};	// 出力データの保存領域
 	uint32_t	input_line_cnt;	// 入力側の行数をカウント
@@ -32,8 +32,9 @@ int	assemble(char *sfile, char *dfile) {
 	map<string, uint32_t> label_map;
 	char	opcode[256];
 	char *tmp = NULL;
+	char *dfile;
 	FILE	*fp;	// source file pointer
-	int i,fd,ret,num;
+	int i,fd,ret,num,len;
 
 
 	input_line_cnt = 0;
@@ -50,6 +51,10 @@ int	assemble(char *sfile, char *dfile) {
 		printf("ファイルが開けませんでした。\n");
 		return -1;
 	}
+	len = strlen(sfile) - 2;
+	dfile = (char*) malloc(len);
+	strncpy(dfile, sfile, len);
+	*(dfile+len) = 0;
 
 	printf("assemble %s ==>\t", sfile);
 
@@ -138,7 +143,7 @@ int	assemble(char *sfile, char *dfile) {
 			}
 		}
 
-		fd = open((dfile)?dfile:DEFAULT_BIN, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
+		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
 		num = DATA_NUM*4;
 		while ((ret = write(fd, output_data, num)) > 0) {
 			num -= ret;
@@ -168,7 +173,7 @@ int	assemble(char *sfile, char *dfile) {
 		}
 		ofs.close();
 
-		printf("%s\n", (dfile)?dfile:DEFAULT_BIN);
+		printf("%s\n", dfile);
 
 		return 0;
 	}

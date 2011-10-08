@@ -8,7 +8,6 @@
 // PROTO_R(add, ADD)
 ////////////////////////////////////////////////////
 #define ASM_LOG "aslog"
-#define DEFAULT_BIN "o.out"
 
 #define PROTO_R(name, opcode) \
 	uint32_t name(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);

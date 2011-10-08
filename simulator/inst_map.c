@@ -31,6 +31,7 @@ void IMapInit(void) {
 	InstMap[JLT] = "jlt";
 	InstMap[JLE] = "jle";
 	InstMap[CALL] = "call";
+	InstMap[CALLR] = "callR";
 	InstMap[RETURN] = "return";
 	InstMap[LD] = "ld";
 	InstMap[ST] = "st";
@@ -74,6 +75,7 @@ void IMapInit(void) {
 	InstTyMap[JLT] = 1;
 	InstTyMap[JLE] = 1;
 	InstTyMap[CALL] = 2;
+	InstTyMap[CALLR] = 0;
 	InstTyMap[RETURN] = 2;
 	InstTyMap[LD] = 1;
 	InstTyMap[ST] = 1;

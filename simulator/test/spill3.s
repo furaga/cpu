@@ -27,25 +27,26 @@ f.56:
 	add	%g27, %g26, %g9
 	add	%g28, %g27, %g10
 	add	%g29, %g28, %g11
-	add	%g30, %g29, %g12
-	st	%g30, %g1, 0
-	add	%g30, %g30, %g13
-	st	%g30, %g1, 4
-	add	%g30, %g30, %g14
-	st	%g30, %g1, 8
-	add	%g30, %g30, %g15
-	st	%g30, %g1, 12
-	add	%g30, %g30, %g16
-	st	%g30, %g1, 16
-	add	%g30, %g30, %g17
-	st	%g30, %g1, 20
-	add	%g30, %g30, %g18
-	st	%g30, %g1, 24
-	add	%g30, %g30, %g19
-	st	%g30, %g1, 28
-	add	%g30, %g30, %g20
-	st	%g3, %g1, 32
-	add	%g3, %g30, %g3
+	st	%g29, %g1, 0
+	add	%g29, %g29, %g12
+	st	%g29, %g1, 4
+	add	%g29, %g29, %g13
+	st	%g29, %g1, 8
+	add	%g29, %g29, %g14
+	st	%g29, %g1, 12
+	add	%g29, %g29, %g15
+	st	%g29, %g1, 16
+	add	%g29, %g29, %g16
+	st	%g29, %g1, 20
+	add	%g29, %g29, %g17
+	st	%g29, %g1, 24
+	add	%g29, %g29, %g18
+	st	%g29, %g1, 28
+	add	%g29, %g29, %g19
+	st	%g29, %g1, 32
+	add	%g29, %g29, %g20
+	st	%g3, %g1, 36
+	add	%g3, %g29, %g3
 	add	%g4, %g4, %g5
 	add	%g4, %g4, %g6
 	add	%g4, %g4, %g7
@@ -70,7 +71,6 @@ f.56:
 	add	%g4, %g4, %g26
 	add	%g4, %g4, %g27
 	add	%g4, %g4, %g28
-	add	%g4, %g4, %g29
 	ld	%g5, %g1, 0
 	add	%g4, %g4, %g5
 	ld	%g5, %g1, 4
@@ -87,9 +87,11 @@ f.56:
 	add	%g4, %g4, %g5
 	ld	%g5, %g1, 28
 	add	%g4, %g4, %g5
-	add	%g4, %g4, %g30
+	ld	%g5, %g1, 32
+	add	%g4, %g4, %g5
+	add	%g4, %g4, %g29
 	add	%g3, %g4, %g3
-	ld	%g4, %g1, 32
+	ld	%g4, %g1, 36
 	add	%g3, %g3, %g4
 	return
 min_caml_start:

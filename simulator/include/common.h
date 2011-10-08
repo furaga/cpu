@@ -2,7 +2,7 @@
 #ifndef _COMMON_HEAD
 #define _COMMON_HEAD
 #include <stdint.h>
-#define InstNum 42
+#define InstNum 43	// 42 + setl
 #define REG_NUM 32
 #define ROM_NUM 1024
 #define RAM_NUM (2 * 1024 * 1024)
