@@ -6,7 +6,7 @@ l.47:	! 4.560000
 l.45:	! 1.230000
 	.long	0x3f9d70a3
 l.39:	! 0.000000
-	.long	0x40000000
+	.long	0x0
 	jmp	min_caml_start
 
 !#####################################################################
@@ -51,7 +51,7 @@ inprod.17:
 	fld	%f1, %g4, %g6
 	fmul	%f0, %f0, %f1
 	subi	%g5, %g5, 1
-	std	%f0, %g1, 0
+	fst	%f0, %g1, 0
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
 	call	inprod.17
@@ -91,7 +91,7 @@ min_caml_start:
 	mvhi	%g5, 0
 	mvlo	%g5, 2
 	ld	%g3, %g1, 0
-	std	%f0, %g1, 8
+	fst	%f0, %g1, 8
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
 	call	inprod.17

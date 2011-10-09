@@ -36,7 +36,7 @@ CREATE_FLOAT_ARRAY_END:
 !#####################################################################
 
 f.2:
-	jmp	min_caml_print_float
+	output	%f0
 min_caml_start:
 	setL %g3, l.5
 	fld	%f0, %g3, 0

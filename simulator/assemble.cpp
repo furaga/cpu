@@ -125,6 +125,8 @@ int	assemble(char *sfile) {
 				case JLT:
 				case JNE:
 				case JEQ:
+				case FJLT:
+				case FJEQ:
 					label_line = label_map[label_name[output_data[i] & 0xffff]];
 					label_line -= i + 1;
 					output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
@@ -156,12 +158,20 @@ int	assemble(char *sfile) {
 			<< "CONTENT\tBEGIN\n\n";
 
 		map<string,uint32_t>::iterator itr;
-		for(i = 0; i < DATA_NUM; i++){
+		for(i = 0; i < DATA_NUM; i++) {
+
 			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
-				if (itr->second == (uint32_t)i) {
+				if ((itr->second / 4 == (uint32_t)i) &&
+					(itr->first[0] == 'l') &&
+					(itr->first[1] == '.')) {
+					ofs << itr->first << ":\n";
+				} else 	if ((itr->second == (uint32_t)i) &&
+							((itr->first[0] != 'l') ||
+							(itr->first[1] != '.'))) {
 					ofs << itr->first << ":\n";
 				}
 			}
+
 			if (output_data[i]) {
 				ofs.width(4);
 				ofs.fill(' ');

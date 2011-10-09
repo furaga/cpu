@@ -70,7 +70,7 @@ min_caml_start:
 	fsub	%f0, %f0, %f1
 	mvhi	%g3, 15
 	mvlo	%g3, 16960
-	std	%f0, %g1, 0
+	fst	%f0, %g1, 0
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
 	call	min_caml_float_of_int

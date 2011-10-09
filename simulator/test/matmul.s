@@ -24,7 +24,7 @@ l.353:	! 2.000000
 l.348:	! 1.000000
 	.long	0x3f800000
 l.338:	! 0.000000
-	.long	0x40000000
+	.long	0x0
 	jmp	min_caml_start
 
 !#####################################################################
@@ -358,8 +358,6 @@ min_caml_start:
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	output	%g3
-	mvhi	%g3, 0
-	mvlo	%g3, 10
 	output	%g3
 	ld	%g3, %g1, 12
 	ld	%g4, %g3, 0
@@ -370,8 +368,6 @@ min_caml_start:
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	output	%g3
-	mvhi	%g3, 0
-	mvlo	%g3, 10
 	output	%g3
 	ld	%g3, %g1, 12
 	ld	%g4, %g3, -4
@@ -382,8 +378,6 @@ min_caml_start:
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	output	%g3
-	mvhi	%g3, 0
-	mvlo	%g3, 10
 	output	%g3
 	ld	%g3, %g1, 12
 	ld	%g3, %g3, -4
@@ -394,7 +388,5 @@ min_caml_start:
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	output	%g3
-	mvhi	%g3, 0
-	mvlo	%g3, 10
 	output	%g3
 	halt

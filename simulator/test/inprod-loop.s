@@ -1,6 +1,6 @@
 .init_heap_size	128
 l.52:	! 0.000000
-	.long	0x40000000
+	.long	0x0
 l.50:	! 1000000.000000
 	.long	0x49742400
 l.48:	! 4.560000
@@ -84,7 +84,7 @@ min_caml_start:
 	mvhi	%g5, 0
 	mvlo	%g5, 2
 	ld	%g3, %g1, 0
-	std	%f0, %g1, 8
+	fst	%f0, %g1, 8
 	fmov	%f0, %f1
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
