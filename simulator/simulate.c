@@ -65,9 +65,8 @@ int simulate(char *sfile)
 		ram[i] = rom[pc];
 		heap_size -= 32;
 	}
-	
+
 	IMapInit();
-	
 	printf("simulate %s\n", sfile);
 	do{
 		ir = rom[pc];
@@ -189,7 +188,6 @@ int simulate(char *sfile)
 				break;
 			case FLD:
 				freg[regs(ir)] = ram[(_RT - _IMM)/4];
-				//printf("fld:%d\n", (_RT - _IMM)/4);
 				break;
 			case FST:
 				ram[(_RT - _IMM)/4] = freg[regs(ir)];
@@ -199,28 +197,24 @@ int simulate(char *sfile)
 				b.i = freg[regt(ir)];
 				ans.f = a.f + b.f;
 				freg[regd(ir)] = ans.i;
-//				_RD = ans.i;
 				break;
 			case FSUB:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f - b.f;
 				freg[regd(ir)] = ans.i;
-//				_RD = ans.i;
 				break;
 			case FMUL:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f * b.f;
 				freg[regd(ir)] = ans.i;
-//				_RD = ans.i;
 				break;
 			case FDIV:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f / b.f;
 				freg[regd(ir)] = ans.i;
-//				_RD = ans.i;
 				break;
 			case FMOV:
 				freg[regd(ir)] = freg[regs(ir)];
@@ -233,21 +227,16 @@ int simulate(char *sfile)
 			case FJEQ:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
-//				printf("debug:a:%f b:%f\n", a.f, b.f);
-//				printf("DEBUG:a:%x b:%x\n", a.i, b.i);
 				if (a.f == b.f) 
 					pc += _IMM;
 				break;
 			case FJLT:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
-//				printf("rs:%f rt:%f\n", a.f, b.f);
-//				printf("DEBUG:a:%x b:%x\n\n", a.i, b.i);
 				if (a.f < b.f) {
 	//				printf("fjlt : true\n");
 					pc += _IMM;
-				}
-				else {
+				} else {
 		//			printf("fjlt : false\n");
 				}
 				break;
