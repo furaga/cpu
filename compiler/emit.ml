@@ -160,7 +160,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       Printf.fprintf oc "\tst\t%s, %s, %d\n" x reg_sp (offset y)
   | NonTail(_), Save(x, y) when List.mem x allfregs && not (S.mem y !stackset) ->
       savef y;
-      Printf.fprintf oc "\tstd\t%s, %s, %d\n" x reg_sp (offset y)
+      Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_sp (offset y)
   | NonTail(_), Save(x, y) -> assert (S.mem y !stackset); ()
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
   | NonTail(x), Restore(y) when List.mem x allregs ->
@@ -251,7 +251,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_tail_if oc x y e1 e2 "fjeq" "fjne"
 
   | Tail, IfFLE(x, y, e1, e2) ->
-      g'_tail_if oc y x e1 e2 "fjle" "fjlt"
+      g'_tail_if oc y x e1 e2 "fjge" "fjlt"
 
 (*
   | NonTail(z), IfEq(x, y', e1, e2) ->
@@ -488,12 +488,17 @@ let f oc (Prog(data, fundefs, e)) =
       let lo = Int32.to_int (getlo f) in
       let s = lo lsr 31 in
       let exp = (lo lsr 20) mod (1 lsl 12) in
-      let exp = exp - 896 in
       let frac = lo mod (1 lsl 20) in
-      let frac = frac lsl 3 in
-      let frac = frac + (hi lsr 29) in
-      let b = (s lsl 31) + (exp lsl 23) + frac in
-      Printf.fprintf oc "\t.long\t0x%lx\n" (Int32.of_int b))
+      if exp = 0 && frac = 0 then
+      	Printf.fprintf oc "\t.long\t0x%lx\n" (Int32.of_int 0)
+	  else  
+		begin
+		  let exp = exp - 896 in
+		  let frac = frac lsl 3 in
+		  let frac = frac + (hi lsr 29) in
+		  let b = (s lsl 31) + (exp lsl 23) + frac in
+		  Printf.fprintf oc "\t.long\t0x%lx\n" (Int32.of_int b)
+		end)
     data;
   (*Printf.fprintf oc ".section\t\".text\"\n";*)
   Printf.fprintf oc "\tjmp\tmin_caml_start\n";

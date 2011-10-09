@@ -1,3 +1,7 @@
 for n in test/*.ml; do
 	./min-caml ${n%.ml}
+done;
+
+for n in test/float_test/*.ml; do
+	./min-caml ${n%.ml}
 done
