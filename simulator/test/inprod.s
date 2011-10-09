@@ -65,7 +65,7 @@ inprod.29:
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
-	std	%f0, %g1, 8
+	fst	%f0, %g1, 8
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
 	call	getx.23
@@ -74,14 +74,14 @@ inprod.29:
 	fld	%f1, %g1, 8
 	fmul	%f0, %f1, %f0
 	ld	%g3, %g1, 0
-	std	%f0, %g1, 16
+	fst	%f0, %g1, 16
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
 	call	gety.25
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 4
-	std	%f0, %g1, 24
+	fst	%f0, %g1, 24
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
 	call	gety.25
@@ -92,14 +92,14 @@ inprod.29:
 	fld	%f1, %g1, 16
 	fadd	%f0, %f1, %f0
 	ld	%g3, %g1, 0
-	std	%f0, %g1, 32
+	fst	%f0, %g1, 32
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
 	call	getz.27
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 4
-	std	%f0, %g1, 40
+	fst	%f0, %g1, 40
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
 	call	getz.27
@@ -135,7 +135,7 @@ min_caml_start:
 	fst	%f3, %g4, -16
 	fst	%f2, %g4, -8
 	fst	%f1, %g4, 0
-	std	%f0, %g1, 0
+	fst	%f0, %g1, 0
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
 	call	inprod.29

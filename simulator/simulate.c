@@ -113,7 +113,8 @@ int simulate(char *sfile)
 				_RD = _RD & 0xff;
 				break;
 			case OUTPUT:
-				printf("cnt:%d output:(int dec)%d (char)%c\n", cnt, _RS, _RS);
+				a.i = _RS;
+				printf("cnt:%d output:(int dec)%d (float)%f (char)%c\n", cnt, _RS, a.f, _RS);
 				break;
 			case AND:
 				_RD = _RS & _RT;
@@ -176,7 +177,6 @@ int simulate(char *sfile)
 				break;
 			case FLD:
 				freg[regs(ir)] = ram[(_RT - _IMM)/4];
-				//printf("fld:%d\n", (_RT - _IMM)/4);
 				break;
 			case FST:
 				ram[(_RT - _IMM)/4] = freg[regs(ir)];
