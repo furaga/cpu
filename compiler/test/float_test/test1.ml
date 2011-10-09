@@ -2,6 +2,7 @@
 let rec fless a b = (a < b) in
 let rec fispos a = (a > 0.0) in
 let rec fisneg a = (a < 0.0) in
+let rec fiszero a = (a = 0.0) in
 
 (* test fless *)
 let x = 1.0 in
@@ -26,4 +27,12 @@ let y = -0.001 in
 let z = 0.0 in
 (if fisneg x then print_int 0 else print_int 1);
 (if fisneg y then print_int 1 else print_int 0);
-(if fisneg z then print_int 0 else print_int 1)
+(if fisneg z then print_int 0 else print_int 1);
+
+(* test fiszero *)
+let x = 1.0 in
+let y = -0.001 in
+let z = 0.0 in
+(if fiszero x then print_int 0 else print_int 1);
+(if fiszero y then print_int 0 else print_int 1);
+(if fiszero z then print_int 1 else print_int 0)

@@ -11,7 +11,6 @@ let rec g env = function (* Ì¿ÎáÎó¤Î13bitÂ¨ÃÍºÇÅ¬²½ (caml2html: simm13_g) *)
   | Let(xt, SLL(y, C(i)), e) when M.mem y env -> (* for array access *)
       (* Format.eprintf "erased redundant SLL on %s@." x; *)
       begin
-      Printf.printf "i = %d\n" i;
       (* ld %gX, %gY, -Z *)
       g env (Let(xt, Set(-((M.find y env) lsl i)), e))
       end

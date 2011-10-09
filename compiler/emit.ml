@@ -28,7 +28,7 @@ min_caml_create_float_array:
 	mov %%g3, %%g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %%g4, %%g2, CREATE_FLOAT_ARRAY_END
-	st %%f0, %%g2, 0
+	fst %%f0, %%g2, 0
 	addi %%g2, %%g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
 CREATE_FLOAT_ARRAY_END:
@@ -120,9 +120,19 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), SLL(y, C(z)) ->
 	 Printf.fprintf oc "\tslli\t%s, %s, %s\n" x y (pp_id_or_imm (C(z))) (*即値 *)
 
-  | NonTail(x), Ld(y, V z) -> let z' = V z in Printf.fprintf oc "\tld\t%s, %s, %s\n" x y (pp_id_or_imm z')
+  | NonTail(x), Ld(y, V z) ->
+   	begin
+  		let z' = pp_id_or_imm (V z) in
+	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
+	  	Printf.fprintf oc "\tld\t%s, %s, 0\n" x y
+  	end
   | NonTail(x), Ld(y, C z) -> let z' = C z in Printf.fprintf oc "\tld\t%s, %s, %s\n" x y (pp_id_or_imm z')
-  | NonTail(_), St(x, y, V z) -> let z' = V z in Printf.fprintf oc "\tst\t%s, %s, %s\n" x y (pp_id_or_imm z')
+  | NonTail(_), St(x, y, V z) ->
+   	begin
+  		let z' = pp_id_or_imm (V z) in
+	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
+	  	Printf.fprintf oc "\tst\t%s, %s, 0\n" x y
+  	end
   | NonTail(_), St(x, y, C z) -> let z' = C z in Printf.fprintf oc "\tst\t%s, %s, %s\n" x y (pp_id_or_imm z')
 
   | NonTail(x), FMovD(y) when x = y -> ()
@@ -148,9 +158,19 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   
 (*  | NonTail(x), LdDF(y, z') -> Printf.fprintf oc "\tldd\t[%s + %s], %s\n" y (pp_id_or_imm z') x
   | NonTail(_), StDF(x, y, z') -> Printf.fprintf oc "\tstd\t%s, [%s + %s]\n" x y (pp_id_or_imm z')*)
-  | NonTail(x), LdDF(y, V(z)) -> Printf.fprintf oc "\tfld\t%s, %s, %s\n" x y (pp_id_or_imm (V(z)))
+  | NonTail(x), LdDF(y, V(z)) ->
+  	begin
+  		let z' = pp_id_or_imm (V(z)) in
+	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
+	  	Printf.fprintf oc "\tfld\t%s, %s, 0\n" x y
+  	end
   | NonTail(x), LdDF(y, C(z)) -> Printf.fprintf oc "\tfld\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))
-  | NonTail(_), StDF(x, y, V(z)) -> Printf.fprintf oc "\tfst\t%s, %s, %s\n" x y (pp_id_or_imm (V(z)))
+  | NonTail(_), StDF(x, y, V(z)) ->
+  	begin
+  		let z' = pp_id_or_imm (V(z)) in
+	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
+	  	Printf.fprintf oc "\tfst\t%s, %s, 0\n" x y
+  	end
   | NonTail(_), StDF(x, y, C(z)) -> Printf.fprintf oc "\tfst\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))
   
   | NonTail(_), Comment(s) -> Printf.fprintf oc "\t! %s\n" s
@@ -248,7 +268,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_tail_if oc e1 e2 "fble" "fbg"
 *)
   | Tail, IfFEq(x, y, e1, e2) ->
-      g'_tail_if oc x y e1 e2 "fjeq" "fjne"
+      g'_tail_if oc x y e2 e1 "fjne" "fjeq"
 
   | Tail, IfFLE(x, y, e1, e2) ->
       g'_tail_if oc y x e1 e2 "fjge" "fjlt"
@@ -303,9 +323,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
       g'_non_tail_if oc (NonTail(z)) e1 e2 "fble" "fbg"
 *)    
   | NonTail(z), IfFEq(x, y, e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) x y e1 e2 "fje" "fjne"
+      g'_non_tail_if oc (NonTail(z)) x y e2 e1 "fjne" "fjeq"
   | NonTail(z), IfFLE(x, y, e1, e2) ->
-      g'_non_tail_if oc (NonTail(z)) y x e2 e1 "fjle" "fjlt"
+      g'_non_tail_if oc (NonTail(z)) y x e1 e2 "fjge" "fjlt"
 
   (* 関数呼び出しの仮想命令の実装 (caml2html: emit_call) *)
 (*jmp : 即値でジャンプ先を指定*)
@@ -327,7 +347,14 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		end
 		  	| "min_caml_print_float" ->(* TODO *) 
 		  		begin
-					Printf.fprintf oc "\toutput\t%%f0\n";
+					g'_args oc [] ys zs;
+					let ss = stacksize () in
+					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
+					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 4);
+					Printf.fprintf oc "\toutput\t%%g3\n";
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\treturn\n"
 				end
 		  	| "min_caml_print_int" 
 		  	| "min_caml_print_byte"
@@ -377,7 +404,17 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				end
 		  	| "min_caml_print_float" ->(* TODO *) 
 		  		begin
-					Printf.fprintf oc "\toutput\t%%f0\n";
+					g'_args oc [] ys zs;
+					let ss = stacksize () in
+					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
+					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 4);
+					Printf.fprintf oc "\toutput\t%%g3\n";
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					if List.mem a allregs && a <> regs.(0) then
+						Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
+					else if List.mem a allfregs && a <> fregs.(0) then
+						(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
 				end
 		  	| "min_caml_print_int" 
 		  	| "min_caml_print_byte"
@@ -490,10 +527,10 @@ let f oc (Prog(data, fundefs, e)) =
       let exp = (lo lsr 20) mod (1 lsl 12) in
       let frac = lo mod (1 lsl 20) in
       if exp = 0 && frac = 0 then
-      	Printf.fprintf oc "\t.long\t0x%lx\n" (Int32.of_int 0)
+      	Printf.fprintf oc "\t.long\t0x%lx\n" (Int32.of_int (s lsl 31))
 	  else  
 		begin
-		  let exp = exp - 896 in
+		  let exp = exp - (if s > 0 then 895 else 896) in (* 負の数だと1ずれる？ *)
 		  let frac = frac lsl 3 in
 		  let frac = frac + (hi lsr 29) in
 		  let b = (s lsl 31) + (exp lsl 23) + frac in
