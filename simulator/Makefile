@@ -10,10 +10,8 @@ ASMH = common.h asm.h
 vpath %.h ./include
 
 
-TEST_TARGET = float_test/test1
-ASM_TARGET = $(TEST_TARGET:%=test/%.s)
-SIM_TARGET = $(TEST_TARGET:%=test/%)
-
+ASMTARGET = test/float_test/test1.s
+SIMTARGET = test/float_test/test1
 
 all: $(TARGET)
 simcho: simcho.o simulate.o inst_map.o
@@ -34,10 +32,10 @@ assemble.o: $(ASMH) call_opcode.o
 call_opcode.o: $(ASMH)
 
 asm:
-	./asmcho $(ASM_TARGET)
+	./asmcho $(ASMTARGET)
 sim:
-	./simcho $(SIM_TARGET)
+	./simcho $(SIMTARGET)
 
 clean:
-	rm -f *.o $(TARGET) $(SIM_TARGET) aslog
+	rm -f *.o $(TARGET) $(SIMTARGET) aslog
 

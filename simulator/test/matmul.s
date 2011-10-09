@@ -49,7 +49,7 @@ min_caml_create_float_array:
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
-	st %f0, %g2, 0
+	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
 CREATE_FLOAT_ARRAY_END:
@@ -69,23 +69,31 @@ loop3.282:
 	mvlo	%g9, 0
 	jlt	%g3, %g9, jle_else.449
 	slli	%g9, %g5, 2
-	ld	%g9, %g6, %g9
+	sub	%g6, %g6, %g9
+	ld	%g9, %g6, 0
 	slli	%g10, %g5, 2
-	ld	%g6, %g6, %g10
+	sub	%g6, %g6, %g10
+	ld	%g6, %g6, 0
 	slli	%g10, %g4, 2
-	fld	%f0, %g6, %g10
+	sub	%g6, %g6, %g10
+	fld	%f0, %g6, 0
 	slli	%g5, %g5, 2
-	ld	%g5, %g8, %g5
+	sub	%g8, %g8, %g5
+	ld	%g5, %g8, 0
 	slli	%g6, %g3, 2
-	fld	%f1, %g5, %g6
+	sub	%g5, %g5, %g6
+	fld	%f1, %g5, 0
 	slli	%g5, %g3, 2
-	ld	%g5, %g7, %g5
+	sub	%g7, %g7, %g5
+	ld	%g5, %g7, 0
 	slli	%g6, %g4, 2
-	fld	%f2, %g5, %g6
+	sub	%g5, %g5, %g6
+	fld	%f2, %g5, 0
 	fmul	%f1, %f1, %f2
 	fadd	%f0, %f0, %f1
 	slli	%g4, %g4, 2
-	fst	%f0, %g9, %g4
+	sub	%g9, %g9, %g4
+	fst	%f0, %g9, 0
 	subi	%g3, %g3, 1
 	ld	%g28, %g29, 0
 	b	%g28
@@ -196,7 +204,8 @@ init.256:
 	ld	%g4, %g1, 8
 	slli	%g5, %g4, 2
 	ld	%g6, %g1, 4
-	st	%g3, %g6, %g5
+	sub	%g6, %g6, %g5
+	st	%g3, %g6, 0
 	subi	%g3, %g4, 1
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0

@@ -31,7 +31,7 @@ min_caml_create_float_array:
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
-	st %f0, %g2, 0
+	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
 CREATE_FLOAT_ARRAY_END:
@@ -46,9 +46,11 @@ inprod.17:
 	mvlo	%g6, 0
 	jlt	%g5, %g6, jle_else.55
 	slli	%g6, %g5, 2
-	fld	%f0, %g3, %g6
+	sub	%g3, %g3, %g6
+	fld	%f0, %g3, 0
 	slli	%g6, %g5, 2
-	fld	%f1, %g4, %g6
+	sub	%g4, %g4, %g6
+	fld	%f1, %g4, 0
 	fmul	%f0, %f0, %f1
 	subi	%g5, %g5, 1
 	fst	%f0, %g1, 0

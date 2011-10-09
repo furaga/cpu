@@ -4,7 +4,7 @@ l.39:	! 48.300300
 l.37:	! 4.500000
 	.long	0x40900000
 l.35:	! -12.300000
-	.long	0xc0c4ccc4
+	.long	0xc144ccc4
 	jmp	min_caml_start
 
 !#####################################################################
@@ -29,7 +29,7 @@ min_caml_create_float_array:
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
-	st %f0, %g2, 0
+	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
 CREATE_FLOAT_ARRAY_END:

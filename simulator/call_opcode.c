@@ -165,10 +165,12 @@ uint32_t call_opcode(char *opcode, char *op_data)
 	if(strcmp(opcode, "fmul") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
 		    return fmul(rs,rt,rd,0,0);
+//		    return fadd(rs,rt,rd,0,0);
 	}
 	if(strcmp(opcode, "fdiv") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
 		    return fdiv(rs,rt,rd,0,0);
+//		    return fadd(rs,rt,rd,0,0);
 	}
 	if(strcmp(opcode, "fmov") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)

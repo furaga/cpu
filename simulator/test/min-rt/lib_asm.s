@@ -1,4 +1,4 @@
-init_heap_size 2496
+.init_heap_size 2496
 ! 78 * 32
 FLOAT_ZERO:
 	.float 0.0

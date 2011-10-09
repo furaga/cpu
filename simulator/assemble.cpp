@@ -158,20 +158,12 @@ int	assemble(char *sfile) {
 			<< "CONTENT\tBEGIN\n\n";
 
 		map<string,uint32_t>::iterator itr;
-		for(i = 0; i < DATA_NUM; i++) {
-
+		for(i = 0; i < DATA_NUM; i++){
 			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
-				if ((itr->second / 4 == (uint32_t)i) &&
-					(itr->first[0] == 'l') &&
-					(itr->first[1] == '.')) {
-					ofs << itr->first << ":\n";
-				} else 	if ((itr->second == (uint32_t)i) &&
-							((itr->first[0] != 'l') ||
-							(itr->first[1] != '.'))) {
+				if (itr->second == (uint32_t)i) {
 					ofs << itr->first << ":\n";
 				}
 			}
-
 			if (output_data[i]) {
 				ofs.width(4);
 				ofs.fill(' ');

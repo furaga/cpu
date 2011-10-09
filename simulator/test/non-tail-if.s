@@ -1,6 +1,6 @@
 .init_heap_size	96
 l.32:	! -7.890000
-	.long	0xc07c7ae1
+	.long	0xc0fc7ae1
 l.30:	! 4.560000
 	.long	0x4091eb7d
 l.28:	! 1.230000
@@ -29,7 +29,7 @@ min_caml_create_float_array:
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
-	st %f0, %g2, 0
+	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
 CREATE_FLOAT_ARRAY_END:

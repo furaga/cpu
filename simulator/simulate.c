@@ -65,10 +65,15 @@ int simulate(char *sfile)
 		ram[i] = rom[pc];
 		heap_size -= 32;
 	}
-
+	
+	IMapInit();
+	
 	printf("simulate %s\n", sfile);
 	do{
 		ir = rom[pc];
+
+		printf("%d.[%d]%s : g%d=%d g%d=%d g%d=%d imm=%d\n", cnt, pc, InstMap[opcode(ir)], regs(ir), _RS, regt(ir), _RT, regd(ir), _RD, _IMM);
+		fflush(stdout);
 
 		cnt++;
 		pc++;
@@ -114,7 +119,8 @@ int simulate(char *sfile)
 				break;
 			case OUTPUT:
 				a.i = _RS;
-				printf("cnt:%d output:(int dec)%d (float)%f (char)%c\n", cnt, _RS, a.f, _RS);
+				printf("\tcnt:%d output:(int dec)%d (char)%c (float)%f\n", cnt, _RS, _RS, a.f);
+				fflush(stdout);
 				break;
 			case AND:
 				_RD = _RS & _RT;
@@ -163,6 +169,12 @@ int simulate(char *sfile)
 				reg[1] -= 4;
 				lr = pc;
 				pc = _RS;
+				
+				for (i = 0; i < 50; i++) {
+					a.i = freg[i];
+					printf("ram[%d]=%d\n", i, ram[i]);
+				}
+
 				break;
 			case RETURN:
 				pc = lr;
@@ -177,6 +189,7 @@ int simulate(char *sfile)
 				break;
 			case FLD:
 				freg[regs(ir)] = ram[(_RT - _IMM)/4];
+				//printf("fld:%d\n", (_RT - _IMM)/4);
 				break;
 			case FST:
 				ram[(_RT - _IMM)/4] = freg[regs(ir)];
@@ -185,25 +198,29 @@ int simulate(char *sfile)
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f + b.f;
-				_RD = ans.i;
+				freg[regd(ir)] = ans.i;
+//				_RD = ans.i;
 				break;
 			case FSUB:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f - b.f;
-				_RD = ans.i;
+				freg[regd(ir)] = ans.i;
+//				_RD = ans.i;
 				break;
 			case FMUL:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f * b.f;
-				_RD = ans.i;
+				freg[regd(ir)] = ans.i;
+//				_RD = ans.i;
 				break;
 			case FDIV:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
 				ans.f = a.f / b.f;
-				_RD = ans.i;
+				freg[regd(ir)] = ans.i;
+//				_RD = ans.i;
 				break;
 			case FMOV:
 				freg[regd(ir)] = freg[regs(ir)];
@@ -216,18 +233,22 @@ int simulate(char *sfile)
 			case FJEQ:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
-				printf("debug:a:%f b:%f\n", a.f, b.f);
-				printf("DEBUG:a:%x b:%x\n", a.i, b.i);
+//				printf("debug:a:%f b:%f\n", a.f, b.f);
+//				printf("DEBUG:a:%x b:%x\n", a.i, b.i);
 				if (a.f == b.f) 
 					pc += _IMM;
 				break;
 			case FJLT:
 				a.i = freg[regs(ir)];
 				b.i = freg[regt(ir)];
-				printf("debug:a:%f b:%f\n", a.f, b.f);
-				printf("DEBUG:a:%x b:%x\n\n", a.i, b.i);
+//				printf("rs:%f rt:%f\n", a.f, b.f);
+//				printf("DEBUG:a:%x b:%x\n\n", a.i, b.i);
 				if (a.f < b.f) {
+	//				printf("fjlt : true\n");
 					pc += _IMM;
+				}
+				else {
+		//			printf("fjlt : false\n");
 				}
 				break;
 			case NOP:
@@ -237,6 +258,11 @@ int simulate(char *sfile)
 			default	:	break;
 		}
 	} while(opcode(ir) != HALT);
+
+	for (i = 0; i < 5; i++) {
+		a.i = freg[i];
+		printf("freg[%d]=%f\n", i, a.f);
+	}
 
 	printf("CPU Simulator Results\n");
 
