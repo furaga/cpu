@@ -69,17 +69,21 @@ int	assemble(char *sfile) {
 
 	cnt = 0;
 	while ((cnt < heap_size) && (fgets(buf, LINE_MAX, fp) != NULL)) {
-		// heap initialize
-		if (strchr(buf, ':')) {
-			// l.X: ------------------------ label
-			tmp = strtok(buf,":");
-			label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt*4));
-		} else {
-			// .xxxx 0xXXXXXXXX ------------------------- data
-			sscanf(buf, "%s 0x%x", tmp, &num);
-			output_data[output_line_cnt++] = num;
-			cnt += 32;
+		if (sscanf(buf, "%s", tmp) == 1) {
+
+			// heap initialize
+			if (strchr(buf, ':')) {
+				// l.X: ------------------------ label
+				tmp = strtok(buf,":");
+				label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt*4));
+			} else {
+				// .xxxx 0xXXXXXXXX ------------------------- data
+				sscanf(buf, "%s 0x%x", tmp, &num);
+				output_data[output_line_cnt++] = num;
+				cnt += 32;
+			}
 		}
+
 		input_line_cnt++;
 	}
 
@@ -158,7 +162,7 @@ int	assemble(char *sfile) {
 			<< "CONTENT\tBEGIN\n\n";
 
 		map<string,uint32_t>::iterator itr;
-		for(i = 0; i < DATA_NUM; i++) {
+		for(i = 0; i < output_line_cnt; i++) {
 
 			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
 				if ((itr->second / 4 == (uint32_t)i) &&
@@ -172,14 +176,13 @@ int	assemble(char *sfile) {
 				}
 			}
 
-			if (output_data[i]) {
-				ofs.width(4);
-				ofs.fill(' ');
-				ofs << dec << i <<": ";
-				ofs.width(8);
-				ofs.fill('0');
-				ofs << hex << output_data[i] << endl;
-			}
+			ofs.width(4);
+			ofs.fill(' ');
+			ofs << dec << i <<": ";
+			ofs.width(8);
+			ofs.fill('0');
+			ofs << hex << output_data[i] << endl;
+
 		}
 		ofs.close();
 
