@@ -69,8 +69,7 @@ int	assemble(char *sfile) {
 
 	cnt = 0;
 	while ((cnt < heap_size) && (fgets(buf, LINE_MAX, fp) != NULL)) {
-		if (sscanf(buf, "%s", tmp) == 1) {
-
+		if (sscanf(buf, "%s", opcode) == 1) {
 			// heap initialize
 			if (strchr(buf, ':')) {
 				// l.X: ------------------------ label
@@ -160,7 +159,8 @@ int	assemble(char *sfile) {
 		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
 			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
 			<< "CONTENT\tBEGIN\n\n";
-
+		
+		ofs << output_line_cnt << endl;
 		map<string,uint32_t>::iterator itr;
 		for(i = 0; i < output_line_cnt; i++) {
 
