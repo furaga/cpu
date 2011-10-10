@@ -368,7 +368,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				  	Printf.fprintf oc "\toutput\t%%g3\n";
 					Printf.fprintf oc "\treturn\n"
 		  		end
-			| "min_caml_read_int" ->
+			| "min_caml_input_char"
+			| "min_caml_read_char" ->
 		  		begin
 					g'_args oc [] ys zs;
 				  	Printf.fprintf oc "\tinput\t%%g3\n";
@@ -433,7 +434,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					else if List.mem a allfregs && a <> fregs.(0) then
 					(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
 				end
-			| "min_caml_read_int" ->
+			| "min_caml_input_char"
+			| "min_caml_read_char" ->
 		  		begin
 					g'_args oc [] ys zs;
 					Printf.fprintf oc "\tinput\t%%g3\n";
