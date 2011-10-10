@@ -63,16 +63,19 @@ int simulate(char *sfile)
 	pc++;
 	for (i = 1; heap_size > 0; i++,pc++) {
 		ram[i] = rom[pc];
+		reg[2] += 4;
 		heap_size -= 32;
 	}
 
 	IMapInit();
 	printf("simulate %s\n", sfile);
 	do{
+		
+		//printf("pc %d\n", pc);
 		ir = rom[pc];
 
-		printf("%d.[%d]%s : g%d=%d g%d=%d g%d=%d imm=%d\n", cnt, pc, InstMap[opcode(ir)], regs(ir), _RS, regt(ir), _RT, regd(ir), _RD, _IMM);
-		fflush(stdout);
+		//printf("%d.[%d]%s : g%d=%d g%d=%d g%d=%d imm=%d\n", cnt, pc, InstMap[opcode(ir)], regs(ir), _RS, regt(ir), _RT, regd(ir), _RD, _IMM);
+		//fflush(stdout);
 
 		cnt++;
 		pc++;
@@ -173,7 +176,6 @@ int simulate(char *sfile)
 					a.i = freg[i];
 					printf("ram[%d]=%d\n", i, ram[i]);
 				}
-
 				break;
 			case RETURN:
 				pc = lr;
