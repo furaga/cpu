@@ -4,6 +4,8 @@ print_float (float_of_int (-1));
 print_float (float_of_int 0);
 print_float (float_of_int 1);
 print_float (float_of_int 2);
+print_float (float_of_int 12);
+print_float (float_of_int 10);
 
 (* test int_of_float *)
 print_int (int_of_float (-. 2.0));

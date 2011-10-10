@@ -58,7 +58,7 @@ let rec read_float _ =
 	let nextch = read_token1 false 32 in
 	let ans =
 		if nextch = 46 then (* nextch = '.' *)
-			(read_token2 false;
+			(read_token2 false; 
 			(float_of_int i.(0)) +. (float_of_int f.(0)) /. (float_of_int exp.(0)))
 		else
 			float_of_int i.(0) in
@@ -67,44 +67,12 @@ let rec read_float _ =
 	else
 		-. ans in
 
-(*
 (* test read_int *)
 print_int (read_int ());
 print_int (read_int ());
-print_int (read_int ())
-*)
+print_int (read_int ());
 
 (* test read_float *)
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
-print_float (read_float ());
 print_float (read_float ());
 print_float (read_float ());
 print_float (read_float ());
