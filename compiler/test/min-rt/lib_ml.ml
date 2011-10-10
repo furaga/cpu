@@ -77,55 +77,74 @@ let rec sin x =
 let rec cos x = sin (1.570796326794895 -. x) in
 
 (* create_array系はコンパイル時にコードを生成。compiler/emit.ml参照 *)
+let rec mul10 x = x * 8 + x * 2 in
 
 let rec read_int _ =
-	let ans = 0 in
-	let rec read_token in_token =
-		let c = read_char () in
+	let ans = Array.create 1 0 in
+	let s = Array.create 1 0 in
+	let rec read_token in_token prev =
+		let c = input_char () in
 		let flg = 
-			if c = 9 then true		(* \t *)
-			else if c = 10 then true			(* \n *)
-			else if c = 13 then true			(* \r *)
-			else if c = 32 then true			(* ' ' *)
+			if c < 48 then true
+			else if c > 57 then true
 			else false in
 		if flg then
-			(if in_token then () else read_token false)
+			(if in_token then (if s.(0) = 1 then ans.(0) else (-ans.(0))) else read_token false c)
 		else
-			
-	
-(*
-let rec read_token in_token =
-  try
-    let c = input_char stdin (* chan *) in
-    match c with
-      ' ' | '\t' | '\r' | '\n' ->
-	if in_token then ()
-	else read_token false
-    | _ ->
-	Buffer.add_char buf c;
-	read_token true
-  with
-    End_of_file ->
-      if in_token then () else raise End_of_file
+			((if s.(0) = 0 then
+				(* prev == '-' *)
+				(if prev = 45 then s.(0) <- (-1) else s.(0) <- (1));
+			else
+				());
+			ans.(0) <- mul10 ans.(0) + (c - 48);
+			read_token true c) in
+	read_token false 32 in
 
-let read_float () = 
-  Buffer.clear buf;
-  read_token false;
-  try
-    float_of_string (Buffer.contents buf)
-  with
-    Failure _ -> failwith ((Buffer.contents buf) ^ ": float conversion failed.")
+let rec read_float _ =
+	let i = Array.create 1 0 in
+	let f = Array.create 1 0 in
+	let exp = Array.create 1 1 in
+	let s = Array.create 1 0 in
+	let rec read_token1 in_token prev =
+		let c = input_char () in
+		let flg =
+			if c < 48 then true
+			else if c > 57 then true
+			else false in
+		if flg then
+			(if in_token then c else read_token1 false c)
+		else
+			((if s.(0) = 0 then
+				(* prev == '-' *)
+				(if prev = 45 then s.(0) <- (-1) else s.(0) <- (1));
+			else
+				());
+			i.(0) <- mul10 i.(0) + (c - 48);
+			read_token1 true c) in
+	let rec read_token2 in_token =
+		let c = input_char () in
+		let flg =
+			if c < 48 then true
+			else if c > 57 then true
+			else false in
+		if flg then
+			(if in_token then () else read_token2 false)
+		else
+			(f.(0) <- mul10 f.(0) + (c - 48);
+			exp.(0) <- mul10 exp.(0);
+			read_token2 true) in
 
-let read_int () = 
-  Buffer.clear buf;
-  read_token false;
-  try
-    int_of_string (Buffer.contents buf)
-  with
-    Failure _ -> failwith ((Buffer.contents buf) ^ ": int conversion failed.")
-
-
-*)
+	let nextch = read_token1 false 32 in
+	let ans =
+		if nextch = 46 then (* nextch = '.' *)
+			(read_token2 false;
+			(float_of_int i.(0)) +. (float_of_int f.(0)) /. (float_of_int exp.(0)))
+		else
+			float_of_int i.(0) in
+	if s.(0) = 1 then 
+		ans
+	else
+		-. ans in
 
 (* read_float, read_int はib_asm.sで定義 *)
 (*
