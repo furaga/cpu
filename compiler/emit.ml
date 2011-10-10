@@ -49,9 +49,12 @@ let save x =
 let savef x =
   stackset := S.add x !stackset;
   if not (List.mem x !stackmap) then
+    stackmap := !stackmap @ [x]
+  (*
+  if not (List.mem x !stackmap) then
     (let pad =
       if List.length !stackmap mod 2 = 0 then [] else [Id.gentmp Type.Int] in
-    stackmap := !stackmap @ pad @ [x; x])
+    stackmap := !stackmap @ pad @ [x; x])*)
 let locate x =
   let rec loc = function
     | [] -> []
@@ -350,10 +353,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					g'_args oc [] ys zs;
 					let ss = stacksize () in
 					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
-					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss);
 					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 4);
 					Printf.fprintf oc "\toutput\t%%g3\n";
-					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss);
 					Printf.fprintf oc "\treturn\n"
 				end
 		  	| "min_caml_print_int" 
@@ -406,11 +409,13 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		begin
 					g'_args oc [] ys zs;
 					let ss = stacksize () in
+					
 					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
-					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss);
 					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 4);
 					Printf.fprintf oc "\toutput\t%%g3\n";
-					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 8);
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss);
+
 					if List.mem a allregs && a <> regs.(0) then
 						Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 					else if List.mem a allfregs && a <> fregs.(0) then
@@ -530,7 +535,7 @@ let f oc (Prog(data, fundefs, e)) =
       	Printf.fprintf oc "\t.long\t0x%lx\n" (Int32.of_int (s lsl 31))
 	  else  
 		begin
-		  let exp = exp - (if s > 0 then 895 else 896) in (* 負の数だと1ずれる？ *)
+		  let exp = exp - (if s > 0 && frac <> 0 then 895 else 896) in (* 負の数だと1ずれる？ *)
 		  let frac = frac lsl 3 in
 		  let frac = frac + (hi lsr 29) in
 		  let b = (s lsl 31) + (exp lsl 23) + frac in

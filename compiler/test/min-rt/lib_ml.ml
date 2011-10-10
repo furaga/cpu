@@ -12,111 +12,57 @@ in
 let rec fneg a = -. a in
 
 (* 算術関数 *)
-let cordic_n = 25 in
-let sqrt_n = 50 in
-let pi = 3.14159265358979 in
-let pi2 = 6.28318530717958 in
-let pih = 1.570796326794895 in
-let r = 0.607252935008881778 in
-let rec cordic_sin a =
-  let rec cordic_rec i x y z p =
-    if i = cordic_n then y
-    else
-      if a > z then
-	cordic_rec (i + 1) (x -. p *. y) (y +. p *. x) (z +. atan_table.(i)) (p *. 0.5)
-      else
-	cordic_rec (i + 1) (x +. p *. y) (y -. p *. x) (z -. atan_table.(i)) (p *. 0.5)
-  in cordic_rec 0 r 0.0 0.0 1.0
-in
-let rec cordic_cos a =
-  let rec cordic_rec i x y z p =
-    if i = cordic_n then x
-    else
-      if a > z then
-	cordic_rec (i + 1) (x -. p *. y) (y +. p *. x) (z +. atan_table.(i)) (p *. 0.5)
-      else
-	cordic_rec (i + 1) (x +. p *. y) (y -. p *. x) (z -. atan_table.(i)) (p *. 0.5)
-  in cordic_rec 0 r 0.0 0.0 1.0
-in
-let rec cordic_atan a =
-  let rec cordic_rec i x y z p =
-    if i = cordic_n then z
-    else
-      if y > 0.0 then
-	cordic_rec (i + 1) (x +. p *. y) (y -. p *. x) (z +. atan_table.(i)) (p *. 0.5)
-      else
-	cordic_rec (i + 1) (x -. p *. y) (y +. p *. x) (z -. atan_table.(i)) (p *. 0.5)
-  in cordic_rec 0 1.0 a 0.0 1.0
-in
-let rec sin a =
-  if a < 0.0 then -. sin (-. a)
-  else if a < pih then cordic_sin a
-  else if a < pi then cordic_sin (pi -. a)
-  else if a < pi2 then -. sin (pi2 -. a)
-  else sin (a -. pi2)
-in
-let rec cos a =
-  if a < 0.0 then cos (-. a)
-  else if a < pih then cordic_cos a
-  else if a < pi then -. cordic_cos (pi -. a)
-  else if a < pi2 then cos (pi2 -. a)
-  else cos (a -. pi2)
-in
-(*
-let rec sin a =
-  if a < 0.0 then sin (a -. (floor (a /. pi2)) *. pi2)
-  else if a < pih then cordic_sin a
-  else if a < pi then cordic_sin (pi -. a)
-  else if a < pi2 then -. sin (pi2 -. a)
-  else sin (a -. (floor (a /. pi2)) *. pi2)
-in
-let rec cos a =
-  if a < 0.0 then cos (a -. (floor (a /. pi2)) *. pi2)
-  else if a < pih then cordic_cos a
-  else if a < pi then -. cordic_cos (pi -. a)
-  else if a < pi2 then cos (pi2 -. a)
-  else cos (a -. (floor (a /. pi2)) *. pi2)
-in
-*)
+let pi = 3.14159265358979323846264 in
+let pi2 = pi *. 2.0 in
+let pih = pi *. 0.5 in
 
-let rec atan a =
-  cordic_atan a
+let rec atan x =
+	let sgn =
+		if x > 1.0 then 1
+		else if x < -1.0 then -1
+		else 0
+	in
+	let x =
+		if (fabs x) > 1.0 then 1.0 /. x
+		else x
+	in
+	let rec atan_sub i xx y =
+		if i < 0.5 then y
+		else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (2.0 *. i +. 1.0 +. y))
+	in
+	let a = atan_sub 11.0 (x *. x) 0.0 in
+	let b = x /. (1.0 +. a) in
+	if sgn > 0 then pi /. 2.0 -. b
+	else if sgn < 0 then -. pi /. 2.0 -. b
+	else b
+	in
+
+let rec tan x = (* -pi/4 <= x <= pi/4 *)
+	let rec tan_sub i xx y =
+		if i < 2.5 then y
+			else tan_sub (i -. 2.) xx (xx /. (i -. y))
+	in
+	x /. (1. -. (tan_sub 9. (x *. x) 0.0))
 in
-let rec get_sqrt_init a =
-  let rec get_sqrt_init_rec a m =
-	if m = sqrt_n - 1 then rsqrt_table.(m)
-	else if a < 2.0 then rsqrt_table.(m)
-    else get_sqrt_init_rec (a /. 2.0) (m + 1)
-  in get_sqrt_init_rec a 0
-in
-let rec sqrt a =
-  if a < 1.0 then
-    let x = a in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-      let x = 0.5 *. (x +. a /. x) in
-	x
-  else
-    let x = get_sqrt_init a in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-    let x = 0.5 *. x *. (3.0 -. a *. x *. x) in
-      x *. a
-in
+let rec sin x =
+	let s1 = if x > 0.0 then true else false in
+	let x0 = fabs x in
+	(* TODO*)
+	let rec tmp x = 
+		if x > pi2 then tmp (x -. pi2)
+		else if x < 0.0 then tmp (x +. pi2)
+		else x in
+	let x1 = tmp x0 in
+(*	let x1 = x0 -. pi2 *. (floor (x0 /. pi2)) in*)
+	let s2 = if x1 > pi then not s1 else s1 in
+	let x2 = if x1 > pi then pi2 -. x1 else x1 in
+	let x3 = if x2 > pih then pi -. x2 else x2 in
+	let t = tan (x3 *. 0.5) in
+	let ans = 2. *. t /. (1. +. t *. t) in
+	if s2 then ans else fneg ans
+	in
+
+let rec cos x = sin (1.570796326794895 -. x) in
 
 (* 入出力 *)
 (* いらなくなったテキスト形式 *)
