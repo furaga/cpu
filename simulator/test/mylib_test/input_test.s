@@ -669,6 +669,7 @@ min_caml_start:
 	call	read_float.138
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
+	fsqrt %f0, %f0
 	fst	%f0, %g1, 4
 	st	%g3, %g1, 8
 	ld	%g3, %g1, 4

@@ -171,6 +171,10 @@ uint32_t call_opcode(char *opcode, char *op_data)
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
 		    return fdiv(rs,rt,rd,0,0);
 	}
+	if(strcmp(opcode, "fsqrt") == 0){
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
+		    return fsqrt(rs,0,rd,0,0);
+	}
 	if(strcmp(opcode, "fmov") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
 		    return fmov(rs,0,rd,0,0);
@@ -264,6 +268,7 @@ DEFINE_R(fadd,FADD);
 DEFINE_R(fsub,FSUB);
 DEFINE_R(fmul,FMUL);
 DEFINE_R(fdiv,FDIV);
+DEFINE_R(fsqrt,FSQRT);
 DEFINE_R(fmov,FMOV);
 DEFINE_R(fneg,FNEG);
 DEFINE_I(fld,FLD);

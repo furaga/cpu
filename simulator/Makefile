@@ -10,9 +10,9 @@ ASMH = common.h asm.h
 vpath %.h ./include
 
 #TEST_TARGET = float_test/test1 float_test/test2 float_test/test3
-#TEST_TARGET = mylib_test/input_test
+TEST_TARGET = mylib_test/input_test
 #TEST_TARGET = heap_test
-TEST_TARGET = min-rt/min-rt
+#TEST_TARGET = min-rt/min-rt
 
 ASM_TARGET = $(TEST_TARGET:%=test/%.s)
 SIM_TARGET = $(TEST_TARGET:%=test/%)

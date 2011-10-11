@@ -5,6 +5,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <math.h>
 #include "sim.h"
 
 
@@ -30,10 +31,15 @@ int32_t imm(uint32_t ir) {
 		   (ir & 0xffff);
 }
 //////////////////////////////////////////////
-#define _RS reg[regs(ir)]
-#define _RD reg[regd(ir)]
-#define _RT reg[regt(ir)]
+// register access ///////////////////////////
+#define _GRS reg[regs(ir)]
+#define _GRD reg[regd(ir)]
+#define _GRT reg[regt(ir)]
+#define _FRS freg[regs(ir)]
+#define _FRD freg[regd(ir)]
+#define _FRT freg[regt(ir)]
 #define _IMM imm(ir)
+//////////////////////////////////////////////
 
 // rom の命令実行列(バイナリ)に従いシミュレートする
 int simulate(char *sfile)
@@ -75,7 +81,7 @@ int simulate(char *sfile)
 		//printf("pc %d\n", pc);
 		ir = rom[pc];
 
-		//printf("%d.[%d]%s : g%d=%d g%d=%d g%d=%d imm=%d\n", cnt, pc, InstMap[opcode(ir)], regs(ir), _RS, regt(ir), _RT, regd(ir), _RD, _IMM);
+		//printf("%d.[%d]%s : g%d=%d g%d=%d g%d=%d imm=%d\n", cnt, pc, InstMap[opcode(ir)], regs(ir), _GRS, regt(ir), _GRT, regd(ir), _GRD, _IMM);
 		//fflush(stdout);
 
 		cnt++;
@@ -83,82 +89,82 @@ int simulate(char *sfile)
 
 		switch(opcode(ir)){
 			case MOV: 
-				_RD = _RS;
+				_GRD = _GRS;
 				break;
 			case MVHI: 
-				_RT = ((uint32_t) _IMM << 16) | (_RT & 0xffff);
+				_GRT = ((uint32_t) _IMM << 16) | (_GRT & 0xffff);
 				break;
 			case MVLO: 
-				_RT = (_RT & 0xffff0000) | _IMM;
+				_GRT = (_GRT & 0xffff0000) | _IMM;
 				break;
 			case ADD: 
-				_RD = _RS + _RT;
+				_GRD = _GRS + _GRT;
 				break;
 			case SUB:
-				_RD = _RS - _RT;
+				_GRD = _GRS - _GRT;
 				break;
 			case MUL:
-				_RD = _RS * _RT;
+				_GRD = _GRS * _GRT;
 				break;
 			case DIV:
-				_RD = _RS / _RT;
+				_GRD = _GRS / _GRT;
 				break;
 			case ADDI:
-				_RT = _RS + _IMM;
+				_GRT = _GRS + _IMM;
 				break;
 			case SUBI:
-				_RT = _RS - _IMM;
+				_GRT = _GRS - _IMM;
 				break;
 			case MULI:
-				_RT = _RS * _IMM;
+				_GRT = _GRS * _IMM;
 				break;
 			case DIVI:
-				_RT = _RS / _IMM;
+				_GRT = _GRS / _IMM;
 				break;
 			case INPUT:
 				///////////////////////////////////////
-				ret = scanf("%c", (char*)&_RD);
-				_RD = _RD & 0xff;
+				ret = scanf("%c", (char*)&_GRD);
+				_GRD = _GRD & 0xff;
 				break;
 			case OUTPUT:
-				a.i = _RS;
-				printf("\tcnt:%d output:(int dec)%d (char)%c (float)%f\n", cnt, _RS, _RS, a.f);
+				a.i = _GRS;
+				printf("\tcnt:%d output:(int dec)%d (char)%c (float)%f\n", cnt, _GRS, _GRS, a.f);
 				fflush(stdout);
 				break;
 			case AND:
-				_RD = _RS & _RT;
+				_GRD = _GRS & _GRT;
 				break;
 			case OR:
-				_RD = _RS | _RT;
+				_GRD = _GRS | _GRT;
 				break;
 			case NOT:
-				_RD = ~_RS;
+				_GRD = ~_GRS;
 				break;
 			case SLL:
-				_RD = _RS << _RT;
+				_GRD = _GRS << _GRT;
 				break;
 			case SRL:
-				_RD = _RS >> _RT;
+				_GRD = _GRS >> _GRT;
 				break;
 			case SLLI:
-				_RT = _RS << _IMM;
+				_GRT = _GRS << _IMM;
 				break;
 			case B:
-				pc = _RS;
+				pc = _GRS;
 				break;
 			case JMP:
 				pc = imm(ir);
 				break;
 			case JEQ:
-				if (_RS == _RT)
+				if (_GRS == _GRT)
 					pc += _IMM;
 				break;
 			case JNE:
-				if (_RS != _RT)
+				if (_GRS != _GRT)
 					pc += _IMM;
 				break;
 			case JLT:
-				if (_RS < _RT)
+				if (_GRS < _GRT)
 					pc += _IMM;
 				break;
 			case CALL:
@@ -171,7 +177,7 @@ int simulate(char *sfile)
 				ram[reg[1]] = lr;
 				reg[1] -= 4;
 				lr = pc;
-				pc = _RS;
+				pc = _GRS;
 				
 				/*
 				for (i = 0; i < 50; i++) {
@@ -186,58 +192,63 @@ int simulate(char *sfile)
 				lr = ram[reg[1]];
 				break;
 			case LD:
-				_RS = ram[(_RT - _IMM)/4];
+				_GRS = ram[(_GRT - _IMM)/4];
 				break;
 			case ST:
-				ram[(_RT - _IMM)/4] = _RS;
+				ram[(_GRT - _IMM)/4] = _GRS;
 				break;
 			case FLD:
-				freg[regs(ir)] = ram[(_RT - _IMM)/4];
+				_FRS = ram[(_GRT - _IMM)/4];
 				break;
 			case FST:
-				ram[(_RT - _IMM)/4] = freg[regs(ir)];
+				ram[(_GRT - _IMM)/4] = _FRS;
 				break;
 			case FADD:
-				a.i = freg[regs(ir)];
-				b.i = freg[regt(ir)];
+				a.i = _FRS;
+				b.i = _FRT;
 				ans.f = a.f + b.f;
-				freg[regd(ir)] = ans.i;
+				_FRD = ans.i;
 				break;
 			case FSUB:
-				a.i = freg[regs(ir)];
-				b.i = freg[regt(ir)];
+				a.i = _FRS;
+				b.i = _FRT;
 				ans.f = a.f - b.f;
-				freg[regd(ir)] = ans.i;
+				_FRD = ans.i;
 				break;
 			case FMUL:
-				a.i = freg[regs(ir)];
-				b.i = freg[regt(ir)];
+				a.i = _FRS;
+				b.i = _FRT;
 				ans.f = a.f * b.f;
-				freg[regd(ir)] = ans.i;
+				_FRD = ans.i;
 				break;
 			case FDIV:
-				a.i = freg[regs(ir)];
-				b.i = freg[regt(ir)];
+				a.i = _FRS;
+				b.i = _FRT;
 				ans.f = a.f / b.f;
-				freg[regd(ir)] = ans.i;
+				_FRD = ans.i;
+				break;
+			case FSQRT:
+				a.i = _FRS;
+				ans.f = sqrt(a.f);
+				_FRD = ans.i;
 				break;
 			case FMOV:
-				freg[regd(ir)] = freg[regs(ir)];
+				_FRD = _FRS;
 				break;
 			case FNEG:
-				freg[regd(ir)] = (freg[regs(ir)] & 0x80000000) ?
-								 (freg[regs(ir)] & 0x7fffffff) : // minus
-								 (freg[regs(ir)] | 0x80000000) ; // plus
+				_FRD = (_FRS & 0x80000000) ?
+								 (_FRS & 0x7fffffff) : // minus
+								 (_FRS | 0x80000000) ; // plus
 				break;
 			case FJEQ:
-				a.i = freg[regs(ir)];
-				b.i = freg[regt(ir)];
+				a.i = _FRS;
+				b.i = _FRT;
 				if (a.f == b.f) 
 					pc += _IMM;
 				break;
 			case FJLT:
-				a.i = freg[regs(ir)];
-				b.i = freg[regt(ir)];
+				a.i = _FRS;
+				b.i = _FRT;
 				if (a.f < b.f) {
 	//				printf("fjlt : true\n");
 					pc += _IMM;

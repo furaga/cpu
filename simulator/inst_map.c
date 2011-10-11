@@ -39,6 +39,7 @@ void IMapInit(void) {
 	InstMap[FSUB] = "fsub";
 	InstMap[FMUL] = "fmul";
 	InstMap[FDIV] = "fdiv";
+	InstMap[FSQRT] = "fsqrt";
 	InstMap[FMOV] = "fmov";
 	InstMap[FNEG] = "fneg";
 	InstMap[FJEQ] = "fbeq";
@@ -83,6 +84,7 @@ void IMapInit(void) {
 	InstTyMap[FSUB] = 0;
 	InstTyMap[FMUL] = 0;
 	InstTyMap[FDIV] = 0;
+	InstTyMap[FSQRT] = 0;
 	InstTyMap[FMOV] = 0;
 	InstTyMap[FNEG] = 0;
 	InstTyMap[FJEQ] = 1;
