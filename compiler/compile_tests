@@ -1,5 +1,9 @@
 for n in test/*.ml; do
-	./min-caml ${n%.ml}
+	cat lib/lib_ml.ml ${n} > tmp.ml
+	./min-caml tmp
+	javac Merge.java
+	java Merge ${n%.ml}.s lib/lib_asm.s tmp.s
+	rm tmp.ml tmp.s
 done;
 
 for n in test/mylib_test/*.ml; do

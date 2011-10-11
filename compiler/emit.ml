@@ -17,6 +17,7 @@ min_caml_create_array:
 	mov %%g3, %%g2
 CREATE_ARRAY_LOOP:
 	jlt %%g5, %%g2, CREATE_ARRAY_END
+	jeq %%g5, %%g2, CREATE_ARRAY_END
 	st %%g4, %%g2, 0
 	addi %%g2, %%g2, 4
 	jmp CREATE_ARRAY_LOOP
@@ -30,6 +31,7 @@ min_caml_create_float_array:
 	mov %%g3, %%g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %%g4, %%g2, CREATE_FLOAT_ARRAY_END
+	jeq %%g4, %%g2, CREATE_ARRAY_END
 	fst %%f0, %%g2, 0
 	addi %%g2, %%g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
@@ -109,16 +111,21 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), Mov(y) -> Printf.fprintf oc "\tmov\t%s, %s\n" x y
 
 (*  | NonTail(x), Neg(y) -> Printf.fprintf oc "\tneg\t%s, %s\n" y x*)
-  | NonTail(x), Neg(y) -> Printf.fprintf oc "\tmuli\t%s, %s, -1\n" x y
+  | NonTail(x), Neg(y) -> Printf.fprintf oc "\tsub\t%s, %%g0, %s\n" x y
 
 (*  | NonTail(x), Add(y, z') -> Printf.fprintf oc "\tadd\t%s, %s, %s\n" y (pp_id_or_imm z') x*)
   | NonTail(x), Add(y, V(z)) -> Printf.fprintf oc "\tadd\t%s, %s, %s\n" x y (pp_id_or_imm (V(z)))
-  
   | NonTail(x), Add(y, C(z)) -> Printf.fprintf oc "\taddi\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))	(*即値*)
 
 (*  | NonTail(x), Sub(y, z') -> Printf.fprintf oc "\tsub\t%s, %s, %s\n" y (pp_id_or_imm z') x*)
   | NonTail(x), Sub(y, V(z)) -> Printf.fprintf oc "\tsub\t%s, %s, %s\n" x y (pp_id_or_imm (V(z)))
   | NonTail(x), Sub(y, C(z)) -> Printf.fprintf oc "\tsubi\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))	(*即値*)
+
+  | NonTail(x), Mul(y, V(z)) -> Printf.fprintf oc "\tmul\t%s, %s, %s\n" x y (pp_id_or_imm (V(z)))
+  | NonTail(x), Mul(y, C(z)) -> Printf.fprintf oc "\tmuli\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))	(*即値*)
+
+  | NonTail(x), Div(y, V(z)) -> Printf.fprintf oc "\tdiv\t%s, %s, %s\n" x y (pp_id_or_imm (V(z)))
+  | NonTail(x), Div(y, C(z)) -> Printf.fprintf oc "\tdivi\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))	(*即値*)
 
 (*  | NonTail(x), SLL(y, z') -> Printf.fprintf oc "\tsll\t%s, %s, %s\n" y (pp_id_or_imm z') x*)
   | NonTail(x), SLL(y, V(z)) -> Printf.fprintf oc "\tsll\t%s, %s, %s\n" x (pp_id_or_imm (V(z))) y
@@ -128,14 +135,16 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), Ld(y, V z) ->
    	begin
   		let z' = pp_id_or_imm (V z) in
-	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
+(*	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';*)
+	  	Printf.fprintf oc "\tadd\t%s, %s, %s\n" y y z';
 	  	Printf.fprintf oc "\tld\t%s, %s, 0\n" x y
   	end
   | NonTail(x), Ld(y, C z) -> let z' = C z in Printf.fprintf oc "\tld\t%s, %s, %s\n" x y (pp_id_or_imm z')
   | NonTail(_), St(x, y, V z) ->
    	begin
   		let z' = pp_id_or_imm (V z) in
-	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
+(*	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';*)
+	  	Printf.fprintf oc "\tadd\t%s, %s, %s\n" y y z';
 	  	Printf.fprintf oc "\tst\t%s, %s, 0\n" x y
   	end
   | NonTail(_), St(x, y, C z) -> let z' = C z in Printf.fprintf oc "\tst\t%s, %s, %s\n" x y (pp_id_or_imm z')
@@ -346,7 +355,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				begin
 					g'_args oc [] ys zs;
 					Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
-					Printf.fprintf oc "\tmvlo\t%%g3, %d\n" (int_of_char '\n');
+					Printf.fprintf oc "\tmvlo\t%%g3, 10\n";
 					Printf.fprintf oc "\toutput\t%%g3\n";
 					Printf.fprintf oc "\treturn\n"
 		  		end
@@ -361,10 +370,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss);
 					Printf.fprintf oc "\treturn\n"
 				end
-		  	| "min_caml_print_int" 
-		  	| "min_caml_print_byte"
-		  	| "min_caml_prerr_int" 
-		  	| "min_caml_prerr_byte" ->
+		  	| "min_caml_print_char"
+		  	| "min_caml_write" ->
 		  		begin
 					g'_args oc [] ys zs;
 				  	Printf.fprintf oc "\toutput\t%%g3\n";
@@ -399,20 +406,28 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 
   | NonTail(a), CallDir(Id.L(x), ys, zs) -> (* ラベルで飛ぶジャンプ *)
 	  	(match x with
-		  	| "min_caml_print_newline" ->
+	  		| "min_caml_sqrt" ->
 		  		begin
 					g'_args oc [] ys zs;
-					Printf.fprintf oc "\toutput\t%%g3\n";
+					Printf.fprintf oc "\tfsqrt\t%%g3, %%g3\n";
 					if List.mem a allregs && a <> regs.(0) then
-					Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
+						Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 					else if List.mem a allfregs && a <> fregs.(0) then
-					(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
+						(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
+				end
+		  	| "min_caml_print_newline" ->
+		  		begin
+					let ss = stacksize () in
+					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss);
+					Printf.fprintf oc "\tmvhi\t%%g3, 0\n";
+					Printf.fprintf oc "\tmvlo\t%%g3, 10\n";
+					Printf.fprintf oc "\toutput\t%%g3\n";
+					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss);
 				end
 		  	| "min_caml_print_float" ->(* TODO *) 
 		  		begin
 					g'_args oc [] ys zs;
 					let ss = stacksize () in
-					
 					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
 					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss);
 					Printf.fprintf oc "\tld\t%%g3, %s, %d\n" reg_sp (ss - 4);
@@ -424,11 +439,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					else if List.mem a allfregs && a <> fregs.(0) then
 						(Printf.fprintf oc "\tfmov\t%s, %s, 0\n" a fregs.(0))
 				end
-		  	| "min_caml_print_int" 
-		  	| "min_caml_print_byte"
-		  	| "min_caml_prerr_int" 
-		  	| "min_caml_prerr_byte" ->
-		  		begin
+		  	| "min_caml_print_char"
+		  	| "min_caml_write" ->
+	  		begin
 					g'_args oc [] ys zs;
 					Printf.fprintf oc "\toutput\t%%g3\n";
 					if List.mem a allregs && a <> regs.(0) then

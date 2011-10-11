@@ -1,0 +1,7 @@
+output files : test/ack.s
+input files : lib/lib_asm.s tmp.s 
+.init_heap_size	192 => 192
+.init_heap_size	0 => 0
+.init_heap_size	192
+
+		skip

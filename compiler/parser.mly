@@ -4,6 +4,13 @@ open Syntax
 open Lexing
 let addtyp x = (x, Type.gentyp ())
 (* log_2^xを求める *)
+let rec is_log2 x = 
+  if x = 0 then
+  	false
+  else if x = 1 then
+  	true
+  else
+  	(if x mod 2 = 0 then is_log2 (x / 2) else false)
 let rec log2 x =
   if x = 1 then
   	0
@@ -96,10 +103,10 @@ exp: /* 一般の式 (caml2html: parser_exp) */
     { Add($1, $3) }
 | exp MINUS exp
     { Sub($1, $3) }
-| exp AST INT
-    { SLL($1, Int(log2 $3)) (* min-rt.mlでは整数の掛け算は -- * 4 の形でしか現れないので、これでごまかせる。 *) }
-| exp SLASH INT
-    { SLL($1, Int(-(log2 $3))) (* min-rt.mlでは整数の掛け算は -- * 4 の形でしか現れないので、これでごまかせる。 *) }
+| exp AST exp
+    { Mul($1, $3) }
+| exp SLASH exp
+    { Div($1, $3) }
 | exp EQUAL exp
     { Eq($1, $3) }
 | exp LESS_GREATER exp
