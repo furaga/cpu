@@ -21,6 +21,7 @@ l.63:	! 1000000.000000
 
 ! * create_array
 min_caml_create_array:
+	slli %g3, %g3, 2
 	add %g5, %g3, %g2
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
@@ -33,6 +34,7 @@ CREATE_ARRAY_END:
 
 ! * create_float_array
 min_caml_create_float_array:
+	slli %g3, %g3, 2
 	add %g4, %g3, %g2
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
@@ -66,48 +68,48 @@ inprod.29:
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
 	fst	%f0, %g1, 8
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	getx.23
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	fld	%f1, %g1, 8
 	fmul	%f0, %f1, %f0
 	ld	%g3, %g1, 0
+	fst	%f0, %g1, 12
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	gety.25
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	ld	%g3, %g1, 4
 	fst	%f0, %g1, 16
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	gety.25
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fld	%f1, %g1, 16
+	fmul	%f0, %f1, %f0
+	fld	%f1, %g1, 12
+	fadd	%f0, %f1, %f0
+	ld	%g3, %g1, 0
+	fst	%f0, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	gety.25
+	call	getz.27
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 4
 	fst	%f0, %g1, 24
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	gety.25
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	getz.27
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
 	fmul	%f0, %f1, %f0
-	fld	%f1, %g1, 16
-	fadd	%f0, %f1, %f0
-	ld	%g3, %g1, 0
-	fst	%f0, %g1, 32
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	getz.27
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	ld	%g3, %g1, 4
-	fst	%f0, %g1, 40
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	getz.27
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	fld	%f1, %g1, 40
-	fmul	%f0, %f1, %f0
-	fld	%f1, %g1, 32
+	fld	%f1, %g1, 20
 	fadd	%f0, %f1, %f0
 	return
 min_caml_start:
@@ -136,17 +138,17 @@ min_caml_start:
 	fst	%f2, %g4, -8
 	fst	%f1, %g4, 0
 	fst	%f0, %g1, 0
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
 	call	inprod.29
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	fld	%f1, %g1, 0
 	fmul	%f0, %f1, %f0
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
 	call	min_caml_truncate
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	output	%g3
 	halt

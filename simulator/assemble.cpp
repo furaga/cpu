@@ -13,28 +13,28 @@
 #include "asm.h"
 
 #define	LINE_MAX	2048	// asmの一行の長さの最大値
-#define DATA_NUM 1024
+#define DATA_NUM (1024 * 1024)
 
 using namespace std;
 
 uint32_t call_opcode(char *, char *);
 int	encoder(int, char*);
 
-char	label_name[128][256];	
+char	label_name[LABEL_MAX][256];	
 uint32_t label_cnt;
  
 int	assemble(char *sfile) {
 	char	buf[LINE_MAX];	
 	uint32_t	output_data[DATA_NUM] = {0};	// 出力データの保存領域
-	uint32_t	input_line_cnt;	// 入力側の行数をカウント
-	uint32_t	output_line_cnt;	// 出力側の行数をカウント
+	uint32_t	i, input_line_cnt, output_line_cnt;	// 入出力側の行数をカウント
 	uint32_t	ir,err_cnt,label_line,heap_size,cnt;
 	map<string, uint32_t> label_map;
+	map<string, uint32_t> heap_label;
 	char	opcode[256];
 	char *tmp = NULL;
 	char *dfile;
 	FILE	*fp;	// source file pointer
-	int i,fd,ret,num,len;
+	int fd,ret,num,len;
 
 
 	input_line_cnt = 0;
@@ -42,6 +42,7 @@ int	assemble(char *sfile) {
 	err_cnt = 0;
 	label_cnt = 0;
 	label_map.empty();
+	heap_label.empty();
 	heap_size = 0;
 
 
@@ -74,7 +75,8 @@ int	assemble(char *sfile) {
 			if (strchr(buf, ':')) {
 				// l.X: ------------------------ label
 				tmp = strtok(buf,":");
-				label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt*4));
+				label_map.insert(map<string,uint32_t>::value_type(tmp, (output_line_cnt-1)*4));
+				heap_label.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
 			} else {
 				// .xxxx 0xXXXXXXXX ------------------------- data
 				sscanf(buf, "%s 0x%x", tmp, &num);
@@ -160,18 +162,17 @@ int	assemble(char *sfile) {
 			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
 			<< "CONTENT\tBEGIN\n\n";
 		
-		ofs << output_line_cnt << endl;
 		map<string,uint32_t>::iterator itr;
 		for(i = 0; i < output_line_cnt; i++) {
+			for(itr = heap_label.begin(); itr != heap_label.end(); itr++) {
+				if (itr->second == (uint32_t)i) {
+					ofs << itr->first << ":\n";
+				}
+			}
 
 			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
-				if ((itr->second / 4 == (uint32_t)i) &&
-					(itr->first[0] == 'l') &&
-					(itr->first[1] == '.')) {
-					ofs << itr->first << ":\n";
-				} else 	if ((itr->second == (uint32_t)i) &&
-							((itr->first[0] != 'l') ||
-							(itr->first[1] != '.'))) {
+				if ((itr->second == (uint32_t)i) &&
+					(heap_label.count(itr->first) <= 0)) {
 					ofs << itr->first << ":\n";
 				}
 			}
@@ -185,6 +186,7 @@ int	assemble(char *sfile) {
 
 		}
 		ofs.close();
+
 
 		printf("%s\n", dfile);
 

@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "asm.h"
-extern char label_name[128][256];
+extern char label_name[LABEL_MAX][256];
 extern uint32_t label_cnt;
 
 uint32_t call_opcode(char *opcode, char *op_data)
@@ -28,6 +28,7 @@ uint32_t call_opcode(char *opcode, char *op_data)
 	char lname[256];
 
 	shaft = funct = target = 0;
+
 
 	if(strcmp(opcode, "mov") == 0){
 		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)

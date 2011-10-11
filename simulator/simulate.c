@@ -61,7 +61,8 @@ int simulate(char *sfile)
 
 	heap_size = rom[0]; 
 	pc++;
-	for (i = 1; heap_size > 0; i++,pc++) {
+	//reg[2] = 4;
+	for (i = 0; heap_size > 0; i++,pc++) {
 		ram[i] = rom[pc];
 		reg[2] += 4;
 		heap_size -= 32;
@@ -116,7 +117,7 @@ int simulate(char *sfile)
 				break;
 			case INPUT:
 				///////////////////////////////////////
-				ret = scanf("%c", &_RD);
+				ret = scanf("%c", (char*)&_RD);
 				_RD = _RD & 0xff;
 				break;
 			case OUTPUT:
@@ -172,10 +173,12 @@ int simulate(char *sfile)
 				lr = pc;
 				pc = _RS;
 				
+				/*
 				for (i = 0; i < 50; i++) {
 					a.i = freg[i];
 					printf("ram[%d]=%d\n", i, ram[i]);
 				}
+				*/
 				break;
 			case RETURN:
 				pc = lr;
@@ -250,11 +253,12 @@ int simulate(char *sfile)
 		}
 	} while(opcode(ir) != HALT);
 
+/*
 	for (i = 0; i < 5; i++) {
 		a.i = freg[i];
 		printf("freg[%d]=%f\n", i, a.f);
 	}
-
+*/
 	printf("CPU Simulator Results\n");
 
 	return 0;

@@ -13,6 +13,7 @@ l.35:	! -12.300000
 
 ! * create_array
 min_caml_create_array:
+	slli %g3, %g3, 2
 	add %g5, %g3, %g2
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
@@ -25,6 +26,7 @@ CREATE_ARRAY_END:
 
 ! * create_float_array
 min_caml_create_float_array:
+	slli %g3, %g3, 2
 	add %g4, %g3, %g2
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
@@ -71,17 +73,17 @@ min_caml_start:
 	mvhi	%g3, 15
 	mvlo	%g3, 16960
 	fst	%f0, %g1, 0
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
 	call	min_caml_float_of_int
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	fld	%f1, %g1, 0
 	fmul	%f0, %f1, %f0
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
 	call	min_caml_int_of_float
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	output	%g3
 	halt

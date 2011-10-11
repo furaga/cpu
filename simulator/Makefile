@@ -1,8 +1,8 @@
 CC = g++
 CXX = g++
 LD = g++
-CFLAGS = -Wall -O2 -I ./include/
-CXXFLAGS = -Wall -O2 -I ./include/
+CFLAGS = -Wall -O2 -funroll-loops -I ./include/
+CXXFLAGS = -Wall -O2 -funroll-loops -I ./include/
 LDFLAGS = -Wall -O2
 TARGET = simcho asmcho 
 SIMH = common.h sim.h
@@ -10,7 +10,9 @@ ASMH = common.h asm.h
 vpath %.h ./include
 
 #TEST_TARGET = float_test/test1 float_test/test2 float_test/test3
-TEST_TARGET = heap_test
+#TEST_TARGET = mylib_test/input_test
+#TEST_TARGET = heap_test
+TEST_TARGET = min-rt/min-rt
 
 ASM_TARGET = $(TEST_TARGET:%=test/%.s)
 SIM_TARGET = $(TEST_TARGET:%=test/%)

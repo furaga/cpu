@@ -1,5 +1,4 @@
 .init_heap_size	32
-
 l.5:	! 3.140000
 	.long	0x4048f5c2
 	jmp	min_caml_start
@@ -10,6 +9,7 @@ l.5:	! 3.140000
 
 ! * create_array
 min_caml_create_array:
+	slli %g3, %g3, 2
 	add %g5, %g3, %g2
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
@@ -22,6 +22,7 @@ CREATE_ARRAY_END:
 
 ! * create_float_array
 min_caml_create_float_array:
+	slli %g3, %g3, 2
 	add %g4, %g3, %g2
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
@@ -38,10 +39,10 @@ CREATE_FLOAT_ARRAY_END:
 
 f.2:
 	fst	%f0, %g1, 4
-	st	%g3, %g1, 0
+	st	%g3, %g1, 8
 	ld	%g3, %g1, 4
 	output	%g3
-	ld	%g3, %g1, 0
+	ld	%g3, %g1, 8
 	return
 min_caml_start:
 	setL %g3, l.5

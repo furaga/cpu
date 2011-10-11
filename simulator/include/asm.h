@@ -8,6 +8,7 @@
 // PROTO_R(add, ADD)
 ////////////////////////////////////////////////////
 #define ASM_LOG "aslog"
+#define LABEL_MAX (4 * 1024)
 
 #define PROTO_R(name, opcode) \
 	uint32_t name(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);

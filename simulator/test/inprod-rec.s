@@ -15,6 +15,7 @@ l.39:	! 0.000000
 
 ! * create_array
 min_caml_create_array:
+	slli %g3, %g3, 2
 	add %g5, %g3, %g2
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
@@ -27,6 +28,7 @@ CREATE_ARRAY_END:
 
 ! * create_float_array
 min_caml_create_float_array:
+	slli %g3, %g3, 2
 	add %g4, %g3, %g2
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
@@ -54,11 +56,11 @@ inprod.17:
 	fmul	%f0, %f0, %f1
 	subi	%g5, %g5, 1
 	fst	%f0, %g1, 0
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
 	call	inprod.17
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	fld	%f1, %g1, 0
 	fadd	%f0, %f1, %f0
 	return
@@ -93,18 +95,18 @@ min_caml_start:
 	mvhi	%g5, 0
 	mvlo	%g5, 2
 	ld	%g3, %g1, 0
-	fst	%f0, %g1, 8
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
+	fst	%f0, %g1, 4
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	inprod.17
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	fld	%f1, %g1, 8
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	fld	%f1, %g1, 4
 	fmul	%f0, %f1, %f0
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_truncate
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	output	%g3
 	halt
