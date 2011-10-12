@@ -135,17 +135,24 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), Ld(y, V z) ->
    	begin
   		let z' = pp_id_or_imm (V z) in
+		let ss = stacksize () in
 (*	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';*)
+		Printf.fprintf oc "\tst\t%s, %s, %d\n" y reg_sp (ss - 4);
 	  	Printf.fprintf oc "\tadd\t%s, %s, %s\n" y y z';
-	  	Printf.fprintf oc "\tld\t%s, %s, 0\n" x y
+	  	Printf.fprintf oc "\tld\t%s, %s, 0\n" x y;
+	  	(* yがxでないときyの値を復帰する *)
+	  	(if x <> y then Printf.fprintf oc "\tld\t%s, %s, %d\n" y reg_sp (ss - 4));
   	end
   | NonTail(x), Ld(y, C z) -> let z' = C z in Printf.fprintf oc "\tld\t%s, %s, %s\n" x y (pp_id_or_imm z')
   | NonTail(_), St(x, y, V z) ->
    	begin
   		let z' = pp_id_or_imm (V z) in
+		let ss = stacksize () in
 (*	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';*)
+		Printf.fprintf oc "\tst\t%s, %s, %d\n" y reg_sp (ss - 4);
 	  	Printf.fprintf oc "\tadd\t%s, %s, %s\n" y y z';
-	  	Printf.fprintf oc "\tst\t%s, %s, 0\n" x y
+	  	Printf.fprintf oc "\tst\t%s, %s, 0\n" x y;
+	  	(if x <> y then Printf.fprintf oc "\tld\t%s, %s, %d\n" y reg_sp (ss - 4));
   	end
   | NonTail(_), St(x, y, C z) -> let z' = C z in Printf.fprintf oc "\tst\t%s, %s, %s\n" x y (pp_id_or_imm z')
 
@@ -174,16 +181,25 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(_), StDF(x, y, z') -> Printf.fprintf oc "\tstd\t%s, [%s + %s]\n" x y (pp_id_or_imm z')*)
   | NonTail(x), LdDF(y, V(z)) ->
   	begin
+  		(* ポインタの値とかあやしい *)
   		let z' = pp_id_or_imm (V(z)) in
-	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
-	  	Printf.fprintf oc "\tfld\t%s, %s, 0\n" x y
+		let ss = stacksize () in
+(*	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';*)
+		Printf.fprintf oc "\tst\t%s, %s, %d\n" y reg_sp (ss - 4);
+	  	Printf.fprintf oc "\tadd\t%s, %s, %s\n" y y z';
+	  	Printf.fprintf oc "\tfld\t%s, %s, 0\n" x y;
+	  	(if x <> y then Printf.fprintf oc "\tld\t%s, %s, %d\n" y reg_sp (ss - 4));
   	end
   | NonTail(x), LdDF(y, C(z)) -> Printf.fprintf oc "\tfld\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))
   | NonTail(_), StDF(x, y, V(z)) ->
   	begin
   		let z' = pp_id_or_imm (V(z)) in
-	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';
-	  	Printf.fprintf oc "\tfst\t%s, %s, 0\n" x y
+		let ss = stacksize () in
+(*	  	Printf.fprintf oc "\tsub\t%s, %s, %s\n" y y z';*)
+		Printf.fprintf oc "\tst\t%s, %s, %d\n" y reg_sp (ss - 4);
+	  	Printf.fprintf oc "\tadd\t%s, %s, %s\n" y y z';
+	  	Printf.fprintf oc "\tfst\t%s, %s, 0\n" x y;
+	  	(if x <> y then Printf.fprintf oc "\tld\t%s, %s, %d\n" y reg_sp (ss - 4));
   	end
   | NonTail(_), StDF(x, y, C(z)) -> Printf.fprintf oc "\tfst\t%s, %s, %s\n" x y (pp_id_or_imm (C(z)))
   
@@ -409,7 +425,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  		| "min_caml_sqrt" ->
 		  		begin
 					g'_args oc [] ys zs;
-					Printf.fprintf oc "\tfsqrt\t%%g3, %%g3\n";
+					Printf.fprintf oc "\tfsqrt\t%%f0, %%f0\n";
 					if List.mem a allregs && a <> regs.(0) then
 						Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 					else if List.mem a allfregs && a <> fregs.(0) then

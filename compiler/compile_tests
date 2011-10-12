@@ -6,6 +6,6 @@ for n in test/*.ml; do
 	rm tmp.ml tmp.s
 done;
 
-for n in test/mylib_test/*.ml; do
-	./min-caml ${n%.ml}
-done
+#for n in test/mylib_test/*.ml; do
+#	./min-caml ${n%.ml}
+#done
