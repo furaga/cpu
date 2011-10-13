@@ -14,6 +14,7 @@ let rec fabs a =
 	if a < 0.0 then -. a
 	else a
 in
+let rec abs_float x = fabs x in
 let rec fneg a = -. a in
 let rec fhalf a = a /. 2.0 in
 let rec fsqr a = a *. a in
@@ -165,7 +166,7 @@ let rec print_int n =
 			print_digits (digits - 1) in
 	let digits = get_digits 0 in
 	(if n < 0 then print_char 45 else ());
-	if digits <= 0 then
+	if digits < 0 then
 		print_char 48
 	else
 		print_digits digits in
