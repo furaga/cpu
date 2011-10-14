@@ -243,17 +243,17 @@ int simulate(char *sfile) {
 				break;
 			case SIN:
 				a.i = _FRS;
-				ans.f = sin(a.f);
+				ans.f = sinf(a.f);
 				_FRD = ans.i;
 				break;
 			case COS:
 				a.i = _FRS;
-				ans.f = cos(a.f);
+				ans.f = cosf(a.f);
 				_FRD = ans.i;
 				break;
 			case ATAN:
 				a.i = _FRS;
-				ans.f = atan(a.f);
+				ans.f = atanf(a.f);
 				_FRD = ans.i;
 				break;
 			case I_OF_F:
