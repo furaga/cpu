@@ -4,7 +4,7 @@
 enum Print_Flags {
 ON,GC,REG,RAM,PRINT_FLAG_NUM
 };
-void decode_ir(uint32_t, const char **,FILE*);
+void decode_ir(uint32_t,FILE*);
 extern const char *InstMap[INST_NUM];
 extern const char *InstTyMap[INST_NUM];
 void IMapInit(void);
@@ -52,6 +52,8 @@ int __print_state(int init_flag, int argc, char **argv) {
 				} else if (strcmp(argv[i], "-o2")==0) {
 					flag[ON] = 1;
 					fp = stderr;
+				} else if (strcmp(argv[i], "-p")==0) {
+					flag[ON] = 1;
 				} else if (strcmp(argv[i], "-res")==0) {
 					flag[ON] = 1;
 					break_points[bpcnt++] = "halt";
@@ -67,15 +69,17 @@ int __print_state(int init_flag, int argc, char **argv) {
 
 
 		if (flag[ON]) {
-			for (i=0,bp=0; i < bpcnt; i++) {
-				if (strcmp(break_points[i], InstMap[get_opcode(rom[pc])]) == 0)
-					bp=1;
+			if (bpcnt > 0) {
+				for (i=0,bp=0; i < bpcnt; i++) {
+					if (strcmp(break_points[i], InstMap[get_opcode(rom[pc])]) == 0)
+						bp=1;
+				}
+				if (bp==0) 
+					return 0;
 			}
-			if (bp==0) 
-				return 0;
 
-			fprintf(fp, "\n");
-			decode_ir(rom[pc],break_points,fp);
+			//fprintf(fp, "\n");
+			decode_ir(rom[pc],fp);
 
 			if (flag[REG]) {
 				fprintf(fp, "g0:%X g1:%X g2:%X g3:%X g4:%X g5:%X g6:%X g7:%X\n",
@@ -160,6 +164,12 @@ void IMapInit(void) {
 	InstMap[FST] = "fst";
 	InstMap[HALT] = "halt";
 
+	InstMap[SIN] = "sin";
+	InstMap[COS] = "cos";
+	InstMap[ATAN] = "atan";
+	InstMap[SQRT] = "sqrt";
+	InstMap[I_OF_F] = "int_of_float";
+	InstMap[F_OF_I] = "float_of_int";
 // 0 = R, 1 = I, 2 = J;
 	InstTyMap[NOP] = "f";		//
 	InstTyMap[MOV] = "fgg";		//
@@ -204,4 +214,11 @@ void IMapInit(void) {
 	InstTyMap[FLD] = "ffgi";
 	InstTyMap[FST] = "ffgi";
 	InstTyMap[HALT] = "f";		//
+
+	InstTyMap[SIN] = "else";
+	InstTyMap[COS] = "else";
+	InstTyMap[ATAN] = "else";
+	InstTyMap[SQRT] = "else";
+	InstTyMap[I_OF_F] = "else";
+	InstTyMap[F_OF_I] = "else";
 }

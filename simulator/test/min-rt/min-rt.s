@@ -1,4 +1,4 @@
-.init_heap_size	1472
+.init_heap_size	1216
 FLOAT_ZERO:		! 0.0
 	.long 0x0
 FLOAT_ONE:		! 1.0
@@ -11,85 +11,69 @@ FLOAT_MAGICF:	! 8388608.0
 	.long 0x4b000000
 FLOAT_MAGICFHX:	! 1258291200
 	.long 0x4b000000
-l.7696:	! 6.283185
-	.long	0x40c90fda
-l.7694:	! 3.141593
-	.long	0x40490fda
-l.7689:	! 128.000000
+l.7541:	! 128.000000
 	.long	0x43000000
-l.7624:	! 0.900000
+l.7476:	! 0.900000
 	.long	0x3f66665e
-l.7622:	! 0.200000
+l.7474:	! 0.200000
 	.long	0x3e4cccc4
-l.7439:	! 150.000000
+l.7291:	! 150.000000
 	.long	0x43160000
-l.7435:	! -150.000000
+l.7287:	! -150.000000
 	.long	0xc3160000
-l.7406:	! 0.100000
+l.7258:	! 0.100000
 	.long	0x3dccccc4
-l.7400:	! -2.000000
+l.7252:	! -2.000000
 	.long	0xc0000000
-l.7396:	! 0.003906
+l.7248:	! 0.003906
 	.long	0x3b800000
-l.7350:	! 20.000000
+l.7202:	! 20.000000
 	.long	0x41a00000
-l.7348:	! 0.050000
+l.7200:	! 0.050000
 	.long	0x3d4cccc4
-l.7339:	! 0.250000
+l.7191:	! 0.250000
 	.long	0x3e800000
-l.7329:	! 10.000000
+l.7181:	! 10.000000
 	.long	0x41200000
-l.7322:	! 0.300000
+l.7174:	! 0.300000
 	.long	0x3e999999
-l.7320:	! 255.000000
+l.7172:	! 255.000000
 	.long	0x437f0000
-l.7315:	! 0.150000
-	.long	0x3e199999
-l.7307:	! 3.141593
-	.long	0x40490fda
-l.7305:	! 30.000000
-	.long	0x41f00000
-l.7303:	! 15.000000
-	.long	0x41700000
-l.7301:	! 0.000100
-	.long	0x38d1b70f
-l.7227:	! 100000000.000000
-	.long	0x4cbebc20
-l.7219:	! 1000000000.000000
-	.long	0x4e6e6b28
-l.7180:	! -0.100000
-	.long	0xbdccccc4
-l.7154:	! 0.010000
-	.long	0x3c23d70a
-l.7152:	! -0.200000
-	.long	0xbe4cccc4
-l.6772:	! -200.000000
-	.long	0xc3480000
-l.6769:	! 200.000000
-	.long	0x43480000
-l.6764:	! 0.017453
-	.long	0x3c8efa2d
-l.6551:	! 1.570796
-	.long	0x3fc90fda
-l.6540:	! 9.000000
-	.long	0x41100000
-l.6536:	! 2.500000
-	.long	0x40200000
-l.6534:	! -1.570796
-	.long	0xbfc90fda
-l.6532:	! 1.570796
-	.long	0x3fc90fda
-l.6528:	! 11.000000
-	.long	0x41300000
-l.6524:	! -1.000000
-	.long	0xbf800000
-l.6519:	! 1.000000
-	.long	0x3f800000
-l.6517:	! 0.500000
+l.7168:	! 0.500000
 	.long	0x3f000000
-l.6515:	! 2.000000
+l.7166:	! 0.150000
+	.long	0x3e199999
+l.7158:	! 3.141593
+	.long	0x40490fda
+l.7156:	! 30.000000
+	.long	0x41f00000
+l.7154:	! 15.000000
+	.long	0x41700000
+l.7152:	! 0.000100
+	.long	0x38d1b70f
+l.7078:	! 100000000.000000
+	.long	0x4cbebc20
+l.7070:	! 1000000000.000000
+	.long	0x4e6e6b28
+l.7031:	! -0.100000
+	.long	0xbdccccc4
+l.7005:	! 0.010000
+	.long	0x3c23d70a
+l.7003:	! -0.200000
+	.long	0xbe4cccc4
+l.6623:	! -200.000000
+	.long	0xc3480000
+l.6620:	! 200.000000
+	.long	0x43480000
+l.6615:	! 0.017453
+	.long	0x3c8efa2d
+l.6470:	! -1.000000
+	.long	0xbf800000
+l.6468:	! 1.000000
+	.long	0x3f800000
+l.6412:	! 2.000000
 	.long	0x40000000
-l.6510:	! 0.000000
+l.6407:	! 0.000000
 	.long	0x0
 	jmp	min_caml_start
 
@@ -158,90 +142,13 @@ FLOOR_RET:
 FLOOR_RET2:
 	fneg %f0, %f0
 	return
-
-! * float_of_int
-min_caml_float_of_int:
-	jlt %g0, %g3, ITOF_MAIN		! if (%g0 <= %g3) goto ITOF_MAIN
-	jeq %g0, %g3, ITOF_MAIN
-	sub %g3, %g0, %g3
-	call ITOF_MAIN
+	
+min_caml_ceil:
+	fneg %f0, %f0
+	call min_caml_ceil
 	fneg %f0, %f0
 	return
-ITOF_MAIN:
 
-	! %f1 <= FLOAT_MAGICF
-	! %g4 <= FLOAT_MAGICFHX
-	! %g5 <= FLOAT_MAGICI
-
-	setL %g5, FLOAT_MAGICF
-	fld %f1, %g5, 0
-	setL %g5, FLOAT_MAGICFHX
-	ld %g4, %g5, 0
-	setL %g5, FLOAT_MAGICI
-	ld %g5, %g5, 0
-	jlt %g5, %g3, ITOF_BIG
-	jeq %g5, %g3, ITOF_BIG
-	add %g3, %g3, %g4
-	st %g3, %g1, 0
-	fld %f0, %g1, 0
-	fsub %f0, %f0, %f1
-	return
-ITOF_BIG:
-	setL %g4, FLOAT_ZERO
-	fld %f2, %g4, 0
-ITOF_LOOP:
-	sub %g3, %g3, %g5
-	fadd %f2, %f2, %f1
-	jlt %g5, %g3, ITOF_LOOP
-	jeq %g5, %g3, ITOF_LOOP
-	add %g3, %g3, %g4
-	st %g3, %g1, 0
-	fld %f0, %g1, 0
-	fsub %f0, %f0, %f1
-	fadd %f0, %f0, %f2
-	return
-
-! * int_of_float
-min_caml_int_of_float:
-	! %f1 <= 0.0
-	setL %g3, FLOAT_ZERO
-	fld %f1, %g3, 0
-	fjlt %f1, %f0, FTOI_MAIN			! if (0.0 <= %f0) goto FTOI_MAIN
-	fjeq %f1, %f0, FTOI_MAIN
-	fneg %f0, %f0
-	call FTOI_MAIN
-	sub %g3, %g0, %g3
-	return
-FTOI_MAIN:
-	call min_caml_floor
-	! %f2 <= FLOAT_MAGICF
-	! %g4 <= FLOAT_MAGICFHX
-	setL %g4, FLOAT_MAGICF
-	fld %f2, %g4, 0
-	setL %g4, FLOAT_MAGICFHX
-	ld %g4, %g4, 0
-	fjlt %f2, %f0, FTOI_BIG		! if (MAGICF <= %f0) goto FTOI_BIG
-	fjeq %f2, %f0, FTOI_BIG
-	fadd %f0, %f0, %f2
-	fst %f0, %g1, 0
-	ld %g3, %g1, 0
-	sub %g3, %g3, %g4
-	return
-FTOI_BIG:
-	setL %g5, FLOAT_MAGICI
-	ld %g5, %g5, 0
-	mov %g3, %g0
-FTOI_LOOP:
-	fsub %f0, %f0, %f2
-	add %g3, %g3, %g5
-	fjlt %f2, %f0, FTOI_LOOP
-	fjeq %f2, %f0, FTOI_LOOP
-	fadd %f0, %f0, %f2
-	fst %f0, %g1, 0
-	ld %g5, %g1, 0
-	sub %g5, %g5, %g4
-	add %g3, %g5, %g3
-	return
 
 !#####################################################################
 !
@@ -285,316 +192,73 @@ CREATE_FLOAT_ARRAY_END:
 ! * ここまでライブラリ関数
 !#####################################################################
 
-fless.2646:
-	fjlt	%f0, %f1, fjge_else.9896
+fless.2610:
+	fjlt	%f0, %f1, fjge_else.9775
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-fjge_else.9896:
+fjge_else.9775:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-fispos.2649:
-	setL %g3, l.6510
+fispos.2613:
+	setL %g3, l.6407
 	fld	%f1, %g3, 0
-	fjlt	%f1, %f0, fjge_else.9897
+	fjlt	%f1, %f0, fjge_else.9776
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-fjge_else.9897:
+fjge_else.9776:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-fisneg.2651:
-	setL %g3, l.6510
+fisneg.2615:
+	setL %g3, l.6407
 	fld	%f1, %g3, 0
-	fjlt	%f0, %f1, fjge_else.9898
+	fjlt	%f0, %f1, fjge_else.9777
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-fjge_else.9898:
+fjge_else.9777:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-fiszero.2653:
-	setL %g3, l.6510
+fiszero.2617:
+	setL %g3, l.6407
 	fld	%f1, %g3, 0
-	fjeq	%f0, %f1, fjne_else.9899
+	fjeq	%f0, %f1, fjne_else.9778
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-fjne_else.9899:
+fjne_else.9778:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-fabs.2658:
-	setL %g3, l.6510
+fabs.2622:
+	setL %g3, l.6407
 	fld	%f1, %g3, 0
-	fjlt	%f0, %f1, fjge_else.9900
+	fjlt	%f0, %f1, fjge_else.9779
 	return
-fjge_else.9900:
+fjge_else.9779:
 	fneg	%f0, %f0
 	return
-fneg.2660:
+fneg.2626:
 	fneg	%f0, %f0
 	return
-fhalf.2662:
-	setL %g3, l.6515
+fhalf.2628:
+	setL %g3, l.6412
 	fld	%f1, %g3, 0
 	fdiv	%f0, %f0, %f1
 	return
-fsqr.2664:
+fsqr.2630:
 	fmul	%f0, %f0, %f0
 	return
-atan_sub.6468:
-	setL %g3, l.6517
-	fld	%f3, %g3, 0
-	fjlt	%f0, %f3, fjge_else.9901
-	setL %g3, l.6519
-	fld	%f3, %g3, 0
-	fsub	%f3, %f0, %f3
-	fmul	%f4, %f0, %f0
-	fmul	%f4, %f4, %f1
-	setL %g3, l.6515
-	fld	%f5, %g3, 0
-	fmul	%f0, %f5, %f0
-	setL %g3, l.6519
-	fld	%f5, %g3, 0
-	fadd	%f0, %f0, %f5
-	fadd	%f0, %f0, %f2
-	fdiv	%f2, %f4, %f0
-	fmov	%f0, %f3
-	jmp	atan_sub.6468
-fjge_else.9901:
-	fmov	%f0, %f2
-	return
-atan.2669:
-	setL %g3, l.6519
-	fld	%f1, %g3, 0
-	fjlt	%f1, %f0, fjge_else.9902
-	setL %g3, l.6524
-	fld	%f1, %g3, 0
-	fjlt	%f0, %f1, fjge_else.9904
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	jmp	fjge_cont.9905
-fjge_else.9904:
-	mvhi	%g3, 65535
-	mvlo	%g3, -1
-fjge_cont.9905:
-	jmp	fjge_cont.9903
-fjge_else.9902:
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-fjge_cont.9903:
-	st	%g3, %g1, 0
-	fst	%f0, %g1, 4
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	fabs.2658
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	setL %g3, l.6519
-	fld	%f1, %g3, 0
-	fjlt	%f1, %f0, fjge_else.9906
-	fld	%f0, %g1, 4
-	jmp	fjge_cont.9907
-fjge_else.9906:
-	setL %g3, l.6519
-	fld	%f0, %g3, 0
-	fld	%f1, %g1, 4
-	fdiv	%f0, %f0, %f1
-fjge_cont.9907:
-	setL %g3, l.6528
-	fld	%f1, %g3, 0
-	fmul	%f2, %f0, %f0
-	setL %g3, l.6510
-	fld	%f3, %g3, 0
-	fst	%f0, %g1, 8
-	fmov	%f0, %f1
-	fmov	%f1, %f2
-	fmov	%f2, %f3
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	atan_sub.6468
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	setL %g3, l.6519
-	fld	%f1, %g3, 0
-	fadd	%f0, %f1, %f0
-	fld	%f1, %g1, 8
-	fdiv	%f0, %f1, %f0
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	ld	%g4, %g1, 0
-	jlt	%g3, %g4, jle_else.9908
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	jlt	%g4, %g3, jle_else.9909
-	return
-jle_else.9909:
-	setL %g3, l.6534
-	fld	%f1, %g3, 0
-	fsub	%f0, %f1, %f0
-	return
-jle_else.9908:
-	setL %g3, l.6532
-	fld	%f1, %g3, 0
-	fsub	%f0, %f1, %f0
-	return
-tan_sub.6451:
-	setL %g3, l.6536
-	fld	%f3, %g3, 0
-	fjlt	%f0, %f3, fjge_else.9910
-	setL %g3, l.6515
-	fld	%f3, %g3, 0
-	fsub	%f3, %f0, %f3
-	fsub	%f0, %f0, %f2
-	fdiv	%f2, %f1, %f0
-	fmov	%f0, %f3
-	jmp	tan_sub.6451
-fjge_else.9910:
-	fmov	%f0, %f2
-	return
-tan.6426:
-	setL %g3, l.6519
-	fld	%f1, %g3, 0
-	setL %g3, l.6540
-	fld	%f2, %g3, 0
-	fmul	%f3, %f0, %f0
-	setL %g3, l.6510
-	fld	%f4, %g3, 0
-	fst	%f0, %g1, 0
-	fst	%f1, %g1, 4
-	fmov	%f1, %f3
-	fmov	%f0, %f2
-	fmov	%f2, %f4
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	tan_sub.6451
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	fld	%f1, %g1, 4
-	fsub	%f0, %f1, %f0
-	fld	%f1, %g1, 0
-	fdiv	%f0, %f1, %f0
-	return
-tmp.6430:
-	fld	%f1, %g29, -8
-	fjlt	%f1, %f0, fjge_else.9911
-	setL %g3, l.6510
-	fld	%f2, %g3, 0
-	fjlt	%f0, %f2, fjge_else.9912
-	return
-fjge_else.9912:
-	fadd	%f0, %f0, %f1
-	ld	%g28, %g29, 0
-	b	%g28
-fjge_else.9911:
-	fsub	%f0, %f0, %f1
-	ld	%g28, %g29, 0
-	b	%g28
-sin.2671:
-	fld	%f1, %g29, -24
-	fld	%f2, %g29, -16
-	fld	%f3, %g29, -8
-	setL %g3, l.6510
-	fld	%f4, %g3, 0
-	fjlt	%f4, %f0, fjge_else.9913
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	jmp	fjge_cont.9914
-fjge_else.9913:
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-fjge_cont.9914:
-	fst	%f1, %g1, 0
-	st	%g3, %g1, 4
-	fst	%f3, %g1, 8
-	fst	%f2, %g1, 12
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	fabs.2658
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	mov	%g29, %g2
-	addi	%g2, %g2, 16
-	setL %g3, tmp.6430
-	st	%g3, %g29, 0
-	fld	%f1, %g1, 12
-	fst	%f1, %g29, -8
-	st	%g31, %g1, 20
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 24
-	callR	%g28
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	fld	%f1, %g1, 8
-	fjlt	%f1, %f0, fjge_else.9915
-	ld	%g3, %g1, 4
-	jmp	fjge_cont.9916
-fjge_else.9915:
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	ld	%g4, %g1, 4
-	jne	%g4, %g3, jeq_else.9917
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	jmp	jeq_cont.9918
-jeq_else.9917:
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-jeq_cont.9918:
-fjge_cont.9916:
-	fjlt	%f1, %f0, fjge_else.9919
-	jmp	fjge_cont.9920
-fjge_else.9919:
-	fld	%f2, %g1, 12
-	fsub	%f0, %f2, %f0
-fjge_cont.9920:
-	fld	%f2, %g1, 0
-	fjlt	%f2, %f0, fjge_else.9921
-	jmp	fjge_cont.9922
-fjge_else.9921:
-	fsub	%f0, %f1, %f0
-fjge_cont.9922:
-	setL %g4, l.6517
-	fld	%f1, %g4, 0
-	fmul	%f0, %f0, %f1
-	st	%g3, %g1, 16
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	tan.6426
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	setL %g3, l.6515
-	fld	%f1, %g3, 0
-	fmul	%f1, %f1, %f0
-	setL %g3, l.6519
-	fld	%f2, %g3, 0
-	fmul	%f0, %f0, %f0
-	fadd	%f0, %f2, %f0
-	fdiv	%f0, %f1, %f0
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	ld	%g4, %g1, 16
-	jne	%g4, %g3, jeq_else.9923
-	jmp	fneg.2660
-jeq_else.9923:
-	return
-cos.2673:
-	ld	%g29, %g29, -4
-	setL %g3, l.6551
-	fld	%f1, %g3, 0
-	fsub	%f0, %f1, %f0
-	ld	%g28, %g29, 0
-	b	%g28
-mul10.2675:
+mul10.2632:
 	muli	%g4, %g3, 8
 	muli	%g3, %g3, 2
 	add	%g3, %g4, %g3
 	return
-read_token.6378:
+read_int_token.2636:
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
 	st	%g3, %g1, 0
@@ -606,53 +270,53 @@ read_token.6378:
 	mov	%g4, %g3
 	mvhi	%g3, 0
 	mvlo	%g3, 48
-	jlt	%g4, %g3, jle_else.9924
+	jlt	%g4, %g3, jle_else.9780
 	mvhi	%g3, 0
 	mvlo	%g3, 57
-	jlt	%g3, %g4, jle_else.9926
+	jlt	%g3, %g4, jle_else.9782
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jle_cont.9927
-jle_else.9926:
+	jmp	jle_cont.9783
+jle_else.9782:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-jle_cont.9927:
-	jmp	jle_cont.9925
-jle_else.9924:
+jle_cont.9783:
+	jmp	jle_cont.9781
+jle_else.9780:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-jle_cont.9925:
+jle_cont.9781:
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jne	%g3, %g5, jeq_else.9928
+	jne	%g3, %g5, jeq_else.9784
 	ld	%g3, %g1, 16
 	ld	%g5, %g3, 0
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jne	%g5, %g6, jeq_else.9929
+	jne	%g5, %g6, jeq_else.9785
 	mvhi	%g5, 0
 	mvlo	%g5, 45
 	ld	%g6, %g1, 12
-	jne	%g6, %g5, jeq_else.9931
+	jne	%g6, %g5, jeq_else.9787
 	mvhi	%g5, 65535
 	mvlo	%g5, -1
 	st	%g5, %g3, 0
-	jmp	jeq_cont.9932
-jeq_else.9931:
+	jmp	jeq_cont.9788
+jeq_else.9787:
 	mvhi	%g5, 0
 	mvlo	%g5, 1
 	st	%g5, %g3, 0
-jeq_cont.9932:
-	jmp	jeq_cont.9930
-jeq_else.9929:
-jeq_cont.9930:
+jeq_cont.9788:
+	jmp	jeq_cont.9786
+jeq_else.9785:
+jeq_cont.9786:
 	ld	%g3, %g1, 8
 	ld	%g5, %g3, 0
 	st	%g4, %g1, 20
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	mul10.2675
+	call	mul10.2632
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
@@ -665,66 +329,50 @@ jeq_cont.9930:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.9928:
+jeq_else.9784:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g5, %g1, 0
-	jne	%g5, %g3, jeq_else.9933
+	jne	%g5, %g3, jeq_else.9789
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.9933:
+jeq_else.9789:
 	ld	%g3, %g1, 16
 	ld	%g3, %g3, 0
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.9934
+	jne	%g3, %g4, jeq_else.9790
 	ld	%g3, %g1, 8
 	ld	%g3, %g3, 0
 	return
-jeq_else.9934:
+jeq_else.9790:
 	ld	%g3, %g1, 8
 	ld	%g3, %g3, 0
 	sub	%g3, %g0, %g3
 	return
-read_int.2677:
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g4, 0
-	mvlo	%g4, 1
+read_int.2639:
+	ld	%g3, %g29, -12
+	ld	%g4, %g29, -8
+	ld	%g5, %g29, -4
+	mvhi	%g6, 0
+	mvlo	%g6, 0
+	st	%g6, %g5, 0
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	st	%g3, %g1, 0
+	st	%g5, %g4, 0
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	mvhi	%g5, 0
+	mvlo	%g5, 32
+	mov	%g29, %g3
 	mov	%g3, %g4
 	mov	%g4, %g5
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mov	%g29, %g2
-	addi	%g2, %g2, 16
-	setL %g4, read_token.6378
-	st	%g4, %g29, 0
-	st	%g3, %g29, -8
-	ld	%g3, %g1, 0
-	st	%g3, %g29, -4
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	mvhi	%g4, 0
-	mvlo	%g4, 32
 	ld	%g28, %g29, 0
 	b	%g28
-read_token1.6292:
+read_float_token1.2645:
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
 	st	%g3, %g1, 0
@@ -736,53 +384,53 @@ read_token1.6292:
 	mov	%g4, %g3
 	mvhi	%g3, 0
 	mvlo	%g3, 48
-	jlt	%g4, %g3, jle_else.9935
+	jlt	%g4, %g3, jle_else.9791
 	mvhi	%g3, 0
 	mvlo	%g3, 57
-	jlt	%g3, %g4, jle_else.9937
+	jlt	%g3, %g4, jle_else.9793
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jle_cont.9938
-jle_else.9937:
+	jmp	jle_cont.9794
+jle_else.9793:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-jle_cont.9938:
-	jmp	jle_cont.9936
-jle_else.9935:
+jle_cont.9794:
+	jmp	jle_cont.9792
+jle_else.9791:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-jle_cont.9936:
+jle_cont.9792:
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jne	%g3, %g5, jeq_else.9939
+	jne	%g3, %g5, jeq_else.9795
 	ld	%g3, %g1, 16
 	ld	%g5, %g3, 0
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jne	%g5, %g6, jeq_else.9940
+	jne	%g5, %g6, jeq_else.9796
 	mvhi	%g5, 0
 	mvlo	%g5, 45
 	ld	%g6, %g1, 12
-	jne	%g6, %g5, jeq_else.9942
+	jne	%g6, %g5, jeq_else.9798
 	mvhi	%g5, 65535
 	mvlo	%g5, -1
 	st	%g5, %g3, 0
-	jmp	jeq_cont.9943
-jeq_else.9942:
+	jmp	jeq_cont.9799
+jeq_else.9798:
 	mvhi	%g5, 0
 	mvlo	%g5, 1
 	st	%g5, %g3, 0
-jeq_cont.9943:
-	jmp	jeq_cont.9941
-jeq_else.9940:
-jeq_cont.9941:
+jeq_cont.9799:
+	jmp	jeq_cont.9797
+jeq_else.9796:
+jeq_cont.9797:
 	ld	%g3, %g1, 8
 	ld	%g5, %g3, 0
 	st	%g4, %g1, 20
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	mul10.2675
+	call	mul10.2632
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
@@ -795,20 +443,20 @@ jeq_cont.9941:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.9939:
+jeq_else.9795:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g5, %g1, 0
-	jne	%g5, %g3, jeq_else.9944
+	jne	%g5, %g3, jeq_else.9800
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.9944:
+jeq_else.9800:
 	mov	%g3, %g4
 	return
-read_token2.6295:
+read_float_token2.2648:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
 	st	%g3, %g1, 0
@@ -818,32 +466,32 @@ read_token2.6295:
 	input	%g3
 	mvhi	%g4, 0
 	mvlo	%g4, 48
-	jlt	%g3, %g4, jle_else.9945
+	jlt	%g3, %g4, jle_else.9801
 	mvhi	%g4, 0
 	mvlo	%g4, 57
-	jlt	%g4, %g3, jle_else.9947
+	jlt	%g4, %g3, jle_else.9803
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jmp	jle_cont.9948
-jle_else.9947:
+	jmp	jle_cont.9804
+jle_else.9803:
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-jle_cont.9948:
-	jmp	jle_cont.9946
-jle_else.9945:
+jle_cont.9804:
+	jmp	jle_cont.9802
+jle_else.9801:
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-jle_cont.9946:
+jle_cont.9802:
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jne	%g4, %g5, jeq_else.9949
+	jne	%g4, %g5, jeq_else.9805
 	ld	%g4, %g1, 12
 	ld	%g5, %g4, 0
 	st	%g3, %g1, 16
 	mov	%g3, %g5
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	mul10.2675
+	call	mul10.2632
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 16
@@ -856,7 +504,7 @@ jle_cont.9946:
 	mov	%g3, %g4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	mul10.2675
+	call	mul10.2632
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 8
@@ -866,87 +514,49 @@ jle_cont.9946:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.9949:
+jeq_else.9805:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g4, %g1, 0
-	jne	%g4, %g3, jeq_else.9950
+	jne	%g4, %g3, jeq_else.9806
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.9950:
+jeq_else.9806:
 	return
-read_float.2679:
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 0
-	st	%g3, %g1, 0
-	mov	%g3, %g4
-	mov	%g4, %g5
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 1
-	st	%g3, %g1, 4
-	mov	%g3, %g4
-	mov	%g4, %g5
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	min_caml_create_array
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 0
-	st	%g3, %g1, 8
-	mov	%g3, %g4
-	mov	%g4, %g5
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	min_caml_create_array
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	mov	%g29, %g2
-	addi	%g2, %g2, 16
-	setL %g4, read_token1.6292
-	st	%g4, %g29, 0
-	st	%g3, %g29, -8
-	ld	%g4, %g1, 0
-	st	%g4, %g29, -4
-	mov	%g5, %g2
-	addi	%g2, %g2, 16
-	setL %g6, read_token2.6295
-	st	%g6, %g5, 0
-	ld	%g6, %g1, 4
-	st	%g6, %g5, -8
-	ld	%g7, %g1, 8
-	st	%g7, %g5, -4
-	mvhi	%g8, 0
-	mvlo	%g8, 0
+read_float.2650:
+	ld	%g3, %g29, -24
+	ld	%g4, %g29, -20
+	ld	%g5, %g29, -16
+	ld	%g6, %g29, -12
+	ld	%g7, %g29, -8
+	ld	%g8, %g29, -4
 	mvhi	%g9, 0
-	mvlo	%g9, 32
-	st	%g3, %g1, 12
-	st	%g5, %g1, 16
-	mov	%g4, %g9
-	mov	%g3, %g8
+	mvlo	%g9, 0
+	st	%g9, %g6, 0
+	mvhi	%g9, 0
+	mvlo	%g9, 0
+	st	%g9, %g7, 0
+	mvhi	%g9, 0
+	mvlo	%g9, 1
+	st	%g9, %g8, 0
+	mvhi	%g9, 0
+	mvlo	%g9, 0
+	st	%g9, %g5, 0
+	mvhi	%g9, 0
+	mvlo	%g9, 0
+	mvhi	%g10, 0
+	mvlo	%g10, 32
+	st	%g5, %g1, 0
+	st	%g8, %g1, 4
+	st	%g7, %g1, 8
+	st	%g6, %g1, 12
+	st	%g3, %g1, 16
+	mov	%g3, %g9
+	mov	%g29, %g4
+	mov	%g4, %g10
 	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 24
@@ -955,7 +565,7 @@ read_float.2679:
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 46
-	jne	%g3, %g4, jeq_else.9952
+	jne	%g3, %g4, jeq_else.9808
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g29, %g1, 16
@@ -965,62 +575,46 @@ read_float.2679:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	ld	%g3, %g1, 0
+	ld	%g3, %g1, 12
 	ld	%g3, %g3, 0
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	ld	%g3, %g1, 4
-	ld	%g3, %g3, 0
-	fst	%f0, %g1, 20
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
+	float_of_int	%f0, %g3
 	ld	%g3, %g1, 8
 	ld	%g3, %g3, 0
+	fst	%f0, %g1, 20
+	float_of_int	%f0, %g3
+	ld	%g3, %g1, 4
+	ld	%g3, %g3, 0
 	fst	%f0, %g1, 24
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
+	float_of_int	%f0, %g3
 	fld	%f1, %g1, 24
 	fdiv	%f0, %f1, %f0
 	fld	%f1, %g1, 20
 	fadd	%f0, %f1, %f0
-	jmp	jeq_cont.9953
-jeq_else.9952:
-	ld	%g3, %g1, 0
-	ld	%g3, %g3, 0
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-jeq_cont.9953:
+	jmp	jeq_cont.9809
+jeq_else.9808:
 	ld	%g3, %g1, 12
+	ld	%g3, %g3, 0
+	float_of_int	%f0, %g3
+jeq_cont.9809:
+	ld	%g3, %g1, 0
 	ld	%g3, %g3, 0
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.9954
+	jne	%g3, %g4, jeq_else.9810
 	return
-jeq_else.9954:
+jeq_else.9810:
 	fneg	%f0, %f0
 	return
-get_digits.6247:
+print_int_get_digits.2654:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
 	ld	%g6, %g4, 0
 	mvhi	%g7, 0
 	mvlo	%g7, 0
-	jlt	%g7, %g6, jle_else.9955
+	jlt	%g7, %g6, jle_else.9811
 	subi	%g3, %g3, 1
 	return
-jle_else.9955:
+jle_else.9811:
 	ld	%g6, %g4, 0
 	divi	%g6, %g6, 10
 	ld	%g7, %g4, 0
@@ -1035,11 +629,11 @@ jle_else.9955:
 	addi	%g3, %g3, 1
 	ld	%g28, %g29, 0
 	b	%g28
-print_digits.6249:
+print_int_print_digits.2656:
 	ld	%g4, %g29, -4
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jlt	%g3, %g5, jle_else.9956
+	jlt	%g3, %g5, jle_else.9812
 	slli	%g5, %g3, 2
 	st	%g4, %g1, 4
 	add	%g4, %g4, %g5
@@ -1054,55 +648,26 @@ print_digits.6249:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.9956:
+jle_else.9812:
 	return
-print_int.2681:
+print_int.2658:
+	ld	%g4, %g29, -12
+	ld	%g5, %g29, -8
+	ld	%g29, %g29, -4
+	mvhi	%g6, 0
+	mvlo	%g6, 0
+	jlt	%g3, %g6, jle_else.9814
+	mov	%g6, %g3
+	jmp	jle_cont.9815
+jle_else.9814:
+	sub	%g6, %g0, %g3
+jle_cont.9815:
+	st	%g6, %g4, 0
 	mvhi	%g4, 0
-	mvlo	%g4, 10
-	mvhi	%g5, 0
-	mvlo	%g5, 32
-	st	%g3, %g1, 0
-	mov	%g3, %g4
-	mov	%g4, %g5
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 0
-	ld	%g6, %g1, 0
-	jlt	%g6, %g5, jle_else.9958
-	mov	%g5, %g6
-	jmp	jle_cont.9959
-jle_else.9958:
-	sub	%g5, %g0, %g6
-jle_cont.9959:
+	mvlo	%g4, 0
+	st	%g5, %g1, 0
 	st	%g3, %g1, 4
 	mov	%g3, %g4
-	mov	%g4, %g5
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	min_caml_create_array
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	mov	%g29, %g2
-	addi	%g2, %g2, 16
-	setL %g4, get_digits.6247
-	st	%g4, %g29, 0
-	st	%g3, %g29, -8
-	ld	%g3, %g1, 4
-	st	%g3, %g29, -4
-	mov	%g4, %g2
-	addi	%g2, %g2, 8
-	setL %g5, print_digits.6249
-	st	%g5, %g4, 0
-	st	%g3, %g4, -4
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	st	%g4, %g1, 8
 	st	%g31, %g1, 12
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 16
@@ -1111,107 +676,107 @@ jle_cont.9959:
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	ld	%g5, %g1, 0
-	st	%g3, %g1, 12
-	jlt	%g5, %g4, jle_else.9960
-	jmp	jle_cont.9961
-jle_else.9960:
+	ld	%g5, %g1, 4
+	st	%g3, %g1, 8
+	jlt	%g5, %g4, jle_else.9816
+	jmp	jle_cont.9817
+jle_else.9816:
 	mvhi	%g4, 0
 	mvlo	%g4, 45
 	mov	%g3, %g4
 	output	%g3
-jle_cont.9961:
+jle_cont.9817:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	ld	%g4, %g1, 12
-	jlt	%g3, %g4, jle_else.9962
+	ld	%g4, %g1, 8
+	jlt	%g4, %g3, jle_else.9818
+	ld	%g29, %g1, 0
+	mov	%g3, %g4
+	ld	%g28, %g29, 0
+	b	%g28
+jle_else.9818:
 	mvhi	%g3, 0
 	mvlo	%g3, 48
 	output	%g3
 	return
-jle_else.9962:
-	ld	%g29, %g1, 8
-	mov	%g3, %g4
-	ld	%g28, %g29, 0
-	b	%g28
-xor.2713:
+xor.2690:
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jne	%g3, %g5, jeq_else.9963
+	jne	%g3, %g5, jeq_else.9819
 	mov	%g3, %g4
 	return
-jeq_else.9963:
+jeq_else.9819:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jne	%g4, %g3, jeq_else.9964
+	jne	%g4, %g3, jeq_else.9820
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.9964:
+jeq_else.9820:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-sgn.2716:
+sgn.2693:
 	fst	%f0, %g1, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9965
+	jne	%g3, %g4, jeq_else.9821
 	fld	%f0, %g1, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9966
-	setL %g3, l.6524
+	jne	%g3, %g4, jeq_else.9822
+	setL %g3, l.6470
 	fld	%f0, %g3, 0
 	return
-jeq_else.9966:
-	setL %g3, l.6519
+jeq_else.9822:
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	return
-jeq_else.9965:
-	setL %g3, l.6510
+jeq_else.9821:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
 	return
-fneg_cond.2718:
+fneg_cond.2695:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9967
-	jmp	fneg.2660
-jeq_else.9967:
+	jne	%g3, %g4, jeq_else.9823
+	jmp	fneg.2626
+jeq_else.9823:
 	return
-add_mod5.2721:
+add_mod5.2698:
 	add	%g3, %g3, %g4
 	mvhi	%g4, 0
 	mvlo	%g4, 5
-	jlt	%g3, %g4, jle_else.9968
+	jlt	%g3, %g4, jle_else.9824
 	subi	%g3, %g3, 5
 	return
-jle_else.9968:
+jle_else.9824:
 	return
-vecset.2724:
+vecset.2701:
 	fst	%f0, %g3, 0
 	fst	%f1, %g3, -4
 	fst	%f2, %g3, -8
 	return
-vecfill.2729:
+vecfill.2706:
 	fst	%f0, %g3, 0
 	fst	%f0, %g3, -4
 	fst	%f0, %g3, -8
 	return
-vecbzero.2732:
-	setL %g4, l.6510
+vecbzero.2709:
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
-	jmp	vecfill.2729
-veccpy.2734:
+	jmp	vecfill.2706
+veccpy.2711:
 	fld	%f0, %g4, 0
 	fst	%f0, %g3, 0
 	fld	%f0, %g4, -4
@@ -1219,13 +784,13 @@ veccpy.2734:
 	fld	%f0, %g4, -8
 	fst	%f0, %g3, -8
 	return
-vecunit_sgn.2742:
+vecunit_sgn.2719:
 	fld	%f0, %g3, 0
 	st	%g4, %g1, 0
 	st	%g3, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
@@ -1234,7 +799,7 @@ vecunit_sgn.2742:
 	fmov	%f0, %f1
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	fld	%f1, %g1, 8
@@ -1245,7 +810,7 @@ vecunit_sgn.2742:
 	fmov	%f0, %f1
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 12
@@ -1254,32 +819,32 @@ vecunit_sgn.2742:
 	fst	%f0, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9972
+	jne	%g3, %g4, jeq_else.9828
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g4, %g1, 0
-	jne	%g4, %g3, jeq_else.9974
-	setL %g3, l.6519
+	jne	%g4, %g3, jeq_else.9830
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 16
 	fdiv	%f0, %f0, %f1
-	jmp	jeq_cont.9975
-jeq_else.9974:
-	setL %g3, l.6524
+	jmp	jeq_cont.9831
+jeq_else.9830:
+	setL %g3, l.6470
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 16
 	fdiv	%f0, %f0, %f1
-jeq_cont.9975:
-	jmp	jeq_cont.9973
-jeq_else.9972:
-	setL %g3, l.6519
+jeq_cont.9831:
+	jmp	jeq_cont.9829
+jeq_else.9828:
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
-jeq_cont.9973:
+jeq_cont.9829:
 	ld	%g3, %g1, 4
 	fld	%f1, %g3, 0
 	fmul	%f1, %f1, %f0
@@ -1291,7 +856,7 @@ jeq_cont.9973:
 	fmul	%f0, %f1, %f0
 	fst	%f0, %g3, -8
 	return
-veciprod.2745:
+veciprod.2722:
 	fld	%f0, %g3, 0
 	fld	%f1, %g4, 0
 	fmul	%f0, %f0, %f1
@@ -1304,7 +869,7 @@ veciprod.2745:
 	fmul	%f1, %f1, %f2
 	fadd	%f0, %f0, %f1
 	return
-veciprod2.2748:
+veciprod2.2725:
 	fld	%f3, %g3, 0
 	fmul	%f0, %f3, %f0
 	fld	%f3, %g3, -4
@@ -1314,7 +879,7 @@ veciprod2.2748:
 	fmul	%f1, %f1, %f2
 	fadd	%f0, %f0, %f1
 	return
-vecaccum.2753:
+vecaccum.2730:
 	fld	%f1, %g3, 0
 	fld	%f2, %g4, 0
 	fmul	%f2, %f0, %f2
@@ -1331,7 +896,7 @@ vecaccum.2753:
 	fadd	%f0, %f1, %f0
 	fst	%f0, %g3, -8
 	return
-vecadd.2757:
+vecadd.2734:
 	fld	%f0, %g3, 0
 	fld	%f1, %g4, 0
 	fadd	%f0, %f0, %f1
@@ -1345,7 +910,7 @@ vecadd.2757:
 	fadd	%f0, %f0, %f1
 	fst	%f0, %g3, -8
 	return
-vecscale.2763:
+vecscale.2740:
 	fld	%f1, %g3, 0
 	fmul	%f1, %f1, %f0
 	fst	%f1, %g3, 0
@@ -1356,7 +921,7 @@ vecscale.2763:
 	fmul	%f0, %f1, %f0
 	fst	%f0, %g3, -8
 	return
-vecaccumv.2766:
+vecaccumv.2743:
 	fld	%f0, %g3, 0
 	fld	%f1, %g4, 0
 	fld	%f2, %g5, 0
@@ -1376,285 +941,268 @@ vecaccumv.2766:
 	fadd	%f0, %f0, %f1
 	fst	%f0, %g3, -8
 	return
-o_texturetype.2770:
+o_texturetype.2747:
 	ld	%g3, %g3, 0
 	return
-o_form.2772:
+o_form.2749:
 	ld	%g3, %g3, -4
 	return
-o_reflectiontype.2774:
+o_reflectiontype.2751:
 	ld	%g3, %g3, -8
 	return
-o_isinvert.2776:
+o_isinvert.2753:
 	ld	%g3, %g3, -24
 	return
-o_isrot.2778:
+o_isrot.2755:
 	ld	%g3, %g3, -12
 	return
-o_param_a.2780:
+o_param_a.2757:
 	ld	%g3, %g3, -16
 	fld	%f0, %g3, 0
 	return
-o_param_b.2782:
+o_param_b.2759:
 	ld	%g3, %g3, -16
 	fld	%f0, %g3, -4
 	return
-o_param_c.2784:
+o_param_c.2761:
 	ld	%g3, %g3, -16
 	fld	%f0, %g3, -8
 	return
-o_param_abc.2786:
+o_param_abc.2763:
 	ld	%g3, %g3, -16
 	return
-o_param_x.2788:
+o_param_x.2765:
 	ld	%g3, %g3, -20
 	fld	%f0, %g3, 0
 	return
-o_param_y.2790:
+o_param_y.2767:
 	ld	%g3, %g3, -20
 	fld	%f0, %g3, -4
 	return
-o_param_z.2792:
+o_param_z.2769:
 	ld	%g3, %g3, -20
 	fld	%f0, %g3, -8
 	return
-o_diffuse.2794:
+o_diffuse.2771:
 	ld	%g3, %g3, -28
 	fld	%f0, %g3, 0
 	return
-o_hilight.2796:
+o_hilight.2773:
 	ld	%g3, %g3, -28
 	fld	%f0, %g3, -4
 	return
-o_color_red.2798:
+o_color_red.2775:
 	ld	%g3, %g3, -32
 	fld	%f0, %g3, 0
 	return
-o_color_green.2800:
+o_color_green.2777:
 	ld	%g3, %g3, -32
 	fld	%f0, %g3, -4
 	return
-o_color_blue.2802:
+o_color_blue.2779:
 	ld	%g3, %g3, -32
 	fld	%f0, %g3, -8
 	return
-o_param_r1.2804:
+o_param_r1.2781:
 	ld	%g3, %g3, -36
 	fld	%f0, %g3, 0
 	return
-o_param_r2.2806:
+o_param_r2.2783:
 	ld	%g3, %g3, -36
 	fld	%f0, %g3, -4
 	return
-o_param_r3.2808:
+o_param_r3.2785:
 	ld	%g3, %g3, -36
 	fld	%f0, %g3, -8
 	return
-o_param_ctbl.2810:
+o_param_ctbl.2787:
 	ld	%g3, %g3, -40
 	return
-p_rgb.2812:
+p_rgb.2789:
 	ld	%g3, %g3, 0
 	return
-p_intersection_points.2814:
+p_intersection_points.2791:
 	ld	%g3, %g3, -4
 	return
-p_surface_ids.2816:
+p_surface_ids.2793:
 	ld	%g3, %g3, -8
 	return
-p_calc_diffuse.2818:
+p_calc_diffuse.2795:
 	ld	%g3, %g3, -12
 	return
-p_energy.2820:
+p_energy.2797:
 	ld	%g3, %g3, -16
 	return
-p_received_ray_20percent.2822:
+p_received_ray_20percent.2799:
 	ld	%g3, %g3, -20
 	return
-p_group_id.2824:
+p_group_id.2801:
 	ld	%g3, %g3, -24
 	ld	%g3, %g3, 0
 	return
-p_set_group_id.2826:
+p_set_group_id.2803:
 	ld	%g3, %g3, -24
 	st	%g4, %g3, 0
 	return
-p_nvectors.2829:
+p_nvectors.2806:
 	ld	%g3, %g3, -28
 	return
-d_vec.2831:
+d_vec.2808:
 	ld	%g3, %g3, 0
 	return
-d_const.2833:
+d_const.2810:
 	ld	%g3, %g3, -4
 	return
-r_surface_id.2835:
+r_surface_id.2812:
 	ld	%g3, %g3, 0
 	return
-r_dvec.2837:
+r_dvec.2814:
 	ld	%g3, %g3, -4
 	return
-r_bright.2839:
+r_bright.2816:
 	fld	%f0, %g3, -8
 	return
-rad.2841:
-	setL %g3, l.6764
+rad.2818:
+	setL %g3, l.6615
 	fld	%f1, %g3, 0
 	fmul	%f0, %f0, %f1
 	return
-read_screen_settings.2843:
-	ld	%g3, %g29, -28
-	ld	%g4, %g29, -24
-	ld	%g5, %g29, -20
-	ld	%g6, %g29, -16
-	ld	%g7, %g29, -12
-	ld	%g8, %g29, -8
-	ld	%g9, %g29, -4
+read_screen_settings.2820:
+	ld	%g3, %g29, -24
+	ld	%g4, %g29, -20
+	ld	%g5, %g29, -16
+	ld	%g6, %g29, -12
+	ld	%g7, %g29, -8
+	ld	%g29, %g29, -4
 	st	%g3, %g1, 0
-	st	%g6, %g1, 4
-	st	%g7, %g1, 8
-	st	%g5, %g1, 12
-	st	%g4, %g1, 16
-	st	%g9, %g1, 20
-	st	%g8, %g1, 24
+	st	%g5, %g1, 4
+	st	%g6, %g1, 8
+	st	%g4, %g1, 12
+	st	%g29, %g1, 16
+	st	%g7, %g1, 20
 	st	%g31, %g1, 28
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	ld	%g3, %g1, 24
+	ld	%g3, %g1, 20
 	fst	%f0, %g3, 0
+	ld	%g29, %g1, 16
 	st	%g31, %g1, 28
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	ld	%g3, %g1, 24
+	ld	%g3, %g1, 20
 	fst	%f0, %g3, -4
+	ld	%g29, %g1, 16
 	st	%g31, %g1, 28
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	ld	%g3, %g1, 24
+	ld	%g3, %g1, 20
 	fst	%f0, %g3, -8
+	ld	%g29, %g1, 16
 	st	%g31, %g1, 28
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	rad.2841
+	call	rad.2818
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	ld	%g29, %g1, 20
+	fst	%f0, %g1, 24
+	cos	%f0, %f0
+	fld	%f1, %g1, 24
 	fst	%f0, %g1, 28
+	fmov	%f0, %f1
+	sin	%f0, %f0
+	ld	%g29, %g1, 16
+	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 40
 	callR	%g28
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-	fld	%f1, %g1, 28
-	ld	%g29, %g1, 16
-	fst	%f0, %g1, 32
-	fmov	%f0, %f1
 	st	%g31, %g1, 36
-	ld	%g28, %g29, 0
 	subi	%g1, %g1, 40
-	callR	%g28
+	call	rad.2818
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fst	%f0, %g1, 36
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	read_float.2679
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	rad.2841
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	ld	%g29, %g1, 20
+	cos	%f0, %f0
+	fld	%f1, %g1, 36
 	fst	%f0, %g1, 40
-	st	%g31, %g1, 44
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 48
-	callR	%g28
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	fld	%f1, %g1, 40
-	ld	%g29, %g1, 16
-	fst	%f0, %g1, 44
 	fmov	%f0, %f1
-	st	%g31, %g1, 52
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 56
-	callR	%g28
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	fld	%f1, %g1, 32
+	sin	%f0, %f0
+	fld	%f1, %g1, 28
 	fmul	%f2, %f1, %f0
-	setL %g3, l.6769
+	setL %g3, l.6620
 	fld	%f3, %g3, 0
 	fmul	%f2, %f2, %f3
 	ld	%g3, %g1, 12
 	fst	%f2, %g3, 0
-	setL %g4, l.6772
+	setL %g4, l.6623
 	fld	%f2, %g4, 0
-	fld	%f3, %g1, 36
+	fld	%f3, %g1, 32
 	fmul	%f2, %f3, %f2
 	fst	%f2, %g3, -4
-	fld	%f2, %g1, 44
+	fld	%f2, %g1, 40
 	fmul	%f4, %f1, %f2
-	setL %g4, l.6769
+	setL %g4, l.6620
 	fld	%f5, %g4, 0
 	fmul	%f4, %f4, %f5
 	fst	%f4, %g3, -8
 	ld	%g4, %g1, 8
 	fst	%f2, %g4, 0
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f4, %g5, 0
 	fst	%f4, %g4, -4
-	fst	%f0, %g1, 48
+	fst	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -8
-	fld	%f0, %g1, 36
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	fneg.2660
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	fld	%f1, %g1, 48
-	fmul	%f0, %f0, %f1
-	ld	%g3, %g1, 4
-	fst	%f0, %g3, 0
 	fld	%f0, %g1, 32
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fneg.2660
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	ld	%g3, %g1, 4
-	fst	%f0, %g3, -4
-	fld	%f0, %g1, 36
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 44
 	fmul	%f0, %f0, %f1
 	ld	%g3, %g1, 4
+	fst	%f0, %g3, 0
+	fld	%f0, %g1, 28
+	st	%g31, %g1, 52
+	subi	%g1, %g1, 56
+	call	fneg.2626
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	ld	%g3, %g1, 4
+	fst	%f0, %g3, -4
+	fld	%f0, %g1, 32
+	st	%g31, %g1, 52
+	subi	%g1, %g1, 56
+	call	fneg.2626
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	fld	%f1, %g1, 40
+	fmul	%f0, %f0, %f1
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, -8
-	ld	%g3, %g1, 24
+	ld	%g3, %g1, 20
 	fld	%f0, %g3, 0
 	ld	%g4, %g1, 12
 	fld	%f1, %g4, 0
@@ -1670,7 +1218,7 @@ read_screen_settings.2843:
 	fsub	%f0, %f0, %f1
 	fst	%f0, %g5, -8
 	return
-read_light.2845:
+read_light.2822:
 	ld	%g3, %g29, -16
 	ld	%g4, %g29, -12
 	ld	%g5, %g29, -8
@@ -1678,24 +1226,35 @@ read_light.2845:
 	st	%g6, %g1, 0
 	st	%g5, %g1, 4
 	st	%g4, %g1, 8
-	st	%g3, %g1, 12
+	mov	%g29, %g3
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	rad.2818
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	fst	%f0, %g1, 12
+	sin	%f0, %f0
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	read_int.2677
+	call	fneg.2626
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	read_float.2679
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	rad.2841
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	ld	%g29, %g1, 12
-	fst	%f0, %g1, 16
+	ld	%g3, %g1, 4
+	fst	%f0, %g3, -4
+	ld	%g29, %g1, 8
 	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 24
@@ -1704,142 +1263,75 @@ read_light.2845:
 	ld	%g31, %g1, 20
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fneg.2660
+	call	rad.2818
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	ld	%g3, %g1, 8
-	fst	%f0, %g3, -4
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	read_float.2679
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	rad.2841
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
+	fld	%f1, %g1, 12
+	fst	%f0, %g1, 16
+	fmov	%f0, %f1
+	cos	%f0, %f0
 	fld	%f1, %g1, 16
-	ld	%g29, %g1, 4
 	fst	%f0, %g1, 20
 	fmov	%f0, %f1
-	st	%g31, %g1, 28
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
-	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
+	sin	%f0, %f0
 	fld	%f1, %g1, 20
-	ld	%g29, %g1, 12
-	fst	%f0, %g1, 24
-	fmov	%f0, %f1
-	st	%g31, %g1, 28
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
-	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fld	%f1, %g1, 24
 	fmul	%f0, %f1, %f0
-	ld	%g3, %g1, 8
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, 0
-	fld	%f0, %g1, 20
-	ld	%g29, %g1, 4
+	fld	%f0, %g1, 16
+	cos	%f0, %f0
+	fld	%f1, %g1, 20
+	fmul	%f0, %f1, %f0
+	ld	%g3, %g1, 4
+	fst	%f0, %g3, -8
+	ld	%g29, %g1, 8
 	st	%g31, %g1, 28
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
 	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fld	%f1, %g1, 24
-	fmul	%f0, %f1, %f0
-	ld	%g3, %g1, 8
-	fst	%f0, %g3, -8
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	read_float.2679
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 0
 	fst	%f0, %g3, 0
 	return
-rotate_quadratic_matrix.2847:
-	ld	%g5, %g29, -8
-	ld	%g29, %g29, -4
+rotate_quadratic_matrix.2824:
 	fld	%f0, %g4, 0
 	st	%g3, %g1, 0
-	st	%g29, %g1, 4
-	st	%g5, %g1, 8
-	st	%g4, %g1, 12
-	st	%g31, %g1, 20
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 24
-	callR	%g28
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	ld	%g3, %g1, 12
+	st	%g4, %g1, 4
+	cos	%f0, %f0
+	ld	%g3, %g1, 4
 	fld	%f1, %g3, 0
-	ld	%g29, %g1, 8
+	fst	%f0, %g1, 8
+	fmov	%f0, %f1
+	sin	%f0, %f0
+	ld	%g3, %g1, 4
+	fld	%f1, %g3, -4
+	fst	%f0, %g1, 12
+	fmov	%f0, %f1
+	cos	%f0, %f0
+	ld	%g3, %g1, 4
+	fld	%f1, %g3, -4
 	fst	%f0, %g1, 16
 	fmov	%f0, %f1
-	st	%g31, %g1, 20
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 24
-	callR	%g28
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	ld	%g3, %g1, 12
-	fld	%f1, %g3, -4
-	ld	%g29, %g1, 4
+	sin	%f0, %f0
+	ld	%g3, %g1, 4
+	fld	%f1, %g3, -8
 	fst	%f0, %g1, 20
 	fmov	%f0, %f1
-	st	%g31, %g1, 28
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
-	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	ld	%g3, %g1, 12
-	fld	%f1, %g3, -4
-	ld	%g29, %g1, 8
+	cos	%f0, %f0
+	ld	%g3, %g1, 4
+	fld	%f1, %g3, -8
 	fst	%f0, %g1, 24
 	fmov	%f0, %f1
-	st	%g31, %g1, 28
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
-	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	ld	%g3, %g1, 12
-	fld	%f1, %g3, -8
-	ld	%g29, %g1, 4
-	fst	%f0, %g1, 28
-	fmov	%f0, %f1
-	st	%g31, %g1, 36
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 40
-	callR	%g28
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	ld	%g3, %g1, 12
-	fld	%f1, %g3, -8
-	ld	%g29, %g1, 8
-	fst	%f0, %g1, 32
-	fmov	%f0, %f1
-	st	%g31, %g1, 36
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 40
-	callR	%g28
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	fld	%f1, %g1, 32
-	fld	%f2, %g1, 24
+	sin	%f0, %f0
+	fld	%f1, %g1, 24
+	fld	%f2, %g1, 16
 	fmul	%f3, %f2, %f1
-	fld	%f4, %g1, 28
-	fld	%f5, %g1, 20
+	fld	%f4, %g1, 20
+	fld	%f5, %g1, 12
 	fmul	%f6, %f5, %f4
 	fmul	%f6, %f6, %f1
-	fld	%f7, %g1, 16
+	fld	%f7, %g1, 8
 	fmul	%f8, %f7, %f0
 	fsub	%f6, %f6, %f8
 	fmul	%f8, %f7, %f4
@@ -1855,173 +1347,173 @@ rotate_quadratic_matrix.2847:
 	fmul	%f0, %f11, %f0
 	fmul	%f1, %f5, %f1
 	fsub	%f0, %f0, %f1
-	fst	%f0, %g1, 36
-	fst	%f8, %g1, 40
-	fst	%f10, %g1, 44
-	fst	%f6, %g1, 48
-	fst	%f9, %g1, 52
-	fst	%f3, %g1, 56
+	fst	%f0, %g1, 28
+	fst	%f8, %g1, 32
+	fst	%f10, %g1, 36
+	fst	%f6, %g1, 40
+	fst	%f9, %g1, 44
+	fst	%f3, %g1, 48
 	fmov	%f0, %f4
-	st	%g31, %g1, 60
-	subi	%g1, %g1, 64
-	call	fneg.2660
-	addi	%g1, %g1, 64
-	ld	%g31, %g1, 60
-	fld	%f1, %g1, 24
-	fld	%f2, %g1, 20
+	st	%g31, %g1, 52
+	subi	%g1, %g1, 56
+	call	fneg.2626
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	fld	%f1, %g1, 16
+	fld	%f2, %g1, 12
 	fmul	%f2, %f2, %f1
-	fld	%f3, %g1, 16
+	fld	%f3, %g1, 8
 	fmul	%f1, %f3, %f1
 	ld	%g3, %g1, 0
 	fld	%f3, %g3, 0
 	fld	%f4, %g3, -4
 	fld	%f5, %g3, -8
-	fld	%f6, %g1, 56
-	fst	%f1, %g1, 60
-	fst	%f2, %g1, 64
-	fst	%f5, %g1, 68
-	fst	%f0, %g1, 72
-	fst	%f4, %g1, 76
-	fst	%f3, %g1, 80
+	fld	%f6, %g1, 48
+	fst	%f1, %g1, 52
+	fst	%f2, %g1, 56
+	fst	%f5, %g1, 60
+	fst	%f0, %g1, 64
+	fst	%f4, %g1, 68
+	fst	%f3, %g1, 72
 	fmov	%f0, %f6
+	st	%g31, %g1, 76
+	subi	%g1, %g1, 80
+	call	fsqr.2630
+	addi	%g1, %g1, 80
+	ld	%g31, %g1, 76
+	fld	%f1, %g1, 72
+	fmul	%f0, %f1, %f0
+	fld	%f2, %g1, 44
+	fst	%f0, %g1, 76
+	fmov	%f0, %f2
 	st	%g31, %g1, 84
 	subi	%g1, %g1, 88
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
-	fld	%f1, %g1, 80
+	fld	%f1, %g1, 68
 	fmul	%f0, %f1, %f0
-	fld	%f2, %g1, 52
+	fld	%f2, %g1, 76
+	fadd	%f0, %f2, %f0
+	fld	%f2, %g1, 64
+	fst	%f0, %g1, 80
+	fmov	%f0, %f2
+	st	%g31, %g1, 84
+	subi	%g1, %g1, 88
+	call	fsqr.2630
+	addi	%g1, %g1, 88
+	ld	%g31, %g1, 84
+	fld	%f1, %g1, 60
+	fmul	%f0, %f1, %f0
+	fld	%f2, %g1, 80
+	fadd	%f0, %f2, %f0
+	ld	%g3, %g1, 0
+	fst	%f0, %g3, 0
+	fld	%f0, %g1, 40
+	st	%g31, %g1, 84
+	subi	%g1, %g1, 88
+	call	fsqr.2630
+	addi	%g1, %g1, 88
+	ld	%g31, %g1, 84
+	fld	%f1, %g1, 72
+	fmul	%f0, %f1, %f0
+	fld	%f2, %g1, 36
 	fst	%f0, %g1, 84
 	fmov	%f0, %f2
 	st	%g31, %g1, 92
 	subi	%g1, %g1, 96
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 96
 	ld	%g31, %g1, 92
-	fld	%f1, %g1, 76
+	fld	%f1, %g1, 68
 	fmul	%f0, %f1, %f0
 	fld	%f2, %g1, 84
 	fadd	%f0, %f2, %f0
-	fld	%f2, %g1, 72
+	fld	%f2, %g1, 56
 	fst	%f0, %g1, 88
 	fmov	%f0, %f2
 	st	%g31, %g1, 92
 	subi	%g1, %g1, 96
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 96
 	ld	%g31, %g1, 92
-	fld	%f1, %g1, 68
+	fld	%f1, %g1, 60
 	fmul	%f0, %f1, %f0
 	fld	%f2, %g1, 88
 	fadd	%f0, %f2, %f0
 	ld	%g3, %g1, 0
-	fst	%f0, %g3, 0
-	fld	%f0, %g1, 48
+	fst	%f0, %g3, -4
+	fld	%f0, %g1, 32
 	st	%g31, %g1, 92
 	subi	%g1, %g1, 96
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 96
 	ld	%g31, %g1, 92
-	fld	%f1, %g1, 80
+	fld	%f1, %g1, 72
 	fmul	%f0, %f1, %f0
-	fld	%f2, %g1, 44
+	fld	%f2, %g1, 28
 	fst	%f0, %g1, 92
 	fmov	%f0, %f2
 	st	%g31, %g1, 100
 	subi	%g1, %g1, 104
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 104
 	ld	%g31, %g1, 100
-	fld	%f1, %g1, 76
+	fld	%f1, %g1, 68
 	fmul	%f0, %f1, %f0
 	fld	%f2, %g1, 92
 	fadd	%f0, %f2, %f0
-	fld	%f2, %g1, 64
+	fld	%f2, %g1, 52
 	fst	%f0, %g1, 96
 	fmov	%f0, %f2
 	st	%g31, %g1, 100
 	subi	%g1, %g1, 104
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 104
 	ld	%g31, %g1, 100
-	fld	%f1, %g1, 68
+	fld	%f1, %g1, 60
 	fmul	%f0, %f1, %f0
 	fld	%f2, %g1, 96
 	fadd	%f0, %f2, %f0
 	ld	%g3, %g1, 0
-	fst	%f0, %g3, -4
-	fld	%f0, %g1, 40
-	st	%g31, %g1, 100
-	subi	%g1, %g1, 104
-	call	fsqr.2664
-	addi	%g1, %g1, 104
-	ld	%g31, %g1, 100
-	fld	%f1, %g1, 80
-	fmul	%f0, %f1, %f0
-	fld	%f2, %g1, 36
-	fst	%f0, %g1, 100
-	fmov	%f0, %f2
-	st	%g31, %g1, 108
-	subi	%g1, %g1, 112
-	call	fsqr.2664
-	addi	%g1, %g1, 112
-	ld	%g31, %g1, 108
-	fld	%f1, %g1, 76
-	fmul	%f0, %f1, %f0
-	fld	%f2, %g1, 100
-	fadd	%f0, %f2, %f0
-	fld	%f2, %g1, 60
-	fst	%f0, %g1, 104
-	fmov	%f0, %f2
-	st	%g31, %g1, 108
-	subi	%g1, %g1, 112
-	call	fsqr.2664
-	addi	%g1, %g1, 112
-	ld	%g31, %g1, 108
-	fld	%f1, %g1, 68
-	fmul	%f0, %f1, %f0
-	fld	%f2, %g1, 104
-	fadd	%f0, %f2, %f0
-	ld	%g3, %g1, 0
 	fst	%f0, %g3, -8
-	setL %g3, l.6515
+	setL %g3, l.6412
 	fld	%f0, %g3, 0
-	fld	%f2, %g1, 48
-	fld	%f3, %g1, 80
+	fld	%f2, %g1, 40
+	fld	%f3, %g1, 72
 	fmul	%f4, %f3, %f2
-	fld	%f5, %g1, 40
+	fld	%f5, %g1, 32
 	fmul	%f4, %f4, %f5
-	fld	%f6, %g1, 44
-	fld	%f7, %g1, 76
+	fld	%f6, %g1, 36
+	fld	%f7, %g1, 68
 	fmul	%f8, %f7, %f6
-	fld	%f9, %g1, 36
+	fld	%f9, %g1, 28
 	fmul	%f8, %f8, %f9
 	fadd	%f4, %f4, %f8
-	fld	%f8, %g1, 64
+	fld	%f8, %g1, 56
 	fmul	%f10, %f1, %f8
-	fld	%f11, %g1, 60
+	fld	%f11, %g1, 52
 	fmul	%f10, %f10, %f11
 	fadd	%f4, %f4, %f10
 	fmul	%f0, %f0, %f4
-	ld	%g3, %g1, 12
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, 0
-	setL %g4, l.6515
+	setL %g4, l.6412
 	fld	%f0, %g4, 0
-	fld	%f4, %g1, 56
+	fld	%f4, %g1, 48
 	fmul	%f10, %f3, %f4
 	fmul	%f5, %f10, %f5
-	fld	%f10, %g1, 52
+	fld	%f10, %g1, 44
 	fmul	%f12, %f7, %f10
 	fmul	%f9, %f12, %f9
 	fadd	%f5, %f5, %f9
-	fld	%f9, %g1, 72
+	fld	%f9, %g1, 64
 	fmul	%f12, %f1, %f9
 	fmul	%f11, %f12, %f11
 	fadd	%f5, %f5, %f11
 	fmul	%f0, %f0, %f5
 	fst	%f0, %g3, -4
-	setL %g4, l.6515
+	setL %g4, l.6412
 	fld	%f0, %g4, 0
 	fmul	%f3, %f3, %f4
 	fmul	%f2, %f3, %f2
@@ -2034,178 +1526,212 @@ rotate_quadratic_matrix.2847:
 	fmul	%f0, %f0, %f1
 	fst	%f0, %g3, -8
 	return
-read_nth_object.2850:
-	ld	%g4, %g29, -8
-	ld	%g5, %g29, -4
-	st	%g4, %g1, 0
-	st	%g5, %g1, 4
-	st	%g3, %g1, 8
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	read_int.2677
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+read_nth_object.2827:
+	ld	%g4, %g29, -12
+	ld	%g5, %g29, -8
+	ld	%g6, %g29, -4
+	st	%g6, %g1, 0
+	st	%g3, %g1, 4
+	st	%g5, %g1, 8
+	st	%g4, %g1, 12
+	mov	%g29, %g4
+	st	%g31, %g1, 20
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 24
+	callR	%g28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 	mvhi	%g4, 65535
 	mvlo	%g4, -1
-	jne	%g3, %g4, jeq_else.9985
+	jne	%g3, %g4, jeq_else.9841
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.9985:
-	st	%g3, %g1, 12
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	read_int.2677
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
+jeq_else.9841:
+	ld	%g29, %g1, 12
 	st	%g3, %g1, 16
 	st	%g31, %g1, 20
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 24
-	call	read_int.2677
+	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
+	ld	%g29, %g1, 12
 	st	%g3, %g1, 20
 	st	%g31, %g1, 28
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
-	call	read_int.2677
+	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
+	ld	%g29, %g1, 12
 	st	%g3, %g1, 24
-	mov	%g3, %g4
 	st	%g31, %g1, 28
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 32
-	call	min_caml_create_float_array
+	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	st	%g3, %g1, 28
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	read_float.2679
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	ld	%g3, %g1, 28
-	fst	%f0, %g3, 0
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	read_float.2679
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	ld	%g3, %g1, 28
-	fst	%f0, %g3, -4
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	read_float.2679
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	ld	%g3, %g1, 28
-	fst	%f0, %g3, -8
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
+	st	%g3, %g1, 28
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
 	call	min_caml_create_float_array
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
+	ld	%g29, %g1, 8
 	st	%g3, %g1, 32
 	st	%g31, %g1, 36
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 40
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 32
 	fst	%f0, %g3, 0
+	ld	%g29, %g1, 8
 	st	%g31, %g1, 36
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 40
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 32
 	fst	%f0, %g3, -4
+	ld	%g29, %g1, 8
 	st	%g31, %g1, 36
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 40
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 32
 	fst	%f0, %g3, -8
+	mvhi	%g4, 0
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	read_float.2679
+	call	min_caml_create_float_array
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	fisneg.2651
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
+	ld	%g29, %g1, 8
+	st	%g3, %g1, 36
+	st	%g31, %g1, 44
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 48
+	callR	%g28
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
+	ld	%g3, %g1, 36
+	fst	%f0, %g3, 0
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 44
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 48
+	callR	%g28
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
+	ld	%g3, %g1, 36
+	fst	%f0, %g3, -4
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 44
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 48
+	callR	%g28
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
+	ld	%g3, %g1, 36
+	fst	%f0, %g3, -8
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 44
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 48
+	callR	%g28
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
+	st	%g31, %g1, 44
+	subi	%g1, %g1, 48
+	call	fisneg.2615
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
-	st	%g3, %g1, 36
+	st	%g3, %g1, 40
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
 	call	min_caml_create_float_array
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
-	st	%g3, %g1, 40
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	read_float.2679
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	ld	%g3, %g1, 40
+	ld	%g29, %g1, 8
+	st	%g3, %g1, 44
+	st	%g31, %g1, 52
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 56
+	callR	%g28
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	ld	%g3, %g1, 44
 	fst	%f0, %g3, 0
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	read_float.2679
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	ld	%g3, %g1, 40
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 52
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 56
+	callR	%g28
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	ld	%g3, %g1, 44
 	fst	%f0, %g3, -4
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	mov	%g3, %g4
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
+	st	%g31, %g1, 52
+	subi	%g1, %g1, 56
 	call	min_caml_create_float_array
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	st	%g3, %g1, 44
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	read_float.2679
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
-	ld	%g3, %g1, 44
+	ld	%g29, %g1, 8
+	st	%g3, %g1, 48
+	st	%g31, %g1, 52
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 56
+	callR	%g28
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	ld	%g3, %g1, 48
 	fst	%f0, %g3, 0
+	ld	%g29, %g1, 8
 	st	%g31, %g1, 52
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 56
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
-	ld	%g3, %g1, 44
+	ld	%g3, %g1, 48
 	fst	%f0, %g3, -4
+	ld	%g29, %g1, 8
 	st	%g31, %g1, 52
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 56
-	call	read_float.2679
+	callR	%g28
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
-	ld	%g3, %g1, 44
+	ld	%g3, %g1, 48
 	fst	%f0, %g3, -8
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	mov	%g3, %g4
 	st	%g31, %g1, 52
@@ -2215,64 +1741,70 @@ jeq_else.9985:
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	ld	%g5, %g1, 24
-	jne	%g5, %g4, jeq_else.9986
-	jmp	jeq_cont.9987
-jeq_else.9986:
-	st	%g3, %g1, 48
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	read_float.2679
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	rad.2841
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	ld	%g3, %g1, 48
+	ld	%g5, %g1, 28
+	jne	%g5, %g4, jeq_else.9842
+	jmp	jeq_cont.9843
+jeq_else.9842:
+	ld	%g29, %g1, 8
+	st	%g3, %g1, 52
+	st	%g31, %g1, 60
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 64
+	callR	%g28
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	st	%g31, %g1, 60
+	subi	%g1, %g1, 64
+	call	rad.2818
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	ld	%g3, %g1, 52
 	fst	%f0, %g3, 0
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	read_float.2679
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	rad.2841
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	ld	%g3, %g1, 48
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 60
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 64
+	callR	%g28
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	st	%g31, %g1, 60
+	subi	%g1, %g1, 64
+	call	rad.2818
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	ld	%g3, %g1, 52
 	fst	%f0, %g3, -4
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	read_float.2679
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	rad.2841
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
-	ld	%g3, %g1, 48
+	ld	%g29, %g1, 8
+	st	%g31, %g1, 60
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 64
+	callR	%g28
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	st	%g31, %g1, 60
+	subi	%g1, %g1, 64
+	call	rad.2818
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	ld	%g3, %g1, 52
 	fst	%f0, %g3, -8
-jeq_cont.9987:
+jeq_cont.9843:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	ld	%g5, %g1, 16
-	jne	%g5, %g4, jeq_else.9988
+	ld	%g5, %g1, 20
+	jne	%g5, %g4, jeq_else.9844
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jmp	jeq_cont.9989
-jeq_else.9988:
-	ld	%g4, %g1, 36
-jeq_cont.9989:
+	jmp	jeq_cont.9845
+jeq_else.9844:
+	ld	%g4, %g1, 40
+jeq_cont.9845:
 	mvhi	%g6, 0
 	mvlo	%g6, 4
-	setL %g7, l.6510
+	setL %g7, l.6407
 	fld	%f0, %g7, 0
-	st	%g4, %g1, 52
-	st	%g3, %g1, 48
+	st	%g4, %g1, 56
+	st	%g3, %g1, 52
 	mov	%g3, %g6
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
@@ -2282,188 +1814,186 @@ jeq_cont.9989:
 	mov	%g4, %g2
 	addi	%g2, %g2, 48
 	st	%g3, %g4, -40
-	ld	%g3, %g1, 48
+	ld	%g3, %g1, 52
 	st	%g3, %g4, -36
-	ld	%g5, %g1, 44
+	ld	%g5, %g1, 48
 	st	%g5, %g4, -32
-	ld	%g5, %g1, 40
+	ld	%g5, %g1, 44
 	st	%g5, %g4, -28
-	ld	%g5, %g1, 52
+	ld	%g5, %g1, 56
 	st	%g5, %g4, -24
-	ld	%g5, %g1, 32
+	ld	%g5, %g1, 36
 	st	%g5, %g4, -20
-	ld	%g5, %g1, 28
+	ld	%g5, %g1, 32
 	st	%g5, %g4, -16
-	ld	%g6, %g1, 24
+	ld	%g6, %g1, 28
 	st	%g6, %g4, -12
-	ld	%g7, %g1, 20
+	ld	%g7, %g1, 24
 	st	%g7, %g4, -8
-	ld	%g7, %g1, 16
+	ld	%g7, %g1, 20
 	st	%g7, %g4, -4
-	ld	%g8, %g1, 12
+	ld	%g8, %g1, 16
 	st	%g8, %g4, 0
-	ld	%g8, %g1, 8
+	ld	%g8, %g1, 4
 	slli	%g8, %g8, 2
-	ld	%g9, %g1, 4
+	ld	%g9, %g1, 0
 	st	%g9, %g1, 60
 	add	%g9, %g9, %g8
 	st	%g4, %g9, 0
 	ld	%g9, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	jne	%g7, %g4, jeq_else.9990
+	jne	%g7, %g4, jeq_else.9846
 	fld	%f0, %g5, 0
-	fst	%f0, %g1, 56
-	st	%g31, %g1, 60
-	subi	%g1, %g1, 64
-	call	fiszero.2653
-	addi	%g1, %g1, 64
-	ld	%g31, %g1, 60
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9992
-	fld	%f0, %g1, 56
-	st	%g31, %g1, 60
-	subi	%g1, %g1, 64
-	call	sgn.2716
-	addi	%g1, %g1, 64
-	ld	%g31, %g1, 60
-	fld	%f1, %g1, 56
 	fst	%f0, %g1, 60
-	fmov	%f0, %f1
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fsqr.2664
+	call	fiszero.2617
+	addi	%g1, %g1, 72
+	ld	%g31, %g1, 68
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	jne	%g3, %g4, jeq_else.9848
+	fld	%f0, %g1, 60
+	st	%g31, %g1, 68
+	subi	%g1, %g1, 72
+	call	sgn.2693
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 60
-	fdiv	%f0, %f1, %f0
-	jmp	jeq_cont.9993
-jeq_else.9992:
-	setL %g3, l.6510
-	fld	%f0, %g3, 0
-jeq_cont.9993:
-	ld	%g3, %g1, 28
-	fst	%f0, %g3, 0
-	fld	%f0, %g3, -4
 	fst	%f0, %g1, 64
+	fmov	%f0, %f1
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fiszero.2653
-	addi	%g1, %g1, 72
-	ld	%g31, %g1, 68
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9994
-	fld	%f0, %g1, 64
-	st	%g31, %g1, 68
-	subi	%g1, %g1, 72
-	call	sgn.2716
+	call	fsqr.2630
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 64
+	fdiv	%f0, %f1, %f0
+	jmp	jeq_cont.9849
+jeq_else.9848:
+	setL %g3, l.6407
+	fld	%f0, %g3, 0
+jeq_cont.9849:
+	ld	%g3, %g1, 32
+	fst	%f0, %g3, 0
+	fld	%f0, %g3, -4
 	fst	%f0, %g1, 68
-	fmov	%f0, %f1
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fsqr.2664
+	call	fiszero.2617
+	addi	%g1, %g1, 80
+	ld	%g31, %g1, 76
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	jne	%g3, %g4, jeq_else.9850
+	fld	%f0, %g1, 68
+	st	%g31, %g1, 76
+	subi	%g1, %g1, 80
+	call	sgn.2693
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 68
-	fdiv	%f0, %f1, %f0
-	jmp	jeq_cont.9995
-jeq_else.9994:
-	setL %g3, l.6510
-	fld	%f0, %g3, 0
-jeq_cont.9995:
-	ld	%g3, %g1, 28
-	fst	%f0, %g3, -4
-	fld	%f0, %g3, -8
 	fst	%f0, %g1, 72
+	fmov	%f0, %f1
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fiszero.2653
-	addi	%g1, %g1, 80
-	ld	%g31, %g1, 76
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.9996
-	fld	%f0, %g1, 72
-	st	%g31, %g1, 76
-	subi	%g1, %g1, 80
-	call	sgn.2716
+	call	fsqr.2630
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 72
+	fdiv	%f0, %f1, %f0
+	jmp	jeq_cont.9851
+jeq_else.9850:
+	setL %g3, l.6407
+	fld	%f0, %g3, 0
+jeq_cont.9851:
+	ld	%g3, %g1, 32
+	fst	%f0, %g3, -4
+	fld	%f0, %g3, -8
 	fst	%f0, %g1, 76
-	fmov	%f0, %f1
 	st	%g31, %g1, 84
 	subi	%g1, %g1, 88
-	call	fsqr.2664
+	call	fiszero.2617
+	addi	%g1, %g1, 88
+	ld	%g31, %g1, 84
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	jne	%g3, %g4, jeq_else.9852
+	fld	%f0, %g1, 76
+	st	%g31, %g1, 84
+	subi	%g1, %g1, 88
+	call	sgn.2693
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
 	fld	%f1, %g1, 76
+	fst	%f0, %g1, 80
+	fmov	%f0, %f1
+	st	%g31, %g1, 84
+	subi	%g1, %g1, 88
+	call	fsqr.2630
+	addi	%g1, %g1, 88
+	ld	%g31, %g1, 84
+	fld	%f1, %g1, 80
 	fdiv	%f0, %f1, %f0
-	jmp	jeq_cont.9997
-jeq_else.9996:
-	setL %g3, l.6510
+	jmp	jeq_cont.9853
+jeq_else.9852:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
-jeq_cont.9997:
-	ld	%g3, %g1, 28
+jeq_cont.9853:
+	ld	%g3, %g1, 32
 	fst	%f0, %g3, -8
-	jmp	jeq_cont.9991
-jeq_else.9990:
+	jmp	jeq_cont.9847
+jeq_else.9846:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g7, %g4, jeq_else.9998
+	jne	%g7, %g4, jeq_else.9854
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	ld	%g7, %g1, 36
-	jne	%g7, %g4, jeq_else.10000
+	ld	%g7, %g1, 40
+	jne	%g7, %g4, jeq_else.9856
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jmp	jeq_cont.10001
-jeq_else.10000:
+	jmp	jeq_cont.9857
+jeq_else.9856:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-jeq_cont.10001:
+jeq_cont.9857:
 	mov	%g3, %g5
 	st	%g31, %g1, 84
 	subi	%g1, %g1, 88
-	call	vecunit_sgn.2742
+	call	vecunit_sgn.2719
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
-	jmp	jeq_cont.9999
-jeq_else.9998:
-jeq_cont.9999:
-jeq_cont.9991:
+	jmp	jeq_cont.9855
+jeq_else.9854:
+jeq_cont.9855:
+jeq_cont.9847:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	ld	%g4, %g1, 24
-	jne	%g4, %g3, jeq_else.10002
-	jmp	jeq_cont.10003
-jeq_else.10002:
-	ld	%g3, %g1, 28
-	ld	%g4, %g1, 48
-	ld	%g29, %g1, 0
+	ld	%g4, %g1, 28
+	jne	%g4, %g3, jeq_else.9858
+	jmp	jeq_cont.9859
+jeq_else.9858:
+	ld	%g3, %g1, 32
+	ld	%g4, %g1, 52
 	st	%g31, %g1, 84
-	ld	%g28, %g29, 0
 	subi	%g1, %g1, 88
-	callR	%g28
+	call	rotate_quadratic_matrix.2824
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
-jeq_cont.10003:
+jeq_cont.9859:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-read_object.2852:
+read_object.2829:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 60
-	jlt	%g3, %g6, jle_else.10004
+	jlt	%g3, %g6, jle_else.9860
 	return
-jle_else.10004:
+jle_else.9860:
 	st	%g29, %g1, 0
 	st	%g5, %g1, 4
 	st	%g3, %g1, 8
@@ -2476,111 +2006,126 @@ jle_else.10004:
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10006
+	jne	%g3, %g4, jeq_else.9862
 	ld	%g3, %g1, 4
 	ld	%g4, %g1, 8
 	st	%g4, %g3, 0
 	return
-jeq_else.10006:
+jeq_else.9862:
 	ld	%g3, %g1, 8
 	addi	%g3, %g3, 1
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-read_all_object.2854:
+read_all_object.2831:
 	ld	%g29, %g29, -4
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g28, %g29, 0
 	b	%g28
-read_net_item.2856:
-	st	%g3, %g1, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	read_int.2677
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g4, 65535
-	mvlo	%g4, -1
-	jne	%g3, %g4, jeq_else.10008
-	ld	%g3, %g1, 0
-	addi	%g3, %g3, 1
-	mvhi	%g4, 65535
-	mvlo	%g4, -1
-	jmp	min_caml_create_array
-jeq_else.10008:
-	ld	%g4, %g1, 0
-	addi	%g5, %g4, 1
+read_net_item.2833:
+	ld	%g4, %g29, -4
+	st	%g29, %g1, 0
 	st	%g3, %g1, 4
-	mov	%g3, %g5
+	mov	%g29, %g4
 	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 16
-	call	read_net_item.2856
+	callR	%g28
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
-	ld	%g4, %g1, 0
-	slli	%g4, %g4, 2
-	ld	%g5, %g1, 4
-	st	%g3, %g1, 12
-	add	%g3, %g3, %g4
-	st	%g5, %g3, 0
-	ld	%g3, %g1, 12
-	return
-read_or_network.2858:
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g3, %g1, 0
-	mov	%g3, %g4
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	read_net_item.2856
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mov	%g4, %g3
-	ld	%g3, %g4, 0
-	mvhi	%g5, 65535
-	mvlo	%g5, -1
-	jne	%g3, %g5, jeq_else.10009
-	ld	%g3, %g1, 0
+	mvhi	%g4, 65535
+	mvlo	%g4, -1
+	jne	%g3, %g4, jeq_else.9864
+	ld	%g3, %g1, 4
 	addi	%g3, %g3, 1
+	mvhi	%g4, 65535
+	mvlo	%g4, -1
 	jmp	min_caml_create_array
-jeq_else.10009:
-	ld	%g3, %g1, 0
-	addi	%g5, %g3, 1
-	st	%g4, %g1, 4
+jeq_else.9864:
+	ld	%g4, %g1, 4
+	addi	%g5, %g4, 1
+	ld	%g29, %g1, 0
+	st	%g3, %g1, 8
 	mov	%g3, %g5
 	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 16
-	call	read_or_network.2858
+	callR	%g28
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
-	ld	%g4, %g1, 0
+	ld	%g4, %g1, 4
 	slli	%g4, %g4, 2
-	ld	%g5, %g1, 4
+	ld	%g5, %g1, 8
 	st	%g3, %g1, 12
 	add	%g3, %g3, %g4
 	st	%g5, %g3, 0
 	ld	%g3, %g1, 12
 	return
-read_and_network.2860:
+read_or_network.2835:
 	ld	%g4, %g29, -4
 	mvhi	%g5, 0
 	mvlo	%g5, 0
 	st	%g29, %g1, 0
-	st	%g4, %g1, 4
-	st	%g3, %g1, 8
+	st	%g3, %g1, 4
+	mov	%g3, %g5
+	mov	%g29, %g4
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	mov	%g4, %g3
+	ld	%g3, %g4, 0
+	mvhi	%g5, 65535
+	mvlo	%g5, -1
+	jne	%g3, %g5, jeq_else.9865
+	ld	%g3, %g1, 4
+	addi	%g3, %g3, 1
+	jmp	min_caml_create_array
+jeq_else.9865:
+	ld	%g3, %g1, 4
+	addi	%g5, %g3, 1
+	ld	%g29, %g1, 0
+	st	%g4, %g1, 8
 	mov	%g3, %g5
 	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
 	subi	%g1, %g1, 16
-	call	read_net_item.2856
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g4, %g1, 4
+	slli	%g4, %g4, 2
+	ld	%g5, %g1, 8
+	st	%g3, %g1, 12
+	add	%g3, %g3, %g4
+	st	%g5, %g3, 0
+	ld	%g3, %g1, 12
+	return
+read_and_network.2837:
+	ld	%g4, %g29, -8
+	ld	%g5, %g29, -4
+	mvhi	%g6, 0
+	mvlo	%g6, 0
+	st	%g29, %g1, 0
+	st	%g5, %g1, 4
+	st	%g3, %g1, 8
+	mov	%g3, %g6
+	mov	%g29, %g4
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g4, %g3, 0
 	mvhi	%g5, 65535
 	mvlo	%g5, -1
-	jne	%g4, %g5, jeq_else.10010
+	jne	%g4, %g5, jeq_else.9866
 	return
-jeq_else.10010:
+jeq_else.9866:
 	ld	%g4, %g1, 8
 	slli	%g5, %g4, 2
 	ld	%g6, %g1, 4
@@ -2592,17 +2137,26 @@ jeq_else.10010:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-read_parameter.2862:
-	ld	%g3, %g29, -20
-	ld	%g4, %g29, -16
-	ld	%g5, %g29, -12
-	ld	%g6, %g29, -8
-	ld	%g7, %g29, -4
-	st	%g7, %g1, 0
-	st	%g5, %g1, 4
+read_parameter.2839:
+	ld	%g3, %g29, -24
+	ld	%g4, %g29, -20
+	ld	%g5, %g29, -16
+	ld	%g6, %g29, -12
+	ld	%g7, %g29, -8
+	ld	%g8, %g29, -4
+	st	%g8, %g1, 0
+	st	%g4, %g1, 4
 	st	%g6, %g1, 8
-	st	%g4, %g1, 12
+	st	%g7, %g1, 12
+	st	%g5, %g1, 16
 	mov	%g29, %g3
+	st	%g31, %g1, 20
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 24
+	callR	%g28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	ld	%g29, %g1, 16
 	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 24
@@ -2616,6 +2170,8 @@ read_parameter.2862:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
+	mvhi	%g3, 0
+	mvlo	%g3, 0
 	ld	%g29, %g1, 8
 	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
@@ -2632,17 +2188,10 @@ read_parameter.2862:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	read_or_network.2858
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
 	ld	%g4, %g1, 0
 	st	%g3, %g4, 0
 	return
-solver_rect_surface.2864:
+solver_rect_surface.2841:
 	ld	%g8, %g29, -4
 	slli	%g9, %g5, 2
 	st	%g4, %g1, 4
@@ -2661,16 +2210,16 @@ solver_rect_surface.2864:
 	fmov	%f0, %f3
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10013
+	jne	%g3, %g4, jeq_else.9869
 	ld	%g3, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_abc.2786
+	call	o_param_abc.2763
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 32
@@ -2678,7 +2227,7 @@ solver_rect_surface.2864:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g4, %g1, 28
@@ -2691,14 +2240,14 @@ solver_rect_surface.2864:
 	st	%g3, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mov	%g4, %g3
 	ld	%g3, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	xor.2713
+	call	xor.2690
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g4, %g1, 28
@@ -2710,7 +2259,7 @@ solver_rect_surface.2864:
 	ld	%g6, %g1, 44
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fneg_cond.2718
+	call	fneg_cond.2695
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 20
@@ -2736,7 +2285,7 @@ solver_rect_surface.2864:
 	fmov	%f0, %f1
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g3, %g1, 16
@@ -2748,16 +2297,16 @@ solver_rect_surface.2864:
 	ld	%g4, %g1, 52
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10014
+	jne	%g3, %g4, jeq_else.9870
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10014:
+jeq_else.9870:
 	ld	%g3, %g1, 8
 	slli	%g4, %g3, 2
 	ld	%g5, %g1, 24
@@ -2771,7 +2320,7 @@ jeq_else.10014:
 	fadd	%f0, %f0, %f2
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g3, %g1, 8
@@ -2783,27 +2332,27 @@ jeq_else.10014:
 	ld	%g4, %g1, 52
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10015
+	jne	%g3, %g4, jeq_else.9871
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10015:
+jeq_else.9871:
 	ld	%g3, %g1, 0
 	fld	%f0, %g1, 44
 	fst	%f0, %g3, 0
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10013:
+jeq_else.9869:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-solver_rect.2873:
+solver_rect.2850:
 	ld	%g29, %g29, -4
 	mvhi	%g5, 0
 	mvlo	%g5, 0
@@ -2825,7 +2374,7 @@ solver_rect.2873:
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10016
+	jne	%g3, %g4, jeq_else.9872
 	mvhi	%g5, 0
 	mvlo	%g5, 1
 	mvhi	%g6, 0
@@ -2846,7 +2395,7 @@ solver_rect.2873:
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10017
+	jne	%g3, %g4, jeq_else.9873
 	mvhi	%g5, 0
 	mvlo	%g5, 2
 	mvhi	%g6, 0
@@ -2867,23 +2416,23 @@ solver_rect.2873:
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10018
+	jne	%g3, %g4, jeq_else.9874
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10018:
+jeq_else.9874:
 	mvhi	%g3, 0
 	mvlo	%g3, 3
 	return
-jeq_else.10017:
+jeq_else.9873:
 	mvhi	%g3, 0
 	mvlo	%g3, 2
 	return
-jeq_else.10016:
+jeq_else.9872:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-solver_surface.2879:
+solver_surface.2856:
 	ld	%g5, %g29, -4
 	st	%g5, %g1, 0
 	fst	%f2, %g1, 4
@@ -2892,7 +2441,7 @@ solver_surface.2879:
 	st	%g4, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_abc.2786
+	call	o_param_abc.2763
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mov	%g4, %g3
@@ -2900,34 +2449,34 @@ solver_surface.2879:
 	st	%g4, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fst	%f0, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10019
+	jne	%g3, %g4, jeq_else.9875
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10019:
+jeq_else.9875:
 	fld	%f0, %g1, 12
 	fld	%f1, %g1, 8
 	fld	%f2, %g1, 4
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	veciprod2.2748
+	call	veciprod2.2725
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
@@ -2937,21 +2486,21 @@ jeq_else.10019:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-quadratic.2885:
+quadratic.2862:
 	fst	%f0, %g1, 0
 	fst	%f2, %g1, 4
 	fst	%f1, %g1, 8
 	st	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 12
 	fst	%f0, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 16
@@ -2961,14 +2510,14 @@ quadratic.2885:
 	fmov	%f0, %f1
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 12
 	fst	%f0, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
@@ -2980,14 +2529,14 @@ quadratic.2885:
 	fmov	%f0, %f1
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 12
 	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
@@ -2998,15 +2547,15 @@ quadratic.2885:
 	fst	%f0, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_isrot.2778
+	call	o_isrot.2755
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10020
+	jne	%g3, %g4, jeq_else.9876
 	fld	%f0, %g1, 36
 	return
-jeq_else.10020:
+jeq_else.9876:
 	fld	%f0, %g1, 4
 	fld	%f1, %g1, 8
 	fmul	%f2, %f1, %f0
@@ -3014,7 +2563,7 @@ jeq_else.10020:
 	fst	%f2, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_r1.2804
+	call	o_param_r1.2781
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 40
@@ -3029,7 +2578,7 @@ jeq_else.10020:
 	fst	%f2, %g1, 48
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_r2.2806
+	call	o_param_r2.2783
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 48
@@ -3044,7 +2593,7 @@ jeq_else.10020:
 	fst	%f1, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_r3.2808
+	call	o_param_r3.2785
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 56
@@ -3052,7 +2601,7 @@ jeq_else.10020:
 	fld	%f1, %g1, 52
 	fadd	%f0, %f1, %f0
 	return
-bilinear.2890:
+bilinear.2867:
 	fmul	%f6, %f0, %f3
 	fst	%f3, %g1, 0
 	fst	%f0, %g1, 4
@@ -3064,7 +2613,7 @@ bilinear.2890:
 	fst	%f6, %g1, 28
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 28
@@ -3077,7 +2626,7 @@ bilinear.2890:
 	fst	%f3, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 36
@@ -3092,7 +2641,7 @@ bilinear.2890:
 	fst	%f3, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 44
@@ -3103,15 +2652,15 @@ bilinear.2890:
 	fst	%f0, %g1, 48
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_isrot.2778
+	call	o_isrot.2755
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10021
+	jne	%g3, %g4, jeq_else.9877
 	fld	%f0, %g1, 48
 	return
-jeq_else.10021:
+jeq_else.9877:
 	fld	%f0, %g1, 20
 	fld	%f1, %g1, 12
 	fmul	%f2, %f1, %f0
@@ -3123,7 +2672,7 @@ jeq_else.10021:
 	fst	%f2, %g1, 52
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_r1.2804
+	call	o_param_r1.2781
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 52
@@ -3140,7 +2689,7 @@ jeq_else.10021:
 	fst	%f1, %g1, 60
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	o_param_r2.2806
+	call	o_param_r2.2783
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 60
@@ -3159,7 +2708,7 @@ jeq_else.10021:
 	fst	%f1, %g1, 68
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	o_param_r3.2808
+	call	o_param_r3.2785
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 68
@@ -3168,13 +2717,13 @@ jeq_else.10021:
 	fadd	%f0, %f1, %f0
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 48
 	fadd	%f0, %f1, %f0
 	return
-solver_second.2898:
+solver_second.2875:
 	ld	%g5, %g29, -4
 	fld	%f3, %g4, 0
 	fld	%f4, %g4, -4
@@ -3190,18 +2739,18 @@ solver_second.2898:
 	fmov	%f0, %f3
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	quadratic.2885
+	call	quadratic.2862
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fst	%f0, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10022
+	jne	%g3, %g4, jeq_else.9878
 	ld	%g3, %g1, 20
 	fld	%f0, %g3, 0
 	fld	%f1, %g3, -4
@@ -3212,7 +2761,7 @@ solver_second.2898:
 	ld	%g3, %g1, 16
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	bilinear.2890
+	call	bilinear.2867
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 12
@@ -3225,33 +2774,33 @@ solver_second.2898:
 	fmov	%f2, %f3
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	quadratic.2885
+	call	quadratic.2862
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 16
 	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	jne	%g3, %g4, jeq_else.10023
-	setL %g3, l.6519
+	jne	%g3, %g4, jeq_else.9879
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 32
 	fsub	%f0, %f1, %f0
-	jmp	jeq_cont.10024
-jeq_else.10023:
+	jmp	jeq_cont.9880
+jeq_else.9879:
 	fld	%f0, %g1, 32
-jeq_cont.10024:
+jeq_cont.9880:
 	fld	%f1, %g1, 28
 	fst	%f0, %g1, 36
 	fmov	%f0, %f1
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 36
@@ -3261,38 +2810,38 @@ jeq_cont.10024:
 	fst	%f0, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10025
+	jne	%g3, %g4, jeq_else.9881
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10025:
+jeq_else.9881:
 	fld	%f0, %g1, 40
 	fsqrt	%f0, %f0
 	ld	%g3, %g1, 16
 	fst	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10026
+	jne	%g3, %g4, jeq_else.9882
 	fld	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
-	jmp	jeq_cont.10027
-jeq_else.10026:
+	jmp	jeq_cont.9883
+jeq_else.9882:
 	fld	%f0, %g1, 44
-jeq_cont.10027:
+jeq_cont.9883:
 	fld	%f1, %g1, 28
 	fsub	%f0, %f0, %f1
 	fld	%f1, %g1, 24
@@ -3302,11 +2851,11 @@ jeq_cont.10027:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10022:
+jeq_else.9878:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-solver.2904:
+solver.2881:
 	ld	%g6, %g29, -16
 	ld	%g7, %g29, -12
 	ld	%g8, %g29, -8
@@ -3326,7 +2875,7 @@ solver.2904:
 	fst	%f0, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_x.2788
+	call	o_param_x.2765
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
@@ -3339,7 +2888,7 @@ solver.2904:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_y.2790
+	call	o_param_y.2767
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
@@ -3351,7 +2900,7 @@ solver.2904:
 	fst	%f1, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_z.2792
+	call	o_param_z.2769
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 40
@@ -3360,12 +2909,12 @@ solver.2904:
 	fst	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10028
+	jne	%g3, %g4, jeq_else.9884
 	fld	%f0, %g1, 28
 	fld	%f1, %g1, 36
 	fld	%f2, %g1, 44
@@ -3374,10 +2923,10 @@ solver.2904:
 	ld	%g29, %g1, 12
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10028:
+jeq_else.9884:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10029
+	jne	%g3, %g4, jeq_else.9885
 	fld	%f0, %g1, 28
 	fld	%f1, %g1, 36
 	fld	%f2, %g1, 44
@@ -3386,7 +2935,7 @@ jeq_else.10028:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10029:
+jeq_else.9885:
 	fld	%f0, %g1, 28
 	fld	%f1, %g1, 36
 	fld	%f2, %g1, 44
@@ -3395,7 +2944,7 @@ jeq_else.10029:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-solver_rect_fast.2908:
+solver_rect_fast.2885:
 	ld	%g6, %g29, -4
 	fld	%f3, %g5, 0
 	fsub	%f3, %f3, %f0
@@ -3415,30 +2964,30 @@ solver_rect_fast.2908:
 	fmov	%f0, %f4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 28
 	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10030
+	jne	%g3, %g4, jeq_else.9886
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10031
-jeq_else.10030:
+	jmp	jeq_cont.9887
+jeq_else.9886:
 	ld	%g3, %g1, 24
 	fld	%f0, %g3, -8
 	fld	%f1, %g1, 20
@@ -3447,52 +2996,52 @@ jeq_else.10030:
 	fadd	%f0, %f0, %f2
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 28
 	fst	%f0, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10032
+	jne	%g3, %g4, jeq_else.9888
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10033
-jeq_else.10032:
+	jmp	jeq_cont.9889
+jeq_else.9888:
 	ld	%g3, %g1, 12
 	fld	%f0, %g3, -4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10034
+	jne	%g3, %g4, jeq_else.9890
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	jmp	jeq_cont.10035
-jeq_else.10034:
+	jmp	jeq_cont.9891
+jeq_else.9890:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-jeq_cont.10035:
-jeq_cont.10033:
-jeq_cont.10031:
+jeq_cont.9891:
+jeq_cont.9889:
+jeq_cont.9887:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10036
+	jne	%g3, %g4, jeq_else.9892
 	ld	%g3, %g1, 12
 	fld	%f0, %g3, -8
 	fld	%f1, %g1, 8
@@ -3508,30 +3057,30 @@ jeq_cont.10031:
 	fmov	%f0, %f2
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 28
 	fst	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10037
+	jne	%g3, %g4, jeq_else.9893
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10038
-jeq_else.10037:
+	jmp	jeq_cont.9894
+jeq_else.9893:
 	ld	%g3, %g1, 24
 	fld	%f0, %g3, -8
 	fld	%f1, %g1, 40
@@ -3540,52 +3089,52 @@ jeq_else.10037:
 	fadd	%f0, %f0, %f2
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g3, %g1, 28
 	fst	%f0, %g1, 48
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 48
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10039
+	jne	%g3, %g4, jeq_else.9895
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10040
-jeq_else.10039:
+	jmp	jeq_cont.9896
+jeq_else.9895:
 	ld	%g3, %g1, 12
 	fld	%f0, %g3, -12
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10041
+	jne	%g3, %g4, jeq_else.9897
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	jmp	jeq_cont.10042
-jeq_else.10041:
+	jmp	jeq_cont.9898
+jeq_else.9897:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-jeq_cont.10042:
-jeq_cont.10040:
-jeq_cont.10038:
+jeq_cont.9898:
+jeq_cont.9896:
+jeq_cont.9894:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10043
+	jne	%g3, %g4, jeq_else.9899
 	ld	%g3, %g1, 12
 	fld	%f0, %g3, -16
 	fld	%f1, %g1, 16
@@ -3601,30 +3150,30 @@ jeq_cont.10038:
 	fmov	%f0, %f1
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 28
 	fst	%f0, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10044
+	jne	%g3, %g4, jeq_else.9900
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10045
-jeq_else.10044:
+	jmp	jeq_cont.9901
+jeq_else.9900:
 	ld	%g3, %g1, 24
 	fld	%f0, %g3, -4
 	fld	%f1, %g1, 52
@@ -3633,77 +3182,77 @@ jeq_else.10044:
 	fadd	%f0, %f0, %f2
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 28
 	fst	%f0, %g1, 60
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 60
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10046
+	jne	%g3, %g4, jeq_else.9902
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10047
-jeq_else.10046:
+	jmp	jeq_cont.9903
+jeq_else.9902:
 	ld	%g3, %g1, 12
 	fld	%f0, %g3, -20
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10048
+	jne	%g3, %g4, jeq_else.9904
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	jmp	jeq_cont.10049
-jeq_else.10048:
+	jmp	jeq_cont.9905
+jeq_else.9904:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-jeq_cont.10049:
-jeq_cont.10047:
-jeq_cont.10045:
+jeq_cont.9905:
+jeq_cont.9903:
+jeq_cont.9901:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10050
+	jne	%g3, %g4, jeq_else.9906
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10050:
+jeq_else.9906:
 	ld	%g3, %g1, 0
 	fld	%f0, %g1, 52
 	fst	%f0, %g3, 0
 	mvhi	%g3, 0
 	mvlo	%g3, 3
 	return
-jeq_else.10043:
+jeq_else.9899:
 	ld	%g3, %g1, 0
 	fld	%f0, %g1, 40
 	fst	%f0, %g3, 0
 	mvhi	%g3, 0
 	mvlo	%g3, 2
 	return
-jeq_else.10036:
+jeq_else.9892:
 	ld	%g3, %g1, 0
 	fld	%f0, %g1, 20
 	fst	%f0, %g3, 0
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-solver_surface_fast.2915:
+solver_surface_fast.2892:
 	ld	%g3, %g29, -4
 	fld	%f3, %g4, 0
 	st	%g3, %g1, 0
@@ -3714,16 +3263,16 @@ solver_surface_fast.2915:
 	fmov	%f0, %f3
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10051
+	jne	%g3, %g4, jeq_else.9907
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10051:
+jeq_else.9907:
 	ld	%g3, %g1, 16
 	fld	%f0, %g3, -4
 	fld	%f1, %g1, 12
@@ -3741,7 +3290,7 @@ jeq_else.10051:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-solver_second_fast.2921:
+solver_second_fast.2898:
 	ld	%g5, %g29, -4
 	fld	%f3, %g4, 0
 	st	%g5, %g1, 0
@@ -3754,12 +3303,12 @@ solver_second_fast.2921:
 	fmov	%f0, %f3
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10052
+	jne	%g3, %g4, jeq_else.9908
 	ld	%g3, %g1, 24
 	fld	%f0, %g3, -4
 	fld	%f1, %g1, 20
@@ -3780,33 +3329,33 @@ solver_second_fast.2921:
 	fmov	%f1, %f3
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	quadratic.2885
+	call	quadratic.2862
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 8
 	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	jne	%g3, %g4, jeq_else.10053
-	setL %g3, l.6519
+	jne	%g3, %g4, jeq_else.9909
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 32
 	fsub	%f0, %f1, %f0
-	jmp	jeq_cont.10054
-jeq_else.10053:
+	jmp	jeq_cont.9910
+jeq_else.9909:
 	fld	%f0, %g1, 32
-jeq_cont.10054:
+jeq_cont.9910:
 	fld	%f1, %g1, 28
 	fst	%f0, %g1, 36
 	fmov	%f0, %f1
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 36
@@ -3816,25 +3365,25 @@ jeq_cont.10054:
 	fst	%f0, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10055
+	jne	%g3, %g4, jeq_else.9911
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10055:
+jeq_else.9911:
 	ld	%g3, %g1, 8
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10056
+	jne	%g3, %g4, jeq_else.9912
 	fld	%f0, %g1, 40
 	fsqrt	%f0, %f0
 	fld	%f1, %g1, 28
@@ -3844,8 +3393,8 @@ jeq_else.10055:
 	fmul	%f0, %f0, %f1
 	ld	%g3, %g1, 0
 	fst	%f0, %g3, 0
-	jmp	jeq_cont.10057
-jeq_else.10056:
+	jmp	jeq_cont.9913
+jeq_else.9912:
 	fld	%f0, %g1, 40
 	fsqrt	%f0, %f0
 	fld	%f1, %g1, 28
@@ -3855,15 +3404,15 @@ jeq_else.10056:
 	fmul	%f0, %f0, %f1
 	ld	%g3, %g1, 0
 	fst	%f0, %g3, 0
-jeq_cont.10057:
+jeq_cont.9913:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10052:
+jeq_else.9908:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-solver_fast.2927:
+solver_fast.2904:
 	ld	%g6, %g29, -16
 	ld	%g7, %g29, -12
 	ld	%g8, %g29, -8
@@ -3884,7 +3433,7 @@ solver_fast.2927:
 	mov	%g3, %g9
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_x.2788
+	call	o_param_x.2765
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 28
@@ -3897,7 +3446,7 @@ solver_fast.2927:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_y.2790
+	call	o_param_y.2767
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 36
@@ -3909,7 +3458,7 @@ solver_fast.2927:
 	fst	%f1, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_z.2792
+	call	o_param_z.2769
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 44
@@ -3918,7 +3467,7 @@ solver_fast.2927:
 	fst	%f0, %g1, 48
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	d_const.2833
+	call	d_const.2810
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g4, %g1, 12
@@ -3931,16 +3480,16 @@ solver_fast.2927:
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10058
+	jne	%g3, %g4, jeq_else.9914
 	ld	%g3, %g1, 16
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mov	%g4, %g3
@@ -3952,10 +3501,10 @@ solver_fast.2927:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10058:
+jeq_else.9914:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10059
+	jne	%g3, %g4, jeq_else.9915
 	fld	%f0, %g1, 32
 	fld	%f1, %g1, 40
 	fld	%f2, %g1, 48
@@ -3964,7 +3513,7 @@ jeq_else.10058:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10059:
+jeq_else.9915:
 	fld	%f0, %g1, 32
 	fld	%f1, %g1, 40
 	fld	%f2, %g1, 48
@@ -3973,7 +3522,7 @@ jeq_else.10059:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-solver_surface_fast2.2931:
+solver_surface_fast2.2908:
 	ld	%g3, %g29, -4
 	fld	%f0, %g4, 0
 	st	%g3, %g1, 0
@@ -3981,16 +3530,16 @@ solver_surface_fast2.2931:
 	st	%g4, %g1, 8
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10060
+	jne	%g3, %g4, jeq_else.9916
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10060:
+jeq_else.9916:
 	ld	%g3, %g1, 8
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 4
@@ -4001,7 +3550,7 @@ jeq_else.10060:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-solver_second_fast2.2938:
+solver_second_fast2.2915:
 	ld	%g6, %g29, -4
 	fld	%f3, %g4, 0
 	st	%g6, %g1, 0
@@ -4015,12 +3564,12 @@ solver_second_fast2.2938:
 	fmov	%f0, %f3
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10061
+	jne	%g3, %g4, jeq_else.9917
 	ld	%g3, %g1, 28
 	fld	%f0, %g3, -4
 	fld	%f1, %g1, 24
@@ -4039,7 +3588,7 @@ solver_second_fast2.2938:
 	fst	%f1, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 36
@@ -4049,25 +3598,25 @@ solver_second_fast2.2938:
 	fst	%f0, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10062
+	jne	%g3, %g4, jeq_else.9918
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10062:
+jeq_else.9918:
 	ld	%g3, %g1, 4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10063
+	jne	%g3, %g4, jeq_else.9919
 	fld	%f0, %g1, 40
 	fsqrt	%f0, %f0
 	fld	%f1, %g1, 32
@@ -4077,8 +3626,8 @@ jeq_else.10062:
 	fmul	%f0, %f0, %f1
 	ld	%g3, %g1, 0
 	fst	%f0, %g3, 0
-	jmp	jeq_cont.10064
-jeq_else.10063:
+	jmp	jeq_cont.9920
+jeq_else.9919:
 	fld	%f0, %g1, 40
 	fsqrt	%f0, %f0
 	fld	%f1, %g1, 32
@@ -4088,15 +3637,15 @@ jeq_else.10063:
 	fmul	%f0, %f0, %f1
 	ld	%g3, %g1, 0
 	fst	%f0, %g3, 0
-jeq_cont.10064:
+jeq_cont.9920:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10061:
+jeq_else.9917:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-solver_fast2.2945:
+solver_fast2.2922:
 	ld	%g5, %g29, -16
 	ld	%g6, %g29, -12
 	ld	%g7, %g29, -8
@@ -4114,7 +3663,7 @@ solver_fast2.2945:
 	mov	%g3, %g8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_ctbl.2810
+	call	o_param_ctbl.2787
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f0, %g3, 0
@@ -4128,7 +3677,7 @@ solver_fast2.2945:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	d_const.2833
+	call	d_const.2810
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g4, %g1, 16
@@ -4141,16 +3690,16 @@ solver_fast2.2945:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10065
+	jne	%g3, %g4, jeq_else.9921
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mov	%g4, %g3
@@ -4162,10 +3711,10 @@ solver_fast2.2945:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10065:
+jeq_else.9921:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10066
+	jne	%g3, %g4, jeq_else.9922
 	fld	%f0, %g1, 36
 	fld	%f1, %g1, 32
 	fld	%f2, %g1, 28
@@ -4175,7 +3724,7 @@ jeq_else.10065:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10066:
+jeq_else.9922:
 	fld	%f0, %g1, 36
 	fld	%f1, %g1, 32
 	fld	%f2, %g1, 28
@@ -4185,10 +3734,10 @@ jeq_else.10066:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-setup_rect_table.2948:
+setup_rect_table.2925:
 	mvhi	%g5, 0
 	mvlo	%g5, 6
-	setL %g6, l.6510
+	setL %g6, l.6407
 	fld	%f0, %g6, 0
 	st	%g4, %g1, 0
 	st	%g3, %g1, 4
@@ -4203,16 +3752,16 @@ setup_rect_table.2948:
 	st	%g3, %g1, 8
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10067
+	jne	%g3, %g4, jeq_else.9923
 	ld	%g3, %g1, 0
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g4, %g1, 4
@@ -4220,14 +3769,14 @@ setup_rect_table.2948:
 	st	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mov	%g4, %g3
 	ld	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	xor.2713
+	call	xor.2690
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 0
@@ -4235,44 +3784,44 @@ setup_rect_table.2948:
 	mov	%g3, %g4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fneg_cond.2718
+	call	fneg_cond.2695
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, 0
-	setL %g4, l.6519
+	setL %g4, l.6468
 	fld	%f0, %g4, 0
 	ld	%g4, %g1, 4
 	fld	%f1, %g4, 0
 	fdiv	%f0, %f0, %f1
 	fst	%f0, %g3, -4
-	jmp	jeq_cont.10068
-jeq_else.10067:
-	setL %g3, l.6510
+	jmp	jeq_cont.9924
+jeq_else.9923:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -4
-jeq_cont.10068:
+jeq_cont.9924:
 	ld	%g4, %g1, 4
 	fld	%f0, %g4, -4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10069
+	jne	%g3, %g4, jeq_else.9925
 	ld	%g3, %g1, 0
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 4
@@ -4280,14 +3829,14 @@ jeq_cont.10068:
 	st	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mov	%g4, %g3
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	xor.2713
+	call	xor.2690
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 0
@@ -4295,44 +3844,44 @@ jeq_cont.10068:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fneg_cond.2718
+	call	fneg_cond.2695
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -8
-	setL %g4, l.6519
+	setL %g4, l.6468
 	fld	%f0, %g4, 0
 	ld	%g4, %g1, 4
 	fld	%f1, %g4, -4
 	fdiv	%f0, %f0, %f1
 	fst	%f0, %g3, -12
-	jmp	jeq_cont.10070
-jeq_else.10069:
-	setL %g3, l.6510
+	jmp	jeq_cont.9926
+jeq_else.9925:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -12
-jeq_cont.10070:
+jeq_cont.9926:
 	ld	%g4, %g1, 4
 	fld	%f0, %g4, -8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10071
+	jne	%g3, %g4, jeq_else.9927
 	ld	%g3, %g1, 0
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 4
@@ -4340,14 +3889,14 @@ jeq_cont.10070:
 	st	%g3, %g1, 28
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mov	%g4, %g3
 	ld	%g3, %g1, 28
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	xor.2713
+	call	xor.2690
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 0
@@ -4355,35 +3904,35 @@ jeq_cont.10070:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg_cond.2718
+	call	fneg_cond.2695
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -16
-	setL %g4, l.6519
+	setL %g4, l.6468
 	fld	%f0, %g4, 0
 	ld	%g4, %g1, 4
 	fld	%f1, %g4, -8
 	fdiv	%f0, %f0, %f1
 	fst	%f0, %g3, -20
-	jmp	jeq_cont.10072
-jeq_else.10071:
-	setL %g3, l.6510
+	jmp	jeq_cont.9928
+jeq_else.9927:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -20
-jeq_cont.10072:
+jeq_cont.9928:
 	return
-setup_surface_table.2951:
+setup_surface_table.2928:
 	mvhi	%g5, 0
 	mvlo	%g5, 4
-	setL %g6, l.6510
+	setL %g6, l.6407
 	fld	%f0, %g6, 0
 	st	%g4, %g1, 0
 	st	%g3, %g1, 4
@@ -4401,7 +3950,7 @@ setup_surface_table.2951:
 	mov	%g3, %g5
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 12
@@ -4414,7 +3963,7 @@ setup_surface_table.2951:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 20
@@ -4428,7 +3977,7 @@ setup_surface_table.2951:
 	fst	%f1, %g1, 28
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 28
@@ -4438,19 +3987,19 @@ setup_surface_table.2951:
 	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10073
-	setL %g3, l.6510
+	jne	%g3, %g4, jeq_else.9929
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, 0
-	jmp	jeq_cont.10074
-jeq_else.10073:
-	setL %g3, l.6524
+	jmp	jeq_cont.9930
+jeq_else.9929:
+	setL %g3, l.6470
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 32
 	fdiv	%f0, %f0, %f1
@@ -4460,14 +4009,14 @@ jeq_else.10073:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
 	fdiv	%f0, %f0, %f1
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 8
@@ -4476,14 +4025,14 @@ jeq_else.10073:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
 	fdiv	%f0, %f0, %f1
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 8
@@ -4492,24 +4041,24 @@ jeq_else.10073:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
 	fdiv	%f0, %f0, %f1
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -12
-jeq_cont.10074:
+jeq_cont.9930:
 	return
-setup_second_table.2954:
+setup_second_table.2931:
 	mvhi	%g5, 0
 	mvlo	%g5, 5
-	setL %g6, l.6510
+	setL %g6, l.6407
 	fld	%f0, %g6, 0
 	st	%g4, %g1, 0
 	st	%g3, %g1, 4
@@ -4528,7 +4077,7 @@ setup_second_table.2954:
 	mov	%g3, %g5
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	quadratic.2885
+	call	quadratic.2862
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
@@ -4539,14 +4088,14 @@ setup_second_table.2954:
 	mov	%g3, %g4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 16
 	fmul	%f0, %f1, %f0
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 4
@@ -4557,14 +4106,14 @@ setup_second_table.2954:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
 	fmul	%f0, %f1, %f0
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 4
@@ -4575,14 +4124,14 @@ setup_second_table.2954:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
 	fmul	%f0, %f1, %f0
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 8
@@ -4593,12 +4142,12 @@ setup_second_table.2954:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_isrot.2778
+	call	o_isrot.2755
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10075
+	jne	%g3, %g4, jeq_else.9931
 	ld	%g3, %g1, 8
 	fld	%f0, %g1, 20
 	fst	%f0, %g3, -4
@@ -4606,8 +4155,8 @@ setup_second_table.2954:
 	fst	%f0, %g3, -8
 	fld	%f0, %g1, 36
 	fst	%f0, %g3, -12
-	jmp	jeq_cont.10076
-jeq_else.10075:
+	jmp	jeq_cont.9932
+jeq_else.9931:
 	ld	%g3, %g1, 4
 	fld	%f0, %g3, -8
 	ld	%g4, %g1, 0
@@ -4615,7 +4164,7 @@ jeq_else.10075:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_r2.2806
+	call	o_param_r2.2783
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 40
@@ -4628,7 +4177,7 @@ jeq_else.10075:
 	mov	%g3, %g4
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_r3.2808
+	call	o_param_r3.2785
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 48
@@ -4637,7 +4186,7 @@ jeq_else.10075:
 	fadd	%f0, %f1, %f0
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 20
@@ -4651,7 +4200,7 @@ jeq_else.10075:
 	mov	%g3, %g5
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_r1.2804
+	call	o_param_r1.2781
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 52
@@ -4664,7 +4213,7 @@ jeq_else.10075:
 	mov	%g3, %g4
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	o_param_r3.2808
+	call	o_param_r3.2785
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 60
@@ -4673,7 +4222,7 @@ jeq_else.10075:
 	fadd	%f0, %f1, %f0
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 28
@@ -4687,7 +4236,7 @@ jeq_else.10075:
 	mov	%g3, %g5
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	o_param_r1.2804
+	call	o_param_r1.2781
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 64
@@ -4699,7 +4248,7 @@ jeq_else.10075:
 	fst	%f1, %g1, 72
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	o_param_r2.2806
+	call	o_param_r2.2783
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 72
@@ -4708,39 +4257,39 @@ jeq_else.10075:
 	fadd	%f0, %f1, %f0
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 36
 	fsub	%f0, %f1, %f0
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -12
-jeq_cont.10076:
+jeq_cont.9932:
 	fld	%f0, %g1, 12
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fiszero.2653
+	call	fiszero.2617
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10077
-	setL %g3, l.6519
+	jne	%g3, %g4, jeq_else.9933
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 12
 	fdiv	%f0, %f0, %f1
 	ld	%g3, %g1, 8
 	fst	%f0, %g3, -16
-	jmp	jeq_cont.10078
-jeq_else.10077:
-jeq_cont.10078:
+	jmp	jeq_cont.9934
+jeq_else.9933:
+jeq_cont.9934:
 	ld	%g3, %g1, 8
 	return
-iter_setup_dirvec_constants.2957:
+iter_setup_dirvec_constants.2934:
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g4, %g6, jle_else.10079
+	jlt	%g4, %g6, jle_else.9935
 	slli	%g6, %g4, 2
 	st	%g5, %g1, 4
 	add	%g5, %g5, %g6
@@ -4751,7 +4300,7 @@ iter_setup_dirvec_constants.2957:
 	st	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	d_const.2833
+	call	d_const.2810
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 12
@@ -4759,7 +4308,7 @@ iter_setup_dirvec_constants.2957:
 	mov	%g3, %g4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 8
@@ -4767,17 +4316,17 @@ iter_setup_dirvec_constants.2957:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10080
+	jne	%g3, %g4, jeq_else.9936
 	ld	%g3, %g1, 20
 	ld	%g4, %g1, 8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	setup_rect_table.2948
+	call	setup_rect_table.2925
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 4
@@ -4787,16 +4336,16 @@ iter_setup_dirvec_constants.2957:
 	add	%g6, %g6, %g5
 	st	%g3, %g6, 0
 	ld	%g6, %g1, 28
-	jmp	jeq_cont.10081
-jeq_else.10080:
+	jmp	jeq_cont.9937
+jeq_else.9936:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10082
+	jne	%g3, %g4, jeq_else.9938
 	ld	%g3, %g1, 20
 	ld	%g4, %g1, 8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	setup_surface_table.2951
+	call	setup_surface_table.2928
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 4
@@ -4806,13 +4355,13 @@ jeq_else.10080:
 	add	%g6, %g6, %g5
 	st	%g3, %g6, 0
 	ld	%g6, %g1, 28
-	jmp	jeq_cont.10083
-jeq_else.10082:
+	jmp	jeq_cont.9939
+jeq_else.9938:
 	ld	%g3, %g1, 20
 	ld	%g4, %g1, 8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	setup_second_table.2954
+	call	setup_second_table.2931
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 4
@@ -4822,27 +4371,27 @@ jeq_else.10082:
 	add	%g6, %g6, %g5
 	st	%g3, %g6, 0
 	ld	%g6, %g1, 28
-jeq_cont.10083:
-jeq_cont.10081:
+jeq_cont.9939:
+jeq_cont.9937:
 	subi	%g4, %g4, 1
 	ld	%g3, %g1, 12
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10079:
+jle_else.9935:
 	return
-setup_dirvec_constants.2960:
+setup_dirvec_constants.2937:
 	ld	%g4, %g29, -8
 	ld	%g29, %g29, -4
 	ld	%g4, %g4, 0
 	subi	%g4, %g4, 1
 	ld	%g28, %g29, 0
 	b	%g28
-setup_startp_constants.2962:
+setup_startp_constants.2939:
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g4, %g6, jle_else.10085
+	jlt	%g4, %g6, jle_else.9941
 	slli	%g6, %g4, 2
 	st	%g5, %g1, 4
 	add	%g5, %g5, %g6
@@ -4854,7 +4403,7 @@ setup_startp_constants.2962:
 	mov	%g3, %g5
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_ctbl.2810
+	call	o_param_ctbl.2787
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 12
@@ -4862,7 +4411,7 @@ setup_startp_constants.2962:
 	mov	%g3, %g4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 8
@@ -4873,7 +4422,7 @@ setup_startp_constants.2962:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_x.2788
+	call	o_param_x.2765
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
@@ -4887,7 +4436,7 @@ setup_startp_constants.2962:
 	mov	%g3, %g5
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_y.2790
+	call	o_param_y.2767
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 28
@@ -4901,7 +4450,7 @@ setup_startp_constants.2962:
 	mov	%g3, %g5
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_z.2792
+	call	o_param_z.2769
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 32
@@ -4911,12 +4460,12 @@ setup_startp_constants.2962:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
 	ld	%g5, %g1, 20
-	jne	%g5, %g4, jeq_else.10086
+	jne	%g5, %g4, jeq_else.9942
 	ld	%g4, %g1, 12
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_abc.2786
+	call	o_param_abc.2763
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 16
@@ -4925,18 +4474,18 @@ setup_startp_constants.2962:
 	fld	%f2, %g4, -8
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	veciprod2.2748
+	call	veciprod2.2725
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 16
 	fst	%f0, %g3, -12
-	jmp	jeq_cont.10087
-jeq_else.10086:
+	jmp	jeq_cont.9943
+jeq_else.9942:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jlt	%g4, %g5, jle_else.10088
-	jmp	jle_cont.10089
-jle_else.10088:
+	jlt	%g4, %g5, jle_else.9944
+	jmp	jle_cont.9945
+jle_else.9944:
 	fld	%f0, %g3, 0
 	fld	%f1, %g3, -4
 	fld	%f2, %g3, -8
@@ -4944,32 +4493,32 @@ jle_else.10088:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	quadratic.2885
+	call	quadratic.2862
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g3, 0
 	mvlo	%g3, 3
 	ld	%g4, %g1, 20
-	jne	%g4, %g3, jeq_else.10090
-	setL %g3, l.6519
+	jne	%g4, %g3, jeq_else.9946
+	setL %g3, l.6468
 	fld	%f1, %g3, 0
 	fsub	%f0, %f0, %f1
-	jmp	jeq_cont.10091
-jeq_else.10090:
-jeq_cont.10091:
+	jmp	jeq_cont.9947
+jeq_else.9946:
+jeq_cont.9947:
 	ld	%g3, %g1, 16
 	fst	%f0, %g3, -12
-jle_cont.10089:
-jeq_cont.10087:
+jle_cont.9945:
+jeq_cont.9943:
 	ld	%g3, %g1, 4
 	subi	%g4, %g3, 1
 	ld	%g3, %g1, 8
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10085:
+jle_else.9941:
 	return
-setup_startp.2965:
+setup_startp.2942:
 	ld	%g4, %g29, -12
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
@@ -4981,7 +4530,7 @@ setup_startp.2965:
 	mov	%g3, %g28
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 8
@@ -4991,115 +4540,115 @@ setup_startp.2965:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-is_rect_outside.2967:
+is_rect_outside.2944:
 	fst	%f2, %g1, 0
 	fst	%f1, %g1, 4
 	st	%g3, %g1, 8
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 8
 	fst	%f0, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10093
+	jne	%g3, %g4, jeq_else.9949
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10094
-jeq_else.10093:
+	jmp	jeq_cont.9950
+jeq_else.9949:
 	fld	%f0, %g1, 4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 8
 	fst	%f0, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10095
+	jne	%g3, %g4, jeq_else.9951
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10096
-jeq_else.10095:
+	jmp	jeq_cont.9952
+jeq_else.9951:
 	fld	%f0, %g1, 0
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fabs.2658
+	call	fabs.2622
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 8
 	fst	%f0, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fmov	%f1, %f0, 0
 	fld	%f0, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-jeq_cont.10096:
-jeq_cont.10094:
+jeq_cont.9952:
+jeq_cont.9950:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10097
+	jne	%g3, %g4, jeq_else.9953
 	ld	%g3, %g1, 8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10098
+	jne	%g3, %g4, jeq_else.9954
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10098:
+jeq_else.9954:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10097:
+jeq_else.9953:
 	ld	%g3, %g1, 8
-	jmp	o_isinvert.2776
-is_plane_outside.2972:
+	jmp	o_isinvert.2753
+is_plane_outside.2949:
 	st	%g3, %g1, 0
 	fst	%f2, %g1, 4
 	fst	%f1, %g1, 8
 	fst	%f0, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_abc.2786
+	call	o_param_abc.2763
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f0, %g1, 12
@@ -5107,104 +4656,104 @@ is_plane_outside.2972:
 	fld	%f2, %g1, 4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	veciprod2.2748
+	call	veciprod2.2725
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 0
 	fst	%f0, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f0, %g1, 16
 	st	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mov	%g4, %g3
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	xor.2713
+	call	xor.2690
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10099
+	jne	%g3, %g4, jeq_else.9955
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10099:
+jeq_else.9955:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-is_second_outside.2977:
+is_second_outside.2954:
 	st	%g3, %g1, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
-	call	quadratic.2885
+	call	quadratic.2862
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	ld	%g3, %g1, 0
 	fst	%f0, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	jne	%g3, %g4, jeq_else.10100
-	setL %g3, l.6519
+	jne	%g3, %g4, jeq_else.9956
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 4
 	fsub	%f0, %f1, %f0
-	jmp	jeq_cont.10101
-jeq_else.10100:
+	jmp	jeq_cont.9957
+jeq_else.9956:
 	fld	%f0, %g1, 4
-jeq_cont.10101:
+jeq_cont.9957:
 	ld	%g3, %g1, 0
 	fst	%f0, %g1, 8
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	fld	%f0, %g1, 8
 	st	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mov	%g4, %g3
 	ld	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	xor.2713
+	call	xor.2690
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10102
+	jne	%g3, %g4, jeq_else.9958
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10102:
+jeq_else.9958:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-is_outside.2982:
+is_outside.2959:
 	fst	%f2, %g1, 0
 	fst	%f1, %g1, 4
 	st	%g3, %g1, 8
 	fst	%f0, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_x.2788
+	call	o_param_x.2765
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 12
@@ -5213,7 +4762,7 @@ is_outside.2982:
 	fst	%f0, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_y.2790
+	call	o_param_y.2767
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 4
@@ -5222,7 +4771,7 @@ is_outside.2982:
 	fst	%f0, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_z.2792
+	call	o_param_z.2769
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 0
@@ -5231,33 +4780,33 @@ is_outside.2982:
 	fst	%f0, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10103
+	jne	%g3, %g4, jeq_else.9959
 	fld	%f0, %g1, 16
 	fld	%f1, %g1, 20
 	fld	%f2, %g1, 24
 	ld	%g3, %g1, 8
-	jmp	is_rect_outside.2967
-jeq_else.10103:
+	jmp	is_rect_outside.2944
+jeq_else.9959:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10104
+	jne	%g3, %g4, jeq_else.9960
 	fld	%f0, %g1, 16
 	fld	%f1, %g1, 20
 	fld	%f2, %g1, 24
 	ld	%g3, %g1, 8
-	jmp	is_plane_outside.2972
-jeq_else.10104:
+	jmp	is_plane_outside.2949
+jeq_else.9960:
 	fld	%f0, %g1, 16
 	fld	%f1, %g1, 20
 	fld	%f2, %g1, 24
 	ld	%g3, %g1, 8
-	jmp	is_second_outside.2977
-check_all_inside.2987:
+	jmp	is_second_outside.2954
+check_all_inside.2964:
 	ld	%g5, %g29, -4
 	slli	%g6, %g3, 2
 	st	%g4, %g1, 4
@@ -5266,11 +4815,11 @@ check_all_inside.2987:
 	ld	%g4, %g1, 4
 	mvhi	%g7, 65535
 	mvlo	%g7, -1
-	jne	%g6, %g7, jeq_else.10105
+	jne	%g6, %g7, jeq_else.9961
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10105:
+jeq_else.9961:
 	slli	%g6, %g6, 2
 	st	%g5, %g1, 4
 	add	%g5, %g5, %g6
@@ -5284,12 +4833,12 @@ jeq_else.10105:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	is_outside.2982
+	call	is_outside.2959
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10106
+	jne	%g3, %g4, jeq_else.9962
 	ld	%g3, %g1, 20
 	addi	%g3, %g3, 1
 	fld	%f0, %g1, 8
@@ -5299,11 +4848,11 @@ jeq_else.10105:
 	ld	%g29, %g1, 16
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10106:
+jeq_else.9962:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-shadow_check_and_group.2993:
+shadow_check_and_group.2970:
 	ld	%g5, %g29, -28
 	ld	%g6, %g29, -24
 	ld	%g7, %g29, -20
@@ -5318,11 +4867,11 @@ shadow_check_and_group.2993:
 	ld	%g4, %g1, 4
 	mvhi	%g13, 65535
 	mvlo	%g13, -1
-	jne	%g12, %g13, jeq_else.10107
+	jne	%g12, %g13, jeq_else.9963
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10107:
+jeq_else.9963:
 	slli	%g12, %g3, 2
 	st	%g4, %g1, 4
 	add	%g4, %g4, %g12
@@ -5352,22 +4901,22 @@ jeq_else.10107:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
 	fst	%f0, %g1, 36
-	jne	%g3, %g4, jeq_else.10108
+	jne	%g3, %g4, jeq_else.9964
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10109
-jeq_else.10108:
-	setL %g3, l.7152
+	jmp	jeq_cont.9965
+jeq_else.9964:
+	setL %g3, l.7003
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
-jeq_cont.10109:
+jeq_cont.9965:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10110
+	jne	%g3, %g4, jeq_else.9966
 	ld	%g3, %g1, 28
 	slli	%g3, %g3, 2
 	ld	%g4, %g1, 24
@@ -5377,24 +4926,24 @@ jeq_cont.10109:
 	ld	%g4, %g1, 44
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10111
+	jne	%g3, %g4, jeq_else.9967
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10111:
+jeq_else.9967:
 	ld	%g3, %g1, 20
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 12
 	ld	%g29, %g1, 16
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10110:
-	setL %g3, l.7154
+jeq_else.9966:
+	setL %g3, l.7005
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 36
 	fadd	%f0, %f1, %f0
@@ -5428,18 +4977,18 @@ jeq_else.10110:
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10112
+	jne	%g3, %g4, jeq_else.9968
 	ld	%g3, %g1, 20
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 12
 	ld	%g29, %g1, 16
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10112:
+jeq_else.9968:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-shadow_check_one_or_group.2996:
+shadow_check_one_or_group.2973:
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
 	slli	%g7, %g3, 2
@@ -5449,11 +4998,11 @@ shadow_check_one_or_group.2996:
 	ld	%g4, %g1, 4
 	mvhi	%g8, 65535
 	mvlo	%g8, -1
-	jne	%g7, %g8, jeq_else.10113
+	jne	%g7, %g8, jeq_else.9969
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10113:
+jeq_else.9969:
 	slli	%g7, %g7, 2
 	st	%g6, %g1, 4
 	add	%g6, %g6, %g7
@@ -5474,18 +5023,18 @@ jeq_else.10113:
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10114
+	jne	%g3, %g4, jeq_else.9970
 	ld	%g3, %g1, 8
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 0
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10114:
+jeq_else.9970:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-shadow_check_one_or_matrix.2999:
+shadow_check_one_or_matrix.2976:
 	ld	%g5, %g29, -20
 	ld	%g6, %g29, -16
 	ld	%g7, %g29, -12
@@ -5499,11 +5048,11 @@ shadow_check_one_or_matrix.2999:
 	ld	%g11, %g10, 0
 	mvhi	%g12, 65535
 	mvlo	%g12, -1
-	jne	%g11, %g12, jeq_else.10115
+	jne	%g11, %g12, jeq_else.9971
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10115:
+jeq_else.9971:
 	mvhi	%g12, 0
 	mvlo	%g12, 99
 	st	%g10, %g1, 0
@@ -5511,11 +5060,11 @@ jeq_else.10115:
 	st	%g4, %g1, 8
 	st	%g29, %g1, 12
 	st	%g3, %g1, 16
-	jne	%g11, %g12, jeq_else.10116
+	jne	%g11, %g12, jeq_else.9972
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	jmp	jeq_cont.10117
-jeq_else.10116:
+	jmp	jeq_cont.9973
+jeq_else.9972:
 	st	%g6, %g1, 20
 	mov	%g4, %g8
 	mov	%g3, %g11
@@ -5529,27 +5078,27 @@ jeq_else.10116:
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10118
+	jne	%g3, %g4, jeq_else.9974
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10119
-jeq_else.10118:
+	jmp	jeq_cont.9975
+jeq_else.9974:
 	ld	%g3, %g1, 20
 	fld	%f0, %g3, 0
-	setL %g3, l.7180
+	setL %g3, l.7031
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10120
+	jne	%g3, %g4, jeq_else.9976
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10121
-jeq_else.10120:
+	jmp	jeq_cont.9977
+jeq_else.9976:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	ld	%g4, %g1, 0
@@ -5562,27 +5111,27 @@ jeq_else.10120:
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10122
+	jne	%g3, %g4, jeq_else.9978
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jmp	jeq_cont.10123
-jeq_else.10122:
+	jmp	jeq_cont.9979
+jeq_else.9978:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-jeq_cont.10123:
-jeq_cont.10121:
-jeq_cont.10119:
-jeq_cont.10117:
+jeq_cont.9979:
+jeq_cont.9977:
+jeq_cont.9975:
+jeq_cont.9973:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10124
+	jne	%g3, %g4, jeq_else.9980
 	ld	%g3, %g1, 16
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 8
 	ld	%g29, %g1, 12
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10124:
+jeq_else.9980:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	ld	%g4, %g1, 0
@@ -5595,18 +5144,18 @@ jeq_else.10124:
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10125
+	jne	%g3, %g4, jeq_else.9981
 	ld	%g3, %g1, 16
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 8
 	ld	%g29, %g1, 12
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10125:
+jeq_else.9981:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-solve_each_element.3002:
+solve_each_element.2979:
 	ld	%g6, %g29, -36
 	ld	%g7, %g29, -32
 	ld	%g8, %g29, -28
@@ -5623,9 +5172,9 @@ solve_each_element.3002:
 	ld	%g4, %g1, 4
 	mvhi	%g16, 65535
 	mvlo	%g16, -1
-	jne	%g15, %g16, jeq_else.10126
+	jne	%g15, %g16, jeq_else.9982
 	return
-jeq_else.10126:
+jeq_else.9982:
 	st	%g11, %g1, 0
 	st	%g13, %g1, 4
 	st	%g12, %g1, 8
@@ -5651,7 +5200,7 @@ jeq_else.10126:
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10128
+	jne	%g3, %g4, jeq_else.9984
 	ld	%g3, %g1, 48
 	slli	%g3, %g3, 2
 	ld	%g4, %g1, 44
@@ -5661,14 +5210,14 @@ jeq_else.10126:
 	ld	%g4, %g1, 52
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10129
+	jne	%g3, %g4, jeq_else.9985
 	return
-jeq_else.10129:
+jeq_else.9985:
 	ld	%g3, %g1, 40
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 32
@@ -5676,37 +5225,37 @@ jeq_else.10129:
 	ld	%g29, %g1, 36
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10128:
+jeq_else.9984:
 	ld	%g4, %g1, 24
 	fld	%f1, %g4, 0
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
 	st	%g3, %g1, 52
 	fst	%f1, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10131
-	jmp	jeq_cont.10132
-jeq_else.10131:
+	jne	%g3, %g4, jeq_else.9987
+	jmp	jeq_cont.9988
+jeq_else.9987:
 	ld	%g3, %g1, 20
 	fld	%f1, %g3, 0
 	fld	%f0, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10133
-	jmp	jeq_cont.10134
-jeq_else.10133:
-	setL %g3, l.7154
+	jne	%g3, %g4, jeq_else.9989
+	jmp	jeq_cont.9990
+jeq_else.9989:
+	setL %g3, l.7005
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 56
 	fadd	%f0, %f1, %f0
@@ -5745,9 +5294,9 @@ jeq_else.10133:
 	ld	%g31, %g1, 76
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10135
-	jmp	jeq_cont.10136
-jeq_else.10135:
+	jne	%g3, %g4, jeq_else.9991
+	jmp	jeq_cont.9992
+jeq_else.9991:
 	ld	%g3, %g1, 20
 	fld	%f0, %g1, 72
 	fst	%f0, %g3, 0
@@ -5757,7 +5306,7 @@ jeq_else.10135:
 	ld	%g3, %g1, 8
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	ld	%g3, %g1, 4
@@ -5766,9 +5315,9 @@ jeq_else.10135:
 	ld	%g3, %g1, 0
 	ld	%g4, %g1, 52
 	st	%g4, %g3, 0
-jeq_cont.10136:
-jeq_cont.10134:
-jeq_cont.10132:
+jeq_cont.9992:
+jeq_cont.9990:
+jeq_cont.9988:
 	ld	%g3, %g1, 40
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 32
@@ -5776,7 +5325,7 @@ jeq_cont.10132:
 	ld	%g29, %g1, 36
 	ld	%g28, %g29, 0
 	b	%g28
-solve_one_or_network.3006:
+solve_one_or_network.2983:
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	slli	%g8, %g3, 2
@@ -5786,9 +5335,9 @@ solve_one_or_network.3006:
 	ld	%g4, %g1, 4
 	mvhi	%g9, 65535
 	mvlo	%g9, -1
-	jne	%g8, %g9, jeq_else.10137
+	jne	%g8, %g9, jeq_else.9993
 	return
-jeq_else.10137:
+jeq_else.9993:
 	slli	%g8, %g8, 2
 	st	%g7, %g1, 4
 	add	%g7, %g7, %g8
@@ -5815,7 +5364,7 @@ jeq_else.10137:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-trace_or_matrix.3010:
+trace_or_matrix.2987:
 	ld	%g6, %g29, -20
 	ld	%g7, %g29, -16
 	ld	%g8, %g29, -12
@@ -5829,16 +5378,16 @@ trace_or_matrix.3010:
 	ld	%g12, %g11, 0
 	mvhi	%g13, 65535
 	mvlo	%g13, -1
-	jne	%g12, %g13, jeq_else.10139
+	jne	%g12, %g13, jeq_else.9995
 	return
-jeq_else.10139:
+jeq_else.9995:
 	mvhi	%g13, 0
 	mvlo	%g13, 99
 	st	%g5, %g1, 0
 	st	%g4, %g1, 4
 	st	%g29, %g1, 8
 	st	%g3, %g1, 12
-	jne	%g12, %g13, jeq_else.10141
+	jne	%g12, %g13, jeq_else.9997
 	mvhi	%g6, 0
 	mvlo	%g6, 1
 	mov	%g4, %g11
@@ -5850,8 +5399,8 @@ jeq_else.10139:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	jmp	jeq_cont.10142
-jeq_else.10141:
+	jmp	jeq_cont.9998
+jeq_else.9997:
 	st	%g11, %g1, 16
 	st	%g10, %g1, 20
 	st	%g6, %g1, 24
@@ -5868,23 +5417,23 @@ jeq_else.10141:
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10143
-	jmp	jeq_cont.10144
-jeq_else.10143:
+	jne	%g3, %g4, jeq_else.9999
+	jmp	jeq_cont.10000
+jeq_else.9999:
 	ld	%g3, %g1, 28
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 24
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10145
-	jmp	jeq_cont.10146
-jeq_else.10145:
+	jne	%g3, %g4, jeq_else.10001
+	jmp	jeq_cont.10002
+jeq_else.10001:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	ld	%g4, %g1, 16
@@ -5896,9 +5445,9 @@ jeq_else.10145:
 	callR	%g28
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-jeq_cont.10146:
-jeq_cont.10144:
-jeq_cont.10142:
+jeq_cont.10002:
+jeq_cont.10000:
+jeq_cont.9998:
 	ld	%g3, %g1, 12
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 4
@@ -5906,11 +5455,11 @@ jeq_cont.10142:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-judge_intersection.3014:
+judge_intersection.2991:
 	ld	%g4, %g29, -12
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
-	setL %g7, l.7219
+	setL %g7, l.7070
 	fld	%f0, %g7, 0
 	fst	%f0, %g5, 0
 	mvhi	%g7, 0
@@ -5929,26 +5478,26 @@ judge_intersection.3014:
 	ld	%g31, %g1, 4
 	ld	%g3, %g1, 0
 	fld	%f1, %g3, 0
-	setL %g3, l.7180
+	setL %g3, l.7031
 	fld	%f0, %g3, 0
 	fst	%f1, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10147
+	jne	%g3, %g4, jeq_else.10003
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10147:
-	setL %g3, l.7227
+jeq_else.10003:
+	setL %g3, l.7078
 	fld	%f1, %g3, 0
 	fld	%f0, %g1, 4
-	jmp	fless.2646
-solve_each_element_fast.3016:
+	jmp	fless.2610
+solve_each_element_fast.2993:
 	ld	%g6, %g29, -36
 	ld	%g7, %g29, -32
 	ld	%g8, %g29, -28
@@ -5974,7 +5523,7 @@ solve_each_element_fast.3016:
 	mov	%g3, %g5
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g4, %g1, 48
@@ -5986,9 +5535,9 @@ solve_each_element_fast.3016:
 	ld	%g6, %g1, 52
 	mvhi	%g7, 65535
 	mvlo	%g7, -1
-	jne	%g5, %g7, jeq_else.10148
+	jne	%g5, %g7, jeq_else.10004
 	return
-jeq_else.10148:
+jeq_else.10004:
 	ld	%g7, %g1, 36
 	ld	%g29, %g1, 40
 	st	%g3, %g1, 52
@@ -6003,7 +5552,7 @@ jeq_else.10148:
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10150
+	jne	%g3, %g4, jeq_else.10006
 	ld	%g3, %g1, 56
 	slli	%g3, %g3, 2
 	ld	%g4, %g1, 32
@@ -6013,14 +5562,14 @@ jeq_else.10148:
 	ld	%g4, %g1, 60
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10151
+	jne	%g3, %g4, jeq_else.10007
 	return
-jeq_else.10151:
+jeq_else.10007:
 	ld	%g3, %g1, 48
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 44
@@ -6028,37 +5577,37 @@ jeq_else.10151:
 	ld	%g29, %g1, 28
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10150:
+jeq_else.10006:
 	ld	%g4, %g1, 24
 	fld	%f1, %g4, 0
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
 	st	%g3, %g1, 60
 	fst	%f1, %g1, 64
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10153
-	jmp	jeq_cont.10154
-jeq_else.10153:
+	jne	%g3, %g4, jeq_else.10009
+	jmp	jeq_cont.10010
+jeq_else.10009:
 	ld	%g3, %g1, 20
 	fld	%f1, %g3, 0
 	fld	%f0, %g1, 64
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10155
-	jmp	jeq_cont.10156
-jeq_else.10155:
-	setL %g3, l.7154
+	jne	%g3, %g4, jeq_else.10011
+	jmp	jeq_cont.10012
+jeq_else.10011:
+	setL %g3, l.7005
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 64
 	fadd	%f0, %f1, %f0
@@ -6095,9 +5644,9 @@ jeq_else.10155:
 	ld	%g31, %g1, 84
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10157
-	jmp	jeq_cont.10158
-jeq_else.10157:
+	jne	%g3, %g4, jeq_else.10013
+	jmp	jeq_cont.10014
+jeq_else.10013:
 	ld	%g3, %g1, 20
 	fld	%f0, %g1, 80
 	fst	%f0, %g3, 0
@@ -6107,7 +5656,7 @@ jeq_else.10157:
 	ld	%g3, %g1, 8
 	st	%g31, %g1, 84
 	subi	%g1, %g1, 88
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
 	ld	%g3, %g1, 4
@@ -6116,9 +5665,9 @@ jeq_else.10157:
 	ld	%g3, %g1, 0
 	ld	%g4, %g1, 60
 	st	%g4, %g3, 0
-jeq_cont.10158:
-jeq_cont.10156:
-jeq_cont.10154:
+jeq_cont.10014:
+jeq_cont.10012:
+jeq_cont.10010:
 	ld	%g3, %g1, 48
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 44
@@ -6126,7 +5675,7 @@ jeq_cont.10154:
 	ld	%g29, %g1, 28
 	ld	%g28, %g29, 0
 	b	%g28
-solve_one_or_network_fast.3020:
+solve_one_or_network_fast.2997:
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	slli	%g8, %g3, 2
@@ -6136,9 +5685,9 @@ solve_one_or_network_fast.3020:
 	ld	%g4, %g1, 4
 	mvhi	%g9, 65535
 	mvlo	%g9, -1
-	jne	%g8, %g9, jeq_else.10159
+	jne	%g8, %g9, jeq_else.10015
 	return
-jeq_else.10159:
+jeq_else.10015:
 	slli	%g8, %g8, 2
 	st	%g7, %g1, 4
 	add	%g7, %g7, %g8
@@ -6165,7 +5714,7 @@ jeq_else.10159:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-trace_or_matrix_fast.3024:
+trace_or_matrix_fast.3001:
 	ld	%g6, %g29, -16
 	ld	%g7, %g29, -12
 	ld	%g8, %g29, -8
@@ -6178,16 +5727,16 @@ trace_or_matrix_fast.3024:
 	ld	%g11, %g10, 0
 	mvhi	%g12, 65535
 	mvlo	%g12, -1
-	jne	%g11, %g12, jeq_else.10161
+	jne	%g11, %g12, jeq_else.10017
 	return
-jeq_else.10161:
+jeq_else.10017:
 	mvhi	%g12, 0
 	mvlo	%g12, 99
 	st	%g5, %g1, 0
 	st	%g4, %g1, 4
 	st	%g29, %g1, 8
 	st	%g3, %g1, 12
-	jne	%g11, %g12, jeq_else.10163
+	jne	%g11, %g12, jeq_else.10019
 	mvhi	%g6, 0
 	mvlo	%g6, 1
 	mov	%g4, %g10
@@ -6199,8 +5748,8 @@ jeq_else.10161:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	jmp	jeq_cont.10164
-jeq_else.10163:
+	jmp	jeq_cont.10020
+jeq_else.10019:
 	st	%g10, %g1, 16
 	st	%g9, %g1, 20
 	st	%g6, %g1, 24
@@ -6216,23 +5765,23 @@ jeq_else.10163:
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10165
-	jmp	jeq_cont.10166
-jeq_else.10165:
+	jne	%g3, %g4, jeq_else.10021
+	jmp	jeq_cont.10022
+jeq_else.10021:
 	ld	%g3, %g1, 28
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 24
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10167
-	jmp	jeq_cont.10168
-jeq_else.10167:
+	jne	%g3, %g4, jeq_else.10023
+	jmp	jeq_cont.10024
+jeq_else.10023:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	ld	%g4, %g1, 16
@@ -6244,9 +5793,9 @@ jeq_else.10167:
 	callR	%g28
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-jeq_cont.10168:
-jeq_cont.10166:
-jeq_cont.10164:
+jeq_cont.10024:
+jeq_cont.10022:
+jeq_cont.10020:
 	ld	%g3, %g1, 12
 	addi	%g3, %g3, 1
 	ld	%g4, %g1, 4
@@ -6254,11 +5803,11 @@ jeq_cont.10164:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-judge_intersection_fast.3028:
+judge_intersection_fast.3005:
 	ld	%g4, %g29, -12
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
-	setL %g7, l.7219
+	setL %g7, l.7070
 	fld	%f0, %g7, 0
 	fst	%f0, %g5, 0
 	mvhi	%g7, 0
@@ -6277,26 +5826,26 @@ judge_intersection_fast.3028:
 	ld	%g31, %g1, 4
 	ld	%g3, %g1, 0
 	fld	%f1, %g3, 0
-	setL %g3, l.7180
+	setL %g3, l.7031
 	fld	%f0, %g3, 0
 	fst	%f1, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10169
+	jne	%g3, %g4, jeq_else.10025
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10169:
-	setL %g3, l.7227
+jeq_else.10025:
+	setL %g3, l.7078
 	fld	%f1, %g3, 0
 	fld	%f0, %g1, 4
-	jmp	fless.2646
-get_nvector_rect.3030:
+	jmp	fless.2610
+get_nvector_rect.3007:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
 	ld	%g5, %g5, 0
@@ -6306,7 +5855,7 @@ get_nvector_rect.3030:
 	mov	%g3, %g4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	vecbzero.2732
+	call	vecbzero.2709
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 8
@@ -6321,12 +5870,12 @@ get_nvector_rect.3030:
 	st	%g4, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	sgn.2716
+	call	sgn.2693
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g3, %g1, 12
@@ -6337,18 +5886,18 @@ get_nvector_rect.3030:
 	fst	%f0, %g4, 0
 	ld	%g4, %g1, 20
 	return
-get_nvector_plane.3032:
+get_nvector_plane.3009:
 	ld	%g4, %g29, -4
 	st	%g3, %g1, 0
 	st	%g4, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
@@ -6357,12 +5906,12 @@ get_nvector_plane.3032:
 	mov	%g3, %g4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
@@ -6371,18 +5920,18 @@ get_nvector_plane.3032:
 	mov	%g3, %g4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g3, %g1, 4
 	fst	%f0, %g3, -8
 	return
-get_nvector_second.3034:
+get_nvector_second.3011:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
 	fld	%f0, %g5, 0
@@ -6392,7 +5941,7 @@ get_nvector_second.3034:
 	fst	%f0, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_param_x.2788
+	call	o_param_x.2765
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 12
@@ -6405,7 +5954,7 @@ get_nvector_second.3034:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_y.2790
+	call	o_param_y.2767
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 20
@@ -6417,7 +5966,7 @@ get_nvector_second.3034:
 	fst	%f1, %g1, 28
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_z.2792
+	call	o_param_z.2769
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 28
@@ -6426,7 +5975,7 @@ get_nvector_second.3034:
 	fst	%f0, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f1, %g1, 16
@@ -6435,7 +5984,7 @@ get_nvector_second.3034:
 	fst	%f0, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 24
@@ -6444,7 +5993,7 @@ get_nvector_second.3034:
 	fst	%f0, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 32
@@ -6453,12 +6002,12 @@ get_nvector_second.3034:
 	fst	%f0, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_isrot.2778
+	call	o_isrot.2755
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10172
+	jne	%g3, %g4, jeq_else.10028
 	ld	%g3, %g1, 0
 	fld	%f0, %g1, 36
 	fst	%f0, %g3, 0
@@ -6466,12 +6015,12 @@ get_nvector_second.3034:
 	fst	%f0, %g3, -4
 	fld	%f0, %g1, 44
 	fst	%f0, %g3, -8
-	jmp	jeq_cont.10173
-jeq_else.10172:
+	jmp	jeq_cont.10029
+jeq_else.10028:
 	ld	%g3, %g1, 4
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_r3.2808
+	call	o_param_r3.2785
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 24
@@ -6480,7 +6029,7 @@ jeq_else.10172:
 	fst	%f0, %g1, 48
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_r2.2806
+	call	o_param_r2.2783
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 32
@@ -6489,7 +6038,7 @@ jeq_else.10172:
 	fadd	%f0, %f2, %f0
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 36
@@ -6500,7 +6049,7 @@ jeq_else.10172:
 	mov	%g3, %g4
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_r3.2808
+	call	o_param_r3.2785
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 16
@@ -6509,7 +6058,7 @@ jeq_else.10172:
 	fst	%f0, %g1, 52
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_r1.2804
+	call	o_param_r1.2781
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 32
@@ -6518,7 +6067,7 @@ jeq_else.10172:
 	fadd	%f0, %f1, %f0
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 40
@@ -6529,7 +6078,7 @@ jeq_else.10172:
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_r2.2806
+	call	o_param_r2.2783
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 16
@@ -6538,7 +6087,7 @@ jeq_else.10172:
 	fst	%f0, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_r1.2804
+	call	o_param_r1.2781
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 24
@@ -6547,25 +6096,25 @@ jeq_else.10172:
 	fadd	%f0, %f1, %f0
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fhalf.2662
+	call	fhalf.2628
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 44
 	fadd	%f0, %f1, %f0
 	ld	%g3, %g1, 0
 	fst	%f0, %g3, -8
-jeq_cont.10173:
+jeq_cont.10029:
 	ld	%g4, %g1, 4
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_isinvert.2776
+	call	o_isinvert.2753
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mov	%g4, %g3
 	ld	%g3, %g1, 0
-	jmp	vecunit_sgn.2742
-get_nvector.3036:
+	jmp	vecunit_sgn.2719
+get_nvector.3013:
 	ld	%g5, %g29, -12
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
@@ -6576,539 +6125,515 @@ get_nvector.3036:
 	st	%g6, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10174
+	jne	%g3, %g4, jeq_else.10030
 	ld	%g3, %g1, 12
 	ld	%g29, %g1, 16
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10174:
+jeq_else.10030:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10175
+	jne	%g3, %g4, jeq_else.10031
 	ld	%g3, %g1, 4
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10175:
+jeq_else.10031:
 	ld	%g3, %g1, 4
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-utexture.3039:
-	ld	%g5, %g29, -12
-	ld	%g6, %g29, -8
-	ld	%g7, %g29, -4
-	st	%g7, %g1, 0
-	st	%g6, %g1, 4
-	st	%g4, %g1, 8
-	st	%g5, %g1, 12
-	st	%g3, %g1, 16
+utexture.3016:
+	ld	%g5, %g29, -4
+	st	%g4, %g1, 0
+	st	%g5, %g1, 4
+	st	%g3, %g1, 8
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	o_texturetype.2747
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g4, %g1, 8
+	st	%g3, %g1, 12
+	mov	%g3, %g4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_texturetype.2770
+	call	o_color_red.2775
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	ld	%g4, %g1, 16
-	st	%g3, %g1, 20
-	mov	%g3, %g4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	o_color_red.2798
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	ld	%g3, %g1, 12
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, 0
-	ld	%g4, %g1, 16
+	ld	%g4, %g1, 8
 	mov	%g3, %g4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	o_color_green.2800
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	ld	%g3, %g1, 12
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	o_color_green.2777
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, -4
-	ld	%g4, %g1, 16
+	ld	%g4, %g1, 8
 	mov	%g3, %g4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	o_color_blue.2802
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	ld	%g3, %g1, 12
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	o_color_blue.2779
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, -8
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	ld	%g5, %g1, 20
-	jne	%g5, %g4, jeq_else.10176
-	ld	%g4, %g1, 8
+	ld	%g5, %g1, 12
+	jne	%g5, %g4, jeq_else.10032
+	ld	%g4, %g1, 0
 	fld	%f0, %g4, 0
-	ld	%g5, %g1, 16
-	fst	%f0, %g1, 24
+	ld	%g5, %g1, 8
+	fst	%f0, %g1, 16
 	mov	%g3, %g5
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	o_param_x.2765
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fld	%f1, %g1, 16
+	fsub	%f0, %f1, %f0
+	setL %g3, l.7200
+	fld	%f1, %g3, 0
+	fmul	%f1, %f0, %f1
+	fst	%f0, %g1, 20
+	fmov	%f0, %f1
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_param_x.2788
+	call	min_caml_floor
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	fld	%f1, %g1, 24
-	fsub	%f0, %f1, %f0
-	setL %g3, l.7348
-	fld	%f1, %g3, 0
-	fmul	%f1, %f0, %f1
-	fst	%f0, %g1, 28
-	fmov	%f0, %f1
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	min_caml_floor
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	setL %g3, l.7350
+	setL %g3, l.7202
 	fld	%f1, %g3, 0
 	fmul	%f0, %f0, %f1
+	fld	%f1, %g1, 20
+	fsub	%f0, %f1, %f0
+	setL %g3, l.7181
+	fld	%f1, %g3, 0
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	fless.2610
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
+	ld	%g4, %g1, 0
+	fld	%f0, %g4, -8
+	ld	%g4, %g1, 8
+	st	%g3, %g1, 24
+	fst	%f0, %g1, 28
+	mov	%g3, %g4
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	o_param_z.2769
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 	fld	%f1, %g1, 28
 	fsub	%f0, %f1, %f0
-	setL %g3, l.7329
+	setL %g3, l.7200
+	fld	%f1, %g3, 0
+	fmul	%f1, %f0, %f1
+	fst	%f0, %g1, 32
+	fmov	%f0, %f1
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_floor
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
+	setL %g3, l.7202
+	fld	%f1, %g3, 0
+	fmul	%f0, %f0, %f1
+	fld	%f1, %g1, 32
+	fsub	%f0, %f1, %f0
+	setL %g3, l.7181
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-	ld	%g4, %g1, 8
-	fld	%f0, %g4, -8
-	ld	%g4, %g1, 16
-	st	%g3, %g1, 32
-	fst	%f0, %g1, 36
-	mov	%g3, %g4
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	o_param_z.2792
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	fld	%f1, %g1, 36
-	fsub	%f0, %f1, %f0
-	setL %g3, l.7348
-	fld	%f1, %g3, 0
-	fmul	%f1, %f0, %f1
-	fst	%f0, %g1, 40
-	fmov	%f0, %f1
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	min_caml_floor
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	setL %g3, l.7350
-	fld	%f1, %g3, 0
-	fmul	%f0, %f0, %f1
-	fld	%f1, %g1, 40
-	fsub	%f0, %f1, %f0
-	setL %g3, l.7329
-	fld	%f1, %g3, 0
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	fless.2646
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	ld	%g5, %g1, 32
-	jne	%g5, %g4, jeq_else.10177
+	ld	%g5, %g1, 24
+	jne	%g5, %g4, jeq_else.10033
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10179
-	setL %g3, l.7320
+	jne	%g3, %g4, jeq_else.10035
+	setL %g3, l.7172
 	fld	%f0, %g3, 0
-	jmp	jeq_cont.10180
-jeq_else.10179:
-	setL %g3, l.6510
+	jmp	jeq_cont.10036
+jeq_else.10035:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
-jeq_cont.10180:
-	jmp	jeq_cont.10178
-jeq_else.10177:
+jeq_cont.10036:
+	jmp	jeq_cont.10034
+jeq_else.10033:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10181
-	setL %g3, l.6510
+	jne	%g3, %g4, jeq_else.10037
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
-	jmp	jeq_cont.10182
-jeq_else.10181:
-	setL %g3, l.7320
+	jmp	jeq_cont.10038
+jeq_else.10037:
+	setL %g3, l.7172
 	fld	%f0, %g3, 0
-jeq_cont.10182:
-jeq_cont.10178:
-	ld	%g3, %g1, 12
+jeq_cont.10038:
+jeq_cont.10034:
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, -4
 	return
-jeq_else.10176:
+jeq_else.10032:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g5, %g4, jeq_else.10184
-	ld	%g4, %g1, 8
+	jne	%g5, %g4, jeq_else.10040
+	ld	%g4, %g1, 0
 	fld	%f0, %g4, -4
-	setL %g4, l.7339
+	setL %g4, l.7191
 	fld	%f1, %g4, 0
 	fmul	%f0, %f0, %f1
-	ld	%g29, %g1, 4
-	st	%g31, %g1, 44
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 48
-	callR	%g28
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	fsqr.2664
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	setL %g3, l.7320
+	sin	%f0, %f0
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	fsqr.2630
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
+	setL %g3, l.7172
 	fld	%f1, %g3, 0
 	fmul	%f1, %f1, %f0
-	ld	%g3, %g1, 12
+	ld	%g3, %g1, 4
 	fst	%f1, %g3, 0
-	setL %g4, l.7320
+	setL %g4, l.7172
 	fld	%f1, %g4, 0
-	setL %g4, l.6519
+	setL %g4, l.6468
 	fld	%f2, %g4, 0
 	fsub	%f0, %f2, %f0
 	fmul	%f0, %f1, %f0
 	fst	%f0, %g3, -4
 	return
-jeq_else.10184:
+jeq_else.10040:
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	jne	%g5, %g4, jeq_else.10186
-	ld	%g4, %g1, 8
+	jne	%g5, %g4, jeq_else.10042
+	ld	%g4, %g1, 0
 	fld	%f0, %g4, 0
-	ld	%g5, %g1, 16
-	fst	%f0, %g1, 44
+	ld	%g5, %g1, 8
+	fst	%f0, %g1, 36
 	mov	%g3, %g5
+	st	%g31, %g1, 44
+	subi	%g1, %g1, 48
+	call	o_param_x.2765
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
+	fld	%f1, %g1, 36
+	fsub	%f0, %f1, %f0
+	ld	%g3, %g1, 0
+	fld	%f1, %g3, -8
+	ld	%g3, %g1, 8
+	fst	%f0, %g1, 40
+	fst	%f1, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_x.2788
+	call	o_param_z.2769
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 44
 	fsub	%f0, %f1, %f0
-	ld	%g3, %g1, 8
-	fld	%f1, %g3, -8
-	ld	%g3, %g1, 16
+	fld	%f1, %g1, 40
 	fst	%f0, %g1, 48
-	fst	%f1, %g1, 52
+	fmov	%f0, %f1
+	st	%g31, %g1, 52
+	subi	%g1, %g1, 56
+	call	fsqr.2630
+	addi	%g1, %g1, 56
+	ld	%g31, %g1, 52
+	fld	%f1, %g1, 48
+	fst	%f0, %g1, 52
+	fmov	%f0, %f1
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_z.2792
+	call	fsqr.2630
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 52
-	fsub	%f0, %f1, %f0
-	fld	%f1, %g1, 48
+	fadd	%f0, %f1, %f0
+	fsqrt	%f0, %f0
+	setL %g3, l.7181
+	fld	%f1, %g3, 0
+	fdiv	%f0, %f0, %f1
 	fst	%f0, %g1, 56
-	fmov	%f0, %f1
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fsqr.2664
+	call	min_caml_floor
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 56
-	fst	%f0, %g1, 60
-	fmov	%f0, %f1
-	st	%g31, %g1, 68
-	subi	%g1, %g1, 72
-	call	fsqr.2664
-	addi	%g1, %g1, 72
-	ld	%g31, %g1, 68
-	fld	%f1, %g1, 60
-	fadd	%f0, %f1, %f0
-	fsqrt	%f0, %f0
-	setL %g3, l.7329
-	fld	%f1, %g3, 0
-	fdiv	%f0, %f0, %f1
-	fst	%f0, %g1, 64
-	st	%g31, %g1, 68
-	subi	%g1, %g1, 72
-	call	min_caml_floor
-	addi	%g1, %g1, 72
-	ld	%g31, %g1, 68
-	fld	%f1, %g1, 64
 	fsub	%f0, %f1, %f0
-	setL %g3, l.7307
+	setL %g3, l.7158
 	fld	%f1, %g3, 0
 	fmul	%f0, %f0, %f1
-	ld	%g29, %g1, 0
-	st	%g31, %g1, 68
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 72
-	callR	%g28
-	addi	%g1, %g1, 72
-	ld	%g31, %g1, 68
-	st	%g31, %g1, 68
-	subi	%g1, %g1, 72
-	call	fsqr.2664
-	addi	%g1, %g1, 72
-	ld	%g31, %g1, 68
-	setL %g3, l.7320
+	cos	%f0, %f0
+	st	%g31, %g1, 60
+	subi	%g1, %g1, 64
+	call	fsqr.2630
+	addi	%g1, %g1, 64
+	ld	%g31, %g1, 60
+	setL %g3, l.7172
 	fld	%f1, %g3, 0
 	fmul	%f1, %f0, %f1
-	ld	%g3, %g1, 12
+	ld	%g3, %g1, 4
 	fst	%f1, %g3, -4
-	setL %g4, l.6519
+	setL %g4, l.6468
 	fld	%f1, %g4, 0
 	fsub	%f0, %f1, %f0
-	setL %g4, l.7320
+	setL %g4, l.7172
 	fld	%f1, %g4, 0
 	fmul	%f0, %f0, %f1
 	fst	%f0, %g3, -8
 	return
-jeq_else.10186:
+jeq_else.10042:
 	mvhi	%g4, 0
 	mvlo	%g4, 4
-	jne	%g5, %g4, jeq_else.10188
-	ld	%g4, %g1, 8
+	jne	%g5, %g4, jeq_else.10044
+	ld	%g4, %g1, 0
 	fld	%f0, %g4, 0
-	ld	%g5, %g1, 16
-	fst	%f0, %g1, 68
+	ld	%g5, %g1, 8
+	fst	%f0, %g1, 60
 	mov	%g3, %g5
-	st	%g31, %g1, 76
-	subi	%g1, %g1, 80
-	call	o_param_x.2788
-	addi	%g1, %g1, 80
-	ld	%g31, %g1, 76
-	fld	%f1, %g1, 68
+	st	%g31, %g1, 68
+	subi	%g1, %g1, 72
+	call	o_param_x.2765
+	addi	%g1, %g1, 72
+	ld	%g31, %g1, 68
+	fld	%f1, %g1, 60
 	fsub	%f0, %f1, %f0
-	ld	%g3, %g1, 16
-	fst	%f0, %g1, 72
+	ld	%g3, %g1, 8
+	fst	%f0, %g1, 64
+	st	%g31, %g1, 68
+	subi	%g1, %g1, 72
+	call	o_param_a.2757
+	addi	%g1, %g1, 72
+	ld	%g31, %g1, 68
+	fsqrt	%f0, %f0
+	fld	%f1, %g1, 64
+	fmul	%f0, %f1, %f0
+	ld	%g3, %g1, 0
+	fld	%f1, %g3, -8
+	ld	%g4, %g1, 8
+	fst	%f0, %g1, 68
+	fst	%f1, %g1, 72
+	mov	%g3, %g4
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	o_param_a.2780
+	call	o_param_z.2769
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
-	fsqrt	%f0, %f0
 	fld	%f1, %g1, 72
-	fmul	%f0, %f1, %f0
+	fsub	%f0, %f1, %f0
 	ld	%g3, %g1, 8
-	fld	%f1, %g3, -8
-	ld	%g4, %g1, 16
 	fst	%f0, %g1, 76
-	fst	%f1, %g1, 80
-	mov	%g3, %g4
 	st	%g31, %g1, 84
 	subi	%g1, %g1, 88
-	call	o_param_z.2792
+	call	o_param_c.2761
+	addi	%g1, %g1, 88
+	ld	%g31, %g1, 84
+	fsqrt	%f0, %f0
+	fld	%f1, %g1, 76
+	fmul	%f0, %f1, %f0
+	fld	%f1, %g1, 68
+	fst	%f0, %g1, 80
+	fmov	%f0, %f1
+	st	%g31, %g1, 84
+	subi	%g1, %g1, 88
+	call	fsqr.2630
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
 	fld	%f1, %g1, 80
-	fsub	%f0, %f1, %f0
-	ld	%g3, %g1, 16
 	fst	%f0, %g1, 84
+	fmov	%f0, %f1
 	st	%g31, %g1, 92
 	subi	%g1, %g1, 96
-	call	o_param_c.2784
+	call	fsqr.2630
 	addi	%g1, %g1, 96
 	ld	%g31, %g1, 92
-	fsqrt	%f0, %f0
 	fld	%f1, %g1, 84
-	fmul	%f0, %f1, %f0
-	fld	%f1, %g1, 76
+	fadd	%f0, %f1, %f0
+	fld	%f1, %g1, 68
 	fst	%f0, %g1, 88
 	fmov	%f0, %f1
 	st	%g31, %g1, 92
 	subi	%g1, %g1, 96
-	call	fsqr.2664
+	call	fabs.2622
 	addi	%g1, %g1, 96
 	ld	%g31, %g1, 92
-	fld	%f1, %g1, 88
+	setL %g3, l.7152
+	fld	%f1, %g3, 0
+	st	%g31, %g1, 92
+	subi	%g1, %g1, 96
+	call	fless.2610
+	addi	%g1, %g1, 96
+	ld	%g31, %g1, 92
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	jne	%g3, %g4, jeq_else.10045
+	fld	%f0, %g1, 68
+	fld	%f1, %g1, 80
+	fdiv	%f0, %f1, %f0
+	st	%g31, %g1, 92
+	subi	%g1, %g1, 96
+	call	fabs.2622
+	addi	%g1, %g1, 96
+	ld	%g31, %g1, 92
+	atan	%f0, %f0
+	setL %g3, l.7156
+	fld	%f1, %g3, 0
+	fmul	%f0, %f0, %f1
+	setL %g3, l.7158
+	fld	%f1, %g3, 0
+	fdiv	%f0, %f0, %f1
+	jmp	jeq_cont.10046
+jeq_else.10045:
+	setL %g3, l.7154
+	fld	%f0, %g3, 0
+jeq_cont.10046:
 	fst	%f0, %g1, 92
-	fmov	%f0, %f1
 	st	%g31, %g1, 100
 	subi	%g1, %g1, 104
-	call	fsqr.2664
+	call	min_caml_floor
 	addi	%g1, %g1, 104
 	ld	%g31, %g1, 100
 	fld	%f1, %g1, 92
-	fadd	%f0, %f1, %f0
-	fld	%f1, %g1, 76
+	fsub	%f0, %f1, %f0
+	ld	%g3, %g1, 0
+	fld	%f1, %g3, -4
+	ld	%g3, %g1, 8
 	fst	%f0, %g1, 96
-	fmov	%f0, %f1
-	st	%g31, %g1, 100
-	subi	%g1, %g1, 104
-	call	fabs.2658
-	addi	%g1, %g1, 104
-	ld	%g31, %g1, 100
-	setL %g3, l.7301
-	fld	%f1, %g3, 0
-	st	%g31, %g1, 100
-	subi	%g1, %g1, 104
-	call	fless.2646
-	addi	%g1, %g1, 104
-	ld	%g31, %g1, 100
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10189
-	fld	%f0, %g1, 76
-	fld	%f1, %g1, 88
-	fdiv	%f0, %f1, %f0
-	st	%g31, %g1, 100
-	subi	%g1, %g1, 104
-	call	fabs.2658
-	addi	%g1, %g1, 104
-	ld	%g31, %g1, 100
-	st	%g31, %g1, 100
-	subi	%g1, %g1, 104
-	call	atan.2669
-	addi	%g1, %g1, 104
-	ld	%g31, %g1, 100
-	setL %g3, l.7305
-	fld	%f1, %g3, 0
-	fmul	%f0, %f0, %f1
-	setL %g3, l.7307
-	fld	%f1, %g3, 0
-	fdiv	%f0, %f0, %f1
-	jmp	jeq_cont.10190
-jeq_else.10189:
-	setL %g3, l.7303
-	fld	%f0, %g3, 0
-jeq_cont.10190:
-	fst	%f0, %g1, 100
+	fst	%f1, %g1, 100
 	st	%g31, %g1, 108
 	subi	%g1, %g1, 112
-	call	min_caml_floor
+	call	o_param_y.2767
 	addi	%g1, %g1, 112
 	ld	%g31, %g1, 108
 	fld	%f1, %g1, 100
 	fsub	%f0, %f1, %f0
 	ld	%g3, %g1, 8
-	fld	%f1, %g3, -4
-	ld	%g3, %g1, 16
 	fst	%f0, %g1, 104
-	fst	%f1, %g1, 108
+	st	%g31, %g1, 108
+	subi	%g1, %g1, 112
+	call	o_param_b.2759
+	addi	%g1, %g1, 112
+	ld	%g31, %g1, 108
+	fsqrt	%f0, %f0
+	fld	%f1, %g1, 104
+	fmul	%f0, %f1, %f0
+	fld	%f1, %g1, 88
+	fst	%f0, %g1, 108
+	fmov	%f0, %f1
 	st	%g31, %g1, 116
 	subi	%g1, %g1, 120
-	call	o_param_y.2790
+	call	fabs.2622
 	addi	%g1, %g1, 120
 	ld	%g31, %g1, 116
+	setL %g3, l.7152
+	fld	%f1, %g3, 0
+	st	%g31, %g1, 116
+	subi	%g1, %g1, 120
+	call	fless.2610
+	addi	%g1, %g1, 120
+	ld	%g31, %g1, 116
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	jne	%g3, %g4, jeq_else.10047
+	fld	%f0, %g1, 88
 	fld	%f1, %g1, 108
-	fsub	%f0, %f1, %f0
-	ld	%g3, %g1, 16
+	fdiv	%f0, %f1, %f0
+	st	%g31, %g1, 116
+	subi	%g1, %g1, 120
+	call	fabs.2622
+	addi	%g1, %g1, 120
+	ld	%g31, %g1, 116
+	atan	%f0, %f0
+	setL %g3, l.7156
+	fld	%f1, %g3, 0
+	fmul	%f0, %f0, %f1
+	setL %g3, l.7158
+	fld	%f1, %g3, 0
+	fdiv	%f0, %f0, %f1
+	jmp	jeq_cont.10048
+jeq_else.10047:
+	setL %g3, l.7154
+	fld	%f0, %g3, 0
+jeq_cont.10048:
 	fst	%f0, %g1, 112
 	st	%g31, %g1, 116
 	subi	%g1, %g1, 120
-	call	o_param_b.2782
+	call	min_caml_floor
 	addi	%g1, %g1, 120
 	ld	%g31, %g1, 116
-	fsqrt	%f0, %f0
 	fld	%f1, %g1, 112
-	fmul	%f0, %f1, %f0
-	fld	%f1, %g1, 96
+	fsub	%f0, %f1, %f0
+	setL %g3, l.7166
+	fld	%f1, %g3, 0
+	setL %g3, l.7168
+	fld	%f2, %g3, 0
+	fld	%f3, %g1, 96
+	fsub	%f2, %f2, %f3
 	fst	%f0, %g1, 116
-	fmov	%f0, %f1
+	fst	%f1, %g1, 120
+	fmov	%f0, %f2
 	st	%g31, %g1, 124
 	subi	%g1, %g1, 128
-	call	fabs.2658
-	addi	%g1, %g1, 128
-	ld	%g31, %g1, 124
-	setL %g3, l.7301
-	fld	%f1, %g3, 0
-	st	%g31, %g1, 124
-	subi	%g1, %g1, 128
-	call	fless.2646
-	addi	%g1, %g1, 128
-	ld	%g31, %g1, 124
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10191
-	fld	%f0, %g1, 96
-	fld	%f1, %g1, 116
-	fdiv	%f0, %f1, %f0
-	st	%g31, %g1, 124
-	subi	%g1, %g1, 128
-	call	fabs.2658
-	addi	%g1, %g1, 128
-	ld	%g31, %g1, 124
-	st	%g31, %g1, 124
-	subi	%g1, %g1, 128
-	call	atan.2669
-	addi	%g1, %g1, 128
-	ld	%g31, %g1, 124
-	setL %g3, l.7305
-	fld	%f1, %g3, 0
-	fmul	%f0, %f0, %f1
-	setL %g3, l.7307
-	fld	%f1, %g3, 0
-	fdiv	%f0, %f0, %f1
-	jmp	jeq_cont.10192
-jeq_else.10191:
-	setL %g3, l.7303
-	fld	%f0, %g3, 0
-jeq_cont.10192:
-	fst	%f0, %g1, 120
-	st	%g31, %g1, 124
-	subi	%g1, %g1, 128
-	call	min_caml_floor
+	call	fsqr.2630
 	addi	%g1, %g1, 128
 	ld	%g31, %g1, 124
 	fld	%f1, %g1, 120
 	fsub	%f0, %f1, %f0
-	setL %g3, l.7315
+	setL %g3, l.7168
 	fld	%f1, %g3, 0
-	setL %g3, l.6517
-	fld	%f2, %g3, 0
-	fld	%f3, %g1, 104
-	fsub	%f2, %f2, %f3
+	fld	%f2, %g1, 116
+	fsub	%f1, %f1, %f2
 	fst	%f0, %g1, 124
-	fst	%f1, %g1, 128
-	fmov	%f0, %f2
+	fmov	%f0, %f1
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
-	fld	%f1, %g1, 128
+	fld	%f1, %g1, 124
 	fsub	%f0, %f1, %f0
-	setL %g3, l.6517
-	fld	%f1, %g3, 0
-	fld	%f2, %g1, 124
-	fsub	%f1, %f1, %f2
-	fst	%f0, %g1, 132
-	fmov	%f0, %f1
-	st	%g31, %g1, 140
-	subi	%g1, %g1, 144
-	call	fsqr.2664
-	addi	%g1, %g1, 144
-	ld	%g31, %g1, 140
-	fld	%f1, %g1, 132
-	fsub	%f0, %f1, %f0
-	fst	%f0, %g1, 136
-	st	%g31, %g1, 140
-	subi	%g1, %g1, 144
-	call	fisneg.2651
-	addi	%g1, %g1, 144
-	ld	%g31, %g1, 140
+	fst	%f0, %g1, 128
+	st	%g31, %g1, 132
+	subi	%g1, %g1, 136
+	call	fisneg.2615
+	addi	%g1, %g1, 136
+	ld	%g31, %g1, 132
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10193
-	fld	%f0, %g1, 136
-	jmp	jeq_cont.10194
-jeq_else.10193:
-	setL %g3, l.6510
+	jne	%g3, %g4, jeq_else.10049
+	fld	%f0, %g1, 128
+	jmp	jeq_cont.10050
+jeq_else.10049:
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
-jeq_cont.10194:
-	setL %g3, l.7320
+jeq_cont.10050:
+	setL %g3, l.7172
 	fld	%f1, %g3, 0
 	fmul	%f0, %f1, %f0
-	setL %g3, l.7322
+	setL %g3, l.7174
 	fld	%f1, %g3, 0
 	fdiv	%f0, %f0, %f1
-	ld	%g3, %g1, 12
+	ld	%g3, %g1, 4
 	fst	%f0, %g3, -8
 	return
-jeq_else.10188:
+jeq_else.10044:
 	return
-add_light.3042:
+add_light.3019:
 	ld	%g3, %g29, -8
 	ld	%g4, %g29, -4
 	fst	%f2, %g1, 0
@@ -7118,43 +6643,43 @@ add_light.3042:
 	st	%g4, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10197
-	jmp	jeq_cont.10198
-jeq_else.10197:
+	jne	%g3, %g4, jeq_else.10053
+	jmp	jeq_cont.10054
+jeq_else.10053:
 	fld	%f0, %g1, 8
 	ld	%g3, %g1, 16
 	ld	%g4, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	vecaccum.2753
+	call	vecaccum.2730
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-jeq_cont.10198:
+jeq_cont.10054:
 	fld	%f0, %g1, 4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10199
+	jne	%g3, %g4, jeq_else.10055
 	return
-jeq_else.10199:
+jeq_else.10055:
 	fld	%f0, %g1, 4
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 0
@@ -7170,7 +6695,7 @@ jeq_else.10199:
 	fadd	%f0, %f1, %f0
 	fst	%f0, %g3, -8
 	return
-trace_reflections.3046:
+trace_reflections.3023:
 	ld	%g5, %g29, -32
 	ld	%g6, %g29, -28
 	ld	%g7, %g29, -24
@@ -7181,7 +6706,7 @@ trace_reflections.3046:
 	ld	%g12, %g29, -4
 	mvhi	%g13, 0
 	mvlo	%g13, 0
-	jlt	%g3, %g13, jle_else.10202
+	jlt	%g3, %g13, jle_else.10058
 	slli	%g13, %g3, 2
 	st	%g6, %g1, 4
 	add	%g6, %g6, %g13
@@ -7202,7 +6727,7 @@ trace_reflections.3046:
 	mov	%g3, %g6
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	r_dvec.2837
+	call	r_dvec.2814
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g29, %g1, 48
@@ -7215,9 +6740,9 @@ trace_reflections.3046:
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10203
-	jmp	jeq_cont.10204
-jeq_else.10203:
+	jne	%g3, %g4, jeq_else.10059
+	jmp	jeq_cont.10060
+jeq_else.10059:
 	ld	%g3, %g1, 44
 	ld	%g3, %g3, 0
 	muli	%g3, %g3, 4
@@ -7229,11 +6754,11 @@ jeq_else.10203:
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	r_surface_id.2835
+	call	r_surface_id.2812
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g4, %g1, 56
-	jne	%g4, %g3, jeq_else.10205
+	jne	%g4, %g3, jeq_else.10061
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g4, %g1, 32
@@ -7247,25 +6772,25 @@ jeq_else.10203:
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10207
+	jne	%g3, %g4, jeq_else.10063
 	ld	%g3, %g1, 52
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mov	%g4, %g3
 	ld	%g3, %g1, 24
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 36
 	fst	%f0, %g1, 60
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	r_bright.2839
+	call	r_bright.2816
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 20
@@ -7277,14 +6802,14 @@ jeq_else.10203:
 	fst	%f0, %g1, 68
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	mov	%g4, %g3
 	ld	%g3, %g1, 16
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 68
@@ -7298,13 +6823,13 @@ jeq_else.10203:
 	callR	%g28
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
-	jmp	jeq_cont.10208
-jeq_else.10207:
-jeq_cont.10208:
-	jmp	jeq_cont.10206
-jeq_else.10205:
-jeq_cont.10206:
-jeq_cont.10204:
+	jmp	jeq_cont.10064
+jeq_else.10063:
+jeq_cont.10064:
+	jmp	jeq_cont.10062
+jeq_else.10061:
+jeq_cont.10062:
+jeq_cont.10060:
 	ld	%g3, %g1, 4
 	subi	%g3, %g3, 1
 	fld	%f0, %g1, 20
@@ -7313,9 +6838,9 @@ jeq_cont.10204:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10202:
+jle_else.10058:
 	return
-trace_ray.3051:
+trace_ray.3028:
 	ld	%g6, %g29, -80
 	ld	%g7, %g29, -76
 	ld	%g8, %g29, -72
@@ -7338,7 +6863,7 @@ trace_ray.3051:
 	ld	%g25, %g29, -4
 	mvhi	%g26, 0
 	mvlo	%g26, 4
-	jlt	%g26, %g3, jle_else.10210
+	jlt	%g26, %g3, jle_else.10066
 	st	%g29, %g1, 0
 	fst	%f1, %g1, 4
 	st	%g8, %g1, 8
@@ -7368,7 +6893,7 @@ trace_ray.3051:
 	mov	%g3, %g5
 	st	%g31, %g1, 108
 	subi	%g1, %g1, 112
-	call	p_surface_ids.2816
+	call	p_surface_ids.2793
 	addi	%g1, %g1, 112
 	ld	%g31, %g1, 108
 	ld	%g4, %g1, 96
@@ -7383,7 +6908,7 @@ trace_ray.3051:
 	ld	%g31, %g1, 108
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10211
+	jne	%g3, %g4, jeq_else.10067
 	mvhi	%g3, 65535
 	mvlo	%g3, -1
 	ld	%g4, %g1, 92
@@ -7395,36 +6920,36 @@ trace_ray.3051:
 	ld	%g6, %g1, 108
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	jne	%g4, %g3, jeq_else.10212
+	jne	%g4, %g3, jeq_else.10068
 	return
-jeq_else.10212:
+jeq_else.10068:
 	ld	%g3, %g1, 96
 	ld	%g4, %g1, 88
 	st	%g31, %g1, 108
 	subi	%g1, %g1, 112
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 112
 	ld	%g31, %g1, 108
 	st	%g31, %g1, 108
 	subi	%g1, %g1, 112
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 112
 	ld	%g31, %g1, 108
 	fst	%f0, %g1, 108
 	st	%g31, %g1, 116
 	subi	%g1, %g1, 120
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 120
 	ld	%g31, %g1, 116
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10214
+	jne	%g3, %g4, jeq_else.10070
 	return
-jeq_else.10214:
+jeq_else.10070:
 	fld	%f0, %g1, 108
 	st	%g31, %g1, 116
 	subi	%g1, %g1, 120
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 120
 	ld	%g31, %g1, 116
 	fld	%f1, %g1, 108
@@ -7445,7 +6970,7 @@ jeq_else.10214:
 	fadd	%f0, %f1, %f0
 	fst	%f0, %g3, -8
 	return
-jeq_else.10211:
+jeq_else.10067:
 	ld	%g3, %g1, 72
 	ld	%g3, %g3, 0
 	slli	%g4, %g3, 2
@@ -7459,7 +6984,7 @@ jeq_else.10211:
 	mov	%g3, %g4
 	st	%g31, %g1, 124
 	subi	%g1, %g1, 128
-	call	o_reflectiontype.2774
+	call	o_reflectiontype.2751
 	addi	%g1, %g1, 128
 	ld	%g31, %g1, 124
 	ld	%g4, %g1, 116
@@ -7467,7 +6992,7 @@ jeq_else.10211:
 	mov	%g3, %g4
 	st	%g31, %g1, 124
 	subi	%g1, %g1, 128
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 128
 	ld	%g31, %g1, 124
 	fld	%f1, %g1, 84
@@ -7486,7 +7011,7 @@ jeq_else.10211:
 	ld	%g4, %g1, 56
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	ld	%g3, %g1, 116
@@ -7513,7 +7038,7 @@ jeq_else.10211:
 	ld	%g3, %g1, 44
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	p_intersection_points.2814
+	call	p_intersection_points.2791
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	ld	%g4, %g1, 92
@@ -7525,13 +7050,13 @@ jeq_else.10211:
 	mov	%g4, %g5
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	ld	%g3, %g1, 44
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	p_calc_diffuse.2818
+	call	p_calc_diffuse.2795
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	ld	%g4, %g1, 116
@@ -7539,19 +7064,19 @@ jeq_else.10211:
 	mov	%g3, %g4
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
-	setL %g3, l.6517
+	setL %g3, l.7168
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10217
+	jne	%g3, %g4, jeq_else.10073
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	ld	%g4, %g1, 92
@@ -7564,7 +7089,7 @@ jeq_else.10211:
 	ld	%g3, %g1, 44
 	st	%g31, %g1, 132
 	subi	%g1, %g1, 136
-	call	p_energy.2820
+	call	p_energy.2797
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	ld	%g4, %g1, 92
@@ -7579,7 +7104,7 @@ jeq_else.10211:
 	mov	%g3, %g5
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
 	ld	%g3, %g1, 92
@@ -7589,20 +7114,20 @@ jeq_else.10211:
 	add	%g5, %g5, %g4
 	ld	%g4, %g5, 0
 	ld	%g5, %g1, 140
-	setL %g5, l.7396
+	setL %g5, l.7248
 	fld	%f0, %g5, 0
 	fld	%f1, %g1, 124
 	fmul	%f0, %f0, %f1
 	mov	%g3, %g4
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	vecscale.2763
+	call	vecscale.2740
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
 	ld	%g3, %g1, 44
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	p_nvectors.2829
+	call	p_nvectors.2806
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
 	ld	%g4, %g1, 92
@@ -7614,11 +7139,11 @@ jeq_else.10211:
 	mov	%g4, %g5
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
-	jmp	jeq_cont.10218
-jeq_else.10217:
+	jmp	jeq_cont.10074
+jeq_else.10073:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g4, %g1, 92
@@ -7628,15 +7153,15 @@ jeq_else.10217:
 	add	%g6, %g6, %g5
 	st	%g3, %g6, 0
 	ld	%g6, %g1, 140
-jeq_cont.10218:
-	setL %g3, l.7400
+jeq_cont.10074:
+	setL %g3, l.7252
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 96
 	ld	%g4, %g1, 36
 	fst	%f0, %g1, 136
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
 	fld	%f1, %g1, 136
@@ -7645,13 +7170,13 @@ jeq_cont.10218:
 	ld	%g4, %g1, 36
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	vecaccum.2753
+	call	vecaccum.2730
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
 	ld	%g3, %g1, 116
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	o_hilight.2796
+	call	o_hilight.2773
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
 	fld	%f1, %g1, 84
@@ -7670,17 +7195,17 @@ jeq_cont.10218:
 	ld	%g31, %g1, 148
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10219
+	jne	%g3, %g4, jeq_else.10075
 	ld	%g3, %g1, 36
 	ld	%g4, %g1, 88
 	st	%g31, %g1, 148
 	subi	%g1, %g1, 152
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
 	st	%g31, %g1, 148
 	subi	%g1, %g1, 152
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
 	fld	%f1, %g1, 124
@@ -7690,12 +7215,12 @@ jeq_cont.10218:
 	fst	%f0, %g1, 144
 	st	%g31, %g1, 148
 	subi	%g1, %g1, 152
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
 	st	%g31, %g1, 148
 	subi	%g1, %g1, 152
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
 	fmov	%f1, %f0, 0
@@ -7708,9 +7233,9 @@ jeq_cont.10218:
 	callR	%g28
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
-	jmp	jeq_cont.10220
-jeq_else.10219:
-jeq_cont.10220:
+	jmp	jeq_cont.10076
+jeq_else.10075:
+jeq_cont.10076:
 	ld	%g3, %g1, 56
 	ld	%g29, %g1, 20
 	st	%g31, %g1, 148
@@ -7732,25 +7257,25 @@ jeq_cont.10220:
 	callR	%g28
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
-	setL %g3, l.7406
+	setL %g3, l.7258
 	fld	%f0, %g3, 0
 	fld	%f1, %g1, 84
 	st	%g31, %g1, 148
 	subi	%g1, %g1, 152
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10221
+	jne	%g3, %g4, jeq_else.10077
 	return
-jeq_else.10221:
+jeq_else.10077:
 	mvhi	%g3, 0
 	mvlo	%g3, 4
 	ld	%g4, %g1, 92
-	jlt	%g4, %g3, jle_else.10223
-	jmp	jle_cont.10224
-jle_else.10223:
+	jlt	%g4, %g3, jle_else.10079
+	jmp	jle_cont.10080
+jle_else.10079:
 	addi	%g3, %g4, 1
 	mvhi	%g5, 65535
 	mvlo	%g5, -1
@@ -7760,18 +7285,18 @@ jle_else.10223:
 	add	%g6, %g6, %g3
 	st	%g5, %g6, 0
 	ld	%g6, %g1, 148
-jle_cont.10224:
+jle_cont.10080:
 	mvhi	%g3, 0
 	mvlo	%g3, 2
 	ld	%g5, %g1, 120
-	jne	%g5, %g3, jeq_else.10225
-	setL %g3, l.6519
+	jne	%g5, %g3, jeq_else.10081
+	setL %g3, l.6468
 	fld	%f0, %g3, 0
 	ld	%g3, %g1, 116
 	fst	%f0, %g1, 148
 	st	%g31, %g1, 156
 	subi	%g1, %g1, 160
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 160
 	ld	%g31, %g1, 156
 	fld	%f1, %g1, 148
@@ -7789,11 +7314,11 @@ jle_cont.10224:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10225:
+jeq_else.10081:
 	return
-jle_else.10210:
+jle_else.10066:
 	return
-trace_diffuse_ray.3057:
+trace_diffuse_ray.3034:
 	ld	%g4, %g29, -48
 	ld	%g5, %g29, -44
 	ld	%g6, %g29, -40
@@ -7828,9 +7353,9 @@ trace_diffuse_ray.3057:
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10228
+	jne	%g3, %g4, jeq_else.10084
 	return
-jeq_else.10228:
+jeq_else.10084:
 	ld	%g3, %g1, 48
 	ld	%g3, %g3, 0
 	slli	%g3, %g3, 2
@@ -7844,7 +7369,7 @@ jeq_else.10228:
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mov	%g4, %g3
@@ -7878,55 +7403,55 @@ jeq_else.10228:
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10230
+	jne	%g3, %g4, jeq_else.10086
 	ld	%g3, %g1, 16
 	ld	%g4, %g1, 12
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fst	%f0, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fispos.2649
+	call	fispos.2613
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10231
-	setL %g3, l.6510
+	jne	%g3, %g4, jeq_else.10087
+	setL %g3, l.6407
 	fld	%f0, %g3, 0
-	jmp	jeq_cont.10232
-jeq_else.10231:
+	jmp	jeq_cont.10088
+jeq_else.10087:
 	fld	%f0, %g1, 56
-jeq_cont.10232:
+jeq_cont.10088:
 	fld	%f1, %g1, 8
 	fmul	%f0, %f1, %f0
 	ld	%g3, %g1, 52
 	fst	%f0, %g1, 60
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 60
 	fmul	%f0, %f1, %f0
 	ld	%g3, %g1, 4
 	ld	%g4, %g1, 0
-	jmp	vecaccum.2753
-jeq_else.10230:
+	jmp	vecaccum.2730
+jeq_else.10086:
 	return
-iter_trace_diffuse_rays.3060:
+iter_trace_diffuse_rays.3037:
 	ld	%g7, %g29, -4
 	mvhi	%g8, 0
 	mvlo	%g8, 0
-	jlt	%g6, %g8, jle_else.10234
+	jlt	%g6, %g8, jle_else.10090
 	slli	%g8, %g6, 2
 	st	%g3, %g1, 4
 	add	%g3, %g3, %g8
@@ -7941,24 +7466,24 @@ iter_trace_diffuse_rays.3060:
 	mov	%g3, %g8
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fst	%f0, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fisneg.2651
+	call	fisneg.2615
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10235
+	jne	%g3, %g4, jeq_else.10091
 	ld	%g3, %g1, 16
 	slli	%g4, %g3, 2
 	ld	%g5, %g1, 12
@@ -7966,7 +7491,7 @@ iter_trace_diffuse_rays.3060:
 	add	%g5, %g5, %g4
 	ld	%g4, %g5, 0
 	ld	%g5, %g1, 28
-	setL %g6, l.7439
+	setL %g6, l.7291
 	fld	%f0, %g6, 0
 	fld	%f1, %g1, 24
 	fdiv	%f0, %f1, %f0
@@ -7978,8 +7503,8 @@ iter_trace_diffuse_rays.3060:
 	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-	jmp	jeq_cont.10236
-jeq_else.10235:
+	jmp	jeq_cont.10092
+jeq_else.10091:
 	ld	%g3, %g1, 16
 	addi	%g4, %g3, 1
 	slli	%g4, %g4, 2
@@ -7988,7 +7513,7 @@ jeq_else.10235:
 	add	%g5, %g5, %g4
 	ld	%g4, %g5, 0
 	ld	%g5, %g1, 28
-	setL %g6, l.7435
+	setL %g6, l.7287
 	fld	%f0, %g6, 0
 	fld	%f1, %g1, 24
 	fdiv	%f0, %f1, %f0
@@ -8000,7 +7525,7 @@ jeq_else.10235:
 	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-jeq_cont.10236:
+jeq_cont.10092:
 	ld	%g3, %g1, 16
 	subi	%g6, %g3, 2
 	ld	%g3, %g1, 12
@@ -8009,9 +7534,9 @@ jeq_cont.10236:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10234:
+jle_else.10090:
 	return
-trace_diffuse_rays.3065:
+trace_diffuse_rays.3042:
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	st	%g5, %g1, 0
@@ -8034,7 +7559,7 @@ trace_diffuse_rays.3065:
 	ld	%g29, %g1, 12
 	ld	%g28, %g29, 0
 	b	%g28
-trace_diffuse_ray_80percent.3069:
+trace_diffuse_ray_80percent.3046:
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	mvhi	%g8, 0
@@ -8044,9 +7569,9 @@ trace_diffuse_ray_80percent.3069:
 	st	%g6, %g1, 8
 	st	%g7, %g1, 12
 	st	%g3, %g1, 16
-	jne	%g3, %g8, jeq_else.10238
-	jmp	jeq_cont.10239
-jeq_else.10238:
+	jne	%g3, %g8, jeq_else.10094
+	jmp	jeq_cont.10095
+jeq_else.10094:
 	ld	%g8, %g7, 0
 	mov	%g3, %g8
 	mov	%g29, %g6
@@ -8056,13 +7581,13 @@ jeq_else.10238:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-jeq_cont.10239:
+jeq_cont.10095:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	ld	%g4, %g1, 16
-	jne	%g4, %g3, jeq_else.10240
-	jmp	jeq_cont.10241
-jeq_else.10240:
+	jne	%g4, %g3, jeq_else.10096
+	jmp	jeq_cont.10097
+jeq_else.10096:
 	ld	%g3, %g1, 12
 	ld	%g5, %g3, -4
 	ld	%g6, %g1, 4
@@ -8077,13 +7602,13 @@ jeq_else.10240:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-jeq_cont.10241:
+jeq_cont.10097:
 	mvhi	%g3, 0
 	mvlo	%g3, 2
 	ld	%g4, %g1, 16
-	jne	%g4, %g3, jeq_else.10242
-	jmp	jeq_cont.10243
-jeq_else.10242:
+	jne	%g4, %g3, jeq_else.10098
+	jmp	jeq_cont.10099
+jeq_else.10098:
 	ld	%g3, %g1, 12
 	ld	%g5, %g3, -8
 	ld	%g6, %g1, 4
@@ -8098,13 +7623,13 @@ jeq_else.10242:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-jeq_cont.10243:
+jeq_cont.10099:
 	mvhi	%g3, 0
 	mvlo	%g3, 3
 	ld	%g4, %g1, 16
-	jne	%g4, %g3, jeq_else.10244
-	jmp	jeq_cont.10245
-jeq_else.10244:
+	jne	%g4, %g3, jeq_else.10100
+	jmp	jeq_cont.10101
+jeq_else.10100:
 	ld	%g3, %g1, 12
 	ld	%g5, %g3, -12
 	ld	%g6, %g1, 4
@@ -8119,13 +7644,13 @@ jeq_else.10244:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-jeq_cont.10245:
+jeq_cont.10101:
 	mvhi	%g3, 0
 	mvlo	%g3, 4
 	ld	%g4, %g1, 16
-	jne	%g4, %g3, jeq_else.10246
+	jne	%g4, %g3, jeq_else.10102
 	return
-jeq_else.10246:
+jeq_else.10102:
 	ld	%g3, %g1, 12
 	ld	%g3, %g3, -16
 	ld	%g4, %g1, 4
@@ -8133,7 +7658,7 @@ jeq_else.10246:
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-calc_diffuse_using_1point.3073:
+calc_diffuse_using_1point.3050:
 	ld	%g5, %g29, -12
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
@@ -8144,7 +7669,7 @@ calc_diffuse_using_1point.3073:
 	st	%g3, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 16
@@ -8152,7 +7677,7 @@ calc_diffuse_using_1point.3073:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_nvectors.2829
+	call	p_nvectors.2806
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 16
@@ -8160,7 +7685,7 @@ calc_diffuse_using_1point.3073:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_intersection_points.2814
+	call	p_intersection_points.2791
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 16
@@ -8168,7 +7693,7 @@ calc_diffuse_using_1point.3073:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	p_energy.2820
+	call	p_energy.2797
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 12
@@ -8184,13 +7709,13 @@ calc_diffuse_using_1point.3073:
 	mov	%g3, %g6
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 16
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	p_group_id.2824
+	call	p_group_id.2801
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 12
@@ -8223,8 +7748,8 @@ calc_diffuse_using_1point.3073:
 	ld	%g4, %g4, 0
 	ld	%g3, %g1, 0
 	ld	%g5, %g1, 8
-	jmp	vecaccumv.2766
-calc_diffuse_using_5points.3076:
+	jmp	vecaccumv.2743
+calc_diffuse_using_5points.3053:
 	ld	%g8, %g29, -8
 	ld	%g9, %g29, -4
 	slli	%g10, %g3, 2
@@ -8240,7 +7765,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
@@ -8255,7 +7780,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
@@ -8269,7 +7794,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 20
@@ -8284,7 +7809,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 20
@@ -8298,7 +7823,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g4, %g1, 8
@@ -8314,7 +7839,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g6
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 8
@@ -8328,7 +7853,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	vecadd.2757
+	call	vecadd.2734
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 8
@@ -8342,7 +7867,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	vecadd.2757
+	call	vecadd.2734
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 8
@@ -8356,7 +7881,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	vecadd.2757
+	call	vecadd.2734
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 8
@@ -8370,7 +7895,7 @@ calc_diffuse_using_5points.3076:
 	mov	%g3, %g5
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	vecadd.2757
+	call	vecadd.2734
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 20
@@ -8382,7 +7907,7 @@ calc_diffuse_using_5points.3076:
 	ld	%g4, %g1, 44
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	p_energy.2820
+	call	p_energy.2797
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g4, %g1, 8
@@ -8393,19 +7918,19 @@ calc_diffuse_using_5points.3076:
 	ld	%g3, %g1, 44
 	ld	%g3, %g1, 0
 	ld	%g5, %g1, 4
-	jmp	vecaccumv.2766
-do_without_neighbors.3082:
+	jmp	vecaccumv.2743
+do_without_neighbors.3059:
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 4
-	jlt	%g6, %g4, jle_else.10248
+	jlt	%g6, %g4, jle_else.10104
 	st	%g29, %g1, 0
 	st	%g5, %g1, 4
 	st	%g3, %g1, 8
 	st	%g4, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	p_surface_ids.2816
+	call	p_surface_ids.2793
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
@@ -8415,11 +7940,11 @@ do_without_neighbors.3082:
 	st	%g3, %g1, 20
 	add	%g3, %g3, %g6
 	ld	%g3, %g3, 0
-	jlt	%g3, %g4, jle_else.10249
+	jlt	%g3, %g4, jle_else.10105
 	ld	%g3, %g1, 8
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	p_calc_diffuse.2818
+	call	p_calc_diffuse.2795
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 12
@@ -8429,9 +7954,9 @@ do_without_neighbors.3082:
 	ld	%g3, %g3, 0
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jne	%g3, %g5, jeq_else.10250
-	jmp	jeq_cont.10251
-jeq_else.10250:
+	jne	%g3, %g5, jeq_else.10106
+	jmp	jeq_cont.10107
+jeq_else.10106:
 	ld	%g3, %g1, 8
 	ld	%g29, %g1, 4
 	st	%g31, %g1, 20
@@ -8440,55 +7965,55 @@ jeq_else.10250:
 	callR	%g28
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-jeq_cont.10251:
+jeq_cont.10107:
 	ld	%g3, %g1, 12
 	addi	%g4, %g3, 1
 	ld	%g3, %g1, 8
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10249:
+jle_else.10105:
 	return
-jle_else.10248:
+jle_else.10104:
 	return
-neighbors_exist.3085:
+neighbors_exist.3062:
 	ld	%g5, %g29, -4
 	ld	%g6, %g5, -4
 	addi	%g7, %g4, 1
-	jlt	%g7, %g6, jle_else.10254
+	jlt	%g7, %g6, jle_else.10110
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jle_else.10254:
+jle_else.10110:
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g6, %g4, jle_else.10255
+	jlt	%g6, %g4, jle_else.10111
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jle_else.10255:
+jle_else.10111:
 	ld	%g4, %g5, 0
 	addi	%g5, %g3, 1
-	jlt	%g5, %g4, jle_else.10256
+	jlt	%g5, %g4, jle_else.10112
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jle_else.10256:
+jle_else.10112:
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jlt	%g4, %g3, jle_else.10257
+	jlt	%g4, %g3, jle_else.10113
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jle_else.10257:
+jle_else.10113:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-get_surface_id.3089:
+get_surface_id.3066:
 	st	%g4, %g1, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
-	call	p_surface_ids.2816
+	call	p_surface_ids.2793
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	ld	%g4, %g1, 0
@@ -8497,7 +8022,7 @@ get_surface_id.3089:
 	add	%g3, %g3, %g4
 	ld	%g3, %g3, 0
 	return
-neighbors_are_available.3092:
+neighbors_are_available.3069:
 	slli	%g8, %g3, 2
 	st	%g5, %g1, 4
 	add	%g5, %g5, %g8
@@ -8512,7 +8037,7 @@ neighbors_are_available.3092:
 	mov	%g3, %g8
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	ld	%g4, %g1, 16
@@ -8528,11 +8053,11 @@ neighbors_are_available.3092:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
-	jne	%g3, %g4, jeq_else.10258
+	jne	%g3, %g4, jeq_else.10114
 	ld	%g3, %g1, 16
 	slli	%g5, %g3, 2
 	ld	%g6, %g1, 4
@@ -8545,11 +8070,11 @@ neighbors_are_available.3092:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
-	jne	%g3, %g4, jeq_else.10259
+	jne	%g3, %g4, jeq_else.10115
 	ld	%g3, %g1, 16
 	subi	%g5, %g3, 1
 	slli	%g5, %g5, 2
@@ -8563,11 +8088,11 @@ neighbors_are_available.3092:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
-	jne	%g3, %g4, jeq_else.10260
+	jne	%g3, %g4, jeq_else.10116
 	ld	%g3, %g1, 16
 	addi	%g3, %g3, 1
 	slli	%g3, %g3, 2
@@ -8580,31 +8105,31 @@ neighbors_are_available.3092:
 	mov	%g4, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
-	jne	%g3, %g4, jeq_else.10261
+	jne	%g3, %g4, jeq_else.10117
 	mvhi	%g3, 0
 	mvlo	%g3, 1
 	return
-jeq_else.10261:
+jeq_else.10117:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10260:
+jeq_else.10116:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10259:
+jeq_else.10115:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-jeq_else.10258:
+jeq_else.10114:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	return
-try_exploit_neighbors.3098:
+try_exploit_neighbors.3075:
 	ld	%g9, %g29, -8
 	ld	%g10, %g29, -4
 	slli	%g11, %g3, 2
@@ -8614,7 +8139,7 @@ try_exploit_neighbors.3098:
 	ld	%g6, %g1, 4
 	mvhi	%g12, 0
 	mvlo	%g12, 4
-	jlt	%g12, %g8, jle_else.10262
+	jlt	%g12, %g8, jle_else.10118
 	mvhi	%g12, 0
 	mvlo	%g12, 0
 	st	%g4, %g1, 0
@@ -8632,11 +8157,11 @@ try_exploit_neighbors.3098:
 	mov	%g3, %g11
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g4, %g1, 40
-	jlt	%g3, %g4, jle_else.10263
+	jlt	%g3, %g4, jle_else.10119
 	ld	%g3, %g1, 36
 	ld	%g4, %g1, 32
 	ld	%g5, %g1, 28
@@ -8644,12 +8169,12 @@ try_exploit_neighbors.3098:
 	ld	%g7, %g1, 20
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	neighbors_are_available.3092
+	call	neighbors_are_available.3069
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10264
+	jne	%g3, %g4, jeq_else.10120
 	ld	%g3, %g1, 36
 	slli	%g3, %g3, 2
 	ld	%g4, %g1, 28
@@ -8661,11 +8186,11 @@ try_exploit_neighbors.3098:
 	ld	%g29, %g1, 16
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10264:
+jeq_else.10120:
 	ld	%g3, %g1, 12
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	p_calc_diffuse.2818
+	call	p_calc_diffuse.2795
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g7, %g1, 20
@@ -8675,9 +8200,9 @@ jeq_else.10264:
 	ld	%g3, %g3, 0
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10265
-	jmp	jeq_cont.10266
-jeq_else.10265:
+	jne	%g3, %g4, jeq_else.10121
+	jmp	jeq_cont.10122
+jeq_else.10121:
 	ld	%g3, %g1, 36
 	ld	%g4, %g1, 32
 	ld	%g5, %g1, 28
@@ -8689,7 +8214,7 @@ jeq_else.10265:
 	callR	%g28
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
-jeq_cont.10266:
+jeq_cont.10122:
 	ld	%g3, %g1, 20
 	addi	%g8, %g3, 1
 	ld	%g3, %g1, 36
@@ -8700,16 +8225,18 @@ jeq_cont.10266:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10263:
+jle_else.10119:
 	return
-jle_else.10262:
+jle_else.10118:
 	return
-write_ppm_header.3105:
-	ld	%g3, %g29, -4
-	mvhi	%g4, 0
-	mvlo	%g4, 80
+write_ppm_header.3082:
+	ld	%g3, %g29, -8
+	ld	%g4, %g29, -4
+	mvhi	%g5, 0
+	mvlo	%g5, 80
 	st	%g3, %g1, 0
-	mov	%g3, %g4
+	st	%g4, %g1, 4
+	mov	%g3, %g5
 	output	%g3
 	mvhi	%g3, 0
 	mvlo	%g3, 51
@@ -8717,101 +8244,115 @@ write_ppm_header.3105:
 	mvhi	%g3, 0
 	mvlo	%g3, 10
 	output	%g3
-	ld	%g3, %g1, 0
+	ld	%g3, %g1, 4
 	ld	%g4, %g3, 0
+	ld	%g29, %g1, 0
 	mov	%g3, %g4
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	print_int.2681
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 32
 	output	%g3
-	ld	%g3, %g1, 0
+	ld	%g3, %g1, 4
 	ld	%g3, %g3, -4
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	print_int.2681
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	ld	%g29, %g1, 0
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 32
 	output	%g3
 	mvhi	%g3, 0
 	mvlo	%g3, 255
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	print_int.2681
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	ld	%g29, %g1, 0
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 10
 	output	%g3
 	return
-write_rgb_element.3107:
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_int_of_float
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+write_rgb_element.3084:
+	ld	%g3, %g29, -4
+	st	%g3, %g1, 0
+	int_of_float	%g3, %f0
 	mvhi	%g4, 0
 	mvlo	%g4, 255
-	jlt	%g4, %g3, jle_else.10269
+	jlt	%g4, %g3, jle_else.10125
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jlt	%g3, %g4, jle_else.10271
-	jmp	jle_cont.10272
-jle_else.10271:
+	jlt	%g3, %g4, jle_else.10127
+	jmp	jle_cont.10128
+jle_else.10127:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-jle_cont.10272:
-	jmp	jle_cont.10270
-jle_else.10269:
+jle_cont.10128:
+	jmp	jle_cont.10126
+jle_else.10125:
 	mvhi	%g3, 0
 	mvlo	%g3, 255
-jle_cont.10270:
-	jmp	print_int.2681
-write_rgb.3109:
-	ld	%g3, %g29, -4
-	fld	%f0, %g3, 0
+jle_cont.10126:
+	ld	%g29, %g1, 0
+	ld	%g28, %g29, 0
+	b	%g28
+write_rgb.3086:
+	ld	%g3, %g29, -8
+	ld	%g4, %g29, -4
+	fld	%f0, %g4, 0
 	st	%g3, %g1, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	write_rgb_element.3107
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	st	%g4, %g1, 4
+	mov	%g29, %g3
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 32
 	output	%g3
-	ld	%g3, %g1, 0
+	ld	%g3, %g1, 4
 	fld	%f0, %g3, -4
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	write_rgb_element.3107
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	ld	%g29, %g1, 0
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 32
 	output	%g3
-	ld	%g3, %g1, 0
+	ld	%g3, %g1, 4
 	fld	%f0, %g3, -8
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	write_rgb_element.3107
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	ld	%g29, %g1, 0
+	st	%g31, %g1, 12
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 16
+	callR	%g28
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 10
 	output	%g3
 	return
-pretrace_diffuse_rays.3111:
+pretrace_diffuse_rays.3088:
 	ld	%g5, %g29, -12
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	mvhi	%g8, 0
 	mvlo	%g8, 4
-	jlt	%g8, %g4, jle_else.10273
+	jlt	%g8, %g4, jle_else.10129
 	st	%g29, %g1, 0
 	st	%g5, %g1, 4
 	st	%g6, %g1, 8
@@ -8820,16 +8361,16 @@ pretrace_diffuse_rays.3111:
 	st	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	get_surface_id.3089
+	call	get_surface_id.3066
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jlt	%g3, %g4, jle_else.10274
+	jlt	%g3, %g4, jle_else.10130
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_calc_diffuse.2818
+	call	p_calc_diffuse.2795
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 16
@@ -8839,13 +8380,13 @@ pretrace_diffuse_rays.3111:
 	ld	%g3, %g3, 0
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jne	%g3, %g5, jeq_else.10275
-	jmp	jeq_cont.10276
-jeq_else.10275:
+	jne	%g3, %g5, jeq_else.10131
+	jmp	jeq_cont.10132
+jeq_else.10131:
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_group_id.2824
+	call	p_group_id.2801
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 12
@@ -8853,13 +8394,13 @@ jeq_else.10275:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	vecbzero.2732
+	call	vecbzero.2709
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	p_nvectors.2829
+	call	p_nvectors.2806
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g4, %g1, 20
@@ -8867,7 +8408,7 @@ jeq_else.10275:
 	mov	%g3, %g4
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	p_intersection_points.2814
+	call	p_intersection_points.2791
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 24
@@ -8901,7 +8442,7 @@ jeq_else.10275:
 	ld	%g3, %g1, 20
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	p_received_ray_20percent.2822
+	call	p_received_ray_20percent.2799
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g4, %g1, 16
@@ -8913,21 +8454,21 @@ jeq_else.10275:
 	mov	%g4, %g5
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-jeq_cont.10276:
+jeq_cont.10132:
 	ld	%g3, %g1, 16
 	addi	%g4, %g3, 1
 	ld	%g3, %g1, 20
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10274:
+jle_else.10130:
 	return
-jle_else.10273:
+jle_else.10129:
 	return
-pretrace_pixels.3114:
+pretrace_pixels.3091:
 	ld	%g6, %g29, -36
 	ld	%g7, %g29, -32
 	ld	%g8, %g29, -28
@@ -8939,7 +8480,7 @@ pretrace_pixels.3114:
 	ld	%g14, %g29, -4
 	mvhi	%g15, 0
 	mvlo	%g15, 0
-	jlt	%g4, %g15, jle_else.10279
+	jlt	%g4, %g15, jle_else.10135
 	fld	%f3, %g10, 0
 	ld	%g10, %g14, 0
 	sub	%g10, %g4, %g10
@@ -8959,11 +8500,7 @@ pretrace_pixels.3114:
 	st	%g9, %g1, 52
 	fst	%f3, %g1, 56
 	mov	%g3, %g10
-	st	%g31, %g1, 60
-	subi	%g1, %g1, 64
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 64
-	ld	%g31, %g1, 60
+	float_of_int	%f0, %g3
 	fld	%f1, %g1, 56
 	fmul	%f0, %f1, %f0
 	ld	%g3, %g1, 52
@@ -8990,25 +8527,25 @@ pretrace_pixels.3114:
 	mov	%g3, %g28
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	vecunit_sgn.2742
+	call	vecunit_sgn.2719
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 32
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	vecbzero.2732
+	call	vecbzero.2709
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 28
 	ld	%g4, %g1, 24
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	setL %g4, l.6519
+	setL %g4, l.6468
 	fld	%f0, %g4, 0
 	ld	%g4, %g1, 20
 	slli	%g5, %g4, 2
@@ -9017,7 +8554,7 @@ pretrace_pixels.3114:
 	add	%g6, %g6, %g5
 	ld	%g5, %g6, 0
 	ld	%g6, %g1, 60
-	setL %g7, l.6510
+	setL %g7, l.6407
 	fld	%f1, %g7, 0
 	ld	%g7, %g1, 44
 	ld	%g29, %g1, 12
@@ -9038,13 +8575,13 @@ pretrace_pixels.3114:
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	p_rgb.2812
+	call	p_rgb.2789
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g4, %g1, 32
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 20
@@ -9059,7 +8596,7 @@ pretrace_pixels.3114:
 	mov	%g4, %g6
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	p_set_group_id.2826
+	call	p_set_group_id.2803
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	ld	%g3, %g1, 20
@@ -9089,7 +8626,7 @@ pretrace_pixels.3114:
 	mov	%g3, %g5
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	add_mod5.2721
+	call	add_mod5.2698
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	mov	%g5, %g3
@@ -9101,9 +8638,9 @@ pretrace_pixels.3114:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10279:
+jle_else.10135:
 	return
-pretrace_line.3121:
+pretrace_line.3098:
 	ld	%g6, %g29, -24
 	ld	%g7, %g29, -20
 	ld	%g8, %g29, -16
@@ -9121,11 +8658,7 @@ pretrace_line.3121:
 	st	%g7, %g1, 20
 	fst	%f0, %g1, 24
 	mov	%g3, %g4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
+	float_of_int	%f0, %g3
 	fld	%f1, %g1, 24
 	fmul	%f0, %f1, %f0
 	ld	%g3, %g1, 20
@@ -9154,7 +8687,7 @@ pretrace_line.3121:
 	fmov	%f1, %f31
 	ld	%g28, %g29, 0
 	b	%g28
-scan_pixel.3125:
+scan_pixel.3102:
 	ld	%g8, %g29, -24
 	ld	%g9, %g29, -20
 	ld	%g10, %g29, -16
@@ -9162,9 +8695,9 @@ scan_pixel.3125:
 	ld	%g12, %g29, -8
 	ld	%g13, %g29, -4
 	ld	%g12, %g12, 0
-	jlt	%g3, %g12, jle_else.10281
+	jlt	%g3, %g12, jle_else.10137
 	return
-jle_else.10281:
+jle_else.10137:
 	slli	%g12, %g3, 2
 	st	%g6, %g1, 4
 	add	%g6, %g6, %g12
@@ -9184,14 +8717,14 @@ jle_else.10281:
 	mov	%g3, %g12
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	p_rgb.2812
+	call	p_rgb.2789
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mov	%g4, %g3
 	ld	%g3, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 32
@@ -9206,7 +8739,7 @@ jle_else.10281:
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10283
+	jne	%g3, %g4, jeq_else.10139
 	ld	%g3, %g1, 32
 	slli	%g4, %g3, 2
 	ld	%g5, %g1, 20
@@ -9225,8 +8758,8 @@ jle_else.10281:
 	callR	%g28
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
-	jmp	jeq_cont.10284
-jeq_else.10283:
+	jmp	jeq_cont.10140
+jeq_else.10139:
 	mvhi	%g8, 0
 	mvlo	%g8, 0
 	ld	%g3, %g1, 32
@@ -9241,7 +8774,7 @@ jeq_else.10283:
 	callR	%g28
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
-jeq_cont.10284:
+jeq_cont.10140:
 	ld	%g29, %g1, 4
 	st	%g31, %g1, 44
 	ld	%g28, %g29, 0
@@ -9258,14 +8791,14 @@ jeq_cont.10284:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-scan_line.3131:
+scan_line.3108:
 	ld	%g8, %g29, -12
 	ld	%g9, %g29, -8
 	ld	%g10, %g29, -4
 	ld	%g11, %g10, -4
-	jlt	%g3, %g11, jle_else.10285
+	jlt	%g3, %g11, jle_else.10141
 	return
-jle_else.10285:
+jle_else.10141:
 	ld	%g10, %g10, -4
 	subi	%g10, %g10, 1
 	st	%g29, %g1, 0
@@ -9275,9 +8808,9 @@ jle_else.10285:
 	st	%g4, %g1, 16
 	st	%g3, %g1, 20
 	st	%g8, %g1, 24
-	jlt	%g3, %g10, jle_else.10287
-	jmp	jle_cont.10288
-jle_else.10287:
+	jlt	%g3, %g10, jle_else.10143
+	jmp	jle_cont.10144
+jle_else.10143:
 	addi	%g10, %g3, 1
 	mov	%g5, %g7
 	mov	%g4, %g10
@@ -9289,7 +8822,7 @@ jle_else.10287:
 	callR	%g28
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
-jle_cont.10288:
+jle_cont.10144:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
 	ld	%g4, %g1, 20
@@ -9312,7 +8845,7 @@ jle_cont.10288:
 	mov	%g3, %g5
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	add_mod5.2721
+	call	add_mod5.2698
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mov	%g7, %g3
@@ -9323,10 +8856,10 @@ jle_cont.10288:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-create_float5x3array.3137:
+create_float5x3array.3114:
 	mvhi	%g3, 0
 	mvlo	%g3, 3
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -9343,7 +8876,7 @@ create_float5x3array.3137:
 	ld	%g31, %g1, 4
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 0
 	mov	%g3, %g4
@@ -9356,7 +8889,7 @@ create_float5x3array.3137:
 	st	%g3, %g4, -4
 	mvhi	%g3, 0
 	mvlo	%g3, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -9367,7 +8900,7 @@ create_float5x3array.3137:
 	st	%g3, %g4, -8
 	mvhi	%g3, 0
 	mvlo	%g3, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -9378,7 +8911,7 @@ create_float5x3array.3137:
 	st	%g3, %g4, -12
 	mvhi	%g3, 0
 	mvlo	%g3, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -9389,10 +8922,10 @@ create_float5x3array.3137:
 	st	%g3, %g4, -16
 	mov	%g3, %g4
 	return
-create_pixel.3139:
+create_pixel.3116:
 	mvhi	%g3, 0
 	mvlo	%g3, 3
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -9402,7 +8935,7 @@ create_pixel.3139:
 	st	%g3, %g1, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
-	call	create_float5x3array.3137
+	call	create_float5x3array.3114
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	mvhi	%g4, 0
@@ -9432,13 +8965,13 @@ create_pixel.3139:
 	st	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	create_float5x3array.3137
+	call	create_float5x3array.3114
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	st	%g3, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	create_float5x3array.3137
+	call	create_float5x3array.3114
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
@@ -9456,7 +8989,7 @@ create_pixel.3139:
 	st	%g3, %g1, 24
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	create_float5x3array.3137
+	call	create_float5x3array.3114
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mov	%g4, %g2
@@ -9478,15 +9011,15 @@ create_pixel.3139:
 	st	%g3, %g4, 0
 	mov	%g3, %g4
 	return
-init_line_elements.3141:
+init_line_elements.3118:
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jlt	%g4, %g5, jle_else.10289
+	jlt	%g4, %g5, jle_else.10145
 	st	%g3, %g1, 0
 	st	%g4, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	create_pixel.3139
+	call	create_pixel.3116
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	ld	%g4, %g1, 4
@@ -9498,17 +9031,17 @@ init_line_elements.3141:
 	ld	%g6, %g1, 12
 	subi	%g4, %g4, 1
 	mov	%g3, %g6
-	jmp	init_line_elements.3141
-jle_else.10289:
+	jmp	init_line_elements.3118
+jle_else.10145:
 	return
-create_pixelline.3144:
+create_pixelline.3121:
 	ld	%g3, %g29, -4
 	ld	%g4, %g3, 0
 	st	%g3, %g1, 0
 	st	%g4, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	create_pixel.3139
+	call	create_pixel.3116
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mov	%g4, %g3
@@ -9521,69 +9054,45 @@ create_pixelline.3144:
 	ld	%g4, %g1, 0
 	ld	%g4, %g4, 0
 	subi	%g4, %g4, 2
-	jmp	init_line_elements.3141
-tan.3146:
-	ld	%g3, %g29, -8
-	ld	%g4, %g29, -4
+	jmp	init_line_elements.3118
+tan.3123:
 	fst	%f0, %g1, 0
-	st	%g4, %g1, 4
-	mov	%g29, %g3
-	st	%g31, %g1, 12
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 16
-	callR	%g28
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	sin	%f0, %f0
 	fld	%f1, %g1, 0
-	ld	%g29, %g1, 4
-	fst	%f0, %g1, 8
+	fst	%f0, %g1, 4
 	fmov	%f0, %f1
-	st	%g31, %g1, 12
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 16
-	callR	%g28
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	fld	%f1, %g1, 8
+	cos	%f0, %f0
+	fld	%f1, %g1, 4
 	fdiv	%f0, %f1, %f0
 	return
-adjust_position.3148:
-	ld	%g3, %g29, -4
+adjust_position.3125:
 	fmul	%f0, %f0, %f0
-	setL %g4, l.7406
-	fld	%f2, %g4, 0
+	setL %g3, l.7258
+	fld	%f2, %g3, 0
 	fadd	%f0, %f0, %f2
-	st	%g3, %g1, 0
-	fst	%f1, %g1, 4
+	fst	%f1, %g1, 0
 	fsqrt	%f0, %f0
-	setL %g3, l.6519
+	setL %g3, l.6468
 	fld	%f1, %g3, 0
 	fdiv	%f1, %f1, %f0
-	fst	%f0, %g1, 8
+	fst	%f0, %g1, 4
 	fmov	%f0, %f1
+	atan	%f0, %f0
+	fld	%f1, %g1, 0
+	fmul	%f0, %f0, %f1
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	atan.2669
+	call	tan.3123
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	fld	%f1, %g1, 4
 	fmul	%f0, %f0, %f1
-	ld	%g29, %g1, 0
-	st	%g31, %g1, 12
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 16
-	callR	%g28
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	fld	%f1, %g1, 8
-	fmul	%f0, %f0, %f1
 	return
-calc_dirvec.3151:
-	ld	%g6, %g29, -8
-	ld	%g7, %g29, -4
-	mvhi	%g8, 0
-	mvlo	%g8, 5
-	jlt	%g3, %g8, jle_else.10290
+calc_dirvec.3128:
+	ld	%g6, %g29, -4
+	mvhi	%g7, 0
+	mvlo	%g7, 5
+	jlt	%g3, %g7, jle_else.10146
 	st	%g5, %g1, 0
 	st	%g6, %g1, 4
 	st	%g4, %g1, 8
@@ -9591,7 +9100,7 @@ calc_dirvec.3151:
 	fst	%f1, %g1, 16
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	fld	%f1, %g1, 16
@@ -9599,12 +9108,12 @@ calc_dirvec.3151:
 	fmov	%f0, %f1
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fsqr.2664
+	call	fsqr.2630
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 20
 	fadd	%f0, %f1, %f0
-	setL %g3, l.6519
+	setL %g3, l.6468
 	fld	%f1, %g3, 0
 	fadd	%f0, %f0, %f1
 	fsqrt	%f0, %f0
@@ -9612,7 +9121,7 @@ calc_dirvec.3151:
 	fdiv	%f1, %f1, %f0
 	fld	%f2, %g1, 16
 	fdiv	%f2, %f2, %f0
-	setL %g3, l.6519
+	setL %g3, l.6468
 	fld	%f3, %g3, 0
 	fdiv	%f0, %f3, %f0
 	ld	%g3, %g1, 8
@@ -9635,7 +9144,7 @@ calc_dirvec.3151:
 	mov	%g3, %g5
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f0, %g1, 36
@@ -9643,7 +9152,7 @@ calc_dirvec.3151:
 	fld	%f2, %g1, 28
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 0
@@ -9657,14 +9166,14 @@ calc_dirvec.3151:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f0, %g1, 32
 	st	%g3, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fmov	%f2, %f0, 0
@@ -9673,7 +9182,7 @@ calc_dirvec.3151:
 	ld	%g3, %g1, 40
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	ld	%g3, %g1, 0
@@ -9687,14 +9196,14 @@ calc_dirvec.3151:
 	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f0, %g1, 36
 	st	%g3, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 32
@@ -9702,7 +9211,7 @@ calc_dirvec.3151:
 	fmov	%f0, %f1
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fmov	%f2, %f0, 0
@@ -9711,7 +9220,7 @@ calc_dirvec.3151:
 	ld	%g3, %g1, 44
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	ld	%g3, %g1, 0
@@ -9725,14 +9234,14 @@ calc_dirvec.3151:
 	mov	%g3, %g4
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f0, %g1, 36
 	st	%g3, %g1, 52
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 32
@@ -9740,7 +9249,7 @@ calc_dirvec.3151:
 	fmov	%f0, %f1
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 28
@@ -9748,7 +9257,7 @@ calc_dirvec.3151:
 	fmov	%f0, %f1
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fmov	%f2, %f0, 0
@@ -9757,7 +9266,7 @@ calc_dirvec.3151:
 	ld	%g3, %g1, 52
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	ld	%g3, %g1, 0
@@ -9771,14 +9280,14 @@ calc_dirvec.3151:
 	mov	%g3, %g4
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f0, %g1, 36
 	st	%g3, %g1, 64
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	fld	%f1, %g1, 28
@@ -9786,7 +9295,7 @@ calc_dirvec.3151:
 	fmov	%f0, %f1
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fmov	%f1, %f0, 0
@@ -9795,7 +9304,7 @@ calc_dirvec.3151:
 	ld	%g3, %g1, 64
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	ld	%g3, %g1, 0
@@ -9808,86 +9317,77 @@ calc_dirvec.3151:
 	ld	%g4, %g1, 76
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f0, %g1, 28
 	st	%g3, %g1, 72
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	fld	%f1, %g1, 36
 	fld	%f2, %g1, 32
 	ld	%g3, %g1, 72
-	jmp	vecset.2724
-jle_else.10290:
+	jmp	vecset.2701
+jle_else.10146:
 	fst	%f2, %g1, 76
 	st	%g5, %g1, 0
 	st	%g4, %g1, 8
 	st	%g29, %g1, 80
 	fst	%f3, %g1, 84
-	st	%g7, %g1, 88
-	st	%g3, %g1, 92
-	mov	%g29, %g7
+	st	%g3, %g1, 88
 	fmov	%f0, %f1
 	fmov	%f1, %f2
-	st	%g31, %g1, 100
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 104
-	callR	%g28
-	addi	%g1, %g1, 104
-	ld	%g31, %g1, 100
-	ld	%g3, %g1, 92
+	st	%g31, %g1, 92
+	subi	%g1, %g1, 96
+	call	adjust_position.3125
+	addi	%g1, %g1, 96
+	ld	%g31, %g1, 92
+	ld	%g3, %g1, 88
 	addi	%g3, %g3, 1
 	fld	%f1, %g1, 84
-	ld	%g29, %g1, 88
-	fst	%f0, %g1, 96
-	st	%g3, %g1, 100
-	st	%g31, %g1, 108
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 112
-	callR	%g28
-	addi	%g1, %g1, 112
-	ld	%g31, %g1, 108
-	fmov	%f1, %f0
-	fld	%f0, %g1, 96
+	fst	%f0, %g1, 92
+	st	%g3, %g1, 96
+	st	%g31, %g1, 100
+	subi	%g1, %g1, 104
+	call	adjust_position.3125
+	addi	%g1, %g1, 104
+	ld	%g31, %g1, 100
+	fmov	%f1, %f0, 0
+	fld	%f0, %g1, 92
 	fld	%f2, %g1, 76
 	fld	%f3, %g1, 84
-	ld	%g3, %g1, 100
+	ld	%g3, %g1, 96
 	ld	%g4, %g1, 8
 	ld	%g5, %g1, 0
 	ld	%g29, %g1, 80
 	ld	%g28, %g29, 0
 	b	%g28
-calc_dirvecs.3159:
+calc_dirvecs.3136:
 	ld	%g6, %g29, -4
 	mvhi	%g7, 0
 	mvlo	%g7, 0
-	jlt	%g3, %g7, jle_else.10291
+	jlt	%g3, %g7, jle_else.10147
 	st	%g29, %g1, 0
 	st	%g3, %g1, 4
 	fst	%f0, %g1, 8
 	st	%g5, %g1, 12
 	st	%g4, %g1, 16
 	st	%g6, %g1, 20
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	setL %g3, l.7622
+	float_of_int	%f0, %g3
+	setL %g3, l.7474
 	fld	%f1, %g3, 0
 	fmul	%f0, %f0, %f1
-	setL %g3, l.7624
+	setL %g3, l.7476
 	fld	%f1, %g3, 0
 	fsub	%f2, %f0, %f1
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f1, %g4, 0
 	fld	%f3, %g1, 8
 	ld	%g4, %g1, 16
@@ -9900,22 +9400,18 @@ calc_dirvecs.3159:
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	setL %g3, l.7622
+	float_of_int	%f0, %g3
+	setL %g3, l.7474
 	fld	%f1, %g3, 0
 	fmul	%f0, %f0, %f1
-	setL %g3, l.7406
+	setL %g3, l.7258
 	fld	%f1, %g3, 0
 	fadd	%f2, %f0, %f1
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f0, %g4, 0
-	setL %g4, l.6510
+	setL %g4, l.6407
 	fld	%f1, %g4, 0
 	ld	%g4, %g1, 12
 	addi	%g5, %g4, 2
@@ -9938,7 +9434,7 @@ calc_dirvecs.3159:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	add_mod5.2721
+	call	add_mod5.2698
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mov	%g4, %g3
@@ -9948,27 +9444,23 @@ calc_dirvecs.3159:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10291:
+jle_else.10147:
 	return
-calc_dirvec_rows.3164:
+calc_dirvec_rows.3141:
 	ld	%g6, %g29, -4
 	mvhi	%g7, 0
 	mvlo	%g7, 0
-	jlt	%g3, %g7, jle_else.10293
+	jlt	%g3, %g7, jle_else.10149
 	st	%g29, %g1, 0
 	st	%g3, %g1, 4
 	st	%g5, %g1, 8
 	st	%g4, %g1, 12
 	st	%g6, %g1, 16
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	setL %g3, l.7622
+	float_of_int	%f0, %g3
+	setL %g3, l.7474
 	fld	%f1, %g3, 0
 	fmul	%f0, %f0, %f1
-	setL %g3, l.7624
+	setL %g3, l.7476
 	fld	%f1, %g3, 0
 	fsub	%f0, %f0, %f1
 	mvhi	%g3, 0
@@ -9991,7 +9483,7 @@ calc_dirvec_rows.3164:
 	mov	%g3, %g5
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	add_mod5.2721
+	call	add_mod5.2698
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	mov	%g4, %g3
@@ -10001,13 +9493,13 @@ calc_dirvec_rows.3164:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10293:
+jle_else.10149:
 	return
-create_dirvec.3168:
+create_dirvec.3145:
 	ld	%g3, %g29, -4
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 0
 	mov	%g3, %g4
@@ -10032,11 +9524,11 @@ create_dirvec.3168:
 	st	%g3, %g4, 0
 	mov	%g3, %g4
 	return
-create_dirvec_elements.3170:
+create_dirvec_elements.3147:
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g4, %g6, jle_else.10295
+	jlt	%g4, %g6, jle_else.10151
 	st	%g29, %g1, 0
 	st	%g3, %g1, 4
 	st	%g4, %g1, 8
@@ -10059,15 +9551,15 @@ create_dirvec_elements.3170:
 	mov	%g3, %g6
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10295:
+jle_else.10151:
 	return
-create_dirvecs.3173:
+create_dirvecs.3150:
 	ld	%g4, %g29, -12
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
 	mvhi	%g7, 0
 	mvlo	%g7, 0
-	jlt	%g3, %g7, jle_else.10297
+	jlt	%g3, %g7, jle_else.10153
 	mvhi	%g7, 0
 	mvlo	%g7, 120
 	st	%g29, %g1, 0
@@ -10116,13 +9608,13 @@ create_dirvecs.3173:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10297:
+jle_else.10153:
 	return
-init_dirvec_constants.3175:
+init_dirvec_constants.3152:
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g4, %g6, jle_else.10299
+	jlt	%g4, %g6, jle_else.10155
 	slli	%g6, %g4, 2
 	st	%g3, %g1, 4
 	add	%g3, %g3, %g6
@@ -10145,14 +9637,14 @@ init_dirvec_constants.3175:
 	ld	%g29, %g1, 4
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10299:
+jle_else.10155:
 	return
-init_vecset_constants.3178:
+init_vecset_constants.3155:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g3, %g6, jle_else.10301
+	jlt	%g3, %g6, jle_else.10157
 	slli	%g6, %g3, 2
 	st	%g5, %g1, 4
 	add	%g5, %g5, %g6
@@ -10175,9 +9667,9 @@ init_vecset_constants.3178:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.10301:
+jle_else.10157:
 	return
-init_dirvecs.3180:
+init_dirvecs.3157:
 	ld	%g3, %g29, -12
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
@@ -10211,7 +9703,7 @@ init_dirvecs.3180:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-add_reflection.3182:
+add_reflection.3159:
 	ld	%g5, %g29, -12
 	ld	%g6, %g29, -8
 	ld	%g29, %g29, -4
@@ -10232,7 +9724,7 @@ add_reflection.3182:
 	st	%g3, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fld	%f0, %g1, 28
@@ -10240,7 +9732,7 @@ add_reflection.3182:
 	fld	%f2, %g1, 20
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	vecset.2724
+	call	vecset.2701
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 32
@@ -10267,13 +9759,13 @@ add_reflection.3182:
 	st	%g3, %g5, 0
 	ld	%g5, %g1, 36
 	return
-setup_rect_reflection.3189:
+setup_rect_reflection.3166:
 	ld	%g5, %g29, -12
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	muli	%g3, %g3, 4
 	ld	%g8, %g5, 0
-	setL %g9, l.6519
+	setL %g9, l.6468
 	fld	%f0, %g9, 0
 	st	%g5, %g1, 0
 	st	%g8, %g1, 4
@@ -10284,7 +9776,7 @@ setup_rect_reflection.3189:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 20
@@ -10295,7 +9787,7 @@ setup_rect_reflection.3189:
 	fmov	%f0, %f1
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	ld	%g3, %g1, 16
@@ -10304,7 +9796,7 @@ setup_rect_reflection.3189:
 	fmov	%f0, %f1
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	ld	%g3, %g1, 16
@@ -10313,7 +9805,7 @@ setup_rect_reflection.3189:
 	fmov	%f0, %f1
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	fneg.2660
+	call	fneg.2626
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	fmov	%f3, %f0, 0
@@ -10374,14 +9866,14 @@ setup_rect_reflection.3189:
 	ld	%g4, %g1, 0
 	st	%g3, %g4, 0
 	return
-setup_surface_reflection.3192:
+setup_surface_reflection.3169:
 	ld	%g5, %g29, -12
 	ld	%g6, %g29, -8
 	ld	%g7, %g29, -4
 	muli	%g3, %g3, 4
 	addi	%g3, %g3, 1
 	ld	%g8, %g5, 0
-	setL %g9, l.6519
+	setL %g9, l.6468
 	fld	%f0, %g9, 0
 	st	%g5, %g1, 0
 	st	%g3, %g1, 4
@@ -10393,7 +9885,7 @@ setup_surface_reflection.3192:
 	mov	%g3, %g4
 	st	%g31, %g1, 28
 	subi	%g1, %g1, 32
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 32
 	ld	%g31, %g1, 28
 	fld	%f1, %g1, 24
@@ -10402,24 +9894,24 @@ setup_surface_reflection.3192:
 	fst	%f0, %g1, 28
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	o_param_abc.2786
+	call	o_param_abc.2763
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mov	%g4, %g3
 	ld	%g3, %g1, 16
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
-	call	veciprod.2745
+	call	veciprod.2722
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
-	setL %g3, l.6515
+	setL %g3, l.6412
 	fld	%f1, %g3, 0
 	ld	%g3, %g1, 20
 	fst	%f0, %g1, 32
 	fst	%f1, %g1, 36
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	o_param_a.2780
+	call	o_param_a.2757
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	fld	%f1, %g1, 36
@@ -10429,7 +9921,7 @@ setup_surface_reflection.3192:
 	ld	%g3, %g1, 16
 	fld	%f2, %g3, 0
 	fsub	%f0, %f0, %f2
-	setL %g4, l.6515
+	setL %g4, l.6412
 	fld	%f2, %g4, 0
 	ld	%g4, %g1, 20
 	fst	%f0, %g1, 40
@@ -10437,7 +9929,7 @@ setup_surface_reflection.3192:
 	mov	%g3, %g4
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	o_param_b.2782
+	call	o_param_b.2759
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	fld	%f1, %g1, 44
@@ -10447,7 +9939,7 @@ setup_surface_reflection.3192:
 	ld	%g3, %g1, 16
 	fld	%f2, %g3, -4
 	fsub	%f0, %f0, %f2
-	setL %g4, l.6515
+	setL %g4, l.6412
 	fld	%f2, %g4, 0
 	ld	%g4, %g1, 20
 	fst	%f0, %g1, 48
@@ -10455,7 +9947,7 @@ setup_surface_reflection.3192:
 	mov	%g3, %g4
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	o_param_c.2784
+	call	o_param_c.2761
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	fld	%f1, %g1, 52
@@ -10482,13 +9974,13 @@ setup_surface_reflection.3192:
 	ld	%g4, %g1, 0
 	st	%g3, %g4, 0
 	return
-setup_reflections.3195:
+setup_reflections.3172:
 	ld	%g4, %g29, -12
 	ld	%g5, %g29, -8
 	ld	%g6, %g29, -4
 	mvhi	%g7, 0
 	mvlo	%g7, 0
-	jlt	%g3, %g7, jle_else.10306
+	jlt	%g3, %g7, jle_else.10162
 	slli	%g7, %g3, 2
 	st	%g6, %g1, 4
 	add	%g6, %g6, %g7
@@ -10500,60 +9992,60 @@ setup_reflections.3195:
 	mov	%g3, %g6
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_reflectiontype.2774
+	call	o_reflectiontype.2751
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10307
+	jne	%g3, %g4, jeq_else.10163
 	ld	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_diffuse.2794
+	call	o_diffuse.2771
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
-	setL %g3, l.6519
+	setL %g3, l.6468
 	fld	%f1, %g3, 0
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	fless.2646
+	call	fless.2610
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	jne	%g3, %g4, jeq_else.10308
+	jne	%g3, %g4, jeq_else.10164
 	return
-jeq_else.10308:
+jeq_else.10164:
 	ld	%g3, %g1, 12
 	st	%g31, %g1, 20
 	subi	%g1, %g1, 24
-	call	o_form.2772
+	call	o_form.2749
 	addi	%g1, %g1, 24
 	ld	%g31, %g1, 20
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	jne	%g3, %g4, jeq_else.10310
+	jne	%g3, %g4, jeq_else.10166
 	ld	%g3, %g1, 4
 	ld	%g4, %g1, 12
 	ld	%g29, %g1, 8
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10310:
+jeq_else.10166:
 	mvhi	%g4, 0
 	mvlo	%g4, 2
-	jne	%g3, %g4, jeq_else.10311
+	jne	%g3, %g4, jeq_else.10167
 	ld	%g3, %g1, 4
 	ld	%g4, %g1, 12
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jeq_else.10311:
+jeq_else.10167:
 	return
-jeq_else.10307:
+jeq_else.10163:
 	return
-jle_else.10306:
+jle_else.10162:
 	return
-rt.3197:
+rt.3174:
 	ld	%g5, %g29, -56
 	ld	%g6, %g29, -52
 	ld	%g7, %g29, -48
@@ -10574,7 +10066,7 @@ rt.3197:
 	st	%g16, %g17, 0
 	divi	%g4, %g4, 2
 	st	%g4, %g17, -4
-	setL %g4, l.7689
+	setL %g4, l.7541
 	fld	%f0, %g4, 0
 	st	%g9, %g1, 0
 	st	%g11, %g1, 4
@@ -10589,11 +10081,7 @@ rt.3197:
 	st	%g18, %g1, 40
 	st	%g8, %g1, 44
 	fst	%f0, %g1, 48
-	st	%g31, %g1, 52
-	subi	%g1, %g1, 56
-	call	min_caml_float_of_int
-	addi	%g1, %g1, 56
-	ld	%g31, %g1, 52
+	float_of_int	%f0, %g3
 	fld	%f1, %g1, 48
 	fdiv	%f0, %f1, %f0
 	ld	%g3, %g1, 44
@@ -10646,13 +10134,13 @@ rt.3197:
 	ld	%g3, %g1, 24
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	d_vec.2831
+	call	d_vec.2808
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	ld	%g4, %g1, 20
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
-	call	veccpy.2734
+	call	veccpy.2711
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	ld	%g3, %g1, 24
@@ -10696,48 +10184,174 @@ rt.3197:
 	ld	%g28, %g29, 0
 	b	%g28
 min_caml_start:
-	setL %g3, l.7694
-	fld	%f0, %g3, 0
-	setL %g3, l.7696
-	fld	%f1, %g3, 0
-	setL %g3, l.6532
-	fld	%f2, %g3, 0
-	mov	%g3, %g2
-	addi	%g2, %g2, 32
-	setL %g4, sin.2671
-	st	%g4, %g3, 0
-	fst	%f2, %g3, -24
-	fst	%f1, %g3, -16
-	fst	%f0, %g3, -8
-	mov	%g4, %g2
-	addi	%g2, %g2, 8
-	setL %g5, cos.2673
-	st	%g5, %g4, 0
-	st	%g3, %g4, -4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g4, 0
+	mvlo	%g4, 1
 	mvhi	%g5, 0
-	mvlo	%g5, 1
-	mvhi	%g6, 0
-	mvlo	%g6, 0
-	st	%g4, %g1, 0
-	st	%g3, %g1, 4
-	mov	%g4, %g6
-	mov	%g3, %g5
+	mvlo	%g5, 0
+	st	%g3, %g1, 0
+	mov	%g3, %g4
+	mov	%g4, %g5
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mov	%g4, %g2
+	addi	%g2, %g2, 16
+	setL %g5, read_int_token.2636
+	st	%g5, %g4, 0
+	st	%g3, %g4, -8
+	ld	%g5, %g1, 0
+	st	%g5, %g4, -4
+	mov	%g6, %g2
+	addi	%g2, %g2, 16
+	setL %g7, read_int.2639
+	st	%g7, %g6, 0
+	st	%g4, %g6, -12
+	st	%g3, %g6, -8
+	st	%g5, %g6, -4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g6, %g1, 4
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
 	call	min_caml_create_array
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
 	mvhi	%g4, 0
-	mvlo	%g4, 0
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
+	mvlo	%g4, 1
+	mvhi	%g5, 0
+	mvlo	%g5, 0
 	st	%g3, %g1, 8
 	mov	%g3, %g4
+	mov	%g4, %g5
 	st	%g31, %g1, 12
 	subi	%g1, %g1, 16
-	call	min_caml_create_float_array
+	call	min_caml_create_array
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
+	mvhi	%g4, 0
+	mvlo	%g4, 1
+	mvhi	%g5, 0
+	mvlo	%g5, 1
+	st	%g3, %g1, 12
+	mov	%g3, %g4
+	mov	%g4, %g5
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_create_array
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	mvhi	%g4, 0
+	mvlo	%g4, 1
+	mvhi	%g5, 0
+	mvlo	%g5, 0
+	st	%g3, %g1, 16
+	mov	%g3, %g4
+	mov	%g4, %g5
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_create_array
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	mov	%g4, %g2
+	addi	%g2, %g2, 16
+	setL %g5, read_float_token1.2645
+	st	%g5, %g4, 0
+	st	%g3, %g4, -8
+	ld	%g5, %g1, 8
+	st	%g5, %g4, -4
+	mov	%g6, %g2
+	addi	%g2, %g2, 16
+	setL %g7, read_float_token2.2648
+	st	%g7, %g6, 0
+	ld	%g7, %g1, 12
+	st	%g7, %g6, -8
+	ld	%g8, %g1, 16
+	st	%g8, %g6, -4
+	mov	%g9, %g2
+	addi	%g2, %g2, 32
+	setL %g10, read_float.2650
+	st	%g10, %g9, 0
+	st	%g6, %g9, -24
+	st	%g4, %g9, -20
+	st	%g3, %g9, -16
+	st	%g5, %g9, -12
+	st	%g7, %g9, -8
+	st	%g8, %g9, -4
+	mvhi	%g3, 0
+	mvlo	%g3, 10
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g9, %g1, 20
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_create_array
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
+	mvhi	%g4, 0
+	mvlo	%g4, 1
+	mvhi	%g5, 0
+	mvlo	%g5, 0
+	st	%g3, %g1, 24
+	mov	%g3, %g4
+	mov	%g4, %g5
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_create_array
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
+	mov	%g4, %g2
+	addi	%g2, %g2, 16
+	setL %g5, print_int_get_digits.2654
+	st	%g5, %g4, 0
+	st	%g3, %g4, -8
+	ld	%g5, %g1, 24
+	st	%g5, %g4, -4
+	mov	%g6, %g2
+	addi	%g2, %g2, 8
+	setL %g7, print_int_print_digits.2656
+	st	%g7, %g6, 0
+	st	%g5, %g6, -4
+	mov	%g5, %g2
+	addi	%g2, %g2, 16
+	setL %g7, print_int.2658
+	st	%g7, %g5, 0
+	st	%g3, %g5, -12
+	st	%g6, %g5, -8
+	st	%g4, %g5, -4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g5, %g1, 28
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_create_array
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 32
+	mov	%g3, %g4
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_create_float_array
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 	mvhi	%g4, 0
 	mvlo	%g4, 60
 	mvhi	%g5, 0
@@ -10767,101 +10381,36 @@ min_caml_start:
 	mov	%g28, %g4
 	mov	%g4, %g3
 	mov	%g3, %g28
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	min_caml_create_array
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
-	st	%g3, %g1, 12
-	mov	%g3, %g4
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	min_caml_create_float_array
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
-	st	%g3, %g1, 16
-	mov	%g3, %g4
-	st	%g31, %g1, 20
-	subi	%g1, %g1, 24
-	call	min_caml_create_float_array
-	addi	%g1, %g1, 24
-	ld	%g31, %g1, 20
-	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
-	st	%g3, %g1, 20
-	mov	%g3, %g4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_create_float_array
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	setL %g5, l.7320
-	fld	%f0, %g5, 0
-	st	%g3, %g1, 24
-	mov	%g3, %g4
-	st	%g31, %g1, 28
-	subi	%g1, %g1, 32
-	call	min_caml_create_float_array
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	mvhi	%g4, 0
-	mvlo	%g4, 50
-	mvhi	%g5, 0
-	mvlo	%g5, 1
-	mvhi	%g6, 65535
-	mvlo	%g6, -1
-	st	%g3, %g1, 28
-	st	%g4, %g1, 32
-	mov	%g4, %g6
-	mov	%g3, %g5
-	st	%g31, %g1, 36
-	subi	%g1, %g1, 40
-	call	min_caml_create_array
-	addi	%g1, %g1, 40
-	ld	%g31, %g1, 36
-	mov	%g4, %g3
-	ld	%g3, %g1, 32
 	st	%g31, %g1, 36
 	subi	%g1, %g1, 40
 	call	min_caml_create_array
 	addi	%g1, %g1, 40
 	ld	%g31, %g1, 36
 	mvhi	%g4, 0
-	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 1
-	ld	%g6, %g3, 0
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
 	st	%g3, %g1, 36
-	st	%g4, %g1, 40
-	mov	%g4, %g6
-	mov	%g3, %g5
+	mov	%g3, %g4
 	st	%g31, %g1, 44
 	subi	%g1, %g1, 48
-	call	min_caml_create_array
-	addi	%g1, %g1, 48
-	ld	%g31, %g1, 44
-	mov	%g4, %g3
-	ld	%g3, %g1, 40
-	st	%g31, %g1, 44
-	subi	%g1, %g1, 48
-	call	min_caml_create_array
+	call	min_caml_create_float_array
 	addi	%g1, %g1, 48
 	ld	%g31, %g1, 44
 	mvhi	%g4, 0
-	mvlo	%g4, 1
-	setL %g5, l.6510
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 40
+	mov	%g3, %g4
+	st	%g31, %g1, 44
+	subi	%g1, %g1, 48
+	call	min_caml_create_float_array
+	addi	%g1, %g1, 48
+	ld	%g31, %g1, 44
+	mvhi	%g4, 0
+	mvlo	%g4, 3
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 44
 	mov	%g3, %g4
@@ -10872,64 +10421,61 @@ min_caml_start:
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
 	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 0
+	setL %g5, l.7172
+	fld	%f0, %g5, 0
 	st	%g3, %g1, 48
 	mov	%g3, %g4
-	mov	%g4, %g5
 	st	%g31, %g1, 52
 	subi	%g1, %g1, 56
-	call	min_caml_create_array
+	call	min_caml_create_float_array
 	addi	%g1, %g1, 56
 	ld	%g31, %g1, 52
 	mvhi	%g4, 0
-	mvlo	%g4, 1
-	setL %g5, l.7219
-	fld	%f0, %g5, 0
+	mvlo	%g4, 50
+	mvhi	%g5, 0
+	mvlo	%g5, 1
+	mvhi	%g6, 65535
+	mvlo	%g6, -1
 	st	%g3, %g1, 52
-	mov	%g3, %g4
+	st	%g4, %g1, 56
+	mov	%g4, %g6
+	mov	%g3, %g5
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	min_caml_create_float_array
+	call	min_caml_create_array
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
-	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
-	st	%g3, %g1, 56
-	mov	%g3, %g4
+	mov	%g4, %g3
+	ld	%g3, %g1, 56
 	st	%g31, %g1, 60
 	subi	%g1, %g1, 64
-	call	min_caml_create_float_array
+	call	min_caml_create_array
 	addi	%g1, %g1, 64
 	ld	%g31, %g1, 60
 	mvhi	%g4, 0
 	mvlo	%g4, 1
 	mvhi	%g5, 0
-	mvlo	%g5, 0
+	mvlo	%g5, 1
+	ld	%g6, %g3, 0
 	st	%g3, %g1, 60
-	mov	%g3, %g4
-	mov	%g4, %g5
+	st	%g4, %g1, 64
+	mov	%g4, %g6
+	mov	%g3, %g5
+	st	%g31, %g1, 68
+	subi	%g1, %g1, 72
+	call	min_caml_create_array
+	addi	%g1, %g1, 72
+	ld	%g31, %g1, 68
+	mov	%g4, %g3
+	ld	%g3, %g1, 64
 	st	%g31, %g1, 68
 	subi	%g1, %g1, 72
 	call	min_caml_create_array
 	addi	%g1, %g1, 72
 	ld	%g31, %g1, 68
 	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
-	st	%g3, %g1, 64
-	mov	%g3, %g4
-	st	%g31, %g1, 68
-	subi	%g1, %g1, 72
-	call	min_caml_create_float_array
-	addi	%g1, %g1, 72
-	ld	%g31, %g1, 68
-	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
+	mvlo	%g4, 1
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 68
 	mov	%g3, %g4
@@ -10939,19 +10485,20 @@ min_caml_start:
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
+	mvlo	%g4, 1
+	mvhi	%g5, 0
+	mvlo	%g5, 0
 	st	%g3, %g1, 72
 	mov	%g3, %g4
+	mov	%g4, %g5
 	st	%g31, %g1, 76
 	subi	%g1, %g1, 80
-	call	min_caml_create_float_array
+	call	min_caml_create_array
 	addi	%g1, %g1, 80
 	ld	%g31, %g1, 76
 	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
+	mvlo	%g4, 1
+	setL %g5, l.7070
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 76
 	mov	%g3, %g4
@@ -10961,19 +10508,18 @@ min_caml_start:
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
 	mvhi	%g4, 0
-	mvlo	%g4, 2
-	mvhi	%g5, 0
-	mvlo	%g5, 0
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
 	st	%g3, %g1, 80
 	mov	%g3, %g4
-	mov	%g4, %g5
 	st	%g31, %g1, 84
 	subi	%g1, %g1, 88
-	call	min_caml_create_array
+	call	min_caml_create_float_array
 	addi	%g1, %g1, 88
 	ld	%g31, %g1, 84
 	mvhi	%g4, 0
-	mvlo	%g4, 2
+	mvlo	%g4, 1
 	mvhi	%g5, 0
 	mvlo	%g5, 0
 	st	%g3, %g1, 84
@@ -10985,8 +10531,8 @@ min_caml_start:
 	addi	%g1, %g1, 96
 	ld	%g31, %g1, 92
 	mvhi	%g4, 0
-	mvlo	%g4, 1
-	setL %g5, l.6510
+	mvlo	%g4, 3
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 88
 	mov	%g3, %g4
@@ -10997,7 +10543,7 @@ min_caml_start:
 	ld	%g31, %g1, 92
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 92
 	mov	%g3, %g4
@@ -11008,7 +10554,7 @@ min_caml_start:
 	ld	%g31, %g1, 100
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 96
 	mov	%g3, %g4
@@ -11019,7 +10565,7 @@ min_caml_start:
 	ld	%g31, %g1, 100
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 100
 	mov	%g3, %g4
@@ -11029,30 +10575,32 @@ min_caml_start:
 	addi	%g1, %g1, 112
 	ld	%g31, %g1, 108
 	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
+	mvlo	%g4, 2
+	mvhi	%g5, 0
+	mvlo	%g5, 0
 	st	%g3, %g1, 104
 	mov	%g3, %g4
+	mov	%g4, %g5
 	st	%g31, %g1, 108
 	subi	%g1, %g1, 112
-	call	min_caml_create_float_array
+	call	min_caml_create_array
 	addi	%g1, %g1, 112
 	ld	%g31, %g1, 108
 	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
-	fld	%f0, %g5, 0
+	mvlo	%g4, 2
+	mvhi	%g5, 0
+	mvlo	%g5, 0
 	st	%g3, %g1, 108
 	mov	%g3, %g4
+	mov	%g4, %g5
 	st	%g31, %g1, 116
 	subi	%g1, %g1, 120
-	call	min_caml_create_float_array
+	call	min_caml_create_array
 	addi	%g1, %g1, 120
 	ld	%g31, %g1, 116
 	mvhi	%g4, 0
-	mvlo	%g4, 3
-	setL %g5, l.6510
+	mvlo	%g4, 1
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 112
 	mov	%g3, %g4
@@ -11062,8 +10610,8 @@ min_caml_start:
 	addi	%g1, %g1, 120
 	ld	%g31, %g1, 116
 	mvhi	%g4, 0
-	mvlo	%g4, 0
-	setL %g5, l.6510
+	mvlo	%g4, 3
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 116
 	mov	%g3, %g4
@@ -11072,42 +10620,20 @@ min_caml_start:
 	call	min_caml_create_float_array
 	addi	%g1, %g1, 128
 	ld	%g31, %g1, 124
-	mov	%g4, %g3
-	mvhi	%g3, 0
-	mvlo	%g3, 0
-	st	%g4, %g1, 120
+	mvhi	%g4, 0
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 120
+	mov	%g3, %g4
 	st	%g31, %g1, 124
 	subi	%g1, %g1, 128
-	call	min_caml_create_array
+	call	min_caml_create_float_array
 	addi	%g1, %g1, 128
 	ld	%g31, %g1, 124
 	mvhi	%g4, 0
-	mvlo	%g4, 0
-	mov	%g5, %g2
-	addi	%g2, %g2, 8
-	st	%g3, %g5, -4
-	ld	%g3, %g1, 120
-	st	%g3, %g5, 0
-	mov	%g3, %g5
-	mov	%g28, %g4
-	mov	%g4, %g3
-	mov	%g3, %g28
-	st	%g31, %g1, 124
-	subi	%g1, %g1, 128
-	call	min_caml_create_array
-	addi	%g1, %g1, 128
-	ld	%g31, %g1, 124
-	mov	%g4, %g3
-	mvhi	%g3, 0
-	mvlo	%g3, 5
-	st	%g31, %g1, 124
-	subi	%g1, %g1, 128
-	call	min_caml_create_array
-	addi	%g1, %g1, 128
-	ld	%g31, %g1, 124
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	setL %g5, l.6510
+	mvlo	%g4, 3
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 124
 	mov	%g3, %g4
@@ -11118,7 +10644,7 @@ min_caml_start:
 	ld	%g31, %g1, 132
 	mvhi	%g4, 0
 	mvlo	%g4, 3
-	setL %g5, l.6510
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 128
 	mov	%g3, %g4
@@ -11128,25 +10654,19 @@ min_caml_start:
 	addi	%g1, %g1, 136
 	ld	%g31, %g1, 132
 	mvhi	%g4, 0
-	mvlo	%g4, 60
-	ld	%g5, %g1, 128
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
 	st	%g3, %g1, 132
 	mov	%g3, %g4
-	mov	%g4, %g5
 	st	%g31, %g1, 140
 	subi	%g1, %g1, 144
-	call	min_caml_create_array
+	call	min_caml_create_float_array
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
-	mov	%g4, %g2
-	addi	%g2, %g2, 8
-	st	%g3, %g4, -4
-	ld	%g3, %g1, 132
-	st	%g3, %g4, 0
-	mov	%g3, %g4
 	mvhi	%g4, 0
-	mvlo	%g4, 0
-	setL %g5, l.6510
+	mvlo	%g4, 3
+	setL %g5, l.6407
 	fld	%f0, %g5, 0
 	st	%g3, %g1, 136
 	mov	%g3, %g4
@@ -11155,26 +10675,120 @@ min_caml_start:
 	call	min_caml_create_float_array
 	addi	%g1, %g1, 144
 	ld	%g31, %g1, 140
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 140
+	mov	%g3, %g4
+	st	%g31, %g1, 148
+	subi	%g1, %g1, 152
+	call	min_caml_create_float_array
+	addi	%g1, %g1, 152
+	ld	%g31, %g1, 148
 	mov	%g4, %g3
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	st	%g4, %g1, 140
+	st	%g4, %g1, 144
 	st	%g31, %g1, 148
 	subi	%g1, %g1, 152
 	call	min_caml_create_array
 	addi	%g1, %g1, 152
 	ld	%g31, %g1, 148
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	mov	%g5, %g2
+	addi	%g2, %g2, 8
+	st	%g3, %g5, -4
+	ld	%g3, %g1, 144
+	st	%g3, %g5, 0
+	mov	%g3, %g5
+	mov	%g28, %g4
+	mov	%g4, %g3
+	mov	%g3, %g28
+	st	%g31, %g1, 148
+	subi	%g1, %g1, 152
+	call	min_caml_create_array
+	addi	%g1, %g1, 152
+	ld	%g31, %g1, 148
+	mov	%g4, %g3
+	mvhi	%g3, 0
+	mvlo	%g3, 5
+	st	%g31, %g1, 148
+	subi	%g1, %g1, 152
+	call	min_caml_create_array
+	addi	%g1, %g1, 152
+	ld	%g31, %g1, 148
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 148
+	mov	%g3, %g4
+	st	%g31, %g1, 156
+	subi	%g1, %g1, 160
+	call	min_caml_create_float_array
+	addi	%g1, %g1, 160
+	ld	%g31, %g1, 156
+	mvhi	%g4, 0
+	mvlo	%g4, 3
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 152
+	mov	%g3, %g4
+	st	%g31, %g1, 156
+	subi	%g1, %g1, 160
+	call	min_caml_create_float_array
+	addi	%g1, %g1, 160
+	ld	%g31, %g1, 156
+	mvhi	%g4, 0
+	mvlo	%g4, 60
+	ld	%g5, %g1, 152
+	st	%g3, %g1, 156
+	mov	%g3, %g4
+	mov	%g4, %g5
+	st	%g31, %g1, 164
+	subi	%g1, %g1, 168
+	call	min_caml_create_array
+	addi	%g1, %g1, 168
+	ld	%g31, %g1, 164
 	mov	%g4, %g2
 	addi	%g2, %g2, 8
 	st	%g3, %g4, -4
-	ld	%g3, %g1, 140
+	ld	%g3, %g1, 156
+	st	%g3, %g4, 0
+	mov	%g3, %g4
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	setL %g5, l.6407
+	fld	%f0, %g5, 0
+	st	%g3, %g1, 160
+	mov	%g3, %g4
+	st	%g31, %g1, 164
+	subi	%g1, %g1, 168
+	call	min_caml_create_float_array
+	addi	%g1, %g1, 168
+	ld	%g31, %g1, 164
+	mov	%g4, %g3
+	mvhi	%g3, 0
+	mvlo	%g3, 0
+	st	%g4, %g1, 164
+	st	%g31, %g1, 172
+	subi	%g1, %g1, 176
+	call	min_caml_create_array
+	addi	%g1, %g1, 176
+	ld	%g31, %g1, 172
+	mov	%g4, %g2
+	addi	%g2, %g2, 8
+	st	%g3, %g4, -4
+	ld	%g3, %g1, 164
 	st	%g3, %g4, 0
 	mov	%g3, %g4
 	mvhi	%g4, 0
 	mvlo	%g4, 180
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	setL %g6, l.6510
+	setL %g6, l.6407
 	fld	%f0, %g6, 0
 	mov	%g6, %g2
 	addi	%g2, %g2, 16
@@ -11185,626 +10799,624 @@ min_caml_start:
 	mov	%g28, %g4
 	mov	%g4, %g3
 	mov	%g3, %g28
-	st	%g31, %g1, 148
-	subi	%g1, %g1, 152
+	st	%g31, %g1, 172
+	subi	%g1, %g1, 176
 	call	min_caml_create_array
-	addi	%g1, %g1, 152
-	ld	%g31, %g1, 148
+	addi	%g1, %g1, 176
+	ld	%g31, %g1, 172
 	mvhi	%g4, 0
 	mvlo	%g4, 1
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	st	%g3, %g1, 144
+	st	%g3, %g1, 168
 	mov	%g3, %g4
 	mov	%g4, %g5
-	st	%g31, %g1, 148
-	subi	%g1, %g1, 152
+	st	%g31, %g1, 172
+	subi	%g1, %g1, 176
 	call	min_caml_create_array
-	addi	%g1, %g1, 152
-	ld	%g31, %g1, 148
+	addi	%g1, %g1, 176
+	ld	%g31, %g1, 172
 	mov	%g4, %g2
 	addi	%g2, %g2, 32
-	setL %g5, read_screen_settings.2843
+	setL %g5, read_screen_settings.2820
 	st	%g5, %g4, 0
-	ld	%g5, %g1, 20
-	st	%g5, %g4, -28
-	ld	%g6, %g1, 4
-	st	%g6, %g4, -24
-	ld	%g7, %g1, 112
-	st	%g7, %g4, -20
-	ld	%g8, %g1, 108
-	st	%g8, %g4, -16
-	ld	%g9, %g1, 104
-	st	%g9, %g4, -12
-	ld	%g10, %g1, 16
-	st	%g10, %g4, -8
-	ld	%g10, %g1, 0
-	st	%g10, %g4, -4
-	mov	%g11, %g2
+	ld	%g5, %g1, 44
+	st	%g5, %g4, -24
+	ld	%g6, %g1, 136
+	st	%g6, %g4, -20
+	ld	%g7, %g1, 132
+	st	%g7, %g4, -16
+	ld	%g8, %g1, 128
+	st	%g8, %g4, -12
+	ld	%g9, %g1, 40
+	st	%g9, %g4, -8
+	ld	%g9, %g1, 20
+	st	%g9, %g4, -4
+	mov	%g10, %g2
 	addi	%g2, %g2, 24
-	setL %g12, read_light.2845
-	st	%g12, %g11, 0
-	st	%g6, %g11, -16
-	ld	%g12, %g1, 24
-	st	%g12, %g11, -12
-	st	%g10, %g11, -8
-	ld	%g13, %g1, 28
-	st	%g13, %g11, -4
+	setL %g11, read_light.2822
+	st	%g11, %g10, 0
+	ld	%g11, %g1, 4
+	st	%g11, %g10, -16
+	st	%g9, %g10, -12
+	ld	%g12, %g1, 48
+	st	%g12, %g10, -8
+	ld	%g13, %g1, 52
+	st	%g13, %g10, -4
 	mov	%g14, %g2
 	addi	%g2, %g2, 16
-	setL %g15, rotate_quadratic_matrix.2847
+	setL %g15, read_nth_object.2827
 	st	%g15, %g14, 0
-	st	%g6, %g14, -8
-	st	%g10, %g14, -4
+	st	%g11, %g14, -12
+	st	%g9, %g14, -8
+	ld	%g9, %g1, 36
+	st	%g9, %g14, -4
 	mov	%g15, %g2
 	addi	%g2, %g2, 16
-	setL %g16, read_nth_object.2850
+	setL %g16, read_object.2829
 	st	%g16, %g15, 0
 	st	%g14, %g15, -8
-	ld	%g14, %g1, 12
+	ld	%g14, %g1, 32
 	st	%g14, %g15, -4
 	mov	%g16, %g2
-	addi	%g2, %g2, 16
-	setL %g17, read_object.2852
-	st	%g17, %g16, 0
-	st	%g15, %g16, -8
-	ld	%g15, %g1, 8
-	st	%g15, %g16, -4
-	mov	%g17, %g2
 	addi	%g2, %g2, 8
-	setL %g18, read_all_object.2854
+	setL %g17, read_all_object.2831
+	st	%g17, %g16, 0
+	st	%g15, %g16, -4
+	mov	%g15, %g2
+	addi	%g2, %g2, 8
+	setL %g17, read_net_item.2833
+	st	%g17, %g15, 0
+	st	%g11, %g15, -4
+	mov	%g11, %g2
+	addi	%g2, %g2, 8
+	setL %g17, read_or_network.2835
+	st	%g17, %g11, 0
+	st	%g15, %g11, -4
+	mov	%g17, %g2
+	addi	%g2, %g2, 16
+	setL %g18, read_and_network.2837
 	st	%g18, %g17, 0
-	st	%g16, %g17, -4
+	st	%g15, %g17, -8
+	ld	%g15, %g1, 60
+	st	%g15, %g17, -4
+	mov	%g18, %g2
+	addi	%g2, %g2, 32
+	setL %g19, read_parameter.2839
+	st	%g19, %g18, 0
+	st	%g4, %g18, -24
+	st	%g11, %g18, -20
+	st	%g10, %g18, -16
+	st	%g17, %g18, -12
+	st	%g16, %g18, -8
+	ld	%g4, %g1, 68
+	st	%g4, %g18, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 8
+	setL %g11, solver_rect_surface.2841
+	st	%g11, %g10, 0
+	ld	%g11, %g1, 72
+	st	%g11, %g10, -4
 	mov	%g16, %g2
 	addi	%g2, %g2, 8
-	setL %g18, read_and_network.2860
-	st	%g18, %g16, 0
-	ld	%g18, %g1, 36
-	st	%g18, %g16, -4
+	setL %g17, solver_rect.2850
+	st	%g17, %g16, 0
+	st	%g10, %g16, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 8
+	setL %g17, solver_surface.2856
+	st	%g17, %g10, 0
+	st	%g11, %g10, -4
+	mov	%g17, %g2
+	addi	%g2, %g2, 8
+	setL %g19, solver_second.2875
+	st	%g19, %g17, 0
+	st	%g11, %g17, -4
 	mov	%g19, %g2
 	addi	%g2, %g2, 24
-	setL %g20, read_parameter.2862
+	setL %g20, solver.2881
 	st	%g20, %g19, 0
-	st	%g4, %g19, -20
-	st	%g11, %g19, -16
-	st	%g16, %g19, -12
-	st	%g17, %g19, -8
-	ld	%g4, %g1, 44
-	st	%g4, %g19, -4
-	mov	%g11, %g2
+	st	%g10, %g19, -16
+	st	%g17, %g19, -12
+	st	%g16, %g19, -8
+	st	%g9, %g19, -4
+	mov	%g10, %g2
 	addi	%g2, %g2, 8
-	setL %g16, solver_rect_surface.2864
-	st	%g16, %g11, 0
-	ld	%g16, %g1, 48
-	st	%g16, %g11, -4
+	setL %g16, solver_rect_fast.2885
+	st	%g16, %g10, 0
+	st	%g11, %g10, -4
+	mov	%g16, %g2
+	addi	%g2, %g2, 8
+	setL %g17, solver_surface_fast.2892
+	st	%g17, %g16, 0
+	st	%g11, %g16, -4
 	mov	%g17, %g2
 	addi	%g2, %g2, 8
-	setL %g20, solver_rect.2873
+	setL %g20, solver_second_fast.2898
 	st	%g20, %g17, 0
 	st	%g11, %g17, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 8
-	setL %g20, solver_surface.2879
-	st	%g20, %g11, 0
-	st	%g16, %g11, -4
 	mov	%g20, %g2
-	addi	%g2, %g2, 8
-	setL %g21, solver_second.2898
+	addi	%g2, %g2, 24
+	setL %g21, solver_fast.2904
 	st	%g21, %g20, 0
-	st	%g16, %g20, -4
+	st	%g16, %g20, -16
+	st	%g17, %g20, -12
+	st	%g10, %g20, -8
+	st	%g9, %g20, -4
+	mov	%g16, %g2
+	addi	%g2, %g2, 8
+	setL %g17, solver_surface_fast2.2908
+	st	%g17, %g16, 0
+	st	%g11, %g16, -4
+	mov	%g17, %g2
+	addi	%g2, %g2, 8
+	setL %g21, solver_second_fast2.2915
+	st	%g21, %g17, 0
+	st	%g11, %g17, -4
 	mov	%g21, %g2
 	addi	%g2, %g2, 24
-	setL %g22, solver.2904
+	setL %g22, solver_fast2.2922
 	st	%g22, %g21, 0
-	st	%g11, %g21, -16
-	st	%g20, %g21, -12
-	st	%g17, %g21, -8
-	st	%g14, %g21, -4
-	mov	%g11, %g2
+	st	%g16, %g21, -16
+	st	%g17, %g21, -12
+	st	%g10, %g21, -8
+	st	%g9, %g21, -4
+	mov	%g10, %g2
 	addi	%g2, %g2, 8
-	setL %g17, solver_rect_fast.2908
-	st	%g17, %g11, 0
-	st	%g16, %g11, -4
+	setL %g16, iter_setup_dirvec_constants.2934
+	st	%g16, %g10, 0
+	st	%g9, %g10, -4
+	mov	%g16, %g2
+	addi	%g2, %g2, 16
+	setL %g17, setup_dirvec_constants.2937
+	st	%g17, %g16, 0
+	st	%g14, %g16, -8
+	st	%g10, %g16, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 8
+	setL %g17, setup_startp_constants.2939
+	st	%g17, %g10, 0
+	st	%g9, %g10, -4
 	mov	%g17, %g2
+	addi	%g2, %g2, 16
+	setL %g22, setup_startp.2942
+	st	%g22, %g17, 0
+	ld	%g22, %g1, 124
+	st	%g22, %g17, -12
+	st	%g10, %g17, -8
+	st	%g14, %g17, -4
+	mov	%g10, %g2
 	addi	%g2, %g2, 8
-	setL %g20, solver_surface_fast.2915
-	st	%g20, %g17, 0
-	st	%g16, %g17, -4
-	mov	%g20, %g2
-	addi	%g2, %g2, 8
-	setL %g22, solver_second_fast.2921
-	st	%g22, %g20, 0
-	st	%g16, %g20, -4
-	mov	%g22, %g2
-	addi	%g2, %g2, 24
-	setL %g23, solver_fast.2927
-	st	%g23, %g22, 0
-	st	%g17, %g22, -16
-	st	%g20, %g22, -12
-	st	%g11, %g22, -8
-	st	%g14, %g22, -4
-	mov	%g17, %g2
-	addi	%g2, %g2, 8
-	setL %g20, solver_surface_fast2.2931
-	st	%g20, %g17, 0
-	st	%g16, %g17, -4
-	mov	%g20, %g2
-	addi	%g2, %g2, 8
-	setL %g23, solver_second_fast2.2938
-	st	%g23, %g20, 0
-	st	%g16, %g20, -4
+	setL %g23, check_all_inside.2964
+	st	%g23, %g10, 0
+	st	%g9, %g10, -4
+	mov	%g23, %g2
+	addi	%g2, %g2, 32
+	setL %g24, shadow_check_and_group.2970
+	st	%g24, %g23, 0
+	st	%g20, %g23, -28
+	st	%g11, %g23, -24
+	st	%g9, %g23, -20
+	ld	%g24, %g1, 160
+	st	%g24, %g23, -16
+	st	%g12, %g23, -12
+	ld	%g25, %g1, 84
+	st	%g25, %g23, -8
+	st	%g10, %g23, -4
+	mov	%g26, %g2
+	addi	%g2, %g2, 16
+	setL %g27, shadow_check_one_or_group.2973
+	st	%g27, %g26, 0
+	st	%g23, %g26, -8
+	st	%g15, %g26, -4
 	mov	%g23, %g2
 	addi	%g2, %g2, 24
-	setL %g24, solver_fast2.2945
-	st	%g24, %g23, 0
-	st	%g17, %g23, -16
-	st	%g20, %g23, -12
-	st	%g11, %g23, -8
-	st	%g14, %g23, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 8
-	setL %g17, iter_setup_dirvec_constants.2957
-	st	%g17, %g11, 0
-	st	%g14, %g11, -4
-	mov	%g17, %g2
-	addi	%g2, %g2, 16
-	setL %g20, setup_dirvec_constants.2960
-	st	%g20, %g17, 0
-	st	%g15, %g17, -8
-	st	%g11, %g17, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 8
-	setL %g20, setup_startp_constants.2962
-	st	%g20, %g11, 0
-	st	%g14, %g11, -4
+	setL %g27, shadow_check_one_or_matrix.2976
+	st	%g27, %g23, 0
+	st	%g20, %g23, -20
+	st	%g11, %g23, -16
+	st	%g26, %g23, -12
+	st	%g24, %g23, -8
+	st	%g25, %g23, -4
 	mov	%g20, %g2
-	addi	%g2, %g2, 16
-	setL %g24, setup_startp.2965
-	st	%g24, %g20, 0
-	ld	%g24, %g1, 100
-	st	%g24, %g20, -12
-	st	%g11, %g20, -8
-	st	%g15, %g20, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 8
-	setL %g25, check_all_inside.2987
-	st	%g25, %g11, 0
-	st	%g14, %g11, -4
-	mov	%g25, %g2
-	addi	%g2, %g2, 32
-	setL %g26, shadow_check_and_group.2993
-	st	%g26, %g25, 0
-	st	%g22, %g25, -28
-	st	%g16, %g25, -24
-	st	%g14, %g25, -20
-	ld	%g26, %g1, 136
-	st	%g26, %g25, -16
-	st	%g12, %g25, -12
-	ld	%g27, %g1, 60
-	st	%g27, %g25, -8
-	st	%g11, %g25, -4
-	mov	%g28, %g2
-	addi	%g2, %g2, 16
-	setL %g29, shadow_check_one_or_group.2996
-	st	%g29, %g28, 0
-	st	%g25, %g28, -8
-	st	%g18, %g28, -4
-	mov	%g25, %g2
-	addi	%g2, %g2, 24
-	setL %g29, shadow_check_one_or_matrix.2999
-	st	%g29, %g25, 0
-	st	%g22, %g25, -20
-	st	%g16, %g25, -16
-	st	%g28, %g25, -12
-	st	%g26, %g25, -8
-	st	%g27, %g25, -4
-	mov	%g22, %g2
 	addi	%g2, %g2, 40
-	setL %g28, solve_each_element.3002
-	st	%g28, %g22, 0
-	ld	%g28, %g1, 56
-	st	%g28, %g22, -36
-	ld	%g29, %g1, 96
-	st	%g29, %g22, -32
-	st	%g16, %g22, -28
-	st	%g21, %g22, -24
-	st	%g14, %g22, -20
-	ld	%g26, %g1, 52
-	st	%g26, %g22, -16
-	st	%g27, %g22, -12
-	st	%g19, %g1, 148
-	ld	%g19, %g1, 64
-	st	%g19, %g22, -8
-	st	%g11, %g22, -4
-	st	%g17, %g1, 152
-	mov	%g17, %g2
+	setL %g26, solve_each_element.2979
+	st	%g26, %g20, 0
+	ld	%g26, %g1, 80
+	st	%g26, %g20, -36
+	ld	%g27, %g1, 120
+	st	%g27, %g20, -32
+	st	%g11, %g20, -28
+	st	%g19, %g20, -24
+	st	%g9, %g20, -20
+	ld	%g28, %g1, 76
+	st	%g28, %g20, -16
+	st	%g25, %g20, -12
+	ld	%g29, %g1, 88
+	st	%g29, %g20, -8
+	st	%g10, %g20, -4
+	mov	%g24, %g2
 	addi	%g2, %g2, 16
-	setL %g15, solve_one_or_network.3006
-	st	%g15, %g17, 0
-	st	%g22, %g17, -8
-	st	%g18, %g17, -4
-	mov	%g15, %g2
+	st	%g18, %g1, 172
+	setL %g18, solve_one_or_network.2983
+	st	%g18, %g24, 0
+	st	%g20, %g24, -8
+	st	%g15, %g24, -4
+	mov	%g18, %g2
 	addi	%g2, %g2, 24
-	setL %g22, trace_or_matrix.3010
-	st	%g22, %g15, 0
-	st	%g28, %g15, -20
-	st	%g29, %g15, -16
-	st	%g16, %g15, -12
-	st	%g21, %g15, -8
-	st	%g17, %g15, -4
-	mov	%g17, %g2
+	setL %g20, trace_or_matrix.2987
+	st	%g20, %g18, 0
+	st	%g26, %g18, -20
+	st	%g27, %g18, -16
+	st	%g11, %g18, -12
+	st	%g19, %g18, -8
+	st	%g24, %g18, -4
+	mov	%g19, %g2
 	addi	%g2, %g2, 16
-	setL %g21, judge_intersection.3014
-	st	%g21, %g17, 0
-	st	%g15, %g17, -12
-	st	%g28, %g17, -8
-	st	%g4, %g17, -4
-	mov	%g15, %g2
+	setL %g20, judge_intersection.2991
+	st	%g20, %g19, 0
+	st	%g18, %g19, -12
+	st	%g26, %g19, -8
+	st	%g4, %g19, -4
+	mov	%g18, %g2
 	addi	%g2, %g2, 40
-	setL %g21, solve_each_element_fast.3016
-	st	%g21, %g15, 0
-	st	%g28, %g15, -36
-	st	%g24, %g15, -32
-	st	%g23, %g15, -28
-	st	%g16, %g15, -24
-	st	%g14, %g15, -20
-	st	%g26, %g15, -16
-	st	%g27, %g15, -12
-	st	%g19, %g15, -8
-	st	%g11, %g15, -4
-	mov	%g11, %g2
+	setL %g20, solve_each_element_fast.2993
+	st	%g20, %g18, 0
+	st	%g26, %g18, -36
+	st	%g22, %g18, -32
+	st	%g21, %g18, -28
+	st	%g11, %g18, -24
+	st	%g9, %g18, -20
+	st	%g28, %g18, -16
+	st	%g25, %g18, -12
+	st	%g29, %g18, -8
+	st	%g10, %g18, -4
+	mov	%g10, %g2
 	addi	%g2, %g2, 16
-	setL %g21, solve_one_or_network_fast.3020
-	st	%g21, %g11, 0
-	st	%g15, %g11, -8
-	st	%g18, %g11, -4
+	setL %g20, solve_one_or_network_fast.2997
+	st	%g20, %g10, 0
+	st	%g18, %g10, -8
+	st	%g15, %g10, -4
 	mov	%g15, %g2
 	addi	%g2, %g2, 24
-	setL %g18, trace_or_matrix_fast.3024
+	setL %g18, trace_or_matrix_fast.3001
 	st	%g18, %g15, 0
-	st	%g28, %g15, -16
-	st	%g23, %g15, -12
-	st	%g16, %g15, -8
-	st	%g11, %g15, -4
+	st	%g26, %g15, -16
+	st	%g21, %g15, -12
+	st	%g11, %g15, -8
+	st	%g10, %g15, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 16
+	setL %g11, judge_intersection_fast.3005
+	st	%g11, %g10, 0
+	st	%g15, %g10, -12
+	st	%g26, %g10, -8
+	st	%g4, %g10, -4
 	mov	%g11, %g2
 	addi	%g2, %g2, 16
-	setL %g16, judge_intersection_fast.3028
-	st	%g16, %g11, 0
-	st	%g15, %g11, -12
-	st	%g28, %g11, -8
-	st	%g4, %g11, -4
-	mov	%g15, %g2
-	addi	%g2, %g2, 16
-	setL %g16, get_nvector_rect.3030
-	st	%g16, %g15, 0
-	ld	%g16, %g1, 68
-	st	%g16, %g15, -8
-	st	%g26, %g15, -4
+	setL %g15, get_nvector_rect.3007
+	st	%g15, %g11, 0
+	ld	%g15, %g1, 92
+	st	%g15, %g11, -8
+	st	%g28, %g11, -4
 	mov	%g18, %g2
 	addi	%g2, %g2, 8
-	setL %g21, get_nvector_plane.3032
-	st	%g21, %g18, 0
-	st	%g16, %g18, -4
+	setL %g20, get_nvector_plane.3009
+	st	%g20, %g18, 0
+	st	%g15, %g18, -4
+	mov	%g20, %g2
+	addi	%g2, %g2, 16
+	setL %g21, get_nvector_second.3011
+	st	%g21, %g20, 0
+	st	%g15, %g20, -8
+	st	%g25, %g20, -4
 	mov	%g21, %g2
 	addi	%g2, %g2, 16
-	setL %g22, get_nvector_second.3034
+	setL %g22, get_nvector.3013
 	st	%g22, %g21, 0
-	st	%g16, %g21, -8
-	st	%g27, %g21, -4
-	mov	%g22, %g2
+	st	%g20, %g21, -12
+	st	%g11, %g21, -8
+	st	%g18, %g21, -4
+	mov	%g11, %g2
+	addi	%g2, %g2, 8
+	setL %g18, utexture.3016
+	st	%g18, %g11, 0
+	ld	%g18, %g1, 96
+	st	%g18, %g11, -4
+	mov	%g20, %g2
 	addi	%g2, %g2, 16
-	setL %g23, get_nvector.3036
-	st	%g23, %g22, 0
-	st	%g21, %g22, -12
-	st	%g15, %g22, -8
-	st	%g18, %g22, -4
-	mov	%g15, %g2
-	addi	%g2, %g2, 16
-	setL %g18, utexture.3039
-	st	%g18, %g15, 0
-	ld	%g18, %g1, 72
-	st	%g18, %g15, -12
-	st	%g6, %g15, -8
-	st	%g10, %g15, -4
-	mov	%g21, %g2
-	addi	%g2, %g2, 16
-	setL %g23, add_light.3042
-	st	%g23, %g21, 0
-	st	%g18, %g21, -8
-	ld	%g23, %g1, 80
-	st	%g23, %g21, -4
+	setL %g22, add_light.3019
+	st	%g22, %g20, 0
+	st	%g18, %g20, -8
+	ld	%g22, %g1, 104
+	st	%g22, %g20, -4
 	mov	%g24, %g2
 	addi	%g2, %g2, 40
-	setL %g10, trace_reflections.3046
-	st	%g10, %g24, 0
-	st	%g25, %g24, -32
-	ld	%g10, %g1, 144
-	st	%g10, %g24, -28
+	st	%g16, %g1, 176
+	setL %g16, trace_reflections.3023
+	st	%g16, %g24, 0
+	st	%g23, %g24, -32
+	ld	%g16, %g1, 168
+	st	%g16, %g24, -28
 	st	%g4, %g24, -24
-	st	%g16, %g24, -20
-	st	%g11, %g24, -16
-	st	%g26, %g24, -12
-	st	%g19, %g24, -8
-	st	%g21, %g24, -4
-	mov	%g10, %g2
-	addi	%g2, %g2, 88
-	setL %g6, trace_ray.3051
-	st	%g6, %g10, 0
-	st	%g15, %g10, -80
-	st	%g24, %g10, -76
-	st	%g28, %g10, -72
-	st	%g18, %g10, -68
-	st	%g29, %g10, -64
-	st	%g25, %g10, -60
-	st	%g20, %g10, -56
-	st	%g23, %g10, -52
-	st	%g4, %g10, -48
-	st	%g14, %g10, -44
-	st	%g16, %g10, -40
-	st	%g3, %g10, -36
-	st	%g12, %g10, -32
-	st	%g17, %g10, -28
-	st	%g26, %g10, -24
-	st	%g27, %g10, -20
-	st	%g19, %g10, -16
-	st	%g22, %g10, -12
-	st	%g13, %g10, -8
-	st	%g21, %g10, -4
-	mov	%g6, %g2
-	addi	%g2, %g2, 56
-	setL %g13, trace_diffuse_ray.3057
-	st	%g13, %g6, 0
-	st	%g15, %g6, -48
-	st	%g18, %g6, -44
-	st	%g25, %g6, -40
-	st	%g4, %g6, -36
-	st	%g14, %g6, -32
-	st	%g16, %g6, -28
-	st	%g12, %g6, -24
-	st	%g11, %g6, -20
-	st	%g27, %g6, -16
-	st	%g19, %g6, -12
-	st	%g22, %g6, -8
-	ld	%g4, %g1, 76
-	st	%g4, %g6, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 8
-	setL %g13, iter_trace_diffuse_rays.3060
-	st	%g13, %g11, 0
-	st	%g6, %g11, -4
-	mov	%g6, %g2
-	addi	%g2, %g2, 16
-	setL %g13, trace_diffuse_rays.3065
-	st	%g13, %g6, 0
-	st	%g20, %g6, -8
-	st	%g11, %g6, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 16
-	setL %g13, trace_diffuse_ray_80percent.3069
-	st	%g13, %g11, 0
-	st	%g6, %g11, -8
-	ld	%g13, %g1, 124
-	st	%g13, %g11, -4
-	mov	%g15, %g2
-	addi	%g2, %g2, 16
-	setL %g16, calc_diffuse_using_1point.3073
-	st	%g16, %g15, 0
-	st	%g11, %g15, -12
-	st	%g23, %g15, -8
-	st	%g4, %g15, -4
-	mov	%g11, %g2
-	addi	%g2, %g2, 16
-	setL %g16, calc_diffuse_using_5points.3076
-	st	%g16, %g11, 0
-	st	%g23, %g11, -8
-	st	%g4, %g11, -4
+	st	%g15, %g24, -20
+	st	%g10, %g24, -16
+	st	%g28, %g24, -12
+	st	%g29, %g24, -8
+	st	%g20, %g24, -4
 	mov	%g16, %g2
+	addi	%g2, %g2, 88
+	setL %g14, trace_ray.3028
+	st	%g14, %g16, 0
+	st	%g11, %g16, -80
+	st	%g24, %g16, -76
+	st	%g26, %g16, -72
+	st	%g18, %g16, -68
+	st	%g27, %g16, -64
+	st	%g23, %g16, -60
+	st	%g17, %g16, -56
+	st	%g22, %g16, -52
+	st	%g4, %g16, -48
+	st	%g9, %g16, -44
+	st	%g15, %g16, -40
+	st	%g3, %g16, -36
+	st	%g12, %g16, -32
+	st	%g19, %g16, -28
+	st	%g28, %g16, -24
+	st	%g25, %g16, -20
+	st	%g29, %g16, -16
+	st	%g21, %g16, -12
+	st	%g13, %g16, -8
+	st	%g20, %g16, -4
+	mov	%g13, %g2
+	addi	%g2, %g2, 56
+	setL %g14, trace_diffuse_ray.3034
+	st	%g14, %g13, 0
+	st	%g11, %g13, -48
+	st	%g18, %g13, -44
+	st	%g23, %g13, -40
+	st	%g4, %g13, -36
+	st	%g9, %g13, -32
+	st	%g15, %g13, -28
+	st	%g12, %g13, -24
+	st	%g10, %g13, -20
+	st	%g25, %g13, -16
+	st	%g29, %g13, -12
+	st	%g21, %g13, -8
+	ld	%g4, %g1, 100
+	st	%g4, %g13, -4
+	mov	%g10, %g2
 	addi	%g2, %g2, 8
-	setL %g17, do_without_neighbors.3082
-	st	%g17, %g16, 0
-	st	%g15, %g16, -4
+	setL %g11, iter_trace_diffuse_rays.3037
+	st	%g11, %g10, 0
+	st	%g13, %g10, -4
+	mov	%g11, %g2
+	addi	%g2, %g2, 16
+	setL %g13, trace_diffuse_rays.3042
+	st	%g13, %g11, 0
+	st	%g17, %g11, -8
+	st	%g10, %g11, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 16
+	setL %g13, trace_diffuse_ray_80percent.3046
+	st	%g13, %g10, 0
+	st	%g11, %g10, -8
+	ld	%g13, %g1, 148
+	st	%g13, %g10, -4
+	mov	%g14, %g2
+	addi	%g2, %g2, 16
+	setL %g15, calc_diffuse_using_1point.3050
+	st	%g15, %g14, 0
+	st	%g10, %g14, -12
+	st	%g22, %g14, -8
+	st	%g4, %g14, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 16
+	setL %g15, calc_diffuse_using_5points.3053
+	st	%g15, %g10, 0
+	st	%g22, %g10, -8
+	st	%g4, %g10, -4
 	mov	%g15, %g2
 	addi	%g2, %g2, 8
-	setL %g17, neighbors_exist.3085
+	setL %g17, do_without_neighbors.3059
 	st	%g17, %g15, 0
-	ld	%g17, %g1, 84
-	st	%g17, %g15, -4
+	st	%g14, %g15, -4
+	mov	%g14, %g2
+	addi	%g2, %g2, 8
+	setL %g17, neighbors_exist.3062
+	st	%g17, %g14, 0
+	ld	%g17, %g1, 108
+	st	%g17, %g14, -4
 	mov	%g18, %g2
 	addi	%g2, %g2, 16
-	setL %g19, try_exploit_neighbors.3098
+	setL %g19, try_exploit_neighbors.3075
 	st	%g19, %g18, 0
-	st	%g16, %g18, -8
-	st	%g11, %g18, -4
-	mov	%g11, %g2
+	st	%g15, %g18, -8
+	st	%g10, %g18, -4
+	mov	%g10, %g2
+	addi	%g2, %g2, 16
+	setL %g19, write_ppm_header.3082
+	st	%g19, %g10, 0
+	ld	%g19, %g1, 28
+	st	%g19, %g10, -8
+	st	%g17, %g10, -4
+	mov	%g20, %g2
 	addi	%g2, %g2, 8
-	setL %g19, write_ppm_header.3105
-	st	%g19, %g11, 0
-	st	%g17, %g11, -4
+	setL %g21, write_rgb_element.3084
+	st	%g21, %g20, 0
+	st	%g19, %g20, -4
 	mov	%g19, %g2
-	addi	%g2, %g2, 8
-	setL %g20, write_rgb.3109
-	st	%g20, %g19, 0
-	st	%g23, %g19, -4
+	addi	%g2, %g2, 16
+	setL %g21, write_rgb.3086
+	st	%g21, %g19, 0
+	st	%g20, %g19, -8
+	st	%g22, %g19, -4
 	mov	%g20, %g2
 	addi	%g2, %g2, 16
-	setL %g21, pretrace_diffuse_rays.3111
+	setL %g21, pretrace_diffuse_rays.3088
 	st	%g21, %g20, 0
-	st	%g6, %g20, -12
+	st	%g11, %g20, -12
 	st	%g13, %g20, -8
 	st	%g4, %g20, -4
 	mov	%g4, %g2
 	addi	%g2, %g2, 40
-	setL %g6, pretrace_pixels.3114
-	st	%g6, %g4, 0
+	setL %g11, pretrace_pixels.3091
+	st	%g11, %g4, 0
 	st	%g5, %g4, -36
-	st	%g10, %g4, -32
-	st	%g29, %g4, -28
-	st	%g9, %g4, -24
-	ld	%g5, %g1, 92
+	st	%g16, %g4, -32
+	st	%g27, %g4, -28
+	st	%g8, %g4, -24
+	ld	%g5, %g1, 116
 	st	%g5, %g4, -20
-	st	%g23, %g4, -16
-	ld	%g6, %g1, 116
-	st	%g6, %g4, -12
+	st	%g22, %g4, -16
+	ld	%g8, %g1, 140
+	st	%g8, %g4, -12
 	st	%g20, %g4, -8
-	ld	%g6, %g1, 88
-	st	%g6, %g4, -4
-	mov	%g9, %g2
+	ld	%g8, %g1, 112
+	st	%g8, %g4, -4
+	mov	%g11, %g2
 	addi	%g2, %g2, 32
-	setL %g10, pretrace_line.3121
-	st	%g10, %g9, 0
-	st	%g7, %g9, -24
-	st	%g8, %g9, -20
-	st	%g5, %g9, -16
-	st	%g4, %g9, -12
-	st	%g17, %g9, -8
-	st	%g6, %g9, -4
+	setL %g16, pretrace_line.3098
+	st	%g16, %g11, 0
+	st	%g6, %g11, -24
+	st	%g7, %g11, -20
+	st	%g5, %g11, -16
+	st	%g4, %g11, -12
+	st	%g17, %g11, -8
+	st	%g8, %g11, -4
 	mov	%g4, %g2
 	addi	%g2, %g2, 32
-	setL %g7, scan_pixel.3125
-	st	%g7, %g4, 0
+	setL %g6, scan_pixel.3102
+	st	%g6, %g4, 0
 	st	%g19, %g4, -24
 	st	%g18, %g4, -20
-	st	%g23, %g4, -16
-	st	%g15, %g4, -12
+	st	%g22, %g4, -16
+	st	%g14, %g4, -12
 	st	%g17, %g4, -8
-	st	%g16, %g4, -4
-	mov	%g7, %g2
+	st	%g15, %g4, -4
+	mov	%g6, %g2
 	addi	%g2, %g2, 16
-	setL %g8, scan_line.3131
-	st	%g8, %g7, 0
-	st	%g4, %g7, -12
-	st	%g9, %g7, -8
-	st	%g17, %g7, -4
+	setL %g7, scan_line.3108
+	st	%g7, %g6, 0
+	st	%g4, %g6, -12
+	st	%g11, %g6, -8
+	st	%g17, %g6, -4
 	mov	%g4, %g2
 	addi	%g2, %g2, 8
-	setL %g8, create_pixelline.3144
-	st	%g8, %g4, 0
+	setL %g7, create_pixelline.3121
+	st	%g7, %g4, 0
 	st	%g17, %g4, -4
-	mov	%g8, %g2
-	addi	%g2, %g2, 16
-	setL %g10, tan.3146
-	st	%g10, %g8, 0
-	ld	%g10, %g1, 4
-	st	%g10, %g8, -8
-	ld	%g10, %g1, 0
-	st	%g10, %g8, -4
-	mov	%g10, %g2
+	mov	%g7, %g2
 	addi	%g2, %g2, 8
-	setL %g15, adjust_position.3148
-	st	%g15, %g10, 0
-	st	%g8, %g10, -4
-	mov	%g8, %g2
-	addi	%g2, %g2, 16
-	setL %g15, calc_dirvec.3151
-	st	%g15, %g8, 0
-	st	%g13, %g8, -8
-	st	%g10, %g8, -4
-	mov	%g10, %g2
+	setL %g14, calc_dirvec.3128
+	st	%g14, %g7, 0
+	st	%g13, %g7, -4
+	mov	%g14, %g2
 	addi	%g2, %g2, 8
-	setL %g15, calc_dirvecs.3159
-	st	%g15, %g10, 0
-	st	%g8, %g10, -4
-	mov	%g8, %g2
+	setL %g15, calc_dirvecs.3136
+	st	%g15, %g14, 0
+	st	%g7, %g14, -4
+	mov	%g7, %g2
 	addi	%g2, %g2, 8
-	setL %g15, calc_dirvec_rows.3164
-	st	%g15, %g8, 0
-	st	%g10, %g8, -4
-	mov	%g10, %g2
+	setL %g15, calc_dirvec_rows.3141
+	st	%g15, %g7, 0
+	st	%g14, %g7, -4
+	mov	%g14, %g2
 	addi	%g2, %g2, 8
-	setL %g15, create_dirvec.3168
-	st	%g15, %g10, 0
-	ld	%g15, %g1, 8
-	st	%g15, %g10, -4
+	setL %g15, create_dirvec.3145
+	st	%g15, %g14, 0
+	ld	%g15, %g1, 32
+	st	%g15, %g14, -4
 	mov	%g16, %g2
 	addi	%g2, %g2, 8
-	setL %g18, create_dirvec_elements.3170
+	setL %g18, create_dirvec_elements.3147
 	st	%g18, %g16, 0
-	st	%g10, %g16, -4
+	st	%g14, %g16, -4
 	mov	%g18, %g2
 	addi	%g2, %g2, 16
-	setL %g19, create_dirvecs.3173
+	setL %g19, create_dirvecs.3150
 	st	%g19, %g18, 0
 	st	%g13, %g18, -12
 	st	%g16, %g18, -8
-	st	%g10, %g18, -4
+	st	%g14, %g18, -4
 	mov	%g16, %g2
 	addi	%g2, %g2, 8
-	setL %g19, init_dirvec_constants.3175
+	setL %g19, init_dirvec_constants.3152
 	st	%g19, %g16, 0
-	ld	%g19, %g1, 152
+	ld	%g19, %g1, 176
 	st	%g19, %g16, -4
 	mov	%g20, %g2
 	addi	%g2, %g2, 16
-	setL %g21, init_vecset_constants.3178
+	setL %g21, init_vecset_constants.3155
 	st	%g21, %g20, 0
 	st	%g16, %g20, -8
 	st	%g13, %g20, -4
 	mov	%g13, %g2
 	addi	%g2, %g2, 16
-	setL %g16, init_dirvecs.3180
+	setL %g16, init_dirvecs.3157
 	st	%g16, %g13, 0
 	st	%g20, %g13, -12
 	st	%g18, %g13, -8
-	st	%g8, %g13, -4
-	mov	%g8, %g2
+	st	%g7, %g13, -4
+	mov	%g7, %g2
 	addi	%g2, %g2, 16
-	setL %g16, add_reflection.3182
-	st	%g16, %g8, 0
-	st	%g19, %g8, -12
-	ld	%g16, %g1, 144
-	st	%g16, %g8, -8
-	st	%g10, %g8, -4
-	mov	%g10, %g2
+	setL %g16, add_reflection.3159
+	st	%g16, %g7, 0
+	st	%g19, %g7, -12
+	ld	%g16, %g1, 168
+	st	%g16, %g7, -8
+	st	%g14, %g7, -4
+	mov	%g14, %g2
 	addi	%g2, %g2, 16
-	setL %g16, setup_rect_reflection.3189
-	st	%g16, %g10, 0
-	st	%g3, %g10, -12
-	st	%g12, %g10, -8
-	st	%g8, %g10, -4
+	setL %g16, setup_rect_reflection.3166
+	st	%g16, %g14, 0
+	st	%g3, %g14, -12
+	st	%g12, %g14, -8
+	st	%g7, %g14, -4
 	mov	%g16, %g2
 	addi	%g2, %g2, 16
-	setL %g18, setup_surface_reflection.3192
+	setL %g18, setup_surface_reflection.3169
 	st	%g18, %g16, 0
 	st	%g3, %g16, -12
 	st	%g12, %g16, -8
-	st	%g8, %g16, -4
+	st	%g7, %g16, -4
 	mov	%g3, %g2
 	addi	%g2, %g2, 16
-	setL %g8, setup_reflections.3195
-	st	%g8, %g3, 0
+	setL %g7, setup_reflections.3172
+	st	%g7, %g3, 0
 	st	%g16, %g3, -12
-	st	%g10, %g3, -8
-	st	%g14, %g3, -4
+	st	%g14, %g3, -8
+	st	%g9, %g3, -4
 	mov	%g29, %g2
 	addi	%g2, %g2, 64
-	setL %g8, rt.3197
-	st	%g8, %g29, 0
-	st	%g11, %g29, -56
+	setL %g7, rt.3174
+	st	%g7, %g29, 0
+	st	%g10, %g29, -56
 	st	%g3, %g29, -52
 	st	%g19, %g29, -48
 	st	%g5, %g29, -44
-	st	%g7, %g29, -40
-	ld	%g3, %g1, 148
+	st	%g6, %g29, -40
+	ld	%g3, %g1, 172
 	st	%g3, %g29, -36
-	st	%g9, %g29, -32
+	st	%g11, %g29, -32
 	st	%g15, %g29, -28
-	ld	%g3, %g1, 136
+	ld	%g3, %g1, 160
 	st	%g3, %g29, -24
 	st	%g12, %g29, -20
 	st	%g13, %g29, -16
 	st	%g17, %g29, -12
-	st	%g6, %g29, -8
+	st	%g8, %g29, -8
 	st	%g4, %g29, -4
 	mvhi	%g3, 0
 	mvlo	%g3, 128
 	mvhi	%g4, 0
 	mvlo	%g4, 128
-	st	%g31, %g1, 156
+	st	%g31, %g1, 180
 	ld	%g28, %g29, 0
-	subi	%g1, %g1, 160
+	subi	%g1, %g1, 184
 	callR	%g28
-	addi	%g1, %g1, 160
-	ld	%g31, %g1, 156
+	addi	%g1, %g1, 184
+	ld	%g31, %g1, 180
 	mvhi	%g0, 0
 	mvlo	%g0, 0
 	halt

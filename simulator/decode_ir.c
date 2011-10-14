@@ -5,7 +5,7 @@ extern const char *InstMap[INST_NUM];
 extern const char *InstTyMap[INST_NUM];
 
 // decoding instruction register ////////////////////
-void decode_ir(uint32_t ir, const char **break_points, FILE *fp) {
+void decode_ir(uint32_t ir, FILE *fp) {
 	static int init_flag = true;
 	static const char *f = "%s\n";
 	static const char *fg = "%s\tg%d=%d\n";
@@ -26,7 +26,6 @@ void decode_ir(uint32_t ir, const char **break_points, FILE *fp) {
 	opcode = get_opcode(ir);
 	name = InstMap[opcode]; type = InstTyMap[opcode];
 
-	fprintf(fp, "%6d.[%4d] ", cnt,pc);
 	if (strcmp(type, "f") == 0) {
 		// nop, halt, return 3
 		fprintf(fp, f, name);

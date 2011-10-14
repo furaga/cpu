@@ -13,7 +13,7 @@ vpath %.h ./include
 #TEST_TARGET = float_test/test1 float_test/test2 float_test/test3
 #TEST_TARGET = mylib_test/input_test
 TEST_TARGET = min-rt/min-rt
-#TEST_TARGET = fib ack
+#TEST_TARGET = fib
 
 ASM_TARGET = $(TEST_TARGET:%=test/%.s)
 SIM_TARGET = $(TEST_TARGET:%=test/%)
