@@ -17,7 +17,7 @@
 
 using namespace std;
 
-uint32_t call_opcode(char *, char *);
+uint32_t encode_op(char *, char *);
 int	encoder(int, char*);
 
 char	label_name[LABEL_MAX][256];	
@@ -103,7 +103,7 @@ int	assemble(char *sfile) {
  	 	 		// -- コメントなので何もしない
  	 	 	}else{
  	 	 		// 命令行
- 	 	 		ir = call_opcode(opcode, buf);
+ 	 	 		ir = encode_op(opcode, buf);
  	 	 		if(ir < 0){             // エラー処理
  	 	 		    printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
  	 	 		    err_cnt++;

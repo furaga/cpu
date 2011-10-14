@@ -13,38 +13,26 @@ int32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
 uint32_t rom[ROM_NUM];
 uint32_t ram[RAM_NUM];
-void IMapInit(void);
-extern const char *InstMap[];
-extern int InstTyMap[];
+uint32_t pc;
+uint32_t cnt;
 
 // define fetch functions ////////////////////
-DEF_ELE_ACC(opcode, 26, 0x3f);		
-DEF_ELE_ACC(regs, 21, 0x1f);
-DEF_ELE_ACC(regt, 16, 0x1f);
-DEF_ELE_ACC(regd, 11, 0x1f);
-DEF_ELE_ACC(shamt, 6, 0x1f);
-DEF_ELE_ACC(funct, 0, 0x3f);
-DEF_ELE_ACC(target, 0, 0x3ffffff);
-int32_t imm(uint32_t ir) {
+DEF_ELE_GET(get_opcode, 26, 0x3f);		
+DEF_ELE_GET(get_rsi, 21, 0x1f);
+DEF_ELE_GET(get_rti, 16, 0x1f);
+DEF_ELE_GET(get_rdi, 11, 0x1f);
+DEF_ELE_GET(get_shamt, 6, 0x1f);
+DEF_ELE_GET(get_funct, 0, 0x3f);
+DEF_ELE_GET(get_target, 0, 0x3ffffff);
+int32_t get_imm(uint32_t ir) {
 	return (ir & (1 << 15)) ?
-		   (0xffff0000 | (ir & 0xffff)):
+		   ((0xffff<<16) | (ir & 0xffff)):
 		   (ir & 0xffff);
 }
-//////////////////////////////////////////////
-// register access ///////////////////////////
-#define _GRS reg[regs(ir)]
-#define _GRD reg[regd(ir)]
-#define _GRT reg[regt(ir)]
-#define _FRS freg[regs(ir)]
-#define _FRD freg[regd(ir)]
-#define _FRT freg[regt(ir)]
-#define _IMM imm(ir)
-//////////////////////////////////////////////
 
 // rom の命令実行列(バイナリ)に従いシミュレートする
-int simulate(char *sfile)
-{ 
-	uint32_t pc, ir, lr, flag_eq, cnt, heap_size;
+int simulate(char *sfile) {
+	uint32_t ir, lr, heap_size;
 	int fd,ret,i;
 	union {
 		uint32_t i;
@@ -53,41 +41,33 @@ int simulate(char *sfile)
 
 	fd = open(sfile, O_RDONLY);
 	if (fd < 0) {
-		printf("%s: No such file\n", sfile);
+		fprintf(stderr, "%s: No such file\n", sfile);
 		return 1;
 	}
 	ret = read(fd, rom, ROM_NUM*4);
 	close(fd);
 
-	pc = 0;
-	flag_eq = 0;
-	lr = 0;
-	cnt = 0;
+	lr = cnt = pc = 0;
 	reg[1] = reg[31] = RAM_NUM;
 
 	heap_size = rom[0]; 
 	pc++;
-	//reg[2] = 4;
 	for (i = 0; heap_size > 0; i++,pc++) {
 		ram[i] = rom[pc];
 		reg[2] += 4;
 		heap_size -= 32;
 	}
 
-	IMapInit();
-	printf("simulate %s\n", sfile);
+	fprintf(stderr, "simulate %s\n", sfile);
+	fflush(stderr);
 	do{
 		
-		//printf("pc %d\n", pc);
 		ir = rom[pc];
-
-		//printf("%d.[%d]%s : g%d=%d g%d=%d g%d=%d imm=%d\n", cnt, pc, InstMap[opcode(ir)], regs(ir), _GRS, regt(ir), _GRT, regd(ir), _GRD, _IMM);
-		//fflush(stdout);
-
+		//print_state();
 		cnt++;
 		pc++;
 
-		switch(opcode(ir)){
+		switch(get_opcode(ir)){
 			case MOV: 
 				_GRD = _GRS;
 				break;
@@ -95,7 +75,7 @@ int simulate(char *sfile)
 				_GRT = ((uint32_t) _IMM << 16) | (_GRT & 0xffff);
 				break;
 			case MVLO: 
-				_GRT = (_GRT & 0xffff0000) | _IMM;
+				_GRT = (_GRT & (0xffff<<16)) | _IMM;
 				break;
 			case ADD: 
 				_GRD = _GRS + _GRT;
@@ -128,8 +108,9 @@ int simulate(char *sfile)
 				break;
 			case OUTPUT:
 				a.i = _GRS;
-				printf("\tcnt:%d output:(int dec)%d (char)%c (float)%f\n", cnt, _GRS, _GRS, a.f);
+				putchar(_GRS);
 				fflush(stdout);
+				//fprintf(stderr, "\tcnt:%d output:(int dec)%d (char)%c (float)%f\n", cnt, _GRS, _GRS, a.f);
 				break;
 			case AND:
 				_GRD = _GRS & _GRT;
@@ -153,7 +134,7 @@ int simulate(char *sfile)
 				pc = _GRS;
 				break;
 			case JMP:
-				pc = imm(ir);
+				pc = get_imm(ir);
 				break;
 			case JEQ:
 				if (_GRS == _GRT)
@@ -229,16 +210,16 @@ int simulate(char *sfile)
 				break;
 			case FSQRT:
 				a.i = _FRS;
-				ans.f = sqrt(a.f);
+				ans.f = sqrtf(a.f);
 				_FRD = ans.i;
 				break;
 			case FMOV:
 				_FRD = _FRS;
 				break;
 			case FNEG:
-				_FRD = (_FRS & 0x80000000) ?
+				_FRD = (_FRS & (0x1 << 31)) ?
 								 (_FRS & 0x7fffffff) : // minus
-								 (_FRS | 0x80000000) ; // plus
+								 (_FRS | (0x1 << 31)) ; // plus
 				break;
 			case FJEQ:
 				a.i = _FRS;
@@ -260,17 +241,34 @@ int simulate(char *sfile)
 				break;
 			case HALT:
 				break;
+			case SIN:
+				a.i = _FRS;
+				ans.f = sin(a.f);
+				_FRD = ans.i;
+				break;
+			case COS:
+				a.i = _FRS;
+				ans.f = cos(a.f);
+				_FRD = ans.i;
+				break;
+			case ATAN:
+				a.i = _FRS;
+				ans.f = atan(a.f);
+				_FRD = ans.i;
+				break;
+			case I_OF_F:
+				_GRD = (int32_t) _FRS;
+				break;
+			case F_OF_I:
+				_FRD = (float) _GRS;
+				break;
 			default	:	break;
 		}
-	} while(opcode(ir) != HALT);
+	} while(get_opcode(ir) != HALT);
 
-/*
-	for (i = 0; i < 5; i++) {
-		a.i = freg[i];
-		printf("freg[%d]=%f\n", i, a.f);
-	}
-*/
-	printf("CPU Simulator Results\n");
+
+	fprintf(stderr, "CPU Simulator Results\n");
+	fflush(stderr);
 
 	return 0;
 } 

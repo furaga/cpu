@@ -77,6 +77,12 @@ FLOOR_RET:
 FLOOR_RET2:
 	fneg %f0, %f0
 	return
+	
+min_caml_ceil:
+	fneg %f0, %f0
+	call min_caml_ceil
+	fneg %f0, %f0
+	return
 
 ! * float_of_int
 min_caml_float_of_int:
@@ -161,6 +167,11 @@ FTOI_LOOP:
 	sub %g5, %g5, %g4
 	add %g3, %g5, %g3
 	return
+	
+! * truncate
+min_caml_truncate:
+	jmp min_caml_int_of_float
+
 
 !#####################################################################
 !

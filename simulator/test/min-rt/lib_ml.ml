@@ -14,6 +14,7 @@ let rec fabs a =
 	if a < 0.0 then -. a
 	else a
 in
+let rec abs_float x = fabs x in
 let rec fneg a = -. a in
 let rec fhalf a = a /. 2.0 in
 let rec fsqr a = a *. a in
@@ -146,7 +147,30 @@ let rec read_float _ =
 	else
 		-. ans in
 
-(* read_float, read_int はib_asm.sで定義 *)
+let rec print_int n =
+	let data = Array.create 10 32 in (* int型の値は３２bitなのでせいぜい10桁 *)
+	let x = Array.create 1 (if n >= 0 then n else -n) in
+	let rec get_digits digits =
+		if x.(0) <= 0 then digits - 1
+		else
+			let nx = x.(0) / 10 in
+			data.(digits) <- x.(0) - nx * 10; (* data[digits] <- x % 10 *)
+			x.(0) <- nx; (* x = x / 10 *)
+			get_digits (digits + 1) in
+	let rec print_digits digits =
+		if digits < 0 then
+			()
+		else
+			let c = (data.(digits) + 48) in
+			print_char c;
+			print_digits (digits - 1) in
+	let digits = get_digits 0 in
+	(if n < 0 then print_char 45 else ());
+	if digits < 0 then
+		print_char 48
+	else
+		print_digits digits in
+
 (*
 
 val print_char : int -> unit

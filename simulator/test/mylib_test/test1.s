@@ -20,6 +20,7 @@ min_caml_create_array:
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
 	jlt %g5, %g2, CREATE_ARRAY_END
+	jeq %g5, %g2, CREATE_ARRAY_END
 	st %g4, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_ARRAY_LOOP
@@ -33,6 +34,7 @@ min_caml_create_float_array:
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
+	jeq %g4, %g2, CREATE_ARRAY_END
 	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
@@ -105,12 +107,20 @@ min_caml_start:
 	jne	%g3, %g4, jeq_else.190
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	jmp	jeq_cont.191
 jeq_else.190:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 jeq_cont.191:
 	fld	%f0, %g1, 8
 	fld	%f1, %g1, 4
@@ -124,12 +134,20 @@ jeq_cont.191:
 	jne	%g3, %g4, jeq_else.192
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	jmp	jeq_cont.193
 jeq_else.192:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 jeq_cont.193:
 	fld	%f0, %g1, 4
 	fmov	%f1, %f0
@@ -143,12 +161,20 @@ jeq_cont.193:
 	jne	%g3, %g4, jeq_else.194
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	jmp	jeq_cont.195
 jeq_else.194:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 jeq_cont.195:
 	fld	%f0, %g1, 0
 	fmov	%f1, %f0
@@ -162,12 +188,20 @@ jeq_cont.195:
 	jne	%g3, %g4, jeq_else.196
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	jmp	jeq_cont.197
 jeq_else.196:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_print_int
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 jeq_cont.197:
 	setL %g3, l.160
 	fld	%f0, %g3, 0
@@ -187,12 +221,20 @@ jeq_cont.197:
 	jne	%g3, %g4, jeq_else.198
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_print_int
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 	jmp	jeq_cont.199
 jeq_else.198:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_print_int
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 jeq_cont.199:
 	fld	%f0, %g1, 16
 	st	%g31, %g1, 20
@@ -205,12 +247,20 @@ jeq_cont.199:
 	jne	%g3, %g4, jeq_else.200
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_print_int
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 	jmp	jeq_cont.201
 jeq_else.200:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_print_int
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 jeq_cont.201:
 	fld	%f0, %g1, 12
 	st	%g31, %g1, 20
@@ -223,12 +273,20 @@ jeq_cont.201:
 	jne	%g3, %g4, jeq_else.202
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_print_int
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 	jmp	jeq_cont.203
 jeq_else.202:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
+	call	min_caml_print_int
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 jeq_cont.203:
 	setL %g3, l.160
 	fld	%f0, %g3, 0
@@ -248,12 +306,20 @@ jeq_cont.203:
 	jne	%g3, %g4, jeq_else.204
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_print_int
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 	jmp	jeq_cont.205
 jeq_else.204:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_print_int
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 jeq_cont.205:
 	fld	%f0, %g1, 24
 	st	%g31, %g1, 28
@@ -266,12 +332,20 @@ jeq_cont.205:
 	jne	%g3, %g4, jeq_else.206
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_print_int
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 	jmp	jeq_cont.207
 jeq_else.206:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_print_int
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 jeq_cont.207:
 	fld	%f0, %g1, 20
 	st	%g31, %g1, 28
@@ -284,12 +358,20 @@ jeq_cont.207:
 	jne	%g3, %g4, jeq_else.208
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_print_int
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 	jmp	jeq_cont.209
 jeq_else.208:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 28
+	subi	%g1, %g1, 32
+	call	min_caml_print_int
+	addi	%g1, %g1, 32
+	ld	%g31, %g1, 28
 jeq_cont.209:
 	setL %g3, l.160
 	fld	%f0, %g3, 0
@@ -309,12 +391,20 @@ jeq_cont.209:
 	jne	%g3, %g4, jeq_else.210
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_print_int
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 	jmp	jeq_cont.211
 jeq_else.210:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_print_int
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 jeq_cont.211:
 	fld	%f0, %g1, 32
 	st	%g31, %g1, 36
@@ -327,12 +417,20 @@ jeq_cont.211:
 	jne	%g3, %g4, jeq_else.212
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_print_int
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 	jmp	jeq_cont.213
 jeq_else.212:
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_print_int
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 jeq_cont.213:
 	fld	%f0, %g1, 28
 	st	%g31, %g1, 36
@@ -345,11 +443,19 @@ jeq_cont.213:
 	jne	%g3, %g4, jeq_else.214
 	mvhi	%g3, 0
 	mvlo	%g3, 0
-	output	%g3
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_print_int
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 	jmp	jeq_cont.215
 jeq_else.214:
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	output	%g3
+	st	%g31, %g1, 36
+	subi	%g1, %g1, 40
+	call	min_caml_print_int
+	addi	%g1, %g1, 40
+	ld	%g31, %g1, 36
 jeq_cont.215:
 	halt

@@ -12,6 +12,7 @@ min_caml_create_array:
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
 	jlt %g5, %g2, CREATE_ARRAY_END
+	jeq %g5, %g2, CREATE_ARRAY_END
 	st %g4, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_ARRAY_LOOP
@@ -25,6 +26,7 @@ min_caml_create_float_array:
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
+	jeq %g4, %g2, CREATE_ARRAY_END
 	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
@@ -36,8 +38,8 @@ CREATE_FLOAT_ARRAY_END:
 !#####################################################################
 
 mul10.134:
-	slli	%g4, %g3, 3
-	slli	%g3, %g3, 1
+	muli	%g4, %g3, 8
+	muli	%g3, %g3, 2
 	add	%g3, %g4, %g3
 	return
 read_token.247:
@@ -133,7 +135,7 @@ jeq_else.384:
 jeq_else.385:
 	ld	%g3, %g1, 8
 	ld	%g3, %g3, 0
-	muli	%g3, %g3, -1
+	sub	%g3, %g0, %g3
 	return
 read_int.136:
 	mvhi	%g3, 0
@@ -463,19 +465,31 @@ min_caml_start:
 	call	read_int.136
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
-	output	%g3
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_print_int
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
 	call	read_int.136
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
-	output	%g3
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_print_int
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
 	call	read_int.136
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
-	output	%g3
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_print_int
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
 	call	read_float.138

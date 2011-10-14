@@ -60,12 +60,19 @@ class Merge {
 					}
 				}
 			}
+
+			out.write("\tjmp\tmin_caml_start\n");
 			
 			// その他の部分の書き込み
 			for (int i = 0; i < args.length - 1; i++) {
 				while (true) {
 					String s = in[i].readLine();
 					if (s == null) break;
+					if (s.trim().startsWith("jmp\tmin_caml_start") ||
+						s.trim().startsWith("jmp min_caml_start")) {
+						System.out.println("\t\tskip");
+						continue;
+					}
 					out.write(s + "\n");
 				}
 				in[i].close();

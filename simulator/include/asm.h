@@ -2,11 +2,6 @@
 #ifndef _ASM_HEAD
 #define _ASM_HEAD
 #include "common.h"
-// DEFINE Instrucion ////////////////////////////////
-// USAGE 
-// DEFINE_R(add, ADD)
-// PROTO_R(add, ADD)
-////////////////////////////////////////////////////
 #define ASM_LOG "asmlog"
 #define LABEL_MAX (4 * 1024)
 
@@ -30,7 +25,7 @@ PROTO_I(mvlo, MVLO);
 PROTO_R(add,ADD);
 PROTO_R(sub,SUB);
 PROTO_R(mul,MUL);
-PROTO_R(div,DIV);
+PROTO_R(_div,DIV);
 PROTO_I(addi,ADDI);
 PROTO_I(subi,SUBI);
 PROTO_I(muli,MULI);
@@ -48,6 +43,7 @@ PROTO_J(jmp,JMP);
 PROTO_I(jeq,JEQ);
 PROTO_I(jne,JNE);
 PROTO_I(jlt,JLT);
+PROTO_I(jle,JLE);
 PROTO_J(call,CALL);
 PROTO_J(_return,RETURN);
 PROTO_I(ld,LD);
@@ -67,7 +63,11 @@ PROTO_I(fjeq,FJEQ);
 PROTO_I(fjlt,FJLT);
 PROTO_R(callr,CALLR);
 
-
-
+PROTO_R(_sin,SIN);
+PROTO_R(_cos,COS);
+PROTO_R(_atan,ATAN);
+PROTO_R(_sqrt,SQRT);
+PROTO_R(_int_of_float,I_OF_F);
+PROTO_R(_float_of_int,F_OF_I);
 
 #endif
