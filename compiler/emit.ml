@@ -373,6 +373,36 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Printf.fprintf oc "\tfsqrt\t%%f0, %%f0\n";
 					Printf.fprintf oc "\treturn\n"
 				end
+	  		| "min_caml_sin" ->
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tsin\t%%f0, %%f0\n";
+					Printf.fprintf oc "\treturn\n"
+				end
+	  		| "min_caml_cos" ->
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tcos\t%%f0, %%f0\n";
+					Printf.fprintf oc "\treturn\n"
+				end
+	  		| "min_caml_atan" ->
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tatan\t%%f0, %%f0\n";
+					Printf.fprintf oc "\treturn\n"
+				end
+	  		| "min_caml_int_of_float" ->
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tint_of_float\t%%g0, %%f0\n";
+					Printf.fprintf oc "\treturn\n"
+				end
+	  		| "min_caml_float_of_int" ->
+		  		begin
+					g'_args oc [] ys zs;
+					Printf.fprintf oc "\tfloat_of_int\t%%f0, %%g0\n";
+					Printf.fprintf oc "\treturn\n"
+				end
 		  	| "min_caml_print_newline" ->
 				begin
 					g'_args oc [] ys zs;
@@ -467,7 +497,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  		| "min_caml_int_of_float" ->
 		  		begin
 					g'_args oc [] ys zs;
-					Printf.fprintf oc "\tint_of_float\t%%f0, %%f0\n";
+					Printf.fprintf oc "\tint_of_float\t%%g3, %%f0\n";
 					if List.mem a allregs && a <> regs.(0) then
 						Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 					else if List.mem a allfregs && a <> fregs.(0) then
@@ -476,7 +506,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  		| "min_caml_float_of_int" ->
 		  		begin
 					g'_args oc [] ys zs;
-					Printf.fprintf oc "\tfloat_of_int\t%%f0, %%f0\n";
+					Printf.fprintf oc "\tfloat_of_int\t%%f0, %%g3\n";
 					if List.mem a allregs && a <> regs.(0) then
 						Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 					else if List.mem a allfregs && a <> fregs.(0) then

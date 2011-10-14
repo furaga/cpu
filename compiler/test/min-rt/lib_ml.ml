@@ -20,7 +20,7 @@ let rec fhalf a = a /. 2.0 in
 let rec fsqr a = a *. a in
 
 (* sqrt, floor, int_of_float, float_of_int はlib_asm.sで定義 *)
-
+(*
 (* 算術関数 *)
 let pi = 3.14159265358979323846264 in
 let pi2 = pi *. 2.0 in
@@ -76,7 +76,7 @@ let rec sin x =
 
 (* cos *)
 let rec cos x = sin (1.570796326794895 -. x) in
-
+*)
 (* create_array系はコンパイル時にコードを生成。compiler/emit.ml参照 *)
 let rec mul10 x = x * 8 + x * 2 in
 
