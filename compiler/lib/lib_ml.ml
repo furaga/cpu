@@ -27,6 +27,10 @@ let pi2 = pi *. 2.0 in
 let pih = pi *. 0.5 in
 
 (* atan *)
+let rec atan_sub i xx y =
+	if i < 0.5 then y
+	else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (2.0 *. i +. 1.0 +. y))
+in
 let rec atan x =
 	let sgn =
 		if x > 1.0 then 1
@@ -37,10 +41,6 @@ let rec atan x =
 		if (fabs x) > 1.0 then 1.0 /. x
 		else x
 	in
-	let rec atan_sub i xx y =
-		if i < 0.5 then y
-		else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (2.0 *. i +. 1.0 +. y))
-	in
 	let a = atan_sub 11.0 (x *. x) 0.0 in
 	let b = x /. (1.0 +. a) in
 	if sgn > 0 then pi /. 2.0 -. b
@@ -48,24 +48,25 @@ let rec atan x =
 	else b
 	in
 
+(* tan *)
+let rec tan x = (* -pi/4 <= x <= pi/4 *)
+	let rec tan_sub i xx y =
+		if i < 2.5 then y
+			else tan_sub (i -. 2.) xx (xx /. (i -. y))
+	in
+	x /. (1. -. (tan_sub 9. (x *. x) 0.0))
+in
 
 (* sin *)
+let rec sin_sub x = 
+	if x > pi2 then sin_sub (x -. pi2)
+	else if x < 0.0 then sin_sub (x +. pi2)
+	else x in
 let rec sin x =
 	(* tan *)
-	let rec tan x = (* -pi/4 <= x <= pi/4 *)
-		let rec tan_sub i xx y =
-			if i < 2.5 then y
-				else tan_sub (i -. 2.) xx (xx /. (i -. y))
-		in
-		x /. (1. -. (tan_sub 9. (x *. x) 0.0))
-	in
 	let s1 = if x > 0.0 then true else false in
 	let x0 = fabs x in
-	let rec tmp x = 
-		if x > pi2 then tmp (x -. pi2)
-		else if x < 0.0 then tmp (x +. pi2)
-		else x in
-	let x1 = tmp x0 in
+	let x1 = sin_sub x0 in
 	let s2 = if x1 > pi then not s1 else s1 in
 	let x2 = if x1 > pi then pi2 -. x1 else x1 in
 	let x3 = if x2 > pih then pi -. x2 else x2 in
@@ -80,100 +81,103 @@ let rec cos x = sin (1.570796326794895 -. x) in
 (* create_array系はコンパイル時にコードを生成。compiler/emit.ml参照 *)
 let rec mul10 x = x * 8 + x * 2 in
 
+(* read_int *)
+let read_int_ans = Array.create 1 0 in
+let read_int_s = Array.create 1 0 in
+let rec read_int_token in_token prev =
+	let c = input_char () in
+	let flg = 
+		if c < 48 then true
+		else if c > 57 then true
+		else false in
+	if flg then
+		(if in_token then (if read_int_s.(0) = 1 then read_int_ans.(0) else (-read_int_ans.(0))) else read_int_token false c)
+	else
+		((if read_int_s.(0) = 0 then
+			(* prev == '-' *)
+			(if prev = 45 then read_int_s.(0) <- (-1) else read_int_s.(0) <- (1));
+		else
+			());
+		read_int_ans.(0) <- mul10 read_int_ans.(0) + (c - 48);
+		read_int_token true c) in
 let rec read_int _ =
-	let ans = Array.create 1 0 in
-	let s = Array.create 1 0 in
-	let rec read_token in_token prev =
-		let c = input_char () in
-		let flg = 
-			if c < 48 then true
-			else if c > 57 then true
-			else false in
-		if flg then
-			(if in_token then (if s.(0) = 1 then ans.(0) else (-ans.(0))) else read_token false c)
-		else
-			((if s.(0) = 0 then
-				(* prev == '-' *)
-				(if prev = 45 then s.(0) <- (-1) else s.(0) <- (1));
-			else
-				());
-			ans.(0) <- mul10 ans.(0) + (c - 48);
-			read_token true c) in
-	read_token false 32 in
+	read_int_ans.(0) <- 0;
+	read_int_s.(0) <- 0;
+	read_int_token false 32 in
 
+(* read_float *)
+let read_float_i = Array.create 1 0 in
+let read_float_f = Array.create 1 0 in
+let read_float_exp = Array.create 1 1 in
+let read_float_s = Array.create 1 0 in
+let rec read_float_token1 in_token prev =
+	let c = input_char () in
+	let flg =
+		if c < 48 then true
+		else if c > 57 then true
+		else false in
+	if flg then
+		(if in_token then c else read_float_token1 false c)
+	else
+		((if read_float_s.(0) = 0 then
+			(* prev == '-' *)
+			(if prev = 45 then read_float_s.(0) <- (-1) else read_float_s.(0) <- (1));
+
+		else
+			());
+		read_float_i.(0) <- mul10 read_float_i.(0) + (c - 48);
+		read_float_token1 true c) in
+let rec read_float_token2 in_token =
+	let c = input_char () in
+	let flg =
+		if c < 48 then true
+		else if c > 57 then true
+		else false in
+	if flg then
+		(if in_token then () else read_float_token2 false)
+	else
+		(read_float_f.(0) <- mul10 read_float_f.(0) + (c - 48);
+		read_float_exp.(0) <- mul10 read_float_exp.(0);
+		read_float_token2 true) in
 let rec read_float _ =
-	let i = Array.create 1 0 in
-	let f = Array.create 1 0 in
-	let exp = Array.create 1 1 in
-	let s = Array.create 1 0 in
-	let rec read_token1 in_token prev =
-		let c = input_char () in
-		let flg =
-			if c < 48 then true
-			else if c > 57 then true
-			else false in
-		if flg then
-			(if in_token then c else read_token1 false c)
-		else
-			((if s.(0) = 0 then
-				(* prev == '-' *)
-				(if prev = 45 then s.(0) <- (-1) else s.(0) <- (1));
-			else
-				());
-			i.(0) <- mul10 i.(0) + (c - 48);
-			read_token1 true c) in
-	let rec read_token2 in_token =
-		let c = input_char () in
-		let flg =
-			if c < 48 then true
-			else if c > 57 then true
-			else false in
-		if flg then
-			(if in_token then () else read_token2 false)
-		else
-			(f.(0) <- mul10 f.(0) + (c - 48);
-			exp.(0) <- mul10 exp.(0);
-			read_token2 true) in
-
-	let nextch = read_token1 false 32 in
+	read_float_i.(0) <- 0;
+	read_float_f.(0) <- 0;
+	read_float_exp.(0) <- 1;
+	read_float_s.(0) <- 0;
+	let nextch = read_float_token1 false 32 in
 	let ans =
 		if nextch = 46 then (* nextch = '.' *)
-			(read_token2 false;
-			(float_of_int i.(0)) +. (float_of_int f.(0)) /. (float_of_int exp.(0)))
+			(read_float_token2 false;
+			(float_of_int read_float_i.(0)) +. (float_of_int read_float_f.(0)) /. (float_of_int read_float_exp.(0)))
 		else
-			float_of_int i.(0) in
-	if s.(0) = 1 then 
+			float_of_int read_float_i.(0) in
+	if read_float_s.(0) = 1 then
 		ans
 	else
 		-. ans in
 
+(* print_int *)
+let print_int_data = Array.create 10 0 in (* int型の値は３２bitなのでせいぜい10桁 *)
+let print_int_x = Array.create 1 0 in
+let rec print_int_get_digits digits =
+	if print_int_x.(0) <= 0 then digits - 1
+	else
+		let nx = print_int_x.(0) / 10 in
+		print_int_data.(digits) <- print_int_x.(0) - nx * 10; (* print_int_data[digits] <- print_int_x % 10 *)
+		print_int_x.(0) <- nx; (* print_int_x = print_int_x / 10 *)
+		print_int_get_digits (digits + 1) in
+let rec print_int_print_digits digits =
+	if digits < 0 then
+		()
+	else
+		let c = (print_int_data.(digits) + 48) in
+		print_char c;
+		print_int_print_digits (digits - 1) in
 let rec print_int n =
-	let data = Array.create 10 32 in (* int型の値は３２bitなのでせいぜい10桁 *)
-	let x = Array.create 1 (if n >= 0 then n else -n) in
-	let rec get_digits digits =
-		if x.(0) <= 0 then digits - 1
-		else
-			let nx = x.(0) / 10 in
-			data.(digits) <- x.(0) - nx * 10; (* data[digits] <- x % 10 *)
-			x.(0) <- nx; (* x = x / 10 *)
-			get_digits (digits + 1) in
-	let rec print_digits digits =
-		if digits < 0 then
-			()
-		else
-			let c = (data.(digits) + 48) in
-			print_char c;
-			print_digits (digits - 1) in
-	let digits = get_digits 0 in
+	print_int_x.(0) <- (if n >= 0 then n else -n);
+	let digits = print_int_get_digits 0 in
 	(if n < 0 then print_char 45 else ());
 	if digits < 0 then
 		print_char 48
 	else
-		print_digits digits in
-
-(*
-
-val print_char : int -> unit
-val print_int : int -> unit
-
-*)
+		print_int_print_digits digits in
