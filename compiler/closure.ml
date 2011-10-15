@@ -106,7 +106,138 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
   | KNormal.ExtArray(x) -> ExtArray(Id.L(x))
   | KNormal.ExtFunApp(x, ys) -> AppDir(Id.L("min_caml_" ^ x), ys)
 
+let indent = Global.indent
+let rec print n = function
+	| Unit -> (indent n; print_endline "Unit")
+	| Int i -> (indent n; Printf.printf "Int (%d)\n" i)
+	| Float f -> (indent n; Printf.printf "Float (%f)\n" f)
+	| Neg s -> (indent n; Printf.printf "Neg (%s)\n" s)
+	| Add (s, v) -> (indent n; Printf.printf "%s + %s\n" s v)
+	| Sub (s, v) -> (indent n; Printf.printf "%s - %s\n" s v)
+	| Mul (s, v) -> (indent n; Printf.printf "%s * %s\n" s v)
+	| Div (s, v) -> (indent n; Printf.printf "%s / %s\n" s v)
+	| SLL (s, v) -> (indent n; Printf.printf "%s << %s\n" s v)
+	| FNeg s -> (indent n; Printf.printf "FNegD (%s)\n" s)
+	| FAdd (s, v) -> (indent n; Printf.printf "%s +. %s\n" s v)
+	| FSub (s, v) -> (indent n; Printf.printf "%s -. %s\n" s v)
+	| FMul (s, v) -> (indent n; Printf.printf "%s *. %s\n" s v)
+	| FDiv (s, v) -> (indent n; Printf.printf "%s /. %s\n" s v)
+
+	(* virtual instructions *)
+	| IfEq (id, v, e1, e2) ->
+		begin
+			indent n;
+			Printf.printf "If %s = %s Then\n" id v;
+			print (n + 1) e1;
+			indent n;
+			Printf.printf "Then\n";
+			print (n + 1) e2;
+		end
+	| IfLE (id, v, e1, e2) ->
+		begin
+			indent n;
+			Printf.printf "If %s <= %s Then\n" id v;
+			print (n + 1) e1;
+			indent n;
+			Printf.printf "Then\n";
+			print (n + 1) e2;
+		end
+	| Let ((id, typ), e1, e2) ->
+		begin
+			indent n;
+			Printf.printf "Let %s : " id; Type.print typ; Printf.printf " =\n";
+			print (n + 1) e1;
+			indent n;
+			Printf.printf "In\n";
+			print n e2
+		end
+	| Var id -> (indent n; Printf.printf "Var (%s)\n" id)
+	(* closure address, integer arguments, and float arguments *)
+	| MakeCls ((id, typ), cls, e) ->
+		begin
+			indent n;
+			Printf.printf "Fun %s " id; Type.print typ;
+			Printf.printf "| %s (" ((fun (Id.L x) -> x) cls.entry);
+			List.iter (fun x -> Printf.printf "%s " x) cls.actual_fv;
+			Printf.printf ") =\n";
+			print (n + 1) e;
+		end
+	| AppCls (f, args) ->
+		begin
+			indent n;
+			Printf.printf "AppClosure %s (" f;
+			List.iter (fun x -> Printf.printf "%s " x) args;
+			Printf.printf ")\n";
+		end
+	| AppDir (Id.L f, args) ->
+		begin
+			indent n;
+			Printf.printf "AppClosure %s (" f;
+			List.iter (fun x -> Printf.printf "%s " x) args;
+			Printf.printf ")\n";
+		end
+	| Tuple elems ->
+		begin
+			indent n;
+			Printf.printf "Tuple (";
+			List.iter (fun x -> Printf.printf "%s, " x) elems;
+			Printf.printf ")\n";
+		end
+	| LetTuple (elems, value, e) ->
+		begin
+			let len = List.length elems in
+			let cnt = ref 1 in
+			indent n;
+			Printf.printf "Let (";
+			List.iter (fun x -> Printf.printf "%s : %s" (fst x) (Type.string_of_type (snd x)); cnt := !cnt + 1; if !cnt < len then print_string ", ") elems;
+			Printf.printf ") = %s In\n" value;
+			print n e
+		end
+	| Get (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s.(%s)\n" id1 id2;
+		end
+	| Put (id1, id2, id3) ->
+		begin
+			indent n;
+			Printf.printf "%s.(%s) <- %s\n" id1 id2 id3;
+		end
+	| ExtArray (Id.L id) ->
+		begin
+			indent n;
+			Printf.printf "ExtArray (%s)\n" id;
+		end
+
+and print_fundef n f =
+	indent n;
+	Type.print (snd f.name);
+	Printf.printf " %s (" ((fun (Id.L x) -> x) (fst f.name));
+	List.iter (fun x -> Printf.printf "(%s : %s) " (fst x) (Type.string_of_type (snd x))) f.args;
+	Printf.printf ")\n";
+	indent (n + 1);
+	List.iter (fun x -> Printf.printf "(%s : %s) " (fst x) (Type.string_of_type (snd x))) f.formal_fv;
+	print_newline ();
+	print (n + 1) f.body
+and print_prog n (Prog (fs, e)) =
+	List.iter (fun x -> print_fundef n x) fs;
+	print n e
+
+let f flg e =
+	toplevel := [];
+	let e' = g M.empty S.empty e in
+	let program = Prog(List.rev !toplevel, e') in
+	if flg then
+		begin
+			print_endline "Print Closure_t(Closure.ml):";
+			print_prog 1 program;
+			print_newline();
+			flush stdout;
+		end;
+	program
+
+(*
 let f e =
   toplevel := [];
   let e' = g M.empty S.empty e in
-  Prog(List.rev !toplevel, e')
+  Prog(List.rev !toplevel, e')*)

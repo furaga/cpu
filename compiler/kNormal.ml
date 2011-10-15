@@ -52,12 +52,14 @@ let insert_let (e, t) k = (* letを挿入する補助関数 (caml2html: knormal_insert) *
       let e', t' = k x in
       Let((x, t), e, e'), t'
 
-let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
+let rec g env e = 
+	let line = snd e in
+	match fst e with (* K正規化ルーチン本体 (caml2html: knormal_g) *)
   | Syntax.Unit -> Unit, Type.Unit
   | Syntax.Bool(b) -> Int(if b then 1 else 0), Type.Int (* 論理値true, falseを整数1, 0に変換 (caml2html: knormal_bool) *)
   | Syntax.Int(i) -> Int(i), Type.Int
   | Syntax.Float(d) -> Float(d), Type.Float
-  | Syntax.Not(e) -> g env (Syntax.If(e, Syntax.Bool(false), Syntax.Bool(true)))
+  | Syntax.Not(e) -> g env (Syntax.If(e, (Syntax.Bool(false), line), (Syntax.Bool(true), line)), line)
   | Syntax.Neg(e) ->
       insert_let (g env e)
 	(fun x -> Neg(x), Type.Int)
@@ -101,23 +103,23 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 	(fun x -> insert_let (g env e2)
 	    (fun y -> FDiv(x, y), Type.Float))
   | Syntax.Eq _ | Syntax.LE _ as cmp ->
-      g env (Syntax.If(cmp, Syntax.Bool(true), Syntax.Bool(false)))
-  | Syntax.If(Syntax.Not(e1), e2, e3) -> g env (Syntax.If(e1, e3, e2)) (* notによる分岐を変換 (caml2html: knormal_not) *)
-  | Syntax.If(Syntax.Eq(e1, e2), e3, e4) ->
+      g env (Syntax.If((cmp, line), (Syntax.Bool(true), line), (Syntax.Bool(false), line)), line)
+  | Syntax.If((Syntax.Not(e1), _), e2, e3) -> g env (Syntax.If(e1, e3, e2), line) (* notによる分岐を変換 (caml2html: knormal_not) *)
+  | Syntax.If((Syntax.Eq(e1, e2), _), e3, e4) ->
       insert_let (g env e1)
 	(fun x -> insert_let (g env e2)
 	    (fun y ->
 	      let e3', t3 = g env e3 in
 	      let e4', t4 = g env e4 in
 	      IfEq(x, y, e3', e4'), t3))
-  | Syntax.If(Syntax.LE(e1, e2), e3, e4) ->
+  | Syntax.If((Syntax.LE(e1, e2), _), e3, e4) ->
       insert_let (g env e1)
 	(fun x -> insert_let (g env e2)
 	    (fun y ->
 	      let e3', t3 = g env e3 in
 	      let e4', t4 = g env e4 in
 	      IfLE(x, y, e3', e4'), t3))
-  | Syntax.If(e1, e2, e3) -> g env (Syntax.If(Syntax.Eq(e1, Syntax.Bool(false)), e3, e2)) (* 比較のない分岐を変換 (caml2html: knormal_if) *)
+  | Syntax.If(e1, e2, e3) -> g env (Syntax.If((Syntax.Eq(e1, (Syntax.Bool(false), line)), line), e3, e2), line) (* 比較のない分岐を変換 (caml2html: knormal_if) *)
   | Syntax.Let((x, t), e1, e2) ->
       let e1', t1 = g env e1 in
       let e2', t2 = g (M.add x t env) e2 in
@@ -132,7 +134,7 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
       let e2', t2 = g env' e2 in
       let e1', t1 = g (M.add_list yts env') e1 in
       LetRec({ name = (x, t); args = yts; body = e1' }, e2'), t2
-  | Syntax.App(Syntax.Var(f), e2s) when not (M.mem f env) -> (* 外部関数の呼び出し (caml2html: knormal_extfunapp) *)
+  | Syntax.App((Syntax.Var(f), _), e2s) when not (M.mem f env) -> (* 外部関数の呼び出し (caml2html: knormal_extfunapp) *)
       (match M.find f !Typing.extenv with
       | Type.Fun(_, t) ->
 	  let rec bind xs = function (* "xs" are identifiers for the arguments *)
@@ -191,70 +193,189 @@ let rec g env = function (* K正規化ルーチン本体 (caml2html: knormal_g) *)
 	    (fun y -> insert_let (g env e3)
 		(fun z -> Put(x, y, z), Type.Unit)))
 
-let f e = fst (g M.empty e)
+(* kNortmal.tをいいかんじに出力 *)
+let indent = Global.indent
+let rec print n = function
+	| Unit ->
+		begin
+			indent n;
+			print_endline "()"
+		end
+	| Int i ->
+		begin
+			indent n;
+			Printf.printf "Int(%d)\n" i
+		end
+	| Float f ->
+		begin
+			indent n;
+			Printf.printf "Float(%f)\n" f
+		end
+	| Neg id ->
+		begin
+			indent n;
+			Printf.printf "-%s\n" id
+		end
+	| Add (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s + %s\n" id1 id2
+		end
+	| Sub (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s - %s\n" id1 id2
+		end
+	| Mul (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s * %s\n" id1 id2
+		end
+	| Div (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s / %s\n" id1 id2
+		end
+	| SLL (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s << %s\n" id1 id2
+		end
+	| FNeg id ->
+		begin
+			indent n;
+			Printf.printf "-.%s\n" id
+		end
+	| FAdd (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s +. %s\n" id1 id2
+		end
+	| FSub (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s -. %s\n" id1 id2
+		end
+	| FMul (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s *. %s\n" id1 id2
+		end
+	| FDiv (id1, id2) ->
+		begin
+			indent n;
+			Printf.printf "%s /. %s\n" id1 id2
+		end
+	| IfEq (id1, id2, then_exp, else_exp) ->
+		begin
+			indent n;
+			Printf.printf "If %s = %s Then\n" id1 id2;
+			print (n + 1) then_exp;
+			indent n;
+			Printf.printf "Else\n";
+			print (n + 1) else_exp;
+		end
+	| IfLE (id1, id2, then_exp, else_exp) ->
+		begin
+			indent n;
+			Printf.printf "If %s <= %s Then\n" id1 id2;
+			print (n + 1) then_exp;
+			indent n;
+			Printf.printf "Else\n";
+			print (n + 1) else_exp;
+		end
+	| Let ((id, typ), e1, e2) ->
+		begin
+			indent n;
+			Printf.printf "Let %s : %s =\n" id (Type.string_of_type typ);
+			print (n + 1) e1;
+			indent n;
+			Printf.printf "In\n";
+			print n e2;
+		end
+	| Var id ->
+		begin
+			indent n;
+			Printf.printf "Var(%s)\n" id;
+		end
+	| LetRec (f, e) ->
+		begin
+			indent n;
+			Printf.printf "Let Rec %s : %s ( " (fst f.name) (Type.string_of_type (snd f.name));
+			List.iter (fun x -> Printf.printf "%s " (fst x)) f.args;
+			Printf.printf ") =\n";
+			print (n + 1) f.body;
+			indent n;
+			Printf.printf "In\n";
+			print n e;
+		end
+	| App (fn, args) ->
+		begin
+			indent n;
+			Printf.printf "%s " fn;
+			List.iter (fun x -> Printf.printf "%s " x) args;
+			Printf.printf "\n";
+		end
+	| Tuple elems ->
+		begin
+			indent n;
+			Printf.printf "(";
+			List.iter (fun x -> Printf.printf "%s, " x) elems;
+			Printf.printf ")\n";
+		end
+	| LetTuple (elems, tpl, e) ->
+		begin
+			let len = List.length elems in
+			let cnt = ref 1 in
+			indent n;
+			Printf.printf "Let (";
+			List.iter (fun x -> Printf.printf "%s : %s" (fst x) (Type.string_of_type (snd x)); cnt := !cnt + 1; if !cnt < len then print_string ", ") elems;
+			Printf.printf ") = %s\n" tpl;
+			indent n;
+			Printf.printf "In\n";
+			print n e
+		end
+	| Get (ar, idx) ->
+		begin
+			indent n;
+			Printf.printf "%s.(%s)" ar idx
+		end
+	| Put (ar, idx, value) ->
+		begin
+			indent n;
+			Printf.printf "%s.(%s) <- %s" ar idx value
+		end
+	| ExtArray id ->
+		begin
+			indent n;
+			Printf.printf "ExtArray:%s\n" id
+		end
+	| ExtFunApp (fn, args) ->
+		begin
+			indent n;
+			Printf.printf "ExtFun:%s " fn;
+			List.iter (fun x -> Printf.printf "%s " x) args;
+			Printf.printf "\n";
+		end
 
-(* report1  *)
-(*
-let rec string_t indent knormal =
-  let indent = indent ^ "  " in
-  match knormal with
-    | Unit -> indent ^ "Unit\n"
-    | Int (i) -> indent ^ "Int(" ^ (string_of_int i) ^ ")\n"
-    | Float (f) -> indent ^ "Float(" ^ (string_of_float f) ^ ")\n"
-		| Neg (i) -> indent ^ "- " ^ i ^ "\n"
-    | Add (i,j) -> indent ^ i ^ " + " ^ j ^ "\n"
-    | Sub (i,j) -> indent ^ i ^ " - " ^ j ^ "\n"
-		| FNeg (i) -> indent ^ "- " ^ i ^ "\n"
-    | FAdd (i,j) -> indent ^ i ^ " +. " ^ j ^ "\n"
-    | FSub (i,j) -> indent ^ i ^ " -. " ^ j ^ "\n"
-    | FMul (i,j) -> indent ^ i ^ " *. " ^ j ^ "\n"
-    | FDiv (i,j) -> indent ^ i ^ " /. " ^ j ^ "\n"
-    | IfEq (i,j,t,u) ->
-	indent ^ "If " ^ i ^ "=" ^ j ^ "\n"
-	^ (string_t indent t) ^ (string_t indent u)
-    | IfLE (i,j,t,u) ->
-	indent ^ "If " ^ i ^ "<=" ^ j ^ "\n"
-	^ (string_t indent t) ^ (string_t indent u)
-    | Let ((i,t),u,v) ->
-	indent ^ "Let\n  " ^ indent ^ i ^ " : " ^ (Type.string_of_t t) ^ "\n"
-	^ (string_t indent u) ^ indent ^ "In\n" ^ (string_t indent v)
-    | Var (i) -> indent ^ "Var(" ^ i ^ ")\n"
-    | App (i, list) ->
-	indent ^ i ^ "("
-	^ (List.fold_left (fun x y -> x ^ " " ^ y) "" list)
-	^ " )\n"
-    | Tuple (list) ->
-	indent ^ "Tuple("
-	^ (List.fold_left (fun x y -> x ^ " " ^ y) "" list)
-	^ " )\n"
-    | LetTuple (list, i, t) ->
-	indent ^ "Let\n" ^ indent ^ "  Tuple\n"
-	^ (List.fold_left (fun x (i,y) -> x ^ indent ^ "    " ^ i ^ " : " ^ (Type.string_of_t y) ^"\n") "" list)
-	^ indent ^ "  " ^ i ^ "\n"
-	^ indent ^ "In\n"  ^ (string_t indent t)
-    | Get (i,j) ->
-	indent ^ i ^ ".(" ^ j ^ ")\n"
-    | Put (i,j,k) ->
-	indent ^ i ^ ".(" ^ j ^ ") <- " ^ k ^ "\n"
-    | ExtArray (i) -> indent ^ "ExtArray(" ^ i ^ ")\n"
-    | ExtFunApp (i, list) ->
-	indent ^ i ^ "("
-	^ (List.fold_left (fun x y -> x ^ " " ^ y) "" list)
-	^ " )\n"
-    | LetRec (fundef, t) ->
-	indent ^ "LetRec\n" 
-	^ (string_fundef indent fundef)
-	^ indent ^ "In\n" ^ string_t indent t
+(*let f e = fst (g M.empty e)*)
 
-and string_fundef indent {name = (i,t); args = list; body = b} =
-  let indent = indent ^ "  " in
-  indent ^ "Fun\n"
-  ^ indent ^ "  Name\n" ^ indent ^ "    " ^ i ^ " : " ^ (Type.string_of_t t) ^ "\n"
-  ^ indent ^ "  Args\n"
-  ^ List.fold_left (fun x (i,y) -> x ^ indent ^ "    " ^ i ^ " : " ^ (Type.string_of_t y) ^"\n") "" list
-  ^ indent ^ "  Body\n"
-  ^ (string_t (indent ^ "  ") b)
-
-let string t = (* KNormal.tを出力する *)
-  print_string (string_t "" t)
-*)
+let f flg e = 
+	begin
+		if flg then
+			begin
+				print_endline "Print Syntax_t(kNormal.ml):";
+				Syntax.print 1 e;
+				print_newline ();
+				flush stdout;
+			end;
+		let ans = fst (g M.empty e) in
+		if flg then
+			begin
+				print_endline "Print KNormal_t(kNormal.ml):";
+				print 1 ans;
+				print_newline ();
+				flush stdout;
+			end;
+		ans
+	end

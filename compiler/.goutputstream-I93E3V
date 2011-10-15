@@ -243,21 +243,4 @@ and print_exp n = function
 			List.iter (fun x -> Printf.printf "%s " x) fargs;
 			print_newline ();
 		end
-	| Save (id1, id2) ->
-		(indent n; Printf.printf "Save %s, %s\n" id1 id2)
-	| Restore id ->
-		(indent n; Printf.printf "Restore %s\n" id)
-
-and print_fundef n f =
-	indent n;
-	Type.print f.ret;
-	Printf.printf " %s (" ((fun (Id.L x) -> x) f.name);
-	List.iter (fun x -> Printf.printf "%s " x) f.args;
-	List.iter (fun x -> Printf.printf "%s " x) f.fargs;
-	Printf.printf ") =\n";
-	print (n + 1) f.body
-and print_prog n (Prog (datas, fs, e)) =
-	List.iter (fun (Id.L label, value) -> indent n; Printf.printf "%s : %f\n" label value) datas;
-	List.iter (fun x -> print_fundef n x) fs;
-	print n e
-
+	| Save (id1, id2) -> (* \«À\«ö\

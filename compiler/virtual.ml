@@ -163,10 +163,27 @@ let h { Closure.name = (Id.L(x), t); Closure.args = yts; Closure.formal_fv = zts
   | Type.Fun(_, t2) ->
       { name = Id.L(x); args = int; fargs = float; body = load; ret = t2 }
   | _ -> assert false
-
+(*
 (* プログラム全体の仮想マシンコード生成 (caml2html: virtual_f) *)
 let f (Closure.Prog(fundefs, e)) =
   data := [];
   let fundefs = List.map h fundefs in
   let e = g M.empty e in
   Prog(!data, fundefs, e)
+*)
+
+(* プログラム全体の仮想マシンコード生成 (caml2html: virtual_f) *)
+let f flg (Closure.Prog(fundefs, e)) =
+	data := [];
+	let fundefs = List.map h fundefs in
+	let e = g M.empty e in
+	let program = Prog(!data, fundefs, e) in
+	if flg then
+		begin
+			print_endline "Print Asm_t(Virtual.ml):";
+			Asm.print_prog 1 program;
+			print_newline();
+			flush stdout;
+		end;
+	program
+

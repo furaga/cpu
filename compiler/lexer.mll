@@ -6,7 +6,8 @@ open Type
 let lnum = ref 0
 }
 (* 正規表現の略記 *)
-let space = [' ' '\t']
+let newline = ['\n']
+let space = [' ' '\t' '\r']
 let nl = ['\n' '\r']
 let digit = ['0'-'9']
 let lower = ['a'-'z']
@@ -14,9 +15,10 @@ let upper = ['A'-'Z']
 
 rule token = parse
 
-| nl
-    { token lexbuf}
-
+| newline
+    {	Global.current_line := !Global.current_line + 1;
+		Global.current_cols := (Lexing.lexeme_end lexbuf) :: !Global.current_cols;
+		token lexbuf }
 | space+
     { token lexbuf }
 | "(*"
@@ -95,12 +97,12 @@ rule token = parse
 | lower (digit|lower|upper|'_')* (* 他の「予約語」より後でないといけない *)
     { IDENT(Lexing.lexeme lexbuf) }
 | _
-    { failwith
-	(Printf.sprintf "unknown token %s near line %d characters %d-%d"
-	   (Lexing.lexeme lexbuf)
-	   !lnum
-	   (Lexing.lexeme_start lexbuf)
-	   (Lexing.lexeme_end lexbuf)) }
+    { 	let (sy, sx) = Global.get_position (Lexing.lexeme_start lexbuf) in
+		let (ey, ex) = Global.get_position (Lexing.lexeme_end lexbuf) in
+		failwith
+		(Printf.sprintf "unknown token %s near characters (%d,%d) - (%d,%d)"
+		   (Lexing.lexeme lexbuf)
+		   sy sx ey ex) }
 and comment = parse
 | "*)"
     { () }

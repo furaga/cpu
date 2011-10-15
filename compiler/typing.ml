@@ -22,35 +22,36 @@ let rec deref_typ = function (* 型変数を中身でおきかえる関数 (caml2html: typing_
       t'
   | t -> t
 let rec deref_id_typ (x, t) = (x, deref_typ t)
-let rec deref_term = function
-  | Not(e) -> Not(deref_term e)
-  | Neg(e) -> Neg(deref_term e)
-  | Add(e1, e2) -> Add(deref_term e1, deref_term e2)
-  | Sub(e1, e2) -> Sub(deref_term e1, deref_term e2)
-  | Mul(e1, e2) -> Mul(deref_term e1, deref_term e2)
-  | Div(e1, e2) -> Div(deref_term e1, deref_term e2)
-  | SLL(e1, e2) -> SLL(deref_term e1, deref_term e2)
-  | Eq(e1, e2) -> Eq(deref_term e1, deref_term e2)
-  | LE(e1, e2) -> LE(deref_term e1, deref_term e2)
-  | FNeg(e) -> FNeg(deref_term e)
-  | FAdd(e1, e2) -> FAdd(deref_term e1, deref_term e2)
-  | FSub(e1, e2) -> FSub(deref_term e1, deref_term e2)
-  | FMul(e1, e2) -> FMul(deref_term e1, deref_term e2)
-  | FDiv(e1, e2) -> FDiv(deref_term e1, deref_term e2)
-  | If(e1, e2, e3) -> If(deref_term e1, deref_term e2, deref_term e3)
-  | Let(xt, e1, e2) -> Let(deref_id_typ xt, deref_term e1, deref_term e2)
-  | LetRec({ name = xt; args = yts; body = e1 }, e2) ->
-      LetRec({ name = deref_id_typ xt;
-	       args = List.map deref_id_typ yts;
-	       body = deref_term e1 },
-	     deref_term e2)
-  | App(e, es) -> App(deref_term e, List.map deref_term es)
-  | Tuple(es) -> Tuple(List.map deref_term es)
-  | LetTuple(xts, e1, e2) -> LetTuple(List.map deref_id_typ xts, deref_term e1, deref_term e2)
-  | Array(e1, e2) -> Array(deref_term e1, deref_term e2)
-  | Get(e1, e2) -> Get(deref_term e1, deref_term e2)
-  | Put(e1, e2, e3) -> Put(deref_term e1, deref_term e2, deref_term e3)
-  | e -> e
+let rec deref_term syntax =
+match fst syntax with
+	| Not(e) -> Not(deref_term e), snd syntax
+	| Neg(e) -> Neg(deref_term e), snd syntax
+	| Add(e1, e2) -> Add(deref_term e1, deref_term e2), snd syntax
+	| Sub(e1, e2) -> Sub(deref_term e1, deref_term e2), snd syntax
+	| Mul(e1, e2) -> Mul(deref_term e1, deref_term e2), snd syntax
+	| Div(e1, e2) -> Div(deref_term e1, deref_term e2), snd syntax
+	| SLL(e1, e2) -> SLL(deref_term e1, deref_term e2), snd syntax
+	| Eq(e1, e2) -> Eq(deref_term e1, deref_term e2), snd syntax
+	| LE(e1, e2) -> LE(deref_term e1, deref_term e2), snd syntax
+	| FNeg(e) -> FNeg(deref_term e), snd syntax
+	| FAdd(e1, e2) -> FAdd(deref_term e1, deref_term e2), snd syntax
+	| FSub(e1, e2) -> FSub(deref_term e1, deref_term e2), snd syntax
+	| FMul(e1, e2) -> FMul(deref_term e1, deref_term e2), snd syntax
+	| FDiv(e1, e2) -> FDiv(deref_term e1, deref_term e2), snd syntax
+	| If(e1, e2, e3) -> If(deref_term e1, deref_term e2, deref_term e3), snd syntax
+	| Let(xt, e1, e2) -> Let(deref_id_typ xt, deref_term e1, deref_term e2), snd syntax
+	| LetRec({ name = xt; args = yts; body = e1 }, e2) ->
+		LetRec({ name = deref_id_typ xt;
+				args = List.map deref_id_typ yts;
+				body = deref_term e1 },
+			deref_term e2), snd syntax
+	| App(e, es) -> App(deref_term e, List.map deref_term es), snd syntax
+	| Tuple(es) -> Tuple(List.map deref_term es), snd syntax
+	| LetTuple(xts, e1, e2) -> LetTuple(List.map deref_id_typ xts, deref_term e1, deref_term e2), snd syntax
+	| Array(e1, e2) -> Array(deref_term e1, deref_term e2), snd syntax
+	| Get(e1, e2) -> Get(deref_term e1, deref_term e2), snd syntax
+	| Put(e1, e2, e3) -> Put(deref_term e1, deref_term e2, deref_term e3), snd syntax
+	| e -> e, snd syntax
 
 let rec occur r1 = function (* occur check (caml2html: typing_occur) *)
   | Type.Fun(t2s, t2) -> List.exists (occur r1) t2s || occur r1 t2
@@ -66,26 +67,26 @@ let rec unify t1 t2 = (* 型が合うように、型変数への代入をする (caml2html: typing
   | Type.Unit, Type.Unit | Type.Bool, Type.Bool | Type.Int, Type.Int | Type.Float, Type.Float -> ()
   | Type.Fun(t1s, t1'), Type.Fun(t2s, t2') ->
       (try List.iter2 unify t1s t2s
-      with Invalid_argument("List.iter2") -> print_endline "1"; raise (Unify(t1, t2)));
+      with Invalid_argument("List.iter2") -> raise (Unify(t1, t2)));
       unify t1' t2'
   | Type.Tuple(t1s), Type.Tuple(t2s) ->
       (try List.iter2 unify t1s t2s
-      with Invalid_argument("List.iter2") -> print_endline "2"; raise (Unify(t1, t2)))
+      with Invalid_argument("List.iter2") -> raise (Unify(t1, t2)))
   | Type.Array(t1), Type.Array(t2) -> unify t1 t2
   | Type.Var(r1), Type.Var(r2) when r1 == r2 -> ()
   | Type.Var({ contents = Some(t1') }), _ -> unify t1' t2
   | _, Type.Var({ contents = Some(t2') }) -> unify t1 t2'
   | Type.Var({ contents = None } as r1), _ -> (* 一方が未定義の型変数の場合 (caml2html: typing_undef) *)
-      if occur r1 t2 then begin print_endline "3"; raise (Unify(t1, t2)) end;
+      if occur r1 t2 then begin raise (Unify(t1, t2)) end;
       r1 := Some(t2)
   | _, Type.Var({ contents = None } as r2) ->
-      if occur r2 t1 then begin print_endline "4"; raise (Unify(t1, t2)) end;
+      if occur r2 t1 then begin raise (Unify(t1, t2)) end;
       r2 := Some(t1)
-  | _, _ -> print_endline "5"; raise (Unify(t1, t2))
+  | _, _ -> raise (Unify(t1, t2))
 
 let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
   try
-    match e with
+    match fst e with
     | Unit -> Type.Unit
     | Bool(_) -> Type.Bool
     | Int(_) -> Type.Int
@@ -152,17 +153,11 @@ let rec g env e = (* 型推論ルーチン (caml2html: typing_g) *)
 	unify (Type.Array(t)) (g env e1);
 	unify Type.Int (g env e2);
 	Type.Unit
-  with Unify(t1, t2) -> print_endline "6"; raise (Error(deref_term e, deref_typ t1, deref_typ t2))
+  with Unify(t1, t2) -> raise (Error(deref_term e, deref_typ t1, deref_typ t2))
 
 let f e =
   extenv := M.empty;
-(*
-  (match deref_typ (g M.empty e) with
-  | Type.Unit -> ()
-  | _ -> Format.eprintf "warning: final result does not have type unit@.");
-*)
-(*  (try unify Type.Unit (g M.empty e)
-  with Unify _ -> failwith "top level does not have type unit"); *)
+  (* 型検査はしてない *)
   ignore(g M.empty e);
   extenv := M.map deref_typ !extenv;
   deref_term e

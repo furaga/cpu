@@ -28,4 +28,6 @@ type t =
 and fundef = { name : Id.t * Type.t; args : (Id.t * Type.t) list; body : t }
 
 val fv : t -> S.t
-val f : Syntax.t -> t
+val f : bool -> Syntax.t -> t
+
+val print : int -> t -> unit

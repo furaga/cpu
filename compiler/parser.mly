@@ -3,6 +3,7 @@
 open Syntax
 open Lexing
 let addtyp x = (x, Type.gentyp ())
+let get_syntax x = (x, (Global.get_position (Parsing.symbol_start ()), Global.get_position (Parsing.symbol_start ())))
 (* log_2^xを求める *)
 let rec is_log2 x = 
   if x = 0 then
@@ -76,90 +77,89 @@ simple_exp: /* 括弧をつけなくても関数の引数になれる式 (caml2html: parser_simple)
 | LPAREN exp RPAREN
     { $2 }
 | LPAREN RPAREN
-    { Unit }
+    { get_syntax Unit }
 | BOOL
-    { Bool($1) }
+    { get_syntax (Bool($1)) }
 | INT
-    { Int($1) }
+    { get_syntax (Int($1)) }
 | FLOAT
-    { Float($1) }
+    { get_syntax (Float($1)) }
 | IDENT
-    { Var($1) }
+    { get_syntax (Var($1)) }
 | simple_exp DOT LPAREN exp RPAREN
-    { Get($1, $4) }
+    { get_syntax (Get($1, $4)) }
 
 exp: /* 一般の式 (caml2html: parser_exp) */
 | simple_exp
     { $1 }
 | NOT exp
     %prec prec_app
-    { Not($2) }
+    { get_syntax (Not($2)) }
 | MINUS exp
     %prec prec_unary_minus
-    { match $2 with
-    | Float(f) -> Float(-.f) (* -1.23などは型エラーではないので別扱い *)
-    | e -> Neg(e) }
+    { match fst $2 with
+    | Float(f) -> get_syntax (Float(-.f)) (* -1.23などは型エラーではないので別扱い *)
+    | e -> get_syntax (Neg($2)) }
 | exp PLUS exp /* 足し算を構文解析するルール (caml2html: parser_add) */
-    { Add($1, $3) }
+    { get_syntax (Add($1, $3)) }
 | exp MINUS exp
-    { Sub($1, $3) }
+    { get_syntax (Sub($1, $3)) }
 | exp AST exp
-    { Mul($1, $3) }
+    { get_syntax (Mul($1, $3)) }
 | exp SLASH exp
-    { Div($1, $3) }
+    { get_syntax (Div($1, $3)) }
 | exp EQUAL exp
-    { Eq($1, $3) }
+    { get_syntax (Eq($1, $3)) }
 | exp LESS_GREATER exp
-    { Not(Eq($1, $3)) }
+    { get_syntax (Not(get_syntax (Eq($1, $3)))) }
 | exp LESS exp
-    { Not(LE($3, $1)) }
+    { get_syntax (Not(get_syntax (LE($3, $1)))) }
 | exp GREATER exp
-    { Not(LE($1, $3)) }
+    { get_syntax (Not(get_syntax (LE($1, $3)))) }
 | exp LESS_EQUAL exp
-    { LE($1, $3) }
+    { get_syntax (LE($1, $3)) }
 | exp GREATER_EQUAL exp
-    { LE($3, $1) }
+    { get_syntax (LE($3, $1)) }
 | IF exp THEN exp ELSE exp
     %prec prec_if
-    { If($2, $4, $6) }
+    { get_syntax (If($2, $4, $6)) }
 | MINUS_DOT exp
     %prec prec_unary_minus
-    { FNeg($2) }
+    { get_syntax (FNeg($2)) }
 | exp PLUS_DOT exp
-    { FAdd($1, $3) }
+    { get_syntax (FAdd($1, $3)) }
 | exp MINUS_DOT exp
-    { FSub($1, $3) }
+    { get_syntax (FSub($1, $3)) }
 | exp AST_DOT exp
-    { FMul($1, $3) }
+    { get_syntax (FMul($1, $3)) }
 | exp SLASH_DOT exp
-    { FDiv($1, $3) }
+    { get_syntax (FDiv($1, $3)) }
 | LET IDENT EQUAL exp IN exp
     %prec prec_let
-    { Let(addtyp $2, $4, $6) }
+    { get_syntax (Let(addtyp $2, $4, $6)) }
 | LET REC fundef IN exp
     %prec prec_let
-    { LetRec($3, $5) }
+    { get_syntax (LetRec($3, $5)) }
 | exp actual_args
     %prec prec_app
-    { App($1, $2) }
+    { get_syntax (App($1, $2)) }
 | elems
-    { Tuple($1) }
+    { get_syntax (Tuple($1)) }
 | LET LPAREN pat RPAREN EQUAL exp IN exp
-    { LetTuple($3, $6, $8) }
+    { get_syntax (LetTuple($3, $6, $8)) }
 | simple_exp DOT LPAREN exp RPAREN LESS_MINUS exp
-    { Put($1, $4, $7) }
+    { get_syntax (Put($1, $4, $7)) }
 | exp SEMICOLON exp
-    { Let((Id.gentmp Type.Unit, Type.Unit), $1, $3) }
+    { get_syntax (Let((Id.gentmp Type.Unit, Type.Unit), $1, $3)) }
 | exp SEMICOLON
     { $1 (*これがないとmin-rt.mlはコンパイルできないという*) }
 | ARRAY_CREATE simple_exp simple_exp
     %prec prec_app
-    { Array($2, $3) }
+    { get_syntax (Array($2, $3)) }
 | error
-    { failwith
-	(Printf.sprintf "parse error near characters %d-%d"
-	   (Parsing.symbol_start ())
-	   (Parsing.symbol_end ())) }
+    { 	let (sy, sx) = Global.get_position (Parsing.symbol_start ()) in
+		let (ey, ex) = Global.get_position (Parsing.symbol_end ()) in
+		failwith (Printf.sprintf "parse error near characters (%d,%d) - (%d,%d)" sy sx ey ex) }
 
 fundef:
 | IDENT formal_args EQUAL exp
