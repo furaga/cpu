@@ -80,9 +80,97 @@ FLOOR_RET2:
 	
 min_caml_ceil:
 	fneg %f0, %f0
-	call min_caml_ceil
+	call min_caml_floor
 	fneg %f0, %f0
 	return
+
+! * float_of_int
+min_caml_float_of_int:
+	jlt %g0, %g3, ITOF_MAIN		! if (%g0 <= %g3) goto ITOF_MAIN
+	jeq %g0, %g3, ITOF_MAIN
+	sub %g3, %g0, %g3
+	call ITOF_MAIN
+	fneg %f0, %f0
+	return
+ITOF_MAIN:
+
+	! %f1 <= FLOAT_MAGICF
+	! %g4 <= FLOAT_MAGICFHX
+	! %g5 <= FLOAT_MAGICI
+
+	setL %g5, FLOAT_MAGICF
+	fld %f1, %g5, 0
+	setL %g5, FLOAT_MAGICFHX
+	ld %g4, %g5, 0
+	setL %g5, FLOAT_MAGICI
+	ld %g5, %g5, 0
+	jlt %g5, %g3, ITOF_BIG
+	jeq %g5, %g3, ITOF_BIG
+	add %g3, %g3, %g4
+	st %g3, %g1, 0
+	fld %f0, %g1, 0
+	fsub %f0, %f0, %f1
+	return
+ITOF_BIG:
+	setL %g4, FLOAT_ZERO
+	fld %f2, %g4, 0
+ITOF_LOOP:
+	sub %g3, %g3, %g5
+	fadd %f2, %f2, %f1
+	jlt %g5, %g3, ITOF_LOOP
+	jeq %g5, %g3, ITOF_LOOP
+	add %g3, %g3, %g4
+	st %g3, %g1, 0
+	fld %f0, %g1, 0
+	fsub %f0, %f0, %f1
+	fadd %f0, %f0, %f2
+	return
+
+! * int_of_float
+min_caml_int_of_float:
+	! %f1 <= 0.0
+	setL %g3, FLOAT_ZERO
+	fld %f1, %g3, 0
+	fjlt %f1, %f0, FTOI_MAIN			! if (0.0 <= %f0) goto FTOI_MAIN
+	fjeq %f1, %f0, FTOI_MAIN
+	fneg %f0, %f0
+	call FTOI_MAIN
+	sub %g3, %g0, %g3
+	return
+FTOI_MAIN:
+	call min_caml_floor
+	! %f2 <= FLOAT_MAGICF
+	! %g4 <= FLOAT_MAGICFHX
+	setL %g4, FLOAT_MAGICF
+	fld %f2, %g4, 0
+	setL %g4, FLOAT_MAGICFHX
+	ld %g4, %g4, 0
+	fjlt %f2, %f0, FTOI_BIG		! if (MAGICF <= %f0) goto FTOI_BIG
+	fjeq %f2, %f0, FTOI_BIG
+	fadd %f0, %f0, %f2
+	fst %f0, %g1, 0
+	ld %g3, %g1, 0
+	sub %g3, %g3, %g4
+	return
+FTOI_BIG:
+	setL %g5, FLOAT_MAGICI
+	ld %g5, %g5, 0
+	mov %g3, %g0
+FTOI_LOOP:
+	fsub %f0, %f0, %f2
+	add %g3, %g3, %g5
+	fjlt %f2, %f0, FTOI_LOOP
+	fjeq %f2, %f0, FTOI_LOOP
+	fadd %f0, %f0, %f2
+	fst %f0, %g1, 0
+	ld %g5, %g1, 0
+	sub %g5, %g5, %g4
+	add %g3, %g5, %g3
+	return
+	
+! * truncate
+min_caml_truncate:
+	jmp min_caml_int_of_float
 
 
 !#####################################################################

@@ -11,7 +11,7 @@ FLOAT_MAGICF:	! 8388608.0
 	.long 0x4b000000
 FLOAT_MAGICFHX:	! 1258291200
 	.long 0x4b000000
-l.524:	! 3.140000
+l.566:	! 3.140000
 	.long	0x4048f5c2
 	jmp	min_caml_start
 
@@ -83,7 +83,7 @@ FLOOR_RET2:
 	
 min_caml_ceil:
 	fneg %f0, %f0
-	call min_caml_ceil
+	call min_caml_floor
 	fneg %f0, %f0
 	return
 
@@ -218,7 +218,7 @@ CREATE_FLOAT_ARRAY_END:
 ! * ここまでライブラリ関数
 !#####################################################################
 
-f.256:
+f.305:
 	fst	%f0, %g1, 4
 	st	%g3, %g1, 8
 	ld	%g3, %g1, 4
@@ -226,11 +226,83 @@ f.256:
 	ld	%g3, %g1, 8
 	return
 min_caml_start:
-	setL %g3, l.524
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 1
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 10
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	mvhi	%g3, 0
+	mvlo	%g3, 1
+	mvhi	%g4, 0
+	mvlo	%g4, 0
+	st	%g31, %g1, 4
+	subi	%g1, %g1, 8
+	call	min_caml_create_array
+	addi	%g1, %g1, 8
+	ld	%g31, %g1, 4
+	setL %g3, l.566
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
-	call	f.256
+	call	f.305
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
 	halt

@@ -1,0 +1,24 @@
+# Makefile.in
+CC = g++
+CXX = g++
+LD = g++
+RM = rm -f
+CFLAGS = -Wall -O2 -funroll-loops
+CXXFLAGS = -Wall -O2 -funroll-loops
+LDFLAGS = -Wall -O2 -lm
+
+###################################
+# Set Vars below
+###################################
+TEST_TARGET = fib
+RT_TARGET = hoe
+SIM_FLAGS = 
+###################################
+MIN_RT = ../test/min-rt/min-rt
+
+
+.PHONY: all asm sim clean rt
+all: $(TARGET)
+clean:
+	$(RM) $(TARGET) *.o asmlog simlog
+	
