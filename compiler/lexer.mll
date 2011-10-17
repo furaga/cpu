@@ -104,6 +104,10 @@ rule token = parse
 		   (Lexing.lexeme lexbuf)
 		   sy sx ey ex) }
 and comment = parse
+| newline
+    {	Global.current_line := !Global.current_line + 1;
+		Global.current_cols := (Lexing.lexeme_end lexbuf) :: !Global.current_cols;
+		comment lexbuf }
 | "*)"
     { () }
 | "(*"

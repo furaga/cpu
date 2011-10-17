@@ -1,0 +1,149 @@
+Print Syntax_t(kNormal.ml):
+  Let x : Int =
+    Let y : Int =
+      Int(1)
+    In
+    Var(y)
+  In
+  Let Rec f : Int -> Int ( y )=
+    Let z : Int =
+      Let w : Int =
+        Int(2)
+      In
+      Var(w)
+    In
+    Var(z)
+  In
+  Let a : Int =
+    Apply
+      Var(f)
+      Var(x)
+  In
+  Var(a)
+
+Print KNormal_t(kNormal.ml):
+  Let x : Int =
+    Let y : Int =
+      Int(1)
+    In
+    Var(y)
+  In
+  Let Rec f : Int -> Int ( y ) =
+    Let z : Int =
+      Let w : Int =
+        Int(2)
+      In
+      Var(w)
+    In
+    Var(z)
+  In
+  Let a : Int =
+    f x 
+  In
+  Var(a)
+
+Print KNormal_t (Alpha.ml)
+  Let x.1 : Int =
+    Let y.7 : Int =
+      Int(1)
+    In
+    Var(y.7)
+  In
+  Let Rec f.2 : Int -> Int ( y.3 ) =
+    Let z.5 : Int =
+      Let w.6 : Int =
+        Int(2)
+      In
+      Var(w.6)
+    In
+    Var(z.5)
+  In
+  Let a.4 : Int =
+    f.2 x.1 
+  In
+  Var(a.4)
+
+Print KNormal_t (Movelet.ml)
+  Let Rec f.2 : Int -> Int ( y.3 ) =
+    Let w.6 : Int =
+      Int(2)
+    In
+    Let z.5 : Int =
+      Var(w.6)
+    In
+    Var(z.5)
+  In
+  Let y.7 : Int =
+    Int(1)
+  In
+  Let x.1 : Int =
+    Var(y.7)
+  In
+  Let a.4 : Int =
+    f.2 x.1 
+  In
+  Var(a.4)
+
+Print KNormal_t (Movelet.ml)
+  Let Rec f.2 : Int -> Int ( y.3 ) =
+    Let w.6 : Int =
+      Int(2)
+    In
+    Var(w.6)
+  In
+  Let y.7 : Int =
+    Int(1)
+  In
+  Let a.4 : Int =
+    f.2 y.7 
+  In
+  Var(a.4)
+
+Print KNormal_t (Movelet.ml)
+  Let Rec f.2 : Int -> Int ( y.3 ) =
+    Let w.6 : Int =
+      Int(2)
+    In
+    Var(w.6)
+  In
+  Let y.7 : Int =
+    Int(1)
+  In
+  Let a.4 : Int =
+    f.2 y.7 
+  In
+  Var(a.4)
+
+Print Closure_t(Closure.ml):
+  Int -> Int f.2 ((y.3 : Int) )
+    
+    Let w.6 : Int =
+      Int (2)
+    In
+    Var (w.6)
+  Let y.7 : Int =
+    Int (1)
+  In
+  Let a.4 : Int =
+    AppClosure f.2 (y.7 )
+  In
+  Var (a.4)
+
+Print Asm_t(Virtual.ml):
+  Int f.2 (y.3 ) =
+    Let w.6 =
+      Set (2)
+    In
+    Ans (
+      Mov (w.6)
+    )
+  Let y.7 =
+    Set (1)
+  In
+  Let a.4 =
+    CallDir f.2 y.7 
+  In
+  Ans (
+    Mov (a.4)
+  )
+

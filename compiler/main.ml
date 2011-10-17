@@ -4,7 +4,7 @@ let print_flg = ref false
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
   Format.eprintf "iteration %d@." n;
   if n = 0 then e else
-  let e' = Elim.f (Cse.f !print_flg (ConstFold.f (Inline.f (Assoc.f (Beta.f e))))) in
+  let e' = Movelet.f !print_flg (Cse.f !print_flg (ConstFold.f (Inline.f (Assoc.f (Beta.f e))))) in
   if e = e' then e else
   iter (n - 1) e'
 
