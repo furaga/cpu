@@ -73,10 +73,12 @@ l.432:	! 0.500000
 
 ! * create_array
 min_caml_create_array:
+	slli %g3, %g3, 2
 	add %g5, %g3, %g2
 	mov %g3, %g2
 CREATE_ARRAY_LOOP:
 	jlt %g5, %g2, CREATE_ARRAY_END
+	jeq %g5, %g2, CREATE_ARRAY_END
 	st %g4, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_ARRAY_LOOP
@@ -85,10 +87,12 @@ CREATE_ARRAY_END:
 
 ! * create_float_array
 min_caml_create_float_array:
+	slli %g3, %g3, 2
 	add %g4, %g3, %g2
 	mov %g3, %g2
 CREATE_FLOAT_ARRAY_LOOP:
 	jlt %g4, %g2, CREATE_FLOAT_ARRAY_END
+	jeq %g4, %g2, CREATE_ARRAY_END
 	fst %f0, %g2, 0
 	addi %g2, %g2, 4
 	jmp CREATE_FLOAT_ARRAY_LOOP
@@ -114,8 +118,10 @@ jeq_else.554:
 	fmul	%f0, %f3, %f0
 	fsub	%f1, %f1, %f0
 	slli	%g3, %g3, 2
-	sub	%g5, %g5, %g3
+	st	%g5, %g1, 4
+	add	%g5, %g5, %g3
 	fld	%f0, %g5, 0
+	ld	%g5, %g1, 4
 	fsub	%f2, %f2, %f0
 	setL %g3, l.432
 	fld	%f0, %g3, 0
@@ -131,8 +137,10 @@ fjge_else.555:
 	fmul	%f0, %f3, %f0
 	fadd	%f1, %f1, %f0
 	slli	%g3, %g3, 2
-	sub	%g5, %g5, %g3
+	st	%g5, %g1, 4
+	add	%g5, %g5, %g3
 	fld	%f0, %g5, 0
+	ld	%g5, %g1, 4
 	fadd	%f2, %f2, %f0
 	setL %g3, l.432
 	fld	%f0, %g3, 0
@@ -321,72 +329,72 @@ min_caml_start:
 	setL %g3, l.437
 	fld	%f3, %g3, 0
 	fst	%f1, %g1, 0
-	fst	%f0, %g1, 8
-	fst	%f2, %g1, 16
-	st	%g29, %g1, 24
+	fst	%f0, %g1, 4
+	fst	%f2, %g1, 8
+	st	%g29, %g1, 12
 	fmov	%f0, %f3
-	st	%g31, %g1, 28
+	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
+	subi	%g1, %g1, 24
 	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fst	%f0, %g1, 28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fst	%f0, %g1, 20
 	st	%g3, %g1, 24
-	ld	%g3, %g1, 28
-	output	%g3
-	ld	%g3, %g1, 24
-	fld	%f0, %g1, 16
-	ld	%g29, %g1, 24
-	st	%g31, %g1, 28
-	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
-	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fst	%f0, %g1, 28
-	st	%g3, %g1, 24
-	ld	%g3, %g1, 28
+	ld	%g3, %g1, 20
 	output	%g3
 	ld	%g3, %g1, 24
 	fld	%f0, %g1, 8
-	ld	%g29, %g1, 24
-	st	%g31, %g1, 28
+	ld	%g29, %g1, 12
+	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
+	subi	%g1, %g1, 24
 	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fst	%f0, %g1, 28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fst	%f0, %g1, 20
 	st	%g3, %g1, 24
-	ld	%g3, %g1, 28
+	ld	%g3, %g1, 20
+	output	%g3
+	ld	%g3, %g1, 24
+	fld	%f0, %g1, 4
+	ld	%g29, %g1, 12
+	st	%g31, %g1, 20
+	ld	%g28, %g29, 0
+	subi	%g1, %g1, 24
+	callR	%g28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fst	%f0, %g1, 20
+	st	%g3, %g1, 24
+	ld	%g3, %g1, 20
 	output	%g3
 	ld	%g3, %g1, 24
 	setL %g3, l.533
 	fld	%f0, %g3, 0
-	ld	%g29, %g1, 24
-	st	%g31, %g1, 28
+	ld	%g29, %g1, 12
+	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
+	subi	%g1, %g1, 24
 	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fst	%f0, %g1, 28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fst	%f0, %g1, 20
 	st	%g3, %g1, 24
-	ld	%g3, %g1, 28
+	ld	%g3, %g1, 20
 	output	%g3
 	ld	%g3, %g1, 24
 	fld	%f0, %g1, 0
-	ld	%g29, %g1, 24
-	st	%g31, %g1, 28
+	ld	%g29, %g1, 12
+	st	%g31, %g1, 20
 	ld	%g28, %g29, 0
-	subi	%g1, %g1, 32
+	subi	%g1, %g1, 24
 	callR	%g28
-	addi	%g1, %g1, 32
-	ld	%g31, %g1, 28
-	fst	%f0, %g1, 28
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	fst	%f0, %g1, 20
 	st	%g3, %g1, 24
-	ld	%g3, %g1, 28
+	ld	%g3, %g1, 20
 	output	%g3
 	ld	%g3, %g1, 24
 	halt

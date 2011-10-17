@@ -1,0 +1,23 @@
+# sim/Makefile
+TARGET = simcho
+SIMH = common.h sim.h
+include ../Makefile.in
+
+CFLAGS += -I ../include/
+CXXFLAGS += -I ../include/
+vpath %.h ../include/
+SIM_TARGET = $(TEST_TARGET:%=../test/%)
+SLD = $(RT_TARGET:%=../sld/%.sld)
+PPM = $(RT_TARGET:%=../ppm/%.ppm)
+
+simcho: simcho.o simulate.o decode_ir.o print_state.o
+simcho.o: $(SIMH) simulate.o
+simulate.o: $(SIMH) print_state.o
+print_state.o: $(SIMH) decode_ir.o
+decode_ir.o: $(SIMH)
+
+sim:
+	./simcho $(SIM_TARGET) $(SIM_FLAGS)
+rt:
+	@./simcho $(MIN_RT) < $(SLD) > $(PPM)
+	eog $(PPM)

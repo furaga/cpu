@@ -20,13 +20,17 @@ let rec fhalf a = a /. 2.0 in
 let rec fsqr a = a *. a in
 
 (* sqrt, floor, int_of_float, float_of_int はlib_asm.sで定義 *)
-(*
+
 (* 算術関数 *)
 let pi = 3.14159265358979323846264 in
 let pi2 = pi *. 2.0 in
 let pih = pi *. 0.5 in
 
 (* atan *)
+let rec atan_sub i xx y =
+	if i < 0.5 then y
+	else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (2.0 *. i +. 1.0 +. y))
+in
 let rec atan x =
 	let sgn =
 		if x > 1.0 then 1
@@ -37,10 +41,6 @@ let rec atan x =
 		if (fabs x) > 1.0 then 1.0 /. x
 		else x
 	in
-	let rec atan_sub i xx y =
-		if i < 0.5 then y
-		else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (2.0 *. i +. 1.0 +. y))
-	in
 	let a = atan_sub 11.0 (x *. x) 0.0 in
 	let b = x /. (1.0 +. a) in
 	if sgn > 0 then pi /. 2.0 -. b
@@ -48,24 +48,25 @@ let rec atan x =
 	else b
 	in
 
+(* tan *)
+let rec tan x = (* -pi/4 <= x <= pi/4 *)
+	let rec tan_sub i xx y =
+		if i < 2.5 then y
+			else tan_sub (i -. 2.) xx (xx /. (i -. y))
+	in
+	x /. (1. -. (tan_sub 9. (x *. x) 0.0))
+in
 
 (* sin *)
+let rec sin_sub x = 
+	if x > pi2 then sin_sub (x -. pi2)
+	else if x < 0.0 then sin_sub (x +. pi2)
+	else x in
 let rec sin x =
 	(* tan *)
-	let rec tan x = (* -pi/4 <= x <= pi/4 *)
-		let rec tan_sub i xx y =
-			if i < 2.5 then y
-				else tan_sub (i -. 2.) xx (xx /. (i -. y))
-		in
-		x /. (1. -. (tan_sub 9. (x *. x) 0.0))
-	in
 	let s1 = if x > 0.0 then true else false in
 	let x0 = fabs x in
-	let rec tmp x = 
-		if x > pi2 then tmp (x -. pi2)
-		else if x < 0.0 then tmp (x +. pi2)
-		else x in
-	let x1 = tmp x0 in
+	let x1 = sin_sub x0 in
 	let s2 = if x1 > pi then not s1 else s1 in
 	let x2 = if x1 > pi then pi2 -. x1 else x1 in
 	let x3 = if x2 > pih then pi -. x2 else x2 in
@@ -76,7 +77,7 @@ let rec sin x =
 
 (* cos *)
 let rec cos x = sin (1.570796326794895 -. x) in
-*)
+
 (* create_array系はコンパイル時にコードを生成。compiler/emit.ml参照 *)
 let rec mul10 x = x * 8 + x * 2 in
 
@@ -180,10 +181,3 @@ let rec print_int n =
 		print_char 48
 	else
 		print_int_print_digits digits in
-
-(*
-
-val print_char : int -> unit
-val print_int : int -> unit
-
-*)

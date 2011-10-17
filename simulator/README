@@ -1,3 +1,11 @@
+フォルダ整理
 
-出力のオプションいろいろつけてみた。
-print_state.cを見るべし。
+
+Makefile.in内の
+TEST_TARGET
+SIM_FLAGS
+を設定して、
+make
+make asm
+make sim
+で実行できる。

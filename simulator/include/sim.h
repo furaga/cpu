@@ -8,7 +8,7 @@ extern uint32_t freg[REG_NUM];
 extern uint32_t rom[ROM_NUM];
 extern uint32_t ram[RAM_NUM];
 extern uint32_t pc;
-extern uint32_t cnt;
+extern long long unsigned cnt;
 #define PRT_ELE_GET(name) \
 	uint32_t name(uint32_t);
 #define DEF_ELE_GET(name, shift, mask) \
