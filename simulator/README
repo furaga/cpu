@@ -1,11 +1,11 @@
-$B%U%)%k%@@0M}(B
 
-
-Makefile.in$BFb$N(B
+Makefile.in内の
 TEST_TARGET
 SIM_FLAGS
-$B$r@_Dj$7$F!"(B
+を設定して、
 make
+make rt
+
 make asm
 make sim
-$B$G<B9T$G$-$k!#(B
+等々
