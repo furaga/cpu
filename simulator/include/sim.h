@@ -40,5 +40,8 @@ int __print_state(int,int,char**);
 #define print_state() __print_state(0,0,NULL)
 #define print_init(argk,argv) __print_state(1,argc,argv)
 
+#define IF0_BREAK_S	if (get_rsi(ir) == 0) { break; }
+#define IF0_BREAK_T	if (get_rti(ir) == 0) { break; }
+#define IF0_BREAK_D	if (get_rdi(ir) == 0) { break; }
 
 #endif

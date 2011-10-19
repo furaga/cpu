@@ -219,16 +219,14 @@ CREATE_FLOAT_ARRAY_END:
 print_int_get_digits.323:
 	ld	%g4, %g29, -8
 	ld	%g5, %g29, -4
-	ld	%g6, %g4, 0
-	mvhi	%g7, 0
-	mvlo	%g7, 0
-	jlt	%g7, %g6, jle_else.674
+	mvhi	%g6, 0
+	mvlo	%g6, 0
+	ld	%g7, %g4, 0
+	jlt	%g6, %g7, jle_else.706
 	subi	%g3, %g3, 1
 	return
-jle_else.674:
-	ld	%g6, %g4, 0
-	divi	%g6, %g6, 10
-	ld	%g7, %g4, 0
+jle_else.706:
+	divi	%g6, %g7, 10
 	muli	%g8, %g6, 10
 	sub	%g7, %g7, %g8
 	slli	%g8, %g3, 2
@@ -244,7 +242,7 @@ print_int_print_digits.325:
 	ld	%g4, %g29, -4
 	mvhi	%g5, 0
 	mvlo	%g5, 0
-	jlt	%g3, %g5, jle_else.675
+	jlt	%g3, %g5, jle_else.707
 	slli	%g5, %g3, 2
 	st	%g4, %g1, 4
 	add	%g4, %g4, %g5
@@ -259,7 +257,7 @@ print_int_print_digits.325:
 	ld	%g29, %g1, 0
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.675:
+jle_else.707:
 	return
 print_int.327:
 	ld	%g4, %g29, -12
@@ -267,45 +265,41 @@ print_int.327:
 	ld	%g29, %g29, -4
 	mvhi	%g6, 0
 	mvlo	%g6, 0
-	jlt	%g3, %g6, jle_else.677
-	mov	%g6, %g3
-	jmp	jle_cont.678
-jle_else.677:
-	sub	%g6, %g0, %g3
-jle_cont.678:
-	st	%g6, %g4, 0
-	mvhi	%g4, 0
-	mvlo	%g4, 0
+	jlt	%g3, %g6, jle_else.709
+	mov	%g7, %g3
+	jmp	jle_cont.710
+jle_else.709:
+	sub	%g7, %g0, %g3
+jle_cont.710:
+	st	%g7, %g4, 0
 	st	%g5, %g1, 0
 	st	%g3, %g1, 4
-	mov	%g3, %g4
+	st	%g6, %g1, 8
+	mov	%g3, %g6
 	st	%g31, %g1, 12
 	ld	%g28, %g29, 0
 	subi	%g1, %g1, 16
 	callR	%g28
 	addi	%g1, %g1, 16
 	ld	%g31, %g1, 12
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	ld	%g5, %g1, 4
-	st	%g3, %g1, 8
-	jlt	%g5, %g4, jle_else.679
-	jmp	jle_cont.680
-jle_else.679:
+	ld	%g4, %g1, 4
+	ld	%g5, %g1, 8
+	st	%g3, %g1, 12
+	jlt	%g4, %g5, jle_else.711
+	jmp	jle_cont.712
+jle_else.711:
 	mvhi	%g4, 0
 	mvlo	%g4, 45
 	mov	%g3, %g4
 	output	%g3
-jle_cont.680:
-	mvhi	%g3, 0
-	mvlo	%g3, 0
+jle_cont.712:
+	ld	%g3, %g1, 12
 	ld	%g4, %g1, 8
-	jlt	%g4, %g3, jle_else.681
+	jlt	%g3, %g4, jle_else.713
 	ld	%g29, %g1, 0
-	mov	%g3, %g4
 	ld	%g28, %g29, 0
 	b	%g28
-jle_else.681:
+jle_else.713:
 	mvhi	%g3, 0
 	mvlo	%g3, 48
 	output	%g3
@@ -318,87 +312,77 @@ g.331:
 	addi	%g3, %g3, 1
 	return
 min_caml_start:
-	mvhi	%g3, 0
-	mvlo	%g3, 1
 	mvhi	%g4, 0
 	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
 	mvhi	%g3, 0
 	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	st	%g4, %g1, 0
+	st	%g3, %g1, 4
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g3, %g1, 4
+	ld	%g4, %g1, 0
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g3, %g1, 4
+	ld	%g4, %g1, 0
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g3, %g1, 4
+	ld	%g4, %g1, 0
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g3, 0
-	mvlo	%g3, 1
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g3, %g1, 4
+	mov	%g4, %g3
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g3, %g1, 4
+	ld	%g4, %g1, 0
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
+	call	min_caml_create_array
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
 	mvhi	%g3, 0
 	mvlo	%g3, 10
-	mvhi	%g4, 0
-	mvlo	%g4, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	ld	%g4, %g1, 0
+	st	%g3, %g1, 8
+	st	%g31, %g1, 12
+	subi	%g1, %g1, 16
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	mvhi	%g5, 0
-	mvlo	%g5, 0
-	st	%g3, %g1, 0
+	addi	%g1, %g1, 16
+	ld	%g31, %g1, 12
+	ld	%g4, %g1, 4
+	ld	%g5, %g1, 0
+	st	%g3, %g1, 12
 	mov	%g3, %g4
 	mov	%g4, %g5
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
 	call	min_caml_create_array
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
 	mov	%g4, %g2
 	addi	%g2, %g2, 16
 	setL %g5, print_int_get_digits.323
 	st	%g5, %g4, 0
 	st	%g3, %g4, -8
-	ld	%g5, %g1, 0
+	ld	%g5, %g1, 12
 	st	%g5, %g4, -4
 	mov	%g6, %g2
 	addi	%g2, %g2, 8
@@ -412,26 +396,17 @@ min_caml_start:
 	st	%g3, %g5, -12
 	st	%g6, %g5, -8
 	st	%g4, %g5, -4
-	mvhi	%g3, 0
-	mvlo	%g3, 10
-	mvhi	%g4, 0
-	mvlo	%g4, 1
-	st	%g5, %g1, 4
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	ld	%g3, %g1, 8
+	ld	%g4, %g1, 4
+	st	%g5, %g1, 16
+	st	%g31, %g1, 20
+	subi	%g1, %g1, 24
 	call	min_caml_create_array
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	st	%g3, %g1, 8
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
-	call	f.329
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	mvhi	%g4, 1
-	mvlo	%g4, 2354
-	ld	%g5, %g1, 8
-	ld	%g6, %g5, 0
+	addi	%g1, %g1, 24
+	ld	%g31, %g1, 20
+	ld	%g4, %g3, 0
+	add	%g5, %g4, %g4
+	add	%g6, %g5, %g5
 	add	%g7, %g6, %g6
 	add	%g8, %g7, %g7
 	add	%g9, %g8, %g8
@@ -445,42 +420,81 @@ min_caml_start:
 	add	%g17, %g16, %g16
 	add	%g18, %g17, %g17
 	add	%g19, %g18, %g18
-	add	%g20, %g19, %g19
-	add	%g21, %g20, %g20
-	ld	%g5, %g5, -4
-	mvhi	%g22, 0
-	mvlo	%g22, 0
-	jne	%g5, %g22, jeq_else.682
-	mov	%g3, %g4
-	st	%g31, %g1, 12
-	subi	%g1, %g1, 16
+	mvhi	%g20, 1
+	mvlo	%g20, 2354
+	st	%g19, %g1, 20
+	st	%g18, %g1, 24
+	st	%g17, %g1, 28
+	st	%g16, %g1, 32
+	st	%g15, %g1, 36
+	st	%g14, %g1, 40
+	st	%g13, %g1, 44
+	st	%g12, %g1, 48
+	st	%g11, %g1, 52
+	st	%g10, %g1, 56
+	st	%g9, %g1, 60
+	st	%g8, %g1, 64
+	st	%g7, %g1, 68
+	st	%g6, %g1, 72
+	st	%g5, %g1, 76
+	st	%g4, %g1, 80
+	st	%g20, %g1, 84
+	st	%g3, %g1, 88
+	st	%g31, %g1, 92
+	subi	%g1, %g1, 96
+	call	f.329
+	addi	%g1, %g1, 96
+	ld	%g31, %g1, 92
+	ld	%g4, %g1, 88
+	ld	%g4, %g4, -4
+	ld	%g5, %g1, 0
+	jne	%g4, %g5, jeq_else.714
+	ld	%g3, %g1, 84
+	st	%g31, %g1, 92
+	subi	%g1, %g1, 96
 	call	g.331
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
-	jmp	jeq_cont.683
-jeq_else.682:
-	add	%g4, %g6, %g7
-	add	%g4, %g4, %g8
-	add	%g4, %g4, %g9
-	add	%g4, %g4, %g10
-	add	%g4, %g4, %g11
-	add	%g4, %g4, %g12
-	add	%g4, %g4, %g13
-	add	%g4, %g4, %g14
-	add	%g4, %g4, %g15
-	add	%g4, %g4, %g16
-	add	%g4, %g4, %g17
-	add	%g4, %g4, %g18
-	add	%g4, %g4, %g19
-	add	%g4, %g4, %g20
-	add	%g4, %g4, %g21
+	addi	%g1, %g1, 96
+	ld	%g31, %g1, 92
+	jmp	jeq_cont.715
+jeq_else.714:
+	ld	%g4, %g1, 76
+	ld	%g5, %g1, 80
+	add	%g4, %g5, %g4
+	ld	%g5, %g1, 72
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 68
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 64
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 60
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 56
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 52
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 48
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 44
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 40
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 36
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 32
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 28
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 24
+	add	%g4, %g4, %g5
+	ld	%g5, %g1, 20
+	add	%g4, %g4, %g5
 	add	%g3, %g4, %g3
-jeq_cont.683:
-	ld	%g29, %g1, 4
-	st	%g31, %g1, 12
+jeq_cont.715:
+	ld	%g29, %g1, 16
+	st	%g31, %g1, 92
 	ld	%g28, %g29, 0
-	subi	%g1, %g1, 16
+	subi	%g1, %g1, 96
 	callR	%g28
-	addi	%g1, %g1, 16
-	ld	%g31, %g1, 12
+	addi	%g1, %g1, 96
+	ld	%g31, %g1, 92
 	halt

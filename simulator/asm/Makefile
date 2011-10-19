@@ -6,7 +6,7 @@ include ../Makefile.in
 CFLAGS += -I ../include/
 CXXFLAGS += -I ../include/
 vpath %.h ../include/
-ASM_TARGET = $(TEST_TARGET:%=../test/%.s)
+ASM_TARGET = $(TEST_TARGET:%=../../compiler/test/%.s)
 
 asmcho: asmcho.o assemble.o encode_op.o
 asmcho.o: $(ASMH) assemble.o

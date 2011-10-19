@@ -3,6 +3,8 @@
 #include "sim.h"
 extern const char *InstMap[INST_NUM];
 extern const char *InstTyMap[INST_NUM];
+extern const char *FunctMap[INST_NUM];
+extern const char *FunctTyMap[INST_NUM];
 
 // decoding instruction register ////////////////////
 void decode_ir(uint32_t ir, FILE *fp) {
@@ -18,13 +20,52 @@ void decode_ir(uint32_t ir, FILE *fp) {
 	static const char *fffl = "%s\tf%d=%f f%d=%f %d\n";
 	static const char *ffff = "%s\tf%d=%f f%d=%f f%d=%f\n";
 	static const char *ffgi = "%s\tf%d=%f g%d=%f %d\n";
-	uint32_t opcode;
-	const char *name,*type; 
+	uint32_t opcode,funct;
+	const char *name,*type,*f_type,*f_name;
 	
 
 	opcode = get_opcode(ir);
-	name = InstMap[opcode]; type = InstTyMap[opcode];
+	funct = get_funct(ir);
+	name = InstMap[opcode];
+	type = InstTyMap[opcode];
+	f_type = FunctTyMap[funct];
+	f_name = FunctMap[funct];
 
+	if (strcmp(type, "special") == 0) {
+		if (strcmp(f_type, "fggg") == 0) {
+			// add,sub,mul,div,and,or, sll, srl
+			fprintf(fp, fggg, f_name, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
+		}else 
+		if (strcmp(f_type, "fg") == 0) {
+			// b, callR 
+			fprintf(fp, fg, f_name, get_rsi(ir), _GRS);
+		} else 
+		if (strcmp(f_type, "f") == 0) {
+			// halt
+			fprintf(fp, f, f_name);
+		} else {
+			fprintf(fp, "Undefined SPECIAL ir\n");
+		}
+	} else 
+	if (strcmp(type, "io") == 0) {
+		if (strcmp(type, "fg") == 0) {
+			fprintf(fp, fg, name, get_rdi(ir), _GRD);
+		} else{
+			fprintf(fp, "Undefined I/O ir\n");
+		}
+	} else
+	if (strcmp(type, "fpi") == 0) {
+		if (strcmp(type, "fff") == 0) {
+			// fmov fneg fsqrt
+			fprintf(fp, fff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
+		}else 
+		if (strcmp(type, "ffff") == 0) {
+			// fadd fsub fmul fdiv
+			fprintf(fp, ffff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
+		} else {
+			fprintf(fp, "Undefined FPI IR\n");
+		}
+	} else 
 	if (strcmp(type, "f") == 0) {
 		// nop, halt, return 3
 		fprintf(fp, f, name);

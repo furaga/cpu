@@ -1,45 +1,45 @@
 .init_heap_size	1344
-l.382:	! 8388608.000000
+l.381:	! 8388608.000000
 	.long	0x4b000000
-l.380:	! -2.000000
+l.379:	! -2.000000
 	.long	0xc0000000
-l.378:	! -1.900000
+l.377:	! -1.900000
 	.long	0xbff33333
-l.376:	! -1.800000
+l.375:	! -1.800000
 	.long	0xbfe6665e
-l.374:	! -1.700000
+l.373:	! -1.700000
 	.long	0xbfd99999
-l.372:	! -1.600000
+l.371:	! -1.600000
 	.long	0xbfccccc4
-l.370:	! -1.500000
+l.369:	! -1.500000
 	.long	0xbfc00000
-l.368:	! -1.400000
+l.367:	! -1.400000
 	.long	0xbfb33333
-l.366:	! -1.300000
+l.365:	! -1.300000
 	.long	0xbfa6665e
-l.364:	! -1.200000
+l.363:	! -1.200000
 	.long	0xbf999999
-l.362:	! -1.100000
+l.361:	! -1.100000
 	.long	0xbf8cccc4
-l.360:	! -1.000000
+l.359:	! -1.000000
 	.long	0xbf800000
-l.358:	! -0.900000
+l.357:	! -0.900000
 	.long	0xbf66665e
-l.356:	! -0.800000
+l.355:	! -0.800000
 	.long	0xbf4cccc4
-l.354:	! -0.700000
+l.353:	! -0.700000
 	.long	0xbf333333
-l.352:	! -0.600000
+l.351:	! -0.600000
 	.long	0xbf199999
-l.350:	! -0.500000
+l.349:	! -0.500000
 	.long	0xbf000000
-l.348:	! -0.400000
+l.347:	! -0.400000
 	.long	0xbeccccc4
-l.346:	! -0.300000
+l.345:	! -0.300000
 	.long	0xbe999999
-l.344:	! -0.200000
+l.343:	! -0.200000
 	.long	0xbe4cccc4
-l.342:	! -0.100000
+l.341:	! -0.100000
 	.long	0xbdccccc4
 l.339:	! 2.000000
 	.long	0x40000000
@@ -129,6 +129,7 @@ min_caml_start:
 	call	min_caml_floor
 	addi	%g1, %g1, 8
 	ld	%g31, %g1, 4
+	st	%g3, %g1, 0
 	fst	%f0, %g1, 4
 	st	%g3, %g1, 8
 	ld	%g3, %g1, 4
@@ -374,7 +375,13 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.299
+	ld	%g3, %g1, 0
+	fst	%f0, %g1, 4
+	st	%g3, %g1, 8
+	ld	%g3, %g1, 4
+	output	%g3
+	ld	%g3, %g1, 8
+	setL %g3, l.341
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -386,7 +393,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.342
+	setL %g3, l.343
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -398,7 +405,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.344
+	setL %g3, l.345
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -410,7 +417,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.346
+	setL %g3, l.347
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -422,7 +429,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.348
+	setL %g3, l.349
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -434,7 +441,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.350
+	setL %g3, l.351
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -446,7 +453,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.352
+	setL %g3, l.353
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -458,7 +465,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.354
+	setL %g3, l.355
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -470,7 +477,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.356
+	setL %g3, l.357
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -482,7 +489,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.358
+	setL %g3, l.359
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -494,7 +501,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.360
+	setL %g3, l.361
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -506,7 +513,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.362
+	setL %g3, l.363
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -518,7 +525,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.364
+	setL %g3, l.365
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -530,7 +537,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.366
+	setL %g3, l.367
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -542,7 +549,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.368
+	setL %g3, l.369
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -554,7 +561,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.370
+	setL %g3, l.371
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -566,7 +573,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.372
+	setL %g3, l.373
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -578,7 +585,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.374
+	setL %g3, l.375
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -590,7 +597,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.376
+	setL %g3, l.377
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -602,7 +609,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.378
+	setL %g3, l.379
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
@@ -614,19 +621,7 @@ min_caml_start:
 	ld	%g3, %g1, 4
 	output	%g3
 	ld	%g3, %g1, 8
-	setL %g3, l.380
-	fld	%f0, %g3, 0
-	st	%g31, %g1, 4
-	subi	%g1, %g1, 8
-	call	min_caml_floor
-	addi	%g1, %g1, 8
-	ld	%g31, %g1, 4
-	fst	%f0, %g1, 4
-	st	%g3, %g1, 8
-	ld	%g3, %g1, 4
-	output	%g3
-	ld	%g3, %g1, 8
-	setL %g3, l.382
+	setL %g3, l.381
 	fld	%f0, %g3, 0
 	st	%g31, %g1, 4
 	subi	%g1, %g1, 8
