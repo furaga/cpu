@@ -149,8 +149,8 @@ void IMapInit(void) {
 	FunctMap[FSQRT_F] = "fsqrt";
 	FunctMap[FMOV_F] = "fmov";
 	FunctMap[FNEG_F] = "fneg";
-	InstMap[FJEQ] = "fbeq";
-	InstMap[FJLT] = "fblt";
+	InstMap[FJEQ] = "fjeq";
+	InstMap[FJLT] = "fjlt";
 	InstMap[FLD] = "fld";
 	InstMap[FST] = "fst";
 

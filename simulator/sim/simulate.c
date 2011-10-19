@@ -67,6 +67,7 @@ int simulate(char *sfile) {
 		opcode = get_opcode(ir);
 		funct = get_funct(ir);
 		print_state();
+		statistics(stderr);
 		cnt++;
 		pc++;
 		if (!(cnt % 100000000)) {

@@ -43,5 +43,6 @@ int __print_state(int,int,char**);
 #define IF0_BREAK_S	if (get_rsi(ir) == 0) { break; }
 #define IF0_BREAK_T	if (get_rti(ir) == 0) { break; }
 #define IF0_BREAK_D	if (get_rdi(ir) == 0) { break; }
+void statistics(FILE*);
 
 #endif

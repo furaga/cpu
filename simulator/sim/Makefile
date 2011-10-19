@@ -10,12 +10,12 @@ SIM_TARGET = $(TEST_TARGET:%=../../compiler/test/%)
 SLD = $(RT_TARGET:%=../sld/%.sld)
 PPM = $(RT_TARGET:%=../ppm/%.ppm)
 
-simcho: simcho.o simulate.o decode_ir.o print_state.o
-#simcho: simcho.o simulate.o
+simcho: simcho.o simulate.o decode_ir.o print_state.o statistics.o
 simcho.o: $(SIMH) simulate.o
-simulate.o: $(SIMH) print_state.o
+simulate.o: $(SIMH) print_state.o statistics.o
 print_state.o: $(SIMH) decode_ir.o
 decode_ir.o: $(SIMH)
+statistics.o: $(SIMH)
 
 sim:
 	./simcho $(SIM_TARGET) $(SIM_FLAGS)
