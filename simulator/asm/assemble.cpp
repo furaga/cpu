@@ -84,7 +84,6 @@ int	assemble(char *sfile) {
 				cnt += 32;
 			}
 		}
-
 		input_line_cnt++;
 	}
 
@@ -104,6 +103,8 @@ int	assemble(char *sfile) {
  	 	 	}else{
  	 	 		// 命令行
  	 	 		ir = encode_op(opcode, buf);
+				//fprintf(stderr, "\t%d\n", ir >> 26);
+				//fflush(stderr);
  	 	 		if(ir < 0){             // エラー処理
  	 	 		    printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
  	 	 		    err_cnt++;
@@ -125,7 +126,7 @@ int	assemble(char *sfile) {
 	}else{
 
 		// replace label_num with label_line
-		for(i = 0; i < DATA_NUM; i++){
+		for(i = heap_size/32+1; i < DATA_NUM; i++){
 			switch ((output_data[i] & 0xfc000000) >> 26) {
 				case JLT:
 				case JNE:
@@ -149,6 +150,7 @@ int	assemble(char *sfile) {
 					break;
 			}
 		}
+
 
 		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
 		num = DATA_NUM*4;
@@ -186,7 +188,6 @@ int	assemble(char *sfile) {
 
 		}
 		ofs.close();
-
 
 		printf("%s\n", dfile);
 

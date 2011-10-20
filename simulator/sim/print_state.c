@@ -4,12 +4,6 @@
 enum Print_Flags {
 ON,GC,REG,RAM,PRINT_FLAG_NUM
 };
-void decode_ir(uint32_t,FILE*);
-extern const char *InstMap[INST_NUM];
-extern const char *InstTyMap[INST_NUM];
-void IMapInit(void);
-const char *InstMap[INST_NUM];
-const char *InstTyMap[INST_NUM];
 
 int __print_state(int init_flag, int argc, char **argv) {
 	static FILE *fp = NULL;
@@ -62,9 +56,9 @@ int __print_state(int init_flag, int argc, char **argv) {
 				}
 			}
 		}
-		if (fp == NULL)
+		if (fp == NULL) {
 			fp = fopen(SIM_LOG, "w");
-		IMapInit();
+		}
 	} else {
 
 
@@ -117,109 +111,4 @@ int __print_state(int init_flag, int argc, char **argv) {
 	}
 
 	return 0;
-}
-
-void IMapInit(void) {
-
-	InstMap[NOP] = "nop";
-	InstMap[MOV] = "mov";
-	InstMap[MVHI] = "mvhi";
-	InstMap[MVLO] = "mvlo";
-	InstMap[ADD] = "add";
-	InstMap[SUB] = "sub";
-	InstMap[MUL] = "mul";
-	InstMap[DIV] = "div";
-	InstMap[ADDI] = "addi";
-	InstMap[SUBI] = "subi";
-	InstMap[MULI] = "muli";
-	InstMap[DIVI] = "divi";
-	InstMap[INPUT] = "input";
-	InstMap[OUTPUT] = "output";
-	InstMap[AND] = "and";
-	InstMap[OR] = "or";
-	InstMap[NOT] = "not";
-	InstMap[SLL] = "sll";
-	InstMap[SLLI] = "slli";
-	InstMap[SRL] = "srl";
-	InstMap[B] = "b";
-	InstMap[JMP] = "jmp";
-	InstMap[JEQ] = "jeq";
-	InstMap[JNE] = "jne";
-	InstMap[JLT] = "jlt";
-	InstMap[JLE] = "jle";
-	InstMap[CALL] = "call";
-	InstMap[CALLR] = "callR";
-	InstMap[RETURN] = "return";
-	InstMap[LD] = "ld";
-	InstMap[ST] = "st";
-	InstMap[FADD] = "fadd";
-	InstMap[FSUB] = "fsub";
-	InstMap[FMUL] = "fmul";
-	InstMap[FDIV] = "fdiv";
-	InstMap[FSQRT] = "fsqrt";
-	InstMap[FMOV] = "fmov";
-	InstMap[FNEG] = "fneg";
-	InstMap[FJEQ] = "fbeq";
-	InstMap[FJLT] = "fblt";
-	InstMap[FLD] = "fld";
-	InstMap[FST] = "fst";
-	InstMap[HALT] = "halt";
-
-	InstMap[SIN] = "sin";
-	InstMap[COS] = "cos";
-	InstMap[ATAN] = "atan";
-	InstMap[SQRT] = "sqrt";
-	InstMap[I_OF_F] = "int_of_float";
-	InstMap[F_OF_I] = "float_of_int";
-// 0 = R, 1 = I, 2 = J;
-	InstTyMap[NOP] = "f";		//
-	InstTyMap[MOV] = "fgg";		//
-	InstTyMap[MVHI] = "fgi";		//
-	InstTyMap[MVLO] = "fgi";		//
-	InstTyMap[ADD] = "fggg";		//
-	InstTyMap[SUB] = "fggg";		//
-	InstTyMap[MUL] = "fggg";		//
-	InstTyMap[DIV] = "fggg";		//
-	InstTyMap[ADDI] = "fggi";		//
-	InstTyMap[SUBI] = "fggi";		//
-	InstTyMap[MULI] = "fggi";		//
-	InstTyMap[DIVI] = "fggi";		//
-	InstTyMap[INPUT] = "fg";		//
-	InstTyMap[OUTPUT] = "fg";		//
-	InstTyMap[AND] = "fggg";		//
-	InstTyMap[OR] = "fggg";		//
-	InstTyMap[NOT] = "fgg";		//
-	InstTyMap[SLL] = "fggg"; //
-	InstTyMap[SRL] = "fggg"; //
-	InstTyMap[SLLI] = "fggi";	//
-	InstTyMap[B] = "fg";		//
-	InstTyMap[JMP] = "fl";		//
-	InstTyMap[JEQ] = "fggl";	//
-	InstTyMap[JNE] = "fggl";	//
-	InstTyMap[JLT] = "fggl";	//
-	InstTyMap[JLE] = "fggl";	//
-	InstTyMap[CALL] = "fl";		//
-	InstTyMap[CALLR] = "fg";		//
-	InstTyMap[RETURN] = "f";		//
-	InstTyMap[LD] = "fggi";		//
-	InstTyMap[ST] = "fggi";		//
-	InstTyMap[FADD] = "ffff"; //
-	InstTyMap[FSUB] = "ffff"; //
-	InstTyMap[FMUL] = "ffff"; //
-	InstTyMap[FDIV] = "ffff"; //
-	InstTyMap[FSQRT] = "fff";
-	InstTyMap[FMOV] = "fff";	//
-	InstTyMap[FNEG] = "fff";	//
-	InstTyMap[FJEQ] = "fffl";	//
-	InstTyMap[FJLT] = "fffl";	//
-	InstTyMap[FLD] = "ffgi";
-	InstTyMap[FST] = "ffgi";
-	InstTyMap[HALT] = "f";		//
-
-	InstTyMap[SIN] = "else";
-	InstTyMap[COS] = "else";
-	InstTyMap[ATAN] = "else";
-	InstTyMap[SQRT] = "else";
-	InstTyMap[I_OF_F] = "else";
-	InstTyMap[F_OF_I] = "else";
 }

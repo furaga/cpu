@@ -9,11 +9,12 @@ uint32_t encode_op(char *opcode, char *op_data)
 {
 	int rd,rs,rt,imm,funct,shaft,target;
 	char tmp[256];
-	// format
-	// g: general register
-	// i: immediate
-	// l: label
-
+	/*
+	 * format
+	 * g: general register
+	 * i: immediate
+	 * l: label
+	 */
 	const char *fg = "%s %%g%d";
 	const char *fl = "%s %s";
 	const char *fgi = "%s %%g%d, %d";
@@ -30,13 +31,12 @@ uint32_t encode_op(char *opcode, char *op_data)
 	const char *ffgi = "%s %%f%d, %%g%d, %d";
 
 	char lname[256];
-
 	shaft = funct = target = 0;
-
-
+	//fprintf(stderr, "opcode:%s", opcode);
+	//fflush(stderr);
 	if(strcmp(opcode, "mov") == 0){
 		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
-		    return mov(rs,0,rd,0,0);
+		    return mov(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "mvhi") == 0){
 		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3)
@@ -48,19 +48,19 @@ uint32_t encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "add") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return add(rs,rt,rd,0,0);
+		    return add(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "sub") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return sub(rs,rt,rd,0,0);
+		    return sub(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "mul") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return mul(rs,rt,rd,0,0);
+		    return mul(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "div") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _div(rs,rt,rd,0,0);
+		    return _div(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "addi") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
@@ -80,31 +80,31 @@ uint32_t encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "input") == 0){
 		if(sscanf(op_data, fg, tmp, &rd) == 2)
-		    return input(0,0,rd,0,0);
+		    return input(0,0,rd,0);
 	}
 	if(strcmp(opcode, "output") == 0){
 		if(sscanf(op_data, fg, tmp, &rs) == 2)
-		    return output(rs,0,0,0,0);
+		    return output(rs,0,0,0);
 	}
 	if(strcmp(opcode, "and") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _and(rs,rt,rd,0,0);
+		    return _and(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "or") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _or(rs,rt,rd,0,0);
+		    return _or(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "not") == 0){
 		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
-		    return _not(rs,0,rd,0,0);
+		    return _not(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "sll") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return sll(rs,rt,rd,0,0);
+		    return sll(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "srl") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return srl(rs,rt,rd,0,0);
+		    return srl(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "slli") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
@@ -112,7 +112,7 @@ uint32_t encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "b") == 0){
 		if(sscanf(op_data, fg, tmp, &rs) == 2)
-		    return b(rs,0,0,0,0);
+		    return b(rs,0,0,0);
 	}
 	if(strcmp(opcode, "jmp") == 0){
 		if(sscanf(op_data, fl, tmp, lname) == 2) {
@@ -152,7 +152,7 @@ uint32_t encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "callR") == 0){
 		if(sscanf(op_data, fg, tmp, &rs) == 2)
-		    return callr(rs,0,0,0,0);
+		    return callr(rs,0,0,0);
 	}
 	if(strcmp(opcode, "return") == 0){
 		    return _return(0);
@@ -167,31 +167,31 @@ uint32_t encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "fadd") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fadd(rs,rt,rd,0,0);
+		    return fadd(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "fsub") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fsub(rs,rt,rd,0,0);
+		    return fsub(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "fmul") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fmul(rs,rt,rd,0,0);
+		    return fmul(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "fdiv") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fdiv(rs,rt,rd,0,0);
+		    return fdiv(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "fsqrt") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fsqrt(rs,0,rd,0,0);
+		    return fsqrt(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "fmov") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fmov(rs,0,rd,0,0);
+		    return fmov(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "fneg") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fneg(rs,0,rd,0,0);
+		    return fneg(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "fld") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4)
@@ -214,10 +214,10 @@ uint32_t encode_op(char *opcode, char *op_data)
 		}
 	}
 	if(strcmp(opcode, "nop") == 0){
-		    return nop(0,0,0,0,0);
+		    return nop(0,0,0,0);
 	}
 	if(strcmp(opcode, "halt") == 0){
-		    return halt(0,0,0,0,0);
+		    return halt(0,0,0,0);
 	}
 	if(strcmp(opcode, "setL") == 0){
 		if(sscanf(op_data, fgl, tmp, &rd, lname) == 3) {
@@ -255,66 +255,53 @@ uint32_t encode_op(char *opcode, char *op_data)
 	return -1;
 }
 
-
-
-#define DEFINE_R(name, opcode) \
-	uint32_t name(uint8_t rs, uint8_t rt, uint8_t rd, uint8_t shaft, uint8_t funct) {\
-		return (opcode << 26 | ((uint32_t)rs << 21) | ((uint32_t) rt << 16)\
-				| ((uint32_t) rd << 11) | ((uint32_t) shaft << 6) |funct);\
-	}
-#define DEFINE_I(name, opcode) \
-	uint32_t name(uint8_t rs, uint8_t rt, uint16_t imm) {\
-		return (opcode << 26 | ((uint32_t)rs << 21) | ((uint32_t) rt << 16) | imm);\
-	}
-#define DEFINE_J(name, opcode) \
-	uint32_t name(uint32_t target) {\
-		return (opcode << 26 | target);\
-	}
-
-DEFINE_R(mov,MOV);
 DEFINE_I(mvhi, MVHI);
 DEFINE_I(mvlo, MVLO);
-DEFINE_R(add,ADD);
-DEFINE_R(sub,SUB);
-DEFINE_R(mul,MUL);
-DEFINE_R(_div,DIV);
 DEFINE_I(addi,ADDI);
 DEFINE_I(subi,SUBI);
 DEFINE_I(muli,MULI);
 DEFINE_I(divi,DIVI);
-DEFINE_R(input,INPUT);
-DEFINE_R(output,OUTPUT);
-DEFINE_R(_and,AND);
-DEFINE_R(_or,OR);
-DEFINE_R(_not,NOT);
-DEFINE_R(sll,SLL);
-DEFINE_R(srl,SRL);
 DEFINE_I(slli,SLLI);
-DEFINE_R(b,B);
 DEFINE_J(jmp,JMP);
 DEFINE_I(jeq,JEQ);
 DEFINE_I(jne,JNE);
 DEFINE_I(jlt,JLT);
 DEFINE_I(jle,JLE);
 DEFINE_J(call,CALL);
-DEFINE_R(callr,CALLR);
 DEFINE_J(_return,RETURN);
 DEFINE_I(ld,LD);
 DEFINE_I(st,ST);
-DEFINE_R(fadd,FADD);
-DEFINE_R(fsub,FSUB);
-DEFINE_R(fmul,FMUL);
-DEFINE_R(fdiv,FDIV);
-DEFINE_R(fsqrt,FSQRT);
-DEFINE_R(fmov,FMOV);
-DEFINE_R(fneg,FNEG);
 DEFINE_I(fld,FLD);
 DEFINE_I(fst,FST);
 DEFINE_I(fjeq,FJEQ);
 DEFINE_I(fjlt,FJLT);
-DEFINE_R(nop,NOP);
-DEFINE_R(halt,HALT);
 DEFINE_I(setl,SETL);
+
+DEFINE_F(mov,SPECIAL,MOV_F);
+DEFINE_F(_not,SPECIAL,NOT_F);
+DEFINE_F(input,IO,INPUT_F);
+DEFINE_F(output,IO,OUTPUT_F);
+DEFINE_F(nop,SPECIAL,NOP_F);
+DEFINE_F(sll,SPECIAL,SLL_F);
+DEFINE_F(srl,SPECIAL,SRL_F);
+DEFINE_F(b,SPECIAL,B_F);
+DEFINE_F(add,SPECIAL,ADD_F);
+DEFINE_F(sub,SPECIAL,SUB_F);
+DEFINE_F(mul,SPECIAL,MUL_F);
+DEFINE_F(_div,SPECIAL,DIV_F);
+DEFINE_F(_and,SPECIAL,AND_F);
+DEFINE_F(_or,SPECIAL,OR_F);
+DEFINE_F(halt,SPECIAL,HALT_F);
+DEFINE_F(callr,SPECIAL,CALLR_F);
+
+DEFINE_F(fadd,FPI,FADD_F);
+DEFINE_F(fsub,FPI,FSUB_F);
+DEFINE_F(fmul,FPI,FMUL_F);
+DEFINE_F(fdiv,FPI,FDIV_F);
+DEFINE_F(fsqrt,FPI,FSQRT_F);
+DEFINE_F(fmov,FPI,FMOV_F);
+DEFINE_F(fneg,FPI,FNEG_F);
+
 ///////////////////////////////
 DEFINE_R(_sin,SIN);
 DEFINE_R(_cos,COS);
@@ -322,3 +309,4 @@ DEFINE_R(_atan,ATAN);
 DEFINE_R(_sqrt,SQRT);
 DEFINE_R(_int_of_float,I_OF_F);
 DEFINE_R(_float_of_int,F_OF_I);
+//////////////////////////////
