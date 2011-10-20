@@ -7,12 +7,6 @@
 #define ROM_NUM (4 * 1024 * 1024)
 #define RAM_NUM (4 * 1024 * 1024)
 
-/*
-enum InstSet {
-NOP = 2,MOV,MVHI,MVLO,ADDI,SUBI,MULI,DIVI,INPUT,OUTPUT,NOT,SLLI,JMP,JEQ,JNE,JLT,JLE,CALL,RETURN,LD,ST,FJEQ,FJLT,FLD,FST,SETL,
-SIN,COS,ATAN,SQRT,I_OF_F,F_OF_I,
-};
-*/
 ///////////////////////////////////////
 // SPECIAL funct //////////////////////
 ///////////////////////////////////////

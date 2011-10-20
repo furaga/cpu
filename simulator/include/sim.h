@@ -2,6 +2,7 @@
 #ifndef _SIM_HEAD
 #define _SIM_HEAD
 #include "common.h"
+#include <stdio.h>
 #define SIM_LOG "simlog"
 extern int32_t reg[REG_NUM];
 extern uint32_t freg[REG_NUM];
@@ -37,12 +38,18 @@ int32_t get_imm(uint32_t);
 //////////////////////////////////////////////
 
 int __print_state(int,int,char**);
+void decode_ir(uint32_t,FILE*);
 #define print_state() __print_state(0,0,NULL)
 #define print_init(argk,argv) __print_state(1,argc,argv)
 
 #define IF0_BREAK_S	if (get_rsi(ir) == 0) { break; }
 #define IF0_BREAK_T	if (get_rti(ir) == 0) { break; }
 #define IF0_BREAK_D	if (get_rdi(ir) == 0) { break; }
+extern const char *InstMap[INST_NUM];
+extern const char *InstTyMap[INST_NUM];
+extern const char *FunctMap[INST_NUM];
+extern const char *FunctTyMap[INST_NUM];
 void statistics(FILE*);
+int operate(uint32_t);
 
 #endif

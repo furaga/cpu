@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include "sim.h"
-extern const char *InstMap[INST_NUM];
-extern const char *FunctMap[INST_NUM];
 
+// 命令実行回数の計数
 void statistics(FILE* fp) {
 	static int count[INST_NUM][INST_NUM];
 	const char *format = "%8s: %f %10d\n";
