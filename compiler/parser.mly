@@ -11,12 +11,31 @@ let rec is_log2 x =
   else if x = 1 then
   	true
   else
-  	(if x mod 2 = 0 then is_log2 (x / 2) else false)
+  	(if x > 0 && x mod 2 = 0 then is_log2 (x / 2) else false)
 let rec log2 x =
   if x = 1 then
   	0
   else
   	(assert (x mod 2 = 0); (log2 (x / 2)) + 1)
+  	
+let is_log2_exp e =
+	match e with
+	| (Int n, _) when is_log2 n -> true
+	| (Neg (Int n, _), _) when is_log2 n -> true
+	| _ -> false
+	
+let sll_of_mul e1 e2 =
+	match e2 with
+	| (Int n, line) -> SLL (e1, (Int (log2 n), line))
+	| (Neg (Int n, _), line) -> SLL ((Neg e1, snd e1), (Int (log2 n), line))
+	| _ -> Mul (e1, e2)
+	
+(* sllの負の数バージョンは算術右シフト *)
+let sll_of_div e1 e2 =
+	match e2 with
+	| (Int n, line) -> SLL (e1, (Int (-(log2 n)), line))
+	| (Neg (Int n, _), line) -> SLL ((Neg e1, snd e1), (Int (-(log2 n)), line))
+	| _ -> assert false (*Div (e1, e2)*)
 %}
 
 /* 字句を表すデータ型の定義 (caml2html: parser_token) */
@@ -105,9 +124,9 @@ exp: /* 一般の式 (caml2html: parser_exp) */
 | exp MINUS exp
     { get_syntax (Sub($1, $3)) }
 | exp AST exp
-    { get_syntax (Mul($1, $3)) }
+    { if is_log2_exp $3 then get_syntax (sll_of_mul $1 $3) else get_syntax (Mul($1, $3)) }
 | exp SLASH exp
-    { get_syntax (Div($1, $3)) }
+    { if is_log2_exp $3 then get_syntax (sll_of_div $1 $3) else assert false(*get_syntax (Div($1, $3))*) }
 | exp EQUAL exp
     { get_syntax (Eq($1, $3)) }
 | exp LESS_GREATER exp

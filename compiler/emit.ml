@@ -129,8 +129,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 
 (*  | NonTail(x), SLL(y, z') -> Printf.fprintf oc "\tsll\t%s, %s, %s\n" y (pp_id_or_imm z') x*)
   | NonTail(x), SLL(y, V(z)) -> Printf.fprintf oc "\tsll\t%s, %s, %s\n" x (pp_id_or_imm (V(z))) y
-  | NonTail(x), SLL(y, C(z)) ->
-	 Printf.fprintf oc "\tslli\t%s, %s, %s\n" x y (pp_id_or_imm (C(z))) (*即値 *)
+  | NonTail(x), SLL(y, C(z)) when z >= 0 ->	(* SLLI *)
+	 Printf.fprintf oc "\tslli\t%s, %s, %d\n" x y z (*即値 *)
+  | NonTail(x), SLL(y, C(z)) ->				(* SRLI *)
+	 Printf.fprintf oc "\tsrli\t%s, %s, %d\n" x y (-z) (*即値 *)
 
   | NonTail(x), Ld(y, V z) ->
    	begin

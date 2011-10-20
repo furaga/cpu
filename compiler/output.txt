@@ -1,149 +1,262 @@
 Print Syntax_t(kNormal.ml):
   Let x : Int =
-    Let y : Int =
-      Int(1)
-    In
-    Var(y)
+    SLL(
+      Int(5)
+      Int(-1)
+    )
   In
-  Let Rec f : Int -> Int ( y )=
-    Let z : Int =
-      Let w : Int =
-        Int(2)
-      In
-      Var(w)
-    In
-    Var(z)
+  Let y : Int =
+    SLL(
+      Int(8)
+      Int(-2)
+    )
   In
-  Let a : Int =
-    Apply
-      Var(f)
+  Let z : Int =
+    Div(
+      Int(9)
+      Int(5)
+    )
+  In
+  Let w : Int =
+    SLL(
+      Neg
+        Int(9)
+      Int(-3)
+    )
+  In
+  Let w : Int =
+    SLL(
+      Neg
+        Int(9)
+      Int(0)
+    )
+  In
+  Let w : Int =
+    SLL(
+      Int(9)
+      Int(0)
+    )
+  In
+  Add(
+    Add(
       Var(x)
-  In
-  Var(a)
+      Var(y)
+    )
+    Var(z)
+  )
 
 Print KNormal_t(kNormal.ml):
   Let x : Int =
-    Let y : Int =
-      Int(1)
+    Let Ti1 : Int =
+      Int(5)
     In
-    Var(y)
+    Let Ti2 : Int =
+      Int(-1)
+    In
+    Ti1 << Ti2
   In
-  Let Rec f : Int -> Int ( y ) =
-    Let z : Int =
-      Let w : Int =
-        Int(2)
+  Let y : Int =
+    Let Ti3 : Int =
+      Int(8)
+    In
+    Let Ti4 : Int =
+      Int(-2)
+    In
+    Ti3 << Ti4
+  In
+  Let z : Int =
+    Let Ti5 : Int =
+      Int(9)
+    In
+    Let Ti6 : Int =
+      Int(5)
+    In
+    Ti5 / Ti6
+  In
+  Let w : Int =
+    Let Ti8 : Int =
+      Let Ti7 : Int =
+        Int(9)
       In
-      Var(w)
+      -Ti7
     In
-    Var(z)
+    Let Ti9 : Int =
+      Int(-3)
+    In
+    Ti8 << Ti9
   In
-  Let a : Int =
-    f x 
+  Let w : Int =
+    Let Ti11 : Int =
+      Let Ti10 : Int =
+        Int(9)
+      In
+      -Ti10
+    In
+    Let Ti12 : Int =
+      Int(0)
+    In
+    Ti11 << Ti12
   In
-  Var(a)
+  Let w : Int =
+    Let Ti13 : Int =
+      Int(9)
+    In
+    Let Ti14 : Int =
+      Int(0)
+    In
+    Ti13 << Ti14
+  In
+  Let Ti15 : Int =
+    x + y
+  In
+  Ti15 + z
 
 Print KNormal_t (Alpha.ml)
-  Let x.1 : Int =
-    Let y.7 : Int =
-      Int(1)
+  Let x.16 : Int =
+    Let Ti1.35 : Int =
+      Int(5)
     In
-    Var(y.7)
+    Let Ti2.36 : Int =
+      Int(-1)
+    In
+    Ti1.35 << Ti2.36
   In
-  Let Rec f.2 : Int -> Int ( y.3 ) =
-    Let z.5 : Int =
-      Let w.6 : Int =
-        Int(2)
+  Let y.17 : Int =
+    Let Ti3.33 : Int =
+      Int(8)
+    In
+    Let Ti4.34 : Int =
+      Int(-2)
+    In
+    Ti3.33 << Ti4.34
+  In
+  Let z.18 : Int =
+    Let Ti5.31 : Int =
+      Int(9)
+    In
+    Let Ti6.32 : Int =
+      Int(5)
+    In
+    Ti5.31 / Ti6.32
+  In
+  Let w.19 : Int =
+    Let Ti8.28 : Int =
+      Let Ti7.30 : Int =
+        Int(9)
       In
-      Var(w.6)
+      -Ti7.30
     In
-    Var(z.5)
+    Let Ti9.29 : Int =
+      Int(-3)
+    In
+    Ti8.28 << Ti9.29
   In
-  Let a.4 : Int =
-    f.2 x.1 
+  Let w.20 : Int =
+    Let Ti11.25 : Int =
+      Let Ti10.27 : Int =
+        Int(9)
+      In
+      -Ti10.27
+    In
+    Let Ti12.26 : Int =
+      Int(0)
+    In
+    Ti11.25 << Ti12.26
   In
-  Var(a.4)
+  Let w.21 : Int =
+    Let Ti13.23 : Int =
+      Int(9)
+    In
+    Let Ti14.24 : Int =
+      Int(0)
+    In
+    Ti13.23 << Ti14.24
+  In
+  Let Ti15.22 : Int =
+    x.16 + y.17
+  In
+  Ti15.22 + z.18
+
+Print KNormal_t(Cse.ml):
+  Let Ti1.35 : Int =
+    Int(5)
+  In
+  Let Ti2.36 : Int =
+    Int(-1)
+  In
+  Let x.16 : Int =
+    Ti1.35 << Ti2.36
+  In
+  Let Ti3.33 : Int =
+    Int(8)
+  In
+  Let Ti4.34 : Int =
+    Int(-2)
+  In
+  Let y.17 : Int =
+    Ti3.33 << Ti4.34
+  In
+  Let Ti5.31 : Int =
+    Int(9)
+  In
+  Let Ti6.32 : Int =
+    Var(Ti1.35)
+  In
+  Let z.18 : Int =
+    Ti5.31 / Ti6.32
+  In
+  Let Ti7.30 : Int =
+    Var(Ti5.31)
+  In
+  Let Ti8.28 : Int =
+    -Ti7.30
+  In
+  Let Ti9.29 : Int =
+    Int(-3)
+  In
+  Let w.19 : Int =
+    Ti8.28 << Ti9.29
+  In
+  Let Ti10.27 : Int =
+    Var(Ti7.30)
+  In
+  Let Ti11.25 : Int =
+    Var(Ti8.28)
+  In
+  Let Ti12.26 : Int =
+    Int(0)
+  In
+  Let w.20 : Int =
+    Ti11.25 << Ti12.26
+  In
+  Let Ti13.23 : Int =
+    Var(Ti10.27)
+  In
+  Let Ti14.24 : Int =
+    Var(Ti12.26)
+  In
+  Let w.21 : Int =
+    Ti13.23 << Ti14.24
+  In
+  Let Ti15.22 : Int =
+    x.16 + y.17
+  In
+  Ti15.22 + z.18
 
 Print KNormal_t (Movelet.ml)
-  Let Rec f.2 : Int -> Int ( y.3 ) =
-    Let w.6 : Int =
-      Int(2)
-    In
-    Let z.5 : Int =
-      Var(w.6)
-    In
-    Var(z.5)
-  In
-  Let y.7 : Int =
-    Int(1)
-  In
-  Let x.1 : Int =
-    Var(y.7)
-  In
-  Let a.4 : Int =
-    f.2 x.1 
-  In
-  Var(a.4)
+  Int(1)
+
+Print KNormal_t(Cse.ml):
+  Int(1)
 
 Print KNormal_t (Movelet.ml)
-  Let Rec f.2 : Int -> Int ( y.3 ) =
-    Let w.6 : Int =
-      Int(2)
-    In
-    Var(w.6)
-  In
-  Let y.7 : Int =
-    Int(1)
-  In
-  Let a.4 : Int =
-    f.2 y.7 
-  In
-  Var(a.4)
-
-Print KNormal_t (Movelet.ml)
-  Let Rec f.2 : Int -> Int ( y.3 ) =
-    Let w.6 : Int =
-      Int(2)
-    In
-    Var(w.6)
-  In
-  Let y.7 : Int =
-    Int(1)
-  In
-  Let a.4 : Int =
-    f.2 y.7 
-  In
-  Var(a.4)
+  Int(1)
 
 Print Closure_t(Closure.ml):
-  Int -> Int f.2 ((y.3 : Int) )
-    
-    Let w.6 : Int =
-      Int (2)
-    In
-    Var (w.6)
-  Let y.7 : Int =
-    Int (1)
-  In
-  Let a.4 : Int =
-    AppClosure f.2 (y.7 )
-  In
-  Var (a.4)
+  Int (1)
 
 Print Asm_t(Virtual.ml):
-  Int f.2 (y.3 ) =
-    Let w.6 =
-      Set (2)
-    In
-    Ans (
-      Mov (w.6)
-    )
-  Let y.7 =
-    Set (1)
-  In
-  Let a.4 =
-    CallDir f.2 y.7 
-  In
   Ans (
-    Mov (a.4)
+    Set (1)
   )
 

@@ -18,10 +18,13 @@ default: debug-code top $(RESULT) do_test
 clean:: nobackup
 
 # ↓もし実装を改造したら、それに合わせて変える
+#elim.mli elim.ml 
 SOURCES = float.c global.ml type.ml id.ml m.ml s.ml \
 syntax.ml parser.mly lexer.mll typing.mli typing.ml kNormal.mli kNormal.ml \
-alpha.mli alpha.ml beta.mli beta.ml assoc.mli assoc.ml \
-inline.mli inline.ml elim.mli elim.ml movelet.mli movelet.ml cse.mli cse.ml constFold.mli constFold.ml \
+alpha.mli alpha.ml beta.mli beta.ml betaTuple.mli betaTuple.ml assoc.mli assoc.ml \
+inline.mli inline.ml \
+movelet.mli movelet.ml elim.mli elim.ml constArg.mli constArg.ml constArray.mli constArray.ml \
+cse.mli cse.ml constFold.mli constFold.ml \
 closure.mli closure.ml asm.mli asm.ml virtual.mli virtual.ml \
 constFold2.mli constFold2.ml simm.mli simm.ml regAlloc.mli regAlloc.ml emit.mli emit.ml \
 main.mli main.ml

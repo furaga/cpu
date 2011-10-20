@@ -3,14 +3,14 @@ open KNormal
 (* A正規化など *)
 
 (* 副作用がないと分かっている関数群 *)
-let noeffectfun = S.of_list [
+let noeffectfun = S.of_list [] (*[
 	"fequal"; "fless"; "fispos"; "fisneg"; "fiszero"; 
 	"xor"; "not"; 
 	"fabs"; "fneg"; 
 	"fsqr"; "fhalf"; "floor";
 	"float_of_int"; "int_of_float";
 	"sin"; "cos"; "atan"; "sqrt"]
-
+*)
 (* 副作用があるか *)
 let rec effect env = function
 	| Let(_, e1, e2) | IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) -> effect env e1 || effect env e2

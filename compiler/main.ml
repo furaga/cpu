@@ -1,10 +1,28 @@
 let limit = ref 1000
 let print_flg = ref false
 
+(*  [Movelet.f; ConstArg.f; ConstFold.f; Cse.f; ConstArray.f; Inline.f; Assoc.f; BetaTuple.f; Beta.f] *)
 let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
   Format.eprintf "iteration %d@." n;
   if n = 0 then e else
-  let e' = Movelet.f !print_flg (Cse.f !print_flg (ConstFold.f (Inline.f (Assoc.f (Beta.f e))))) in
+  let e' =
+	(*Movelet.f !print_flg*)Elim.f (  (* Moveletはバグってる。要修正(ｷﾘｯ *)
+		ConstArg.f !print_flg (
+			ConstFold.f(
+				Cse.f !print_flg (
+					ConstArray.f !print_flg (
+						Inline.f (
+							Assoc.f (
+								BetaTuple.f !print_flg (
+									Beta.f e
+								)
+							)
+						)
+					)
+				)
+			)
+		)
+	) in
   if e = e' then e else
   iter (n - 1) e'
 

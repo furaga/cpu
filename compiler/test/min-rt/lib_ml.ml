@@ -155,7 +155,7 @@ let rec read_float _ =
 		ans
 	else
 		-. ans in
-
+(*
 (* print_int *)
 let print_int_data = Array.create 10 0 in (* int型の値は３２bitなのでせいぜい10桁 *)
 let print_int_x = Array.create 1 0 in
@@ -181,3 +181,59 @@ let rec print_int n =
 		print_char 48
 	else
 		print_int_print_digits digits in
+*)
+
+let rec div_binary_search a b left right =
+(*	Printf.printf "(%d, %d, %d, %d)\n" a b left right;*)
+	let mid = (left + right) / 2 in
+	let x = mid * b in
+	if right - left <= 1 then
+		left
+	else
+		if x < a then
+			div_binary_search a b mid right
+		else if x = a then
+			mid
+		else
+			div_binary_search a b left mid in
+
+(* print_int div命令を使わない版 *)
+(* 0 から 9999 までを出力 *)
+let rec print_int x =
+	if x > 10000 then ()
+	else if x < 0 then
+		(print_char 45; print_int (-x))
+	else
+		(* 1000の位を表示 *)
+		let tx = div_binary_search x 1000 0 10 in
+		let dx = tx * 1000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then false
+			else (print_char (48 + tx); true) in
+		(* 100の位を表示 *)
+		let tx = div_binary_search x 100 0 10 in
+		let dx = tx * 100 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
+		(* 10の位を表示 *)
+		let tx = div_binary_search x 10 0 10 in
+		let dx = tx * 10 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
+		(* 1の位を表示 *)
+		print_char (48 + x) in

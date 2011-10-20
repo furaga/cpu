@@ -36,6 +36,8 @@ let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 	| Mul(x, y) when memi y env && M.find y env = Int(1) -> Var (x) (* 片方が1だったら *)
 	| Mul(x, y) when memi x env && M.find x env = Int(-1) -> Neg (y) (* 片方が-1だったら *)
 	| Mul(x, y) when memi y env && M.find y env = Int(-1) -> Neg (x) (* 片方が-1だったら *)
+	| Mul(x, y) when memi x env && M.find x env = Int(2) -> Add (y, y) (* X * 2 = X + X *)
+	| Mul(x, y) when memi y env && M.find y env = Int(2) -> Add (x, x) (* X * 2 = X + X *)
 
 	| Div(x, y) when memi x env && memi y env -> Int(findi x env / findi y env)
 	| Div(x, y) when memi x env && M.find x env = Int(0) -> Int (0) (* 左が1だったら *)
@@ -43,7 +45,7 @@ let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 	| Div(x, y) when memi y env && M.find y env = Int(-1) -> Neg (x) (* 右が-1だったら *)
 
 	| SLL(x, y) when memi x env && memi y env && findi y env >= 0 -> Int(findi x env lsl findi y env)
-	| SLL(x, y) when memi x env && memi y env -> Int(findi x env asr findi y env)
+	| SLL(x, y) when memi x env && memi y env -> Int(findi x env asr (-(findi y env)))
 	| SLL(x, y) when memi x env && M.find x env = Int(0) -> Int (0) (* 左が０だったら *)
 	| SLL(x, y) when memi y env && M.find y env = Int(0) -> Var (x) (* 右が０だったら *)
 
