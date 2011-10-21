@@ -74,17 +74,31 @@ let rec number e =
 			if x < y then find (FMul(x, y))
 			else find (FMul(y, x))
 		| FDiv(x, y) -> find (FDiv(v x, v y))
-		| IfEq(x, y, e1, e2) ->
+	
+		| IfEq(V x, V y, e1, e2) ->
 			let x = v x in
 			let y = v y in
 			if x < y then
-				find (IfEq(x, y, Var(number e1), Var(number e2)))
+				find (IfEq(V x, V y, Var(number e1), Var(number e2)))
 			else
-				find (IfEq(y, x, Var(number e1), Var(number e2)))
-		| IfLE(x, y, e1, e2) ->
-			find (IfLE(v x, v y,
-			Var(number e1),
-			Var(number e2)))
+				find (IfEq(V y, V x, Var(number e1), Var(number e2)))
+
+		| IfEq(V x, C y, e1, e2) ->
+			let x = v x in
+			find (IfEq(V x, C y, Var(number e1), Var(number e2)))
+
+		| IfEq(C x, V y, e1, e2) ->
+			let y = v y in
+			find (IfEq(C x, V y, Var(number e1), Var(number e2)))
+
+		| IfEq(C x, C y, e1, e2) ->
+			find (IfEq(C x, C y, Var(number e1), Var(number e2)))
+
+		| IfLE(V x, V y, e1, e2) -> find (IfLE(V (v x), V (v y), Var(number e1), Var(number e2)))
+		| IfLE(V x, C y, e1, e2) -> find (IfLE(V (v x), C y, Var(number e1), Var(number e2)))
+		| IfLE(C x, V y, e1, e2) -> find (IfLE(C x, V (v y), Var(number e1), Var(number e2)))
+		| IfLE(C x, C y, e1, e2) -> find (IfLE(C x, C y, Var(number e1), Var(number e2)))
+
 		| Var(x) -> v x
 		| App(x, ys) ->
 			if S.mem x !no_effect_fun then

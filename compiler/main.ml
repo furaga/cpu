@@ -7,13 +7,13 @@ let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
   if n = 0 then e else
   let e' =
 	(*Movelet.f !print_flg*)Elim.f (  (* Moveletはバグってる。要修正(ｷﾘｯ *)
-		ConstArg.f !print_flg (
+		(*ConstArg.f !print_flg*) (
 			ConstFold.f(
 				Cse.f !print_flg (
 					ConstArray.f !print_flg (
 						Inline.f (
 							Assoc.f (
-								BetaTuple.f !print_flg (
+								(*BetaTuple.f !print_flg*) (
 									Beta.f e
 								)
 							)
@@ -32,7 +32,7 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 	Emit.f outchan
 		(RegAlloc.f
 			(Simm.f
-				((*ConstFold2.f !print_flg*)
+				(Sglobal.f
 					(Virtual.f !print_flg
 						(Closure.f !print_flg
 							(iter !limit

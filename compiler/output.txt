@@ -1,262 +1,789 @@
-Print Syntax_t(kNormal.ml):
-  Let x : Int =
-    SLL(
-      Int(5)
-      Int(-1)
+compile  test/float.ml
+
+	hello
+
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+
+	KNormal.App
+
+	l.620[0] => %f28
+	l.622[0] => %f27
+	l.628[0] => %f26
+	l.633[0] => %f25
+	l.637[0] => %f24
+	l.639[0] => %f23
+	l.641[0] => %f22
+	l.643[0] => %f21
+	l.645[0] => %f20
+	l.647[0] => %f19
+	l.624[0] => %f18
+	l.626[0] => %f17
+	l.618[0] => %f16
+	len = 13
+  l.647 : 48.300300
+  l.645 : 4.500000
+  l.643 : 1.570796
+  l.641 : 6.283185
+  l.639 : 3.141593
+  l.637 : 1.570796
+  l.633 : 0.500000
+  l.628 : 9.000000
+  l.626 : 1.000000
+  l.624 : 2.000000
+  l.622 : 2.500000
+  l.620 : -12.300000
+  l.618 : 0.000000
+  Float fabs.272 (a.273 ) =
+    Let l.619 =
+      FMovD (%f16)
+    In
+    Ans (
+      If Td253.614 <=. a.273 Then
+        Ans (
+          FMovD (a.273)
+        )
+      Then
+        Ans (
+          FNegD (a.273)
+        )
     )
-  In
-  Let y : Int =
-    SLL(
-      Int(8)
-      Int(-2)
+  Float abs_float.274 () =
+    Let l.621 =
+      FMovD (%f28)
+    In
+    Ans (
+      CallDir fabs.272 x.275 
     )
-  In
-  Let z : Int =
-    Div(
-      Int(9)
-      Int(5)
+  Float fneg.276 (a.277 ) =
+    Ans (
+      FNegD (a.277)
     )
-  In
-  Let w : Int =
-    SLL(
-      Neg
-        Int(9)
-      Int(-3)
+  Float tan_sub.563 (i.564 xx.565 y.566 ) =
+    Let l.623 =
+      FMovD (%f27)
+    In
+    Ans (
+      If Td218.573 <=. i.564 Then
+        Let l.625 =
+          FMovD (%f18)
+        In
+        Let Td220.574 =
+          i.564 -. Td219.577
+        In
+        Let Td221.576 =
+          i.564 -. y.566
+        In
+        Let Td222.575 =
+          xx.565 /. Td221.576
+        In
+        Ans (
+          CallDir tan_sub.563 Td220.574 xx.565 Td222.575 
+        )
+      Then
+        Ans (
+          FMovD (y.566)
+        )
     )
-  In
-  Let w : Int =
-    SLL(
-      Neg
-        Int(9)
-      Int(0)
+  Float tan.291 (x.292 ) =
+    Let l.627 =
+      FMovD (%f17)
+    In
+    Let l.629 =
+      FMovD (%f26)
+    In
+    Let Td214.571 =
+      x.292 *. x.292
+    In
+    Let l.630 =
+      FMovD (%f16)
+    In
+    Let Td216.569 =
+      CallDir tan_sub.563 Td213.570 Td214.571 Td215.572 
+    In
+    Let Td217.567 =
+      Td212.568 -. Td216.569
+    In
+    Ans (
+      x.292 /. Td217.567
     )
-  In
-  Let w : Int =
-    SLL(
-      Int(9)
-      Int(0)
+  Float sin_sub.293 (x.294 ) =
+    Let pi2.283 =
+      FLord %g29[-8]
+    In
+    Ans (
+      If x.294 <=. pi2.283 Then
+        Let l.631 =
+          FMovD (%f16)
+        In
+        Ans (
+          If Td209.561 <=. x.294 Then
+            Ans (
+              FMovD (x.294)
+            )
+          Then
+            Let Td210.562 =
+              x.294 +. pi2.283
+            In
+            Ans (
+              CallCls sin_sub.293 Td210.562 
+            )
+        )
+      Then
+        Let Td211.560 =
+          x.294 -. pi2.283
+        In
+        Ans (
+          CallCls sin_sub.293 Td211.560 
+        )
     )
-  In
-  Add(
-    Add(
-      Var(x)
-      Var(y)
+  Float sin.295 (x.296 ) =
+    Let sin_sub.293 =
+      Lord %g29[-32]
+    In
+    Let pih.284 =
+      FLord %g29[-24]
+    In
+    Let pi2.283 =
+      FLord %g29[-16]
+    In
+    Let pi.282 =
+      FLord %g29[-8]
+    In
+    Let l.632 =
+      FMovD (%f16)
+    In
+    Let s1.542 =
+      If x.296 <=. Td199.559 Then
+        Ans (
+          Set (0)
+        )
+      Then
+        Ans (
+          Set (1)
+        )
+    In
+    Let x0.543 =
+      CallDir fabs.272 x.296 
+    In
+    Let x1.544 =
+      CallCls sin_sub.293 x0.543 
+    In
+    Let s2.545 =
+      If x1.544 <=. pi.282 Then
+        Ans (
+          Mov (s1.542)
+        )
+      Then
+        Let Ti200.558 =
+          Set (0)
+        In
+        Ans (
+          If s1.542 = Ti200.558 Then
+            Ans (
+              Set (1)
+            )
+          Then
+            Ans (
+              Set (0)
+            )
+        )
+    In
+    Let x2.546 =
+      If x1.544 <=. pi.282 Then
+        Ans (
+          FMovD (x1.544)
+        )
+      Then
+        Ans (
+          pi2.283 -. x1.544
+        )
+    In
+    Let x3.547 =
+      If x2.546 <=. pih.284 Then
+        Ans (
+          FMovD (x2.546)
+        )
+      Then
+        Ans (
+          pi.282 -. x2.546
+        )
+    In
+    Let l.634 =
+      FMovD (%f25)
+    In
+    Let Td202.556 =
+      x3.547 *. Td201.557
+    In
+    Let t.548 =
+      CallDir tan.291 Td202.556 
+    In
+    Let l.635 =
+      FMovD (%f18)
+    In
+    Let Td204.551 =
+      Td203.555 *. t.548
+    In
+    Let l.636 =
+      FMovD (%f17)
+    In
+    Let Td206.554 =
+      t.548 *. t.548
+    In
+    Let Td207.552 =
+      Td205.553 +. Td206.554
+    In
+    Let ans.549 =
+      Td204.551 /. Td207.552
+    In
+    Let Ti208.550 =
+      Set (0)
+    In
+    Ans (
+      If s2.545 = Ti208.550 Then
+        Ans (
+          CallDir fneg.276 ans.549 
+        )
+      Then
+        Ans (
+          FMovD (ans.549)
+        )
     )
-    Var(z)
-  )
-
-Print KNormal_t(kNormal.ml):
-  Let x : Int =
-    Let Ti1 : Int =
-      Int(5)
+  Float cos.297 (x.298 ) =
+    Let sin.295 =
+      Lord %g29[-4]
     In
-    Let Ti2 : Int =
-      Int(-1)
+    Let l.638 =
+      FMovD (%f24)
     In
-    Ti1 << Ti2
-  In
-  Let y : Int =
-    Let Ti3 : Int =
-      Int(8)
+    Let Td198.540 =
+      Td197.541 -. x.298
     In
-    Let Ti4 : Int =
-      Int(-2)
+    Ans (
+      CallCls sin.295 Td198.540 
+    )
+  Int div_binary_search.319 (a.320 b.321 left.322 right.323 ) =
+    Let Ti86.398 =
+      left.322 + right.323
     In
-    Ti3 << Ti4
-  In
-  Let z : Int =
-    Let Ti5 : Int =
-      Int(9)
+    Let Ti87.399 =
+      Set (-1)
     In
-    Let Ti6 : Int =
-      Int(5)
+    Let mid.394 =
+      Ti86.398 << Ti87.399
     In
-    Ti5 / Ti6
-  In
-  Let w : Int =
-    Let Ti8 : Int =
-      Let Ti7 : Int =
-        Int(9)
-      In
-      -Ti7
+    Let x.395 =
+      mid.394 * b.321
     In
-    Let Ti9 : Int =
-      Int(-3)
+    Let Ti88.396 =
+      right.323 - left.322
     In
-    Ti8 << Ti9
-  In
-  Let w : Int =
-    Let Ti11 : Int =
-      Let Ti10 : Int =
-        Int(9)
-      In
-      -Ti10
+    Let Ti89.397 =
+      Set (1)
     In
-    Let Ti12 : Int =
-      Int(0)
+    Ans (
+      If Ti88.396 <= Ti89.397 Then
+        Ans (
+          Mov (left.322)
+        )
+      Then
+        Ans (
+          If a.320 <= x.395 Then
+            Ans (
+              If x.395 = a.320 Then
+                Ans (
+                  Mov (mid.394)
+                )
+              Then
+                Ans (
+                  CallDir div_binary_search.319 a.320 b.321 left.322 mid.394 
+                )
+            )
+          Then
+            Ans (
+              CallDir div_binary_search.319 a.320 b.321 mid.394 right.323 
+            )
+        )
+    )
+  Unit print_int.324 (x.325 ) =
+    Let Ti53.343 =
+      Set (10000)
     In
-    Ti11 << Ti12
+    Ans (
+      If x.325 <= Ti53.343 Then
+        Let Ti54.344 =
+          Set (0)
+        In
+        Ans (
+          If Ti54.344 <= x.325 Then
+            Let Ti55.391 =
+              Set (1000)
+            In
+            Let Ti56.392 =
+              Set (0)
+            In
+            Let Ti57.393 =
+              Set (10)
+            In
+            Let tx.348 =
+              CallDir div_binary_search.319 x.325 Ti55.391 Ti56.392 Ti57.393 
+            In
+            Let Ti58.390 =
+              Set (1000)
+            In
+            Let dx.349 =
+              tx.348 * Ti58.390
+            In
+            Let x.350 =
+              x.325 - dx.349
+            In
+            Let Ti59.386 =
+              Set (0)
+            In
+            Let flg.351 =
+              If tx.348 <= Ti59.386 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let Ti60.389 =
+                  Set (48)
+                In
+                Let Ti61.388 =
+                  Ti60.389 + tx.348
+                In
+                Let Tu17.387 =
+                  CallDir min_caml_print_char Ti61.388 
+                In
+                Ans (
+                  Set (1)
+                )
+            In
+            Let Ti62.383 =
+              Set (100)
+            In
+            Let Ti63.384 =
+              Set (0)
+            In
+            Let Ti64.385 =
+              Set (10)
+            In
+            Let tx.352 =
+              CallDir div_binary_search.319 x.350 Ti62.383 Ti63.384 Ti64.385 
+            In
+            Let Ti65.382 =
+              Set (100)
+            In
+            Let dx.353 =
+              tx.352 * Ti65.382
+            In
+            Let x.354 =
+              x.350 - dx.353
+            In
+            Let Ti66.374 =
+              Set (0)
+            In
+            Let flg.355 =
+              If tx.352 <= Ti66.374 Then
+                Let Ti67.378 =
+                  Set (0)
+                In
+                Ans (
+                  If flg.351 = Ti67.378 Then
+                    Ans (
+                      Set (0)
+                    )
+                  Then
+                    Let Ti68.381 =
+                      Set (48)
+                    In
+                    Let Ti69.380 =
+                      Ti68.381 + tx.352
+                    In
+                    Let Tu18.379 =
+                      CallDir min_caml_print_char Ti69.380 
+                    In
+                    Ans (
+                      Set (1)
+                    )
+                )
+              Then
+                Let Ti70.377 =
+                  Set (48)
+                In
+                Let Ti71.376 =
+                  Ti70.377 + tx.352
+                In
+                Let Tu19.375 =
+                  CallDir min_caml_print_char Ti71.376 
+                In
+                Ans (
+                  Set (1)
+                )
+            In
+            Let Ti72.371 =
+              Set (10)
+            In
+            Let Ti73.372 =
+              Set (0)
+            In
+            Let Ti74.373 =
+              Set (10)
+            In
+            Let tx.356 =
+              CallDir div_binary_search.319 x.354 Ti72.371 Ti73.372 Ti74.373 
+            In
+            Let Ti75.370 =
+              Set (10)
+            In
+            Let dx.357 =
+              tx.356 * Ti75.370
+            In
+            Let x.358 =
+              x.354 - dx.357
+            In
+            Let Ti76.362 =
+              Set (0)
+            In
+            Let flg.359 =
+              If tx.356 <= Ti76.362 Then
+                Let Ti77.366 =
+                  Set (0)
+                In
+                Ans (
+                  If flg.355 = Ti77.366 Then
+                    Ans (
+                      Set (0)
+                    )
+                  Then
+                    Let Ti78.369 =
+                      Set (48)
+                    In
+                    Let Ti79.368 =
+                      Ti78.369 + tx.356
+                    In
+                    Let Tu20.367 =
+                      CallDir min_caml_print_char Ti79.368 
+                    In
+                    Ans (
+                      Set (1)
+                    )
+                )
+              Then
+                Let Ti80.365 =
+                  Set (48)
+                In
+                Let Ti81.364 =
+                  Ti80.365 + tx.356
+                In
+                Let Tu21.363 =
+                  CallDir min_caml_print_char Ti81.364 
+                In
+                Ans (
+                  Set (1)
+                )
+            In
+            Let Ti82.361 =
+              Set (48)
+            In
+            Let Ti83.360 =
+              Ti82.361 + x.358
+            In
+            Ans (
+              CallDir min_caml_print_char Ti83.360 
+            )
+          Then
+            Let Ti84.347 =
+              Set (45)
+            In
+            Let Tu16.345 =
+              CallDir min_caml_print_char Ti84.347 
+            In
+            Let Ti85.346 =
+              Neg (x.325)
+            In
+            Ans (
+              CallDir print_int.324 Ti85.346 
+            )
+        )
+      Then
+        Ans (
+          Nop
+        )
+    )
+  Let %g28 =
+    Set (l.618)
   In
-  Let w : Int =
-    Let Ti13 : Int =
-      Int(9)
-    In
-    Let Ti14 : Int =
-      Int(0)
-    In
-    Ti13 << Ti14
+  Let %f16 =
+    FLord %g28[0]
   In
-  Let Ti15 : Int =
-    x + y
+  Let %g28 =
+    Set (l.626)
   In
-  Ti15 + z
-
-Print KNormal_t (Alpha.ml)
-  Let x.16 : Int =
-    Let Ti1.35 : Int =
-      Int(5)
-    In
-    Let Ti2.36 : Int =
-      Int(-1)
-    In
-    Ti1.35 << Ti2.36
+  Let %f17 =
+    FLord %g28[0]
   In
-  Let y.17 : Int =
-    Let Ti3.33 : Int =
-      Int(8)
-    In
-    Let Ti4.34 : Int =
-      Int(-2)
-    In
-    Ti3.33 << Ti4.34
+  Let %g28 =
+    Set (l.624)
   In
-  Let z.18 : Int =
-    Let Ti5.31 : Int =
-      Int(9)
-    In
-    Let Ti6.32 : Int =
-      Int(5)
-    In
-    Ti5.31 / Ti6.32
+  Let %f18 =
+    FLord %g28[0]
   In
-  Let w.19 : Int =
-    Let Ti8.28 : Int =
-      Let Ti7.30 : Int =
-        Int(9)
-      In
-      -Ti7.30
-    In
-    Let Ti9.29 : Int =
-      Int(-3)
-    In
-    Ti8.28 << Ti9.29
+  Let %g28 =
+    Set (l.647)
   In
-  Let w.20 : Int =
-    Let Ti11.25 : Int =
-      Let Ti10.27 : Int =
-        Int(9)
-      In
-      -Ti10.27
-    In
-    Let Ti12.26 : Int =
-      Int(0)
-    In
-    Ti11.25 << Ti12.26
+  Let %f19 =
+    FLord %g28[0]
   In
-  Let w.21 : Int =
-    Let Ti13.23 : Int =
-      Int(9)
-    In
-    Let Ti14.24 : Int =
-      Int(0)
-    In
-    Ti13.23 << Ti14.24
+  Let %g28 =
+    Set (l.645)
   In
-  Let Ti15.22 : Int =
-    x.16 + y.17
+  Let %f20 =
+    FLord %g28[0]
   In
-  Ti15.22 + z.18
-
-Print KNormal_t(Cse.ml):
-  Let Ti1.35 : Int =
-    Int(5)
+  Let %g28 =
+    Set (l.643)
   In
-  Let Ti2.36 : Int =
-    Int(-1)
+  Let %f21 =
+    FLord %g28[0]
   In
-  Let x.16 : Int =
-    Ti1.35 << Ti2.36
+  Let %g28 =
+    Set (l.641)
   In
-  Let Ti3.33 : Int =
-    Int(8)
+  Let %f22 =
+    FLord %g28[0]
   In
-  Let Ti4.34 : Int =
-    Int(-2)
+  Let %g28 =
+    Set (l.639)
   In
-  Let y.17 : Int =
-    Ti3.33 << Ti4.34
+  Let %f23 =
+    FLord %g28[0]
   In
-  Let Ti5.31 : Int =
-    Int(9)
+  Let %g28 =
+    Set (l.637)
   In
-  Let Ti6.32 : Int =
-    Var(Ti1.35)
+  Let %f24 =
+    FLord %g28[0]
   In
-  Let z.18 : Int =
-    Ti5.31 / Ti6.32
+  Let %g28 =
+    Set (l.633)
   In
-  Let Ti7.30 : Int =
-    Var(Ti5.31)
+  Let %f25 =
+    FLord %g28[0]
   In
-  Let Ti8.28 : Int =
-    -Ti7.30
+  Let %g28 =
+    Set (l.628)
   In
-  Let Ti9.29 : Int =
-    Int(-3)
+  Let %f26 =
+    FLord %g28[0]
   In
-  Let w.19 : Int =
-    Ti8.28 << Ti9.29
+  Let %g28 =
+    Set (l.622)
   In
-  Let Ti10.27 : Int =
-    Var(Ti7.30)
+  Let %f27 =
+    FLord %g28[0]
   In
-  Let Ti11.25 : Int =
-    Var(Ti8.28)
+  Let %g28 =
+    Set (l.620)
   In
-  Let Ti12.26 : Int =
-    Int(0)
+  Let %f28 =
+    FLord %g28[0]
   In
-  Let w.20 : Int =
-    Ti11.25 << Ti12.26
+  Let l.640 =
+    Set (l.639)
   In
-  Let Ti13.23 : Int =
-    Var(Ti10.27)
+  Let pi.282 =
+    FLord l.640[0]
   In
-  Let Ti14.24 : Int =
-    Var(Ti12.26)
+  Let l.642 =
+    Set (l.641)
   In
-  Let w.21 : Int =
-    Ti13.23 << Ti14.24
+  Let pi2.283 =
+    FLord l.642[0]
   In
-  Let Ti15.22 : Int =
-    x.16 + y.17
+  Let l.644 =
+    Set (l.643)
   In
-  Ti15.22 + z.18
-
-Print KNormal_t (Movelet.ml)
-  Int(1)
-
-Print KNormal_t(Cse.ml):
-  Int(1)
-
-Print KNormal_t (Movelet.ml)
-  Int(1)
-
-Print Closure_t(Closure.ml):
-  Int (1)
-
-Print Asm_t(Virtual.ml):
-  Ans (
+  Let pih.284 =
+    FLord l.644[0]
+  In
+  Let sin_sub.293 =
+    Mov (%g2)
+  In
+  Let %g2 =
+    %g2 + 16
+  In
+  Let l.659 =
+    Set (sin_sub.293)
+  In
+  Let Tu660 =
+    Store l.659 to sin_sub.293[0]
+  In
+  Let Tu658 =
+    FStore pi2.283 to sin_sub.293[-8]
+  In
+  Let sin.295 =
+    Mov (%g2)
+  In
+  Let %g2 =
+    %g2 + 40
+  In
+  Let l.656 =
+    Set (sin.295)
+  In
+  Let Tu657 =
+    Store l.656 to sin.295[0]
+  In
+  Let Tu655 =
+    Store sin_sub.293 to sin.295[-32]
+  In
+  Let Tu654 =
+    FStore pih.284 to sin.295[-24]
+  In
+  Let Tu653 =
+    FStore pi2.283 to sin.295[-16]
+  In
+  Let Tu652 =
+    FStore pi.282 to sin.295[-8]
+  In
+  Let cos.297 =
+    Mov (%g2)
+  In
+  Let %g2 =
+    %g2 + 8
+  In
+  Let l.650 =
+    Set (cos.297)
+  In
+  Let Tu651 =
+    Store l.650 to cos.297[0]
+  In
+  Let Tu649 =
+    Store sin.295 to cos.297[-4]
+  In
+  Let Ti24.534 =
     Set (1)
+  In
+  Let Ti25.535 =
+    Set (0)
+  In
+  Let read_int_ans.301 =
+    CallDir min_caml_create_array Ti24.534 Ti25.535 
+  In
+  Let Ti26.532 =
+    Set (1)
+  In
+  Let Ti27.533 =
+    Set (0)
+  In
+  Let read_int_s.302 =
+    CallDir min_caml_create_array Ti26.532 Ti27.533 
+  In
+  Let Ti28.489 =
+    Set (1)
+  In
+  Let Ti29.490 =
+    Set (0)
+  In
+  Let read_float_i.308 =
+    CallDir min_caml_create_array Ti28.489 Ti29.490 
+  In
+  Let Ti30.487 =
+    Set (1)
+  In
+  Let Ti31.488 =
+    Set (0)
+  In
+  Let read_float_f.309 =
+    CallDir min_caml_create_array Ti30.487 Ti31.488 
+  In
+  Let Ti32.485 =
+    Set (1)
+  In
+  Let Ti33.486 =
+    Set (1)
+  In
+  Let read_float_exp.310 =
+    CallDir min_caml_create_array Ti32.485 Ti33.486 
+  In
+  Let Ti34.483 =
+    Set (1)
+  In
+  Let Ti35.484 =
+    Set (0)
+  In
+  Let read_float_s.311 =
+    CallDir min_caml_create_array Ti34.483 Ti35.484 
+  In
+  Let Td37.341 =
+    CallDir abs_float.274 
+  In
+  Let Td38.340 =
+    CallDir min_caml_sqrt Td37.341 
+  In
+  Let Td39.339 =
+    CallCls cos.297 Td38.340 
+  In
+  Let Td40.337 =
+    CallCls sin.295 Td39.339 
+  In
+  Let l.646 =
+    Set (l.645)
+  In
+  Let Td41.338 =
+    FLord l.646[0]
+  In
+  Let Td42.331 =
+    Td40.337 +. Td41.338
+  In
+  Let l.648 =
+    Set (l.647)
+  In
+  Let Td47.332 =
+    FLord l.648[0]
+  In
+  Let Td48.328 =
+    Td42.331 -. Td47.332
+  In
+  Let Ti49.330 =
+    Set (1000000)
+  In
+  Let Td50.329 =
+    CallDir min_caml_float_of_int Ti49.330 
+  In
+  Let Td51.327 =
+    Td48.328 *. Td50.329
+  In
+  Let Ti52.326 =
+    CallDir min_caml_int_of_float Td51.327 
+  In
+  Ans (
+    CallDir print_int.324 Ti52.326 
   )
+output files : test/float.s
+input files : lib/lib_asm.s tmp.s 
+.init_heap_size	192 => 192
+.init_heap_size	416 => 416
+.init_heap_size	608
 
+		skip

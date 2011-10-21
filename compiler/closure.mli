@@ -1,3 +1,6 @@
+type id_or_imm = V of Id.t | C of int
+val pp_id_or_imm : id_or_imm -> string
+
 type closure = { entry : Id.l; actual_fv : Id.t list }
 type t =
   | Unit
@@ -14,8 +17,8 @@ type t =
   | FSub of Id.t * Id.t
   | FMul of Id.t * Id.t
   | FDiv of Id.t * Id.t
-  | IfEq of Id.t * Id.t * t * t
-  | IfLE of Id.t * Id.t * t * t
+  | IfEq of id_or_imm * id_or_imm * t * t
+  | IfLE of id_or_imm * id_or_imm * t * t
   | Let of (Id.t * Type.t) * t * t
   | Var of Id.t
   | MakeCls of (Id.t * Type.t) * closure * t

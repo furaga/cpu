@@ -144,3 +144,4 @@ let rec print n syntax =
 			Printf.printf "<-\n";
 			print (n + 1) e2;
 		end
+	| _ -> ()

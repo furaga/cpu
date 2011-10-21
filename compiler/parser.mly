@@ -117,6 +117,7 @@ exp: /* 一般の式 (caml2html: parser_exp) */
 | MINUS exp
     %prec prec_unary_minus
     { match fst $2 with
+    | Int(n) -> get_syntax (Int(-n)) (* -1.23などは型エラーではないので別扱い *)
     | Float(f) -> get_syntax (Float(-.f)) (* -1.23などは型エラーではないので別扱い *)
     | e -> get_syntax (Neg($2)) }
 | exp PLUS exp /* 足し算を構文解析するルール (caml2html: parser_add) */
@@ -126,7 +127,7 @@ exp: /* 一般の式 (caml2html: parser_exp) */
 | exp AST exp
     { if is_log2_exp $3 then get_syntax (sll_of_mul $1 $3) else get_syntax (Mul($1, $3)) }
 | exp SLASH exp
-    { if is_log2_exp $3 then get_syntax (sll_of_div $1 $3) else assert false(*get_syntax (Div($1, $3))*) }
+    { if (print_endline "\n\thello\n\n"; is_log2_exp $3) then get_syntax (sll_of_div $1 $3) else assert false(*get_syntax (Div($1, $3))*) }
 | exp EQUAL exp
     { get_syntax (Eq($1, $3)) }
 | exp LESS_GREATER exp

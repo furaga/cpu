@@ -1,5 +1,7 @@
 open Asm
 
+let fixed = ref S.empty
+
 (* for register coalescing *)
 (* [XXX] Callがあったら、そこから先は無意味というか逆効果なので追わない。
          そのために「Callがあったかどうか」を返り値の第1要素に含める。 *)
@@ -28,9 +30,11 @@ and target src dest = function (* register targeting (caml2html: regalloc_target
   | Ans(exp) -> target' src dest exp
   | Let(xt, exp, e) ->
       let c1, rs1 = target' src xt exp in
-      if c1 then true, rs1 else
-      let c2, rs2 = target src dest e in
-      c2, rs1 @ rs2
+      if c1 then 
+      	true, rs1 
+      else 
+      	let c2, rs2 = target src dest e in 
+      	c2, rs1 @ rs2
 and target_args src all n = function (* auxiliary function for Call *)
   | [] -> []
   | y :: ys when src = y -> all.(n) :: target_args src all (n + 1) ys
@@ -102,15 +106,15 @@ let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (caml2html: re
       let (e1', regenv1) = g'_and_restore xt cont' regenv exp in
       (match alloc dest cont' regenv1 x t with
       | Spill(y) ->
-	  let r = M.find y regenv1 in
-	  let (e2', regenv2) = g dest cont (add x r (M.remove y regenv1)) e in
-	  let save =
-	    try Save(M.find y regenv, y)
-	    with Not_found -> Nop in	    
-	  (seq(save, concat e1' (r, t) e2'), regenv2)
+		  let r = M.find y regenv1 in
+		  let (e2', regenv2) = g dest cont (add x r (M.remove y regenv1)) e in
+		  let save =
+			try Save(M.find y regenv, y)
+			with Not_found -> Nop in	    
+		  (seq(save, concat e1' (r, t) e2'), regenv2)
       | Alloc(r) ->
-	  let (e2', regenv2) = g dest cont (add x r regenv1) e in
-	  (concat e1' (r, t) e2', regenv2))
+		  let (e2', regenv2) = g dest cont (add x r regenv1) e in
+		  (concat e1' (r, t) e2', regenv2))
 and g'_and_restore dest cont regenv exp = (* 使用される変数をスタックからレジスタへRestore (caml2html: regalloc_unspill) *)
   try g' dest cont regenv exp
   with NoReg(x, t) ->
@@ -183,21 +187,21 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数のレ
       (fun (i, arg_regs, regenv) y ->
         let r = regs.(i) in
         (i + 1,
-	 arg_regs @ [r],
-	 (assert (not (is_reg y));
-	  M.add y r regenv)))
-      (0, [], regenv)
-      ys in
+		 arg_regs @ [r],
+		 (assert (not (is_reg y));
+		  M.add y r regenv)))
+	  (0, [], regenv)
+	  ys in
   let (d, farg_regs, regenv) =
     List.fold_left
       (fun (d, farg_regs, regenv) z ->
         let fr = fregs.(d) in
         (d + 1,
-	 farg_regs @ [fr],
-	 (assert (not (is_reg z));
-	  M.add z fr regenv)))
-      (0, [], regenv)
-      zs in
+		 farg_regs @ [fr],
+		 (assert (not (is_reg z));
+		  M.add z fr regenv)))
+	  (0, [], regenv)
+	  zs in
   let a =
     match t with
     | Type.Unit -> Id.gentmp Type.Unit
@@ -208,6 +212,7 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数のレ
 
 let f (Prog(data, fundefs, e)) = (* プログラム全体のレジスタ割り当て (caml2html: regalloc_f) *)
   Format.eprintf "register allocation: may take some time (up to a few minutes, depending on the size of functions)@.";
+  fixed := S.empty;
   let fundefs' = List.map h fundefs in
   let e', regenv' = g (Id.gentmp Type.Unit, Type.Unit) (Ans(Nop)) M.empty e in
   Prog(data, fundefs', e')

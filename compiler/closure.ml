@@ -1,3 +1,9 @@
+type id_or_imm = V of Id.t | C of int
+
+let pp_id_or_imm = function
+  | V(x) -> x
+  | C(i) -> string_of_int i
+
 type closure = { entry : Id.l; actual_fv : Id.t list }
 type t = (* クロージャ変換後の式 (caml2html: closure_t) *)
   | Unit
@@ -14,8 +20,8 @@ type t = (* クロージャ変換後の式 (caml2html: closure_t) *)
   | FSub of Id.t * Id.t
   | FMul of Id.t * Id.t
   | FDiv of Id.t * Id.t
-  | IfEq of Id.t * Id.t * t * t
-  | IfLE of Id.t * Id.t * t * t
+  | IfEq of id_or_imm * id_or_imm * t * t
+  | IfLE of id_or_imm * id_or_imm * t * t
   | Let of (Id.t * Type.t) * t * t
   | Var of Id.t
   | MakeCls of (Id.t * Type.t) * closure * t
@@ -36,7 +42,12 @@ let rec fv = function
   | Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
   | Neg(x) | FNeg(x) -> S.singleton x
   | Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | SLL(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
-  | IfEq(x, y, e1, e2)| IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
+
+  | IfEq(V x, V y, e1, e2) | IfLE(V x, V y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
+  | IfEq(V x, C y, e1, e2) | IfLE(V x, C y, e1, e2) -> S.add x (S.union (fv e1) (fv e2))
+  | IfEq(C x, V y, e1, e2) | IfLE(C x, V y, e1, e2) -> S.add y (S.union (fv e1) (fv e2))
+  | IfEq(C x, C y, e1, e2) | IfLE(C x, C y, e1, e2) -> S.union (fv e1) (fv e2)
+
   | Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2))
   | Var(x) -> S.singleton x
   | MakeCls((x, t), { entry = l; actual_fv = ys }, e) -> S.remove x (S.union (S.of_list ys) (fv e))
@@ -62,8 +73,17 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
   | KNormal.FSub(x, y) -> FSub(x, y)
   | KNormal.FMul(x, y) -> FMul(x, y)
   | KNormal.FDiv(x, y) -> FDiv(x, y)
-  | KNormal.IfEq(x, y, e1, e2) -> IfEq(x, y, g env known e1, g env known e2)
-  | KNormal.IfLE(x, y, e1, e2) -> IfLE(x, y, g env known e1, g env known e2)
+
+  | KNormal.IfEq(KNormal.V x, KNormal.V y, e1, e2) -> IfEq(V x, V y, g env known e1, g env known e2)
+  | KNormal.IfEq(KNormal.V x, KNormal.C y, e1, e2) -> IfEq(V x, C y, g env known e1, g env known e2)
+  | KNormal.IfEq(KNormal.C x, KNormal.V y, e1, e2) -> IfEq(C x, V y, g env known e1, g env known e2)
+  | KNormal.IfEq(KNormal.C x, KNormal.C y, e1, e2) -> if x = y then g env known e1 else g env known e2
+
+  | KNormal.IfLE(KNormal.V x, KNormal.V y, e1, e2) -> IfLE(V x, V y, g env known e1, g env known e2)
+  | KNormal.IfLE(KNormal.V x, KNormal.C y, e1, e2) -> IfLE(V x, C y, g env known e1, g env known e2)
+  | KNormal.IfLE(KNormal.C x, KNormal.V y, e1, e2) -> IfLE(C x, V y, g env known e1, g env known e2)
+  | KNormal.IfLE(KNormal.C x, KNormal.C y, e1, e2) -> if x <= y then g env known e1 else g env known e2
+
   | KNormal.Let((x, t), e1, e2) -> Let((x, t), g env known e1, g (M.add x t env) known e2)
   | KNormal.Var(x) -> Var(x)
   | KNormal.LetRec({ KNormal.name = (x, t); KNormal.args = yts; KNormal.body = e1 }, e2) -> (* 関数定義の場合 (caml2html: closure_letrec) *)
@@ -98,7 +118,7 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
   | KNormal.App(x, ys) when S.mem x known -> (* 関数適用の場合 (caml2html: closure_app) *)
       Format.eprintf "directly applying %s@." x;
       AppDir(Id.L(x), ys)
-  | KNormal.App(f, xs) -> (print_endline "\n\tKNormal.App\n"; AppCls(f, xs) )
+  | KNormal.App(f, xs) -> (AppCls(f, xs) )
   | KNormal.Tuple(xs) -> Tuple(xs)
   | KNormal.LetTuple(xts, y, e) -> LetTuple(xts, y, g (M.add_list xts env) known e)
   | KNormal.Get(x, y) -> Get(x, y)
@@ -127,6 +147,8 @@ let rec print n = function
 	| IfEq (id, v, e1, e2) ->
 		begin
 			indent n;
+			let id = pp_id_or_imm id in
+			let v = pp_id_or_imm v in
 			Printf.printf "If %s = %s Then\n" id v;
 			print (n + 1) e1;
 			indent n;
@@ -136,6 +158,8 @@ let rec print n = function
 	| IfLE (id, v, e1, e2) ->
 		begin
 			indent n;
+			let id = pp_id_or_imm id in
+			let v = pp_id_or_imm v in
 			Printf.printf "If %s <= %s Then\n" id v;
 			print (n + 1) e1;
 			indent n;

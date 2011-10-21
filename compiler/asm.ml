@@ -1,42 +1,43 @@
 (* SPARC assembly with a few virtual instructions *)
-
 type id_or_imm = V of Id.t | C of int
-type t = (* 命令の列 (caml2html: sparcasm_t) *)
-  | Ans of exp
-  | Let of (Id.t * Type.t) * exp * t
-and exp = (* 一つ一つの命令に対応する式 (caml2html: sparcasm_exp) *)
-  | Nop
-  | Set of int
-  | SetL of Id.l
-  | Mov of Id.t
-  | Neg of Id.t
-  | Add of Id.t * id_or_imm
-  | Sub of Id.t * id_or_imm
-  | Mul of Id.t * id_or_imm
-  | Div of Id.t * id_or_imm
-  | SLL of Id.t * id_or_imm
-  | Ld of Id.t * id_or_imm
-  | St of Id.t * Id.t * id_or_imm
-  | FMovD of Id.t
-  | FNegD of Id.t
-  | FAddD of Id.t * Id.t
-  | FSubD of Id.t * Id.t
-  | FMulD of Id.t * Id.t
-  | FDivD of Id.t * Id.t
-  | LdDF of Id.t * id_or_imm
-  | StDF of Id.t * Id.t * id_or_imm
-  | Comment of string
-  (* virtual instructions *)
-  | IfEq of Id.t * id_or_imm * t * t
-  | IfLE of Id.t * id_or_imm * t * t
-  | IfGE of Id.t * id_or_imm * t * t (* 左右対称ではないので必要 *)
-  | IfFEq of Id.t * Id.t * t * t
-  | IfFLE of Id.t * Id.t * t * t
-  (* closure address, integer arguments, and float arguments *)
-  | CallCls of Id.t * Id.t list * Id.t list
-  | CallDir of Id.l * Id.t list * Id.t list
-  | Save of Id.t * Id.t (* レジスタ変数の値をスタック変数へ保存 (caml2html: sparcasm_save) *)
-  | Restore of Id.t (* スタック変数から値を復元 (caml2html: sparcasm_restore) *)
+(*type id_or_imm' = V' of Id.t | C' of Id.t * int*)
+type t =
+	| Ans of exp
+	| Let of (Id.t * Type.t) * exp * t
+(*	| Forget of Id.t * t*)
+and exp =
+	| Nop
+	| Set of int
+	| SetL of Id.l
+	| Mov of Id.t
+	| Neg of Id.t
+	| Add of Id.t * id_or_imm
+	| Sub of Id.t * id_or_imm
+	| Mul of Id.t * id_or_imm
+	| Div of Id.t * id_or_imm
+	| SLL of Id.t * id_or_imm
+	| Ld of Id.t * id_or_imm
+	| St of Id.t * Id.t * id_or_imm
+	| FMovD of Id.t
+	| FNegD of Id.t
+	| FAddD of Id.t * Id.t
+	| FSubD of Id.t * Id.t
+	| FMulD of Id.t * Id.t
+	| FDivD of Id.t * Id.t
+	| LdDF of Id.t * id_or_imm
+	| StDF of Id.t * Id.t * id_or_imm
+	| Comment of string
+	(* virtual instructions *)
+	| IfEq of Id.t * id_or_imm * t * t
+	| IfLE of Id.t * id_or_imm * t * t
+	| IfGE of Id.t * id_or_imm * t * t
+	| IfFEq of Id.t * Id.t * t * t
+	| IfFLE of Id.t * Id.t * t * t
+	(* closure address, integer arguments, and float arguments *)
+	| CallCls of Id.t * Id.t list * Id.t list
+	| CallDir of Id.l * Id.t list * Id.t list
+	| Save of Id.t * Id.t (* レジスタ変数の値をスタック変数へ保存 *)
+	| Restore of Id.t (* スタック変数から値を復元 *)
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 (* プログラム全体 = 浮動小数点数テーブル + トップレベル関数 + メインの式 (caml2html: sparcasm_prog) *)
 type prog = Prog of (Id.l * float) list * fundef list * t
@@ -48,20 +49,31 @@ let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
 let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
   [| "%g3"; "%g4"; "%g5"; "%g6"; "%g7"; "%g8"; "%g9";
   	 "%g10"; "%g11"; "%g12"; "%g13"; "%g14"; "%g15"; "%g16"; "%g17"; "%g18"; "%g19"; 
-     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; "%g26"; "%g27"; "%g28"; "%g29" |]
+     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; "%g26"; "%g27";  |](*"%g28"; "%g29"*)
 (*  [| "%i2"; "%i3"; "%i4"; "%i5";
      "%l0"; "%l1"; "%l2"; "%l3"; "%l4"; "%l5"; "%l6"; "%l7";
      "%o0"; "%o1"; "%o2"; "%o3"; "%o4"; "%o5" |]
 *)
-let fregs = Array.init 32 (fun i -> Printf.sprintf "%%f%d" i)
+
+let freg_num = 16
+
+let fregs = Array.init freg_num (fun i -> Printf.sprintf "%%f%d" i)
 let allregs = Array.to_list regs
 let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
 let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)
 let reg_fsw = fregs.(Array.length fregs - 1) (* temporary for swap *)
+
+let reg_0 = "%g0"	(* 常に０ *)
+let reg_p1 = "%g28"	(* 常に１ *)
+let reg_m1 = "%g29"	(* 常に-１ *)
+
 let reg_sp = "%g1" (* stack pointer *)
 let reg_hp = "%g2" (* heap pointer (caml2html: sparcasm_reghp) *)
 let reg_ra = "%g31" (* return address *)
+
+let reg_fgs = Array.to_list (Array.init (32 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
+
 let is_reg x = (x.[0] = '%')
 (*let co_freg_table =
   let ht = Hashtbl.create 16 in
@@ -96,6 +108,7 @@ and fv = function
   | Ans(exp) -> fv_exp exp
   | Let((x, t), exp, e) ->
       fv_exp exp @ remove_and_uniq (S.singleton x) (fv e)
+(*  | Forget(x, e) -> fv (S.add x env) cont e*)
 let fv e = remove_and_uniq S.empty (fv e)
 
 let rec concat e1 xt e2 =

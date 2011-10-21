@@ -1,5 +1,11 @@
 (* give names to intermediate values (K-normalization) *)
 
+type id_or_imm = V of Id.t | C of int
+
+let pp_id_or_imm = function
+  | V(x) -> x
+  | C(i) -> string_of_int i
+
 type t = (* K正規化後の式 (caml2html: knormal_t) *)
   | Unit
   | Int of int
@@ -15,8 +21,8 @@ type t = (* K正規化後の式 (caml2html: knormal_t) *)
   | FSub of Id.t * Id.t
   | FMul of Id.t * Id.t
   | FDiv of Id.t * Id.t
-  | IfEq of Id.t * Id.t * t * t (* 比較 + 分岐 (caml2html: knormal_branch) *)
-  | IfLE of Id.t * Id.t * t * t (* 比較 + 分岐 *)
+  | IfEq of id_or_imm * id_or_imm * t * t (* 比較 + 分岐 (caml2html: knormal_branch) *)
+  | IfLE of id_or_imm * id_or_imm * t * t (* 比較 + 分岐 *)
   | Let of (Id.t * Type.t) * t * t
   | Var of Id.t
   | LetRec of fundef * t
@@ -33,7 +39,10 @@ let rec fv = function (* 式に出現する（自由な）変数 (caml2html: knormal_fv) *)
   | Unit | Int(_) | Float(_) | ExtArray(_) -> S.empty
   | Neg(x) | FNeg(x) -> S.singleton x
   | Add(x, y) | Sub(x, y) | Mul(x, y) | Div(x, y) | SLL(x, y) | FAdd(x, y) | FSub(x, y) | FMul(x, y) | FDiv(x, y) | Get(x, y) -> S.of_list [x; y]
-  | IfEq(x, y, e1, e2) | IfLE(x, y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
+  | IfEq(V x, V y, e1, e2) | IfLE(V x, V y, e1, e2) -> S.add x (S.add y (S.union (fv e1) (fv e2)))
+  | IfEq(V x, C y, e1, e2) | IfLE(V x, C y, e1, e2) -> S.add x (S.union (fv e1) (fv e2))
+  | IfEq(C x, V y, e1, e2) | IfLE(C x, V y, e1, e2) -> S.add y (S.union (fv e1) (fv e2))
+  | IfEq(C x, C y, e1, e2) | IfLE(C x, C y, e1, e2) -> S.union (fv e1) (fv e2)
   | Let((x, t), e1, e2) -> S.union (fv e1) (S.remove x (fv e2))
   | Var(x) -> S.singleton x
   | LetRec({ name = (x, t); args = yts; body = e1 }, e2) ->
@@ -105,20 +114,36 @@ let rec g env e =
   | Syntax.Eq _ | Syntax.LE _ as cmp ->
       g env (Syntax.If((cmp, line), (Syntax.Bool(true), line), (Syntax.Bool(false), line)), line)
   | Syntax.If((Syntax.Not(e1), _), e2, e3) -> g env (Syntax.If(e1, e3, e2), line) (* notによる分岐を変換 (caml2html: knormal_not) *)
+
   | Syntax.If((Syntax.Eq(e1, e2), _), e3, e4) ->
-      insert_let (g env e1)
-	(fun x -> insert_let (g env e2)
-	    (fun y ->
-	      let e3', t3 = g env e3 in
-	      let e4', t4 = g env e4 in
-	      IfEq(x, y, e3', e4'), t3))
+	let e1', t1 = g env e1 in
+	let e2', t2 = g env e2 in
+	let e3', t3 = g env e3 in
+	let e4', t4 = g env e4 in
+  	(match e1', e2' with
+	| Int m, Int n when -1 <= m && m <= 1 && -1 <= n && n <= 1 -> if m = n then (e3', t3) else (e4', t4)
+	| Int m, e2' when -1 <= m && m <= 1 -> insert_let (e2', t2) (fun y -> IfEq (C m, V y, e3', e4'), t3)
+	| e1', Int n when -1 <= n && n <= 1 -> insert_let (e1', t1) (fun y -> IfEq (C n, V y, e3', e4'), t3)
+	| e1', e2' ->
+		insert_let (e1', t1)
+			(fun x -> insert_let (e2', t2)
+				(fun y -> IfEq(V x, V y, e3', e4'), t3))
+	)
+
   | Syntax.If((Syntax.LE(e1, e2), _), e3, e4) ->
-      insert_let (g env e1)
-	(fun x -> insert_let (g env e2)
-	    (fun y ->
-	      let e3', t3 = g env e3 in
-	      let e4', t4 = g env e4 in
-	      IfLE(x, y, e3', e4'), t3))
+	let e1', t1 = g env e1 in
+	let e2', t2 = g env e2 in
+	let e3', t3 = g env e3 in
+	let e4', t4 = g env e4 in
+  	(match e1', e2' with
+	| Int m, Int n when -1 <= m && m <= 1 && -1 <= n && n <= 1 -> if m <= n then (e3', t3) else (e4', t4)
+	| Int m, e2' when -1 <= m && m <= 1 -> insert_let (e2', t2) (fun y -> IfLE (C m, V y, e3', e4'), t3)
+	| e1', Int n when -1 <= n && n <= 1 -> insert_let (e1', t1) (fun x -> IfLE (V x, C n, e3', e4'), t3)
+	| e1', e2' ->
+		insert_let (e1', t1)
+			(fun x -> insert_let (e2', t2)
+				(fun y -> IfLE(V x, V y, e3', e4'), t3))
+	)
   | Syntax.If(e1, e2, e3) -> g env (Syntax.If((Syntax.Eq(e1, (Syntax.Bool(false), line)), line), e3, e2), line) (* 比較のない分岐を変換 (caml2html: knormal_if) *)
   | Syntax.Let((x, t), e1, e2) ->
       let e1', t1 = g env e1 in
@@ -269,6 +294,8 @@ let rec print n = function
 	| IfEq (id1, id2, then_exp, else_exp) ->
 		begin
 			indent n;
+			let id1 = pp_id_or_imm id1 in
+			let id2 = pp_id_or_imm id2 in
 			Printf.printf "If %s = %s Then\n" id1 id2;
 			print (n + 1) then_exp;
 			indent n;
@@ -278,6 +305,8 @@ let rec print n = function
 	| IfLE (id1, id2, then_exp, else_exp) ->
 		begin
 			indent n;
+			let id1 = pp_id_or_imm id1 in
+			let id2 = pp_id_or_imm id2 in
 			Printf.printf "If %s <= %s Then\n" id1 id2;
 			print (n + 1) then_exp;
 			indent n;
@@ -362,13 +391,13 @@ let rec print n = function
 
 let f flg e = 
 	begin
-		if flg then
+(*		if flg then
 			begin
 				print_endline "Print Syntax_t(kNormal.ml):";
 				Syntax.print 1 e;
 				print_newline ();
 				flush stdout;
-			end;
+			end;*)
 		let ans = fst (g M.empty e) in
 		if flg then
 			begin

@@ -19,8 +19,16 @@ let rec g env = function (* α変換ルーチン本体 (caml2html: alpha_g) *)
   | FSub(x, y) -> FSub(find x env, find y env)
   | FMul(x, y) -> FMul(find x env, find y env)
   | FDiv(x, y) -> FDiv(find x env, find y env)
-  | IfEq(x, y, e1, e2) -> IfEq(find x env, find y env, g env e1, g env e2)
-  | IfLE(x, y, e1, e2) -> IfLE(find x env, find y env, g env e1, g env e2)
+  | IfEq(V x, V y, e1, e2) -> IfEq(V (find x env), V (find y env), g env e1, g env e2)
+  | IfEq(V x, C y, e1, e2) -> IfEq(V (find x env), C y, g env e1, g env e2)
+  | IfEq(C x, V y, e1, e2) -> IfEq(C x, V (find y env), g env e1, g env e2)
+  | IfEq(C x, C y, e1, e2) -> IfEq(C x, C y, g env e1, g env e2)
+
+  | IfLE(V x, V y, e1, e2) -> IfLE(V (find x env), V (find y env), g env e1, g env e2)
+  | IfLE(V x, C y, e1, e2) -> IfLE(V (find x env), C y, g env e1, g env e2)
+  | IfLE(C x, V y, e1, e2) -> IfLE(C x, V (find y env), g env e1, g env e2)
+  | IfLE(C x, C y, e1, e2) -> IfLE(C x, C y, g env e1, g env e2)
+
   | Let((x, t), e1, e2) -> (* letのα変換 (caml2html: alpha_let) *)
       let x' = Id.genid x in
       Let((x', t), g env e1, g (M.add x x' env) e2)

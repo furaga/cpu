@@ -25,7 +25,7 @@ and effect_fun id env exp =
 	if effect (S.add id env) exp then
 		effect env exp
 	else false
-
+(*
 (* let x を削除 *)
 let rec remove x = function
 	| Let ((x',t),e1,e2)  -> if x = x' then e2 else Let ((x',t),remove x e1,remove x e2)
@@ -106,4 +106,4 @@ let f flg e =
 			print_newline ()
 		end;
 	ans
-	
+	*)
