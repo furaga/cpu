@@ -72,7 +72,7 @@ let reg_sp = "%g1" (* stack pointer *)
 let reg_hp = "%g2" (* heap pointer (caml2html: sparcasm_reghp) *)
 let reg_ra = "%g31" (* return address *)
 
-let reg_fgs = Array.to_list (Array.init (32 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
+let reg_fgs = Array.to_list (Array.init (31 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
 
 let is_reg x = (x.[0] = '%')
 (*let co_freg_table =

@@ -19,12 +19,12 @@ let rec rename env = function
   | FMul(x, y) -> FMul(find x env, find y env)
   | FDiv(x, y) -> FDiv(find x env, find y env)
 
-  | IfEq(V x, V y, e1, e2) -> IfEq(V (find x env), V (find x env), rename env e1, rename env e2)
+  | IfEq(V x, V y, e1, e2) -> IfEq(V (find x env), V (find y env), rename env e1, rename env e2)
   | IfEq(V x, C y, e1, e2) -> IfEq(V (find x env), C y, rename env e1, rename env e2)
   | IfEq(C x, V y, e1, e2) -> IfEq(C x, V (find y env), rename env e1, rename env e2)
   | IfEq(C x, C y, e1, e2) -> IfEq(C x, C y, rename env e1, rename env e2)
 
-  | IfLE(V x, V y, e1, e2) -> IfLE(V (find x env), V (find x env), rename env e1, rename env e2)
+  | IfLE(V x, V y, e1, e2) -> IfLE(V (find x env), V (find y env), rename env e1, rename env e2)
   | IfLE(V x, C y, e1, e2) -> IfLE(V (find x env), C y, rename env e1, rename env e2)
   | IfLE(C x, V y, e1, e2) -> IfLE(C x, V (find y env), rename env e1, rename env e2)
   | IfLE(C x, C y, e1, e2) -> IfLE(C x, C y, rename env e1, rename env e2)
