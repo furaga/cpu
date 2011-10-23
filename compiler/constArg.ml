@@ -71,7 +71,7 @@ let rec setConstArgs env = function
 	| _ -> ()
 
 let member x env =
-	try (match M.find x !constArgs with _ -> true)
+	try (match M.find x env with _ -> true)
 	with Not_found -> false
 
 let rec g = function
@@ -79,7 +79,7 @@ let rec g = function
 	| IfLE(x, y, e1, e2) -> IfLE(x, y, g e1, g e2)
 	| Let((x, t), e1, e2) -> Let((x, t), g e1, g e2)
 	(* 引数が定数または使用されてなければ関数定義から除去する *)
-	| LetRec({name = (x, Type.Fun(ts, t)); args = ys; body = e1}, e2) ->
+	| LetRec({name = (x, Type.Fun(ts, t)); args = ys; body = e1}, e2)  when member x !constArgs ->
 		let (ys', e1') = List.fold_right2
 			(fun y z (ys, e) ->
 				match z with
@@ -89,7 +89,7 @@ let rec g = function
 			ys (M.find x !constArgs) ([], e1) in
 		LetRec({name = (x, Type.Fun (List.map snd ys', t)); args = ys'; body = g e1'}, g e2)
 	(* 引数が定数または使用されてないものであれば関数適用から除去する *)
-	| App(x, ys) ->
+	| App(x, ys) when member x !constArgs ->
 		App(x, List.fold_right2 (fun y z ys -> match z with Const _ | None -> ys | _ -> y :: ys) ys (M.find x !constArgs) [])
 	| LetTuple(xts, y, e) -> LetTuple(xts, y, g e)
 	| e -> e
