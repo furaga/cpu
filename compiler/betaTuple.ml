@@ -1,4 +1,3 @@
-(* 読め *)
 open KNormal
 
 let find x env = try M.find x env with Not_found -> x
@@ -54,19 +53,19 @@ let rec g env = function
   | LetRec({ name = (x, t); args = yts; body = e1 }, e2) ->
       LetRec({ name = (x, t); args = yts; body = g env e1 },
              g env e2)
+  (* タプルの要素のうち、eの中で使われるもののみ残す *)
   | LetTuple(xts, y, e) ->
-      let xs = List.map fst xts in
-      let free = KNormal.fv e in
-      let env', rnenv, _ =
-	List.fold_left 
-	  (fun (env, rnenv, i) x ->
-	     if S.mem x free then
-	       if M.mem (id y i) env then (* ロードされている *)
-		 (env, M.add x (M.find (id y i) env) rnenv, i+1)
-	       else (* 新しくロード *)
-		 (M.add (id y i) x env, rnenv, i+1)
-	     else (env, rnenv, i+1)
-	  ) (env, M.empty, 0) xs in
+	let xs = List.map fst xts in
+	let free = KNormal.fv e in
+	let env', rnenv, _ = List.fold_left 
+							(fun (env, rnenv, i) x ->
+								if S.mem x free then
+									if M.mem (id y i) env then (* id y i が登録済みだったらその値で置換する *)
+										(env, M.add x (M.find (id y i) env) rnenv, i + 1)
+									else (* 新しくロード *)
+										(M.add (id y i) x env, rnenv, i + 1)
+								else (env, rnenv, i + 1)
+							) (env, M.empty, 0) xs in
 	LetTuple(xts, y, g env' (rename rnenv e))
   | e -> e
 

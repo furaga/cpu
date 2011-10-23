@@ -14,18 +14,18 @@ let noeffectfun = S.of_list [] (*[
 (* 副作用があるか *)
 let rec effect env = function
 	| Let(_, e1, e2) | IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) -> effect env e1 || effect env e2
-	| LetRec({name=(x,_);body=e1}, e2) ->
-		if effect_fun x env e1 then effect env e2 else effect (S.add x env) e2
+	| LetRec({name=(x,_);body=e1}, e2) -> if effect_fun x env e1 then effect env e2 else effect (S.add x env) e2
 	| LetTuple(_, _, e) -> effect env e
 	| App (x,_) -> not (S.mem x env)
 	| ExtFunApp (x,_) -> not (S.mem x noeffectfun)
 	| Put _  -> true
 	| _ -> false
+(* 関数idが副作用がないと仮定した上でeffect関数を呼ぶ *)
 and effect_fun id env exp =
 	if effect (S.add id env) exp then
 		effect env exp
 	else false
-(*
+
 (* let x を削除 *)
 let rec remove x = function
 	| Let ((x',t),e1,e2)  -> if x = x' then e2 else Let ((x',t),remove x e1,remove x e2)
@@ -41,7 +41,6 @@ let rec remove x = function
 	| e -> e
 
 (* xのlet式を追加 *)
-(* TODO: eにxが含まれないときのみinsert <- ベータ簡約で取り除かれるはずなので必要ない *)
 let rec insert env x e =
 	try
 		let (t, e1) = M.find x env in
@@ -49,7 +48,7 @@ let rec insert env x e =
 		S.fold (fun x e -> insert env x e) (fv e1) e1'		(* 各自由変数のlet式をe1'に追加 *)
 	with Not_found -> e
 
-(* 定義される変数の集合を返す *)
+(* 式の中で定義される変数の集合を返す *)
 let rec find = function
 	| Let ((x,t),e1,e2)  -> S.add x (S.union (find e1) (find e2))
 	| IfEq (_,_,e1,e2) | IfLE (_,_,e1,e2) | LetRec ({body = e1} , e2) -> S.union (find e1) (find e2)
@@ -57,21 +56,40 @@ let rec find = function
 	| e -> S.empty
 
 let rec g env letenv = function
-	| IfEq(x, y, e1, e2) ->
+	| IfEq(V x, V y, e1, e2) ->
 		(* e1', e2'両方で使われている変数だけletを挿入 *)
 		let e1' = g env letenv e1 in
 		let e2' = g env letenv e2 in
 		let xs = S.add x (S.add y (S.inter (find e1') (find e2'))) in
-		S.fold (insert letenv) xs (IfEq(x, y, e1', e2'))
-	| IfLE(x, y, e1, e2) ->
+		S.fold (insert letenv) xs (IfEq(V x, V y, e1', e2'))
+	| IfEq(V x, C y, e1, e2) | IfEq(C y, V x, e1, e2) ->
+		(* e1', e2'両方で使われている変数だけletを挿入 *)
+		let e1' = g env letenv e1 in
+		let e2' = g env letenv e2 in
+		let xs = S.add x (S.inter (find e1') (find e2')) in
+		S.fold (insert letenv) xs (IfEq(V x, C y, e1', e2'))
+	| IfLE(V x, V y, e1, e2) ->
 		(* e1', e2'両方で使われている変数だけletを挿入 *)
 		let e1' = g env letenv e1 in
 		let e2' = g env letenv e2 in
 		let xs = S.add x (S.add y (S.inter (find e1') (find e2'))) in
-		S.fold (insert letenv) xs (IfLE(x, y, e1', e2'))
+		S.fold (insert letenv) xs (IfLE(V x, V y, e1', e2'))
+	| IfLE(V x, C y, e1, e2) ->
+		(* e1', e2'両方で使われている変数だけletを挿入 *)
+		let e1' = g env letenv e1 in
+		let e2' = g env letenv e2 in
+		let xs = S.add x (S.inter (find e1') (find e2')) in
+		S.fold (insert letenv) xs (IfLE(V x, C y, e1', e2'))
+	| IfLE(C x, V y, e1, e2) ->
+		(* e1', e2'両方で使われている変数だけletを挿入 *)
+		let e1' = g env letenv e1 in
+		let e2' = g env letenv e2 in
+		let xs = S.add y (S.inter (find e1') (find e2')) in
+		S.fold (insert letenv) xs (IfLE(C x, V y, e1', e2'))
+	| IfEq(C x, C y, _ , _) | IfLE(C x, C y, _, _) -> assert false
 	| Let((x, t), e1, e2) ->
 		(* e1'に副作用がなければlet式を削除 *)
-		let e1' = (*g env M.empty*)e1 in
+		let e1' = (*g env letenv*) e1 in
 		if effect env e1' then
 			S.fold (insert letenv) (fv e1') (Let((x,t), e1', g env letenv e2))
 		else
@@ -106,4 +124,3 @@ let f flg e =
 			print_newline ()
 		end;
 	ans
-	*)

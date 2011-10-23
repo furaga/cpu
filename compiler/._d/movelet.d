@@ -1,2 +1,2 @@
-movelet.cmo: s.cmo kNormal.cmi movelet.cmi 
-movelet.cmx: s.cmx kNormal.cmx movelet.cmi 
+movelet.cmo: s.cmo m.cmo kNormal.cmi movelet.cmi 
+movelet.cmx: s.cmx m.cmx kNormal.cmx movelet.cmi 

@@ -11,9 +11,24 @@ let memt x env =
   try (match M.find x env with Tuple(_) -> true | _ -> false)
   with Not_found -> false
 
+(* M.find x envが、if ・・・ then 1 else 0 のような単純なif文ならtrue *)
+let mem_simple_if x env =
+  try (
+  	match M.find x env with 
+  		| IfEq (_, _, Int m, Int n) when (m = 0 || m = 1) && (n = 0 || n = 1) -> true
+  		| IfLE (_, _, Int m, Int n) when (m = 0 || m = 1) && (n = 0 || n = 1) -> true
+  		| _ -> false)
+  with Not_found -> false
+
 let findi x env = (match M.find x env with Int(i) -> i | _ -> raise Not_found)
 let findf x env = (match M.find x env with Float(d) -> d | _ -> raise Not_found)
 let findt x env = (match M.find x env with Tuple(ys) -> ys | _ -> raise Not_found)
+
+let find_simple_if x env =
+	match M.find x env with 
+		| IfEq (a, b, Int m, Int n) as e when (m = 0 || m = 1) && (n = 0 || n = 1) -> e
+		| IfLE (a, b, Int m, Int n) as e when (m = 0 || m = 1) && (n = 0 || n = 1) -> e
+		| _ -> raise Not_found
 
 let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 	| Var(x) when memi x env -> Int(findi x env)
@@ -77,18 +92,57 @@ let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 	| IfEq(V x, V y, e1, e2) when memi x env && memi y env -> if findi x env = findi y env then g env e1 else g env e2
 	| IfEq(V x, C y, e1, e2) when memi x env -> if findi x env = y then g env e1 else g env e2
 	| IfEq(C x, V y, e1, e2) when memi y env -> if x = findi y env then g env e1 else g env e2
-	| IfEq(V x, V y, e1, e2) -> IfEq(V x, V y, g env e1, g env e2)
-	| IfEq(V x, C y, e1, e2) -> IfEq(V x, C y, g env e1, g env e2)
-	| IfEq(C x, V y, e1, e2) -> IfEq(C x, V y, g env e1, g env e2)
+
+	(*
+			let x = if a <= b then 0 else 1 in
+			・・・
+			if x = 1 then e1 else e2
+
+		のような式を
+		
+			if a <= b then e2 else e1
+
+		に変形	
+	*)
+	| IfEq(V x, C y, e1, e2) (*when (y = 1 || y = 0) && mem_simple_if x env*)
+	| IfEq(C y, V x, e1, e2) when (y = 1 || y = 0) && mem_simple_if x env ->
+		(match find_simple_if x env with
+			| IfEq (a, b, Int m, Int n) ->
+				if y = 1 && m = 1 && n = 1 then g env e1
+				else if y = 0 && m = 1 && n = 1 then g env e2
+				else if y = 1 && m = 0 && n = 0 then g env e2
+				else if y = 0 && m = 0 && n = 0 then g env e1
+				else if y = 1 && m = 1 && n = 0 then IfEq (a, b, g env e1, g env e2)
+				else if y = 0 && m = 1 && n = 0 then IfEq (a, b, g env e2, g env e1)
+				else if y = 1 && m = 0 && n = 1 then IfEq (a, b, g env e2, g env e1)
+				else if y = 0 && m = 0 && n = 1 then IfEq (a, b, g env e1, g env e2)
+				else assert false
+			| IfLE (a, b, Int m, Int n) ->
+				if y = 1 && m = 1 && n = 1 then g env e1
+				else if y = 0 && m = 1 && n = 1 then g env e2
+				else if y = 1 && m = 0 && n = 0 then g env e2
+				else if y = 0 && m = 0 && n = 0 then g env e1
+				else if y = 1 && m = 1 && n = 0 then IfLE (a, b, g env e1, g env e2)
+				else if y = 0 && m = 1 && n = 0 then IfLE (a, b, g env e2, g env e1)
+				else if y = 1 && m = 0 && n = 1 then IfLE (a, b, g env e2, g env e1)
+				else if y = 0 && m = 0 && n = 1 then IfLE (a, b, g env e1, g env e2)
+				else assert false
+			| _ -> assert false
+		)
+	(* if x = y then a else e2 を if x = y then (if ・・ then 1 else 0) else e2みたいにしたい *)
+	| IfEq(x, y, Var a, e2) when mem_simple_if a env -> IfEq (x, y, find_simple_if a env, g env e2)
+	| IfEq(x, y, e1, Var a) when mem_simple_if a env -> IfEq (x, y, g env e1, find_simple_if a env)
+	| IfEq(x, y, e1, e2) -> IfEq(x, y, g env e1, g env e2)
 
 	(* IfLE *)
 	| IfLE(V x, V y, e1, e2) when memf x env && memf y env -> if findf x env <= findf y env then g env e1 else g env e2
 	| IfLE(V x, V y, e1, e2) when memi x env && memi y env -> if findi x env <= findi y env then g env e1 else g env e2
 	| IfLE(V x, C y, e1, e2) when memi x env -> if findi x env <= y then g env e1 else g env e2
 	| IfLE(C x, V y, e1, e2) when memi y env -> if x <= findi y env then g env e1 else g env e2
-	| IfLE(V x, V y, e1, e2) -> IfLE(V x, V y, g env e1, g env e2)
-	| IfLE(V x, C y, e1, e2) -> IfLE(V x, C y, g env e1, g env e2)
-	| IfLE(C x, V y, e1, e2) -> IfLE(C x, V y, g env e1, g env e2)
+	(* if x <= y then a else e2 を if x <= y then (if ・・ then 1 else 0) else e2みたいにしたい *)
+	| IfLE(x, y, Var a, e2) when mem_simple_if a env -> IfLE (x, y, find_simple_if a env, g env e2)
+	| IfLE(x, y, e1, Var a) when mem_simple_if a env -> IfLE (x, y, g env e1, find_simple_if a env)
+	| IfLE(x, y, e1, e2) -> IfLE(x, y, g env e1, g env e2)
 
 	| Let((x, t), e1, e2) -> (* letのケース (caml2html: constfold_let) *)
 		let e1' = g env e1 in

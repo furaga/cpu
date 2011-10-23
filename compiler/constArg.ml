@@ -54,18 +54,25 @@ let rec setConstArgs env = function
 		setConstArgs env e2)
 	| App(x, ys) ->
 		(* 各引数の状態は、適用されるごとに適宜 Wait -> Const -> Manyと遷移する *)
-		let zs = M.find x !constArgs in
-		let zs = List.map2
-					(fun y -> function
-						| None -> None
-						| Wait when mem y env -> Const(M.find y env)
-						| Const(v) as c when mem y env && v = M.find y env -> c
-						| _ -> Many
-					) ys zs in
-		constArgs := M.add x zs !constArgs
+		if (try (match M.find x !constArgs with _ -> true) with Not_found -> false) then
+			let zs = M.find x !constArgs in
+			let zs = List.map2
+						(fun y -> function
+							| None -> None
+							| Wait when mem y env -> Const(M.find y env)
+							| Const(v) as c when mem y env && v = M.find y env -> c
+							| _ -> Many
+						) ys zs in
+			constArgs := M.add x zs !constArgs
+		else
+			()
 	| LetTuple(_, _, e) ->
 		setConstArgs env e
 	| _ -> ()
+
+let member x env =
+	try (match M.find x !constArgs with _ -> true)
+	with Not_found -> false
 
 let rec g = function
 	| IfEq(x, y, e1, e2) -> IfEq(x, y, g e1, g e2)

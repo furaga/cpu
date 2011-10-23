@@ -251,11 +251,15 @@ let f flg e =
 	toplevel := [];
 	let e' = g M.empty S.empty e in
 	let program = Prog(List.rev !toplevel, e') in
-	if flg then
+	if (*flg*) true then
 		begin
+			print_endline "Print KNormal_t(Closure.ml):";
+			KNormal.print 1 e;
+			print_newline();
+(*
 			print_endline "Print Closure_t(Closure.ml):";
 			print_prog 1 program;
-			print_newline();
+			print_newline();*)
 			flush stdout;
 		end;
 	program

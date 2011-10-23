@@ -229,12 +229,12 @@ let rec print n = function
 	| Int i ->
 		begin
 			indent n;
-			Printf.printf "Int(%d)\n" i
+			Printf.printf "%d\n" i
 		end
 	| Float f ->
 		begin
 			indent n;
-			Printf.printf "Float(%f)\n" f
+			Printf.printf "%f\n" f
 		end
 	| Neg id ->
 		begin
@@ -296,10 +296,10 @@ let rec print n = function
 			indent n;
 			let id1 = pp_id_or_imm id1 in
 			let id2 = pp_id_or_imm id2 in
-			Printf.printf "If %s = %s Then\n" id1 id2;
+			Printf.printf "if %s = %s then\n" id1 id2;
 			print (n + 1) then_exp;
 			indent n;
-			Printf.printf "Else\n";
+			Printf.printf "else\n";
 			print (n + 1) else_exp;
 		end
 	| IfLE (id1, id2, then_exp, else_exp) ->
@@ -307,35 +307,35 @@ let rec print n = function
 			indent n;
 			let id1 = pp_id_or_imm id1 in
 			let id2 = pp_id_or_imm id2 in
-			Printf.printf "If %s <= %s Then\n" id1 id2;
+			Printf.printf "if %s <= %s then\n" id1 id2;
 			print (n + 1) then_exp;
 			indent n;
-			Printf.printf "Else\n";
+			Printf.printf "else\n";
 			print (n + 1) else_exp;
 		end
 	| Let ((id, typ), e1, e2) ->
 		begin
 			indent n;
-			Printf.printf "Let %s : %s =\n" id (Type.string_of_type typ);
+			Printf.printf "let %s : %s =\n" id (Type.string_of_type typ);
 			print (n + 1) e1;
 			indent n;
-			Printf.printf "In\n";
+			Printf.printf "in\n";
 			print n e2;
 		end
 	| Var id ->
 		begin
 			indent n;
-			Printf.printf "Var(%s)\n" id;
+			Printf.printf "%s\n" id;
 		end
 	| LetRec (f, e) ->
 		begin
 			indent n;
-			Printf.printf "Let Rec %s : %s ( " (fst f.name) (Type.string_of_type (snd f.name));
+			Printf.printf "let rec %s : %s ( " (fst f.name) (Type.string_of_type (snd f.name));
 			List.iter (fun x -> Printf.printf "%s " (fst x)) f.args;
 			Printf.printf ") =\n";
 			print (n + 1) f.body;
 			indent n;
-			Printf.printf "In\n";
+			Printf.printf "in\n";
 			print n e;
 		end
 	| App (fn, args) ->
@@ -357,11 +357,11 @@ let rec print n = function
 			let len = List.length elems in
 			let cnt = ref 1 in
 			indent n;
-			Printf.printf "Let (";
+			Printf.printf "let (";
 			List.iter (fun x -> Printf.printf "%s : %s" (fst x) (Type.string_of_type (snd x)); cnt := !cnt + 1; if !cnt < len then print_string ", ") elems;
 			Printf.printf ") = %s\n" tpl;
 			indent n;
-			Printf.printf "In\n";
+			Printf.printf "in\n";
 			print n e
 		end
 	| Get (ar, idx) ->
@@ -377,12 +377,12 @@ let rec print n = function
 	| ExtArray id ->
 		begin
 			indent n;
-			Printf.printf "ExtArray:%s\n" id
+			Printf.printf "%s\n" id
 		end
 	| ExtFunApp (fn, args) ->
 		begin
 			indent n;
-			Printf.printf "ExtFun:%s " fn;
+			Printf.printf "%s " fn;
 			List.iter (fun x -> Printf.printf "%s " x) args;
 			Printf.printf "\n";
 		end

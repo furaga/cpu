@@ -1,4 +1,4 @@
-for n in test/float.ml; do
+for n in test/*.ml; do
 	echo "compile " ${n}
 	cat lib/lib_ml.ml ${n} > tmp.ml
 	./min-caml.opt tmp
