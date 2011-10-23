@@ -49,6 +49,7 @@ PROTO_I(subi);
 PROTO_I(muli);
 PROTO_I(divi);
 PROTO_I(slli);
+PROTO_I(srli);
 PROTO_J(jmp);
 PROTO_I(jeq);
 PROTO_I(jne);

@@ -11,14 +11,14 @@ LDFLAGS = -Wall -O2 -lm
 # Set Vars below
 ###################################
 TEST_TARGET = fib
-RT_TARGET = base
+RT_TARGET = contest
 SIM_FLAGS =
 MIN_RT = ../../compiler/test/min-rt/min-rt
 ###################################
 ###################################
 
 
-.PHONY: all asm sim clean rt simple_sim
+.PHONY: all asm sim clean rt fsim
 all: $(TARGET)
 clean:
 	$(RM) $(TARGET) *.o asmlog simlog

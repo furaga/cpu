@@ -110,6 +110,10 @@ uint32_t encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
 		    return slli(rs,rt,imm);
 	}
+	if(strcmp(opcode, "srli") == 0){
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
+		    return srli(rs,rt,imm);
+	}
 	if(strcmp(opcode, "b") == 0){
 		if(sscanf(op_data, fg, tmp, &rs) == 2)
 		    return b(rs,0,0,0);
@@ -262,6 +266,7 @@ DEFINE_I(subi,SUBI);
 DEFINE_I(muli,MULI);
 DEFINE_I(divi,DIVI);
 DEFINE_I(slli,SLLI);
+DEFINE_I(srli,SRLI);
 DEFINE_J(jmp,JMP);
 DEFINE_I(jeq,JEQ);
 DEFINE_I(jne,JNE);

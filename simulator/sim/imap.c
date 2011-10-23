@@ -18,6 +18,7 @@ void IMapInit(void) {
 	FunctMap[OUTPUT_F] = "output";
 	FunctMap[NOT_F] = "not";
 	InstMap[SLLI] = "slli";
+	InstMap[SRLI] = "srli";
 	InstMap[JMP] = "jmp";
 	InstMap[JEQ] = "jeq";
 	InstMap[JNE] = "jne";
@@ -78,6 +79,7 @@ void IMapInit(void) {
 	FunctTyMap[SLL_F] = "fggg"; //
 	FunctTyMap[SRL_F] = "fggg"; //
 	InstTyMap[SLLI] = "fggi";	//
+	InstTyMap[SRLI] = "fggi";	//
 	FunctTyMap[B_F] = "fg";		//
 	InstTyMap[JMP] = "fl";		//
 	InstTyMap[JEQ] = "fggl";	//

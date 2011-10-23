@@ -144,6 +144,10 @@ int operate(uint32_t ir) {
 			IF0_BREAK_T
 			_GRT = _GRS << _IMM;
 			break;
+		case SRLI:
+			IF0_BREAK_T
+			_GRT = _GRS >> _IMM;
+			break;
 		case JMP:
 			pc = get_target(ir);
 			break;

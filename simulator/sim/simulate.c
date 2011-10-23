@@ -61,7 +61,6 @@ int simulate(char *sfile) {
 	// 命令列を実行
 	do{
 		
-		rom[1 << 30] = 1;;
 		ir = rom[pc];
 		print_state();
 		statistics(stderr);
