@@ -1,0 +1,24 @@
+library IEEE;
+use IEEE.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
+use IEEE.std_logic_1164.all;
+
+entity ram is
+  port (
+    PCout   : in  std_logic_vector(31 downto 0);
+    ALUout  : in  std_logic_vector(31 downto 0);
+    exin    : in  std_logic_vector(31 downto 0);  -- 外部入力
+    RegB    : in  std_logic_vector(31 downto 0);  -- reg out 2
+    RamAddr : in  std_logic;
+    RamData : in  std_logic;
+    RamOut  : out std_logic_vector(31 downto 0));
+end ram;
+
+architecture block of ram is
+   type memory is array (0 to 1024) of std_logic_vector(35 downto 0);
+         
+begin  -- block
+  
+  
+
+end block;

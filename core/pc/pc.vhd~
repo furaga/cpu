@@ -1,0 +1,14 @@
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_ARITH.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
+
+entity ProgramCounter is
+  
+  port (
+    PCplus : in  std_logic_vector(31 downto 0);   -- 前のPCをインクリメントした値
+    ALUout : in  std_logic_vector(31 downto 0);  -- 分岐先アドレス
+    Jaddr  : in  std_logic_vector(31 downto 0);   -- ジャンプ先アドレス
+    PCout  : out std_logic_vector(31 downto 0));
+
+end ProgramCounter;

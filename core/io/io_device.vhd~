@@ -1,0 +1,16 @@
+library IEEE;
+use IEEE.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
+use IEEE.std_logic_1164.all;
+
+entity io_device is
+  
+  port (
+    RAMOut : in  std_logic_vector(31 downto 0);
+    RegB   : in  std_logic_vector(31 downto 0);
+    OBCtrl : in  std_logic;             --  out buffer 付属のMultiplexer
+    RS_RX  : in  std_logic;
+    RS_TX  : out std_logic;
+    InData : out std_logic_vector(31 downto 0));
+
+end io_device;

@@ -1,0 +1,110 @@
+-- Tue Oct 18 15:05:0541 2011
+-- ALU
+
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+
+package alu_pack is
+  constant ADD   : std_logic_vector := x'0';
+  constant SUB   : std_logic_vector := x'1';
+  constant MUL   : std_logic_vector := x'2';
+  constant DIV   : std_logic_vector := x'3';
+  constant S_L   : std_logic_vector := x'4';
+  constant S_R   : std_logic_vector := x'5';
+  constant I_AND : std_logic_vector := x'6';
+  constant I_OR  : std_logic_vector := x'7';  
+  constant I_NOR : std_logic_vector := x'8';
+end alu_pack is;
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_unsigned.all;
+use IEEE.std_logic_arith.all;
+use IEEE.numeric_std.all;
+use work.alu_pack.all;
+
+entity ALU is
+  port (
+    A, PC   : in  std_logic_vector(31 downto 0);  -- MuxA でどちらかを選択する。
+    B       : in  std_logic_vector(31 downto 0);  -- BとImを符号拡張したもの、imを符号拡張して2bit左シフトしたもの、
+    Im      : in  std_logic_vector(15 downto 0);  -- 定数の4をMuxBは選択する。
+    clk     : in  std_logic;
+    control : in std_logic_vector(3 downto 0);  
+    branch  : in std_logic;             -- branch命令であれば、計算結果はALUOutに書き込まない。
+    MACtrl  : in std_logic;
+    MBCtrl  : in std_logic_vector(1 downto 0);
+    ANS,Obuf : out std_logic_vector(31 downto 0);  -- Obufは、一つ前の計算結果を保存しておく
+    condreg  : out std_logic_vector(1 downto 0));   -- 計算結果が負->01, 正->10, ゼロ->00
+end ALU;
+
+architecture alu_core of ALU is
+  signal in1, in2 : std_logic_vector(31 downto 0) := x"00000000";
+  signal ExIm : std_logic_vector(31 downto 0);
+begin  -- alu_core
+
+  -- purpose: Im の符号拡張
+  Expand: process (Im)
+  begin  -- process Expand
+    if Im(15) = 0 then
+      ExIm <= x"0000" & Im;
+    else
+      ExIm <= x"FFFF" & Im;
+    end if;
+  end process Expand;
+
+  MuxA: process (A, PC, MACtrl)
+  begin  -- process
+    if MACtrl = 0 then
+      in1 <= PC;
+    else
+      in1 <= A;
+    end if;
+  end process;
+
+  MuxB: process (B, Im, MBCtrl)
+  begin  -- process
+    case MBCtrl is
+      when "00" => in2 <= B;
+      when "01" => in2 <= x"0004";
+      when "10" => in2 <= ExIm;
+      when "11" => In2 <= ExIm(31 downto 2) & "00";
+    end case;
+  end process;
+
+  -- purpose: Out Bufferを操作
+  -- branch命令でなければ、計算結果はALUoutに保存しない。(前のサイクルで計算しておいた値を使うため)
+  OutControl: process (ANS)
+  begin  -- process OutCntrol
+    if branch = '0' then
+      Obuf <= ANS;
+    end if;
+  end process OutCntrol;
+
+  calc: process (clk, A, B, control)
+    variable DIS : integer := 0;          -- shift distance(0 to 32)
+    DIS = CONV_INTEGER(in2(3 downto 0));
+  begin  -- process calc
+    case control is
+      when ADD   => ANS <= in1 + in2;
+      when SUB   => ANS <= in1 - in2;
+      when MUL   => ANS <= in1 * in2;
+--      when DIV   => ANS <= in1 / in2;
+      when S_L   => ANS <= in1 sll DIS;
+      when S_R   => ANS <= in2 srl DIS;
+      when I_AND => ANS <= in1 and in2;
+      when I_OR  => ANS <= in1 or in2;
+      when I_NOR => ANS <= in1 nor in2;
+      when others => ANS <= x"FFFFFFFF";
+    end case;
+    if CONV_INTEGER(ANS) > 0 then
+      condreg <= "10"
+    else
+      if ANS = x"00000000" then
+        condreg <= "00"
+      else
+        condreg <= "01"
+      end if;
+    end if;
+  end process calc;
+end alu_core;
