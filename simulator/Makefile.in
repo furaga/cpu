@@ -11,14 +11,15 @@ LDFLAGS = -Wall -O2 -lm
 # Set Vars below
 ###################################
 TEST_TARGET = non-tail-if2
-RT_TARGET = contest
+RT_TARGET = base
+#RT_TARGET = $(subst .sld,, $(shell ls ../sld))
 SIM_FLAGS =
 MIN_RT = ../../compiler/test/min-rt/min-rt
 ###################################
 ###################################
 
 
-.PHONY: all asm sim clean rt fsim
+.PHONY: all asm sim clean rt fsim frt
 all: $(TARGET)
 clean:
 	$(RM) $(TARGET) *.o asmlog simlog

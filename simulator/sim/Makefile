@@ -7,8 +7,6 @@ CFLAGS += -I ../include/
 CXXFLAGS += -I ../include/
 vpath %.h ../include/
 SIM_TARGET = $(TEST_TARGET:%=../../compiler/test/%)
-SLD = $(RT_TARGET:%=../sld/%.sld)
-PPM = $(RT_TARGET:%=../ppm/%.ppm)
 
 simcho: simcho.o simulate.o decode_ir.o print_state.o statistics.o imap.o operate.o
 simcho.o: $(SIMH) simulate.o imap.o decode_ir.o
@@ -22,5 +20,14 @@ imap.o: $(SIMH)
 sim:
 	./simcho $(SIM_TARGET) $(SIM_FLAGS)
 rt:
-	@./simcho $(MIN_RT) $(SIM_FLAGS) < $(SLD) > $(PPM)
-	eog $(PPM) &
+	@for name in $(RT_TARGET) ; do \
+		sld='../sld/'$$name'.sld'; \
+		ppm='../ppm/'$$name'.ppm'; \
+		original='../ppm0/'$$name'.ppm'; \
+		diff='../diff/'$$name'.dif'; \
+		./simcho $(MIN_RT) $(SIM_FLAGS) < $$sld > $$ppm; \
+		diff $$original $$ppm | cat > $$diff; \
+		cat $$diff; \
+		(eog $$ppm &); \
+	done 
+
