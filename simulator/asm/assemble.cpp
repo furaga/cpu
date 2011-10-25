@@ -52,8 +52,9 @@ int	assemble(char *sfile) {
 		printf("ファイルが開けませんでした。\n");
 		return -1;
 	}
+
 	len = strlen(sfile) - 2;
-	dfile = (char*) malloc(len);
+	dfile = (char*) malloc(len+1);
 	strncpy(dfile, sfile, len);
 	*(dfile+len) = 0;
 

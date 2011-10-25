@@ -48,20 +48,20 @@ void decode_ir(uint32_t ir, FILE *fp) {
 		}
 	} else 
 	if (strcmp(type, "io") == 0) {
-		if (strcmp(type, "fg") == 0) {
-			fprintf(fp, fg, name, get_rdi(ir), _GRD);
+		if (strcmp(f_type, "fg") == 0) {
+			fprintf(fp, fg, f_name, get_rdi(ir), _GRD);
 		} else{
 			fprintf(fp, "Undefined I/O ir\n");
 		}
 	} else
 	if (strcmp(type, "fpi") == 0) {
-		if (strcmp(type, "fff") == 0) {
+		if (strcmp(f_type, "fff") == 0) {
 			// fmov fneg fsqrt
-			fprintf(fp, fff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
+			fprintf(fp, fff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
 		}else 
-		if (strcmp(type, "ffff") == 0) {
+		if (strcmp(f_type, "ffff") == 0) {
 			// fadd fsub fmul fdiv
-			fprintf(fp, ffff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
+			fprintf(fp, ffff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
 		} else {
 			fprintf(fp, "Undefined FPI IR\n");
 		}

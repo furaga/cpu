@@ -122,7 +122,7 @@ int operate(uint32_t ir) {
 			break;
 		case MVLO: 
 			IF0_BREAK_T
-			_GRT = (_GRT & (0xffff<<16)) | _IMM;
+			_GRT = (_GRT & (0xffff<<16)) | (_IMM & 0xffff);
 			break;
 		case ADDI:
 			IF0_BREAK_T
