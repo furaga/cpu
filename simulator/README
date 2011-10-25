@@ -2,9 +2,18 @@
 Makefile.in内の
 TEST_TARGET
 SIM_FLAGS
-を設定して、
+RT_TARGET
+を設定して以下のコマンド。
+すべてのsldファイルをppmファイルにするなら、
+コメントアウトしてあるRT_TARGETをコメントアウトアウトしてmake frt
+いちいち画像出力するのがウザいときはfsim/Makefile,sim/Makefileの
+ラベルrt内のeogコマンドの行を削除してください。
+
 make
+
 make rt
+
+make frt
 
 make asm
 make sim

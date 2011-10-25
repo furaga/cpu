@@ -41,6 +41,7 @@
 #define FMUL_F 002
 #define FDIV_F 003
 #define FSQRT_F 004
+#define FABS_F 005
 #define FMOV_F 006
 #define FNEG_F 007
 ///////////////////////////////////////

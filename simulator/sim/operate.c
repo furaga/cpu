@@ -104,6 +104,9 @@ int operate(uint32_t ir) {
 					ans.f = sqrtf(a.f);
 					_FRD = ans.i;
 					break;
+				case FABS_F:
+					_FRD = 0x7fffffff & _FRS;
+					break;
 				case FMOV_F:
 					_FRD = _FRS;
 					break;

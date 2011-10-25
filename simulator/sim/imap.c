@@ -33,6 +33,7 @@ void IMapInit(void) {
 	FunctMap[FMUL_F] = "fmul";
 	FunctMap[FDIV_F] = "fdiv";
 	FunctMap[FSQRT_F] = "fsqrt";
+	FunctMap[FABS_F] = "fmov";
 	FunctMap[FMOV_F] = "fmov";
 	FunctMap[FNEG_F] = "fneg";
 	InstMap[FJEQ] = "fjeq";
@@ -96,6 +97,7 @@ void IMapInit(void) {
 	FunctTyMap[FMUL_F] = "ffff"; //
 	FunctTyMap[FDIV_F] = "ffff"; //
 	FunctTyMap[FSQRT_F] = "fff";
+	FunctTyMap[FABS_F] = "fff";	//
 	FunctTyMap[FMOV_F] = "fff";	//
 	FunctTyMap[FNEG_F] = "fff";	//
 	InstTyMap[FJEQ] = "fffl";	//
