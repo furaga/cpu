@@ -13,8 +13,8 @@
 (*NOMINCAML open Globals;;*)
 (*(*MINCAML*) let true = 1 in 
 (*MINCAML*) let false = 0 in *)
-(*MINCAML*) let rec xor x y = if x then not y else y in
-
+(*(*MINCAML*) let rec xor x y = if x then not y else y in
+*)
 (******************************************************************************
    ユーティリティー
  *****************************************************************************)
@@ -2111,11 +2111,11 @@ in
    立方体上の各面に100本ずつ分布させ、さらに、100本が立方体上の面上で10 x 10 の
    格子状に並ぶような配列を使う。この配列では方角によるベクトルの密度の差が
    大きいので、これに補正を加えたものを最終的に用いる *)
-
+(*
 let rec tan x =
   sin(x) /. cos(x)
 in
-
+*)
 (* ベクトル達が出来るだけ球面状に一様に分布するよう座標を補正する *)
 let rec adjust_position h ratio =
   let l = sqrt(h*.h +. 0.1) in

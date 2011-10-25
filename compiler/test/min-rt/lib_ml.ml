@@ -16,7 +16,7 @@ let rec fabs a =
 in
 let rec abs_float x = fabs x in
 let rec fneg a = -. a in
-let rec fhalf a = a /. 2.0 in
+let rec fhalf a = a *. 0.5 in
 let rec fsqr a = a *. a in
 
 (* sqrt, floor, int_of_float, float_of_int はlib_asm.sで定義 *)
@@ -29,7 +29,7 @@ let pih = pi *. 0.5 in
 (* atan *)
 let rec atan_sub i xx y =
 	if i < 0.5 then y
-	else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (2.0 *. i +. 1.0 +. y))
+	else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (i +. i +. y))
 in
 let rec atan x =
 	let sgn =
@@ -38,7 +38,7 @@ let rec atan x =
 		else 0
 	in
 	let x =
-		if (fabs x) > 1.0 then 1.0 /. x
+		if sgn <> 0 then 1.0 /. x
 		else x
 	in
 	let a = atan_sub 11.0 (x *. x) 0.0 in
@@ -64,7 +64,7 @@ let rec sin_sub x =
 	else x in
 let rec sin x =
 	(* tan *)
-	let s1 = if x > 0.0 then true else false in
+	let s1 = x > 0.0 in
 	let x0 = fabs x in
 	let x1 = sin_sub x0 in
 	let s2 = if x1 > pi then not s1 else s1 in
@@ -72,11 +72,10 @@ let rec sin x =
 	let x3 = if x2 > pih then pi -. x2 else x2 in
 	let t = tan (x3 *. 0.5) in
 	let ans = 2. *. t /. (1. +. t *. t) in
-	if s2 then ans else fneg ans
-	in
+	if s2 then ans else fneg ans in
 
 (* cos *)
-let rec cos x = sin (1.570796326794895 -. x) in
+let rec cos x = sin (pih -. x) in
 
 (* create_array系はコンパイル時にコードを生成。compiler/emit.ml参照 *)
 let rec mul10 x = x * 8 + x * 2 in
@@ -200,29 +199,17 @@ let rec div_binary_search a b left right =
 (* print_int div命令を使わない版 *)
 (* 0 から 9999 までを出力 *)
 let rec print_int x =
-	if x > 10000 then ()
+	if x >= 1000 then ()
 	else if x < 0 then
 		(print_char 45; print_int (-x))
 	else
-		(* 1000の位を表示 *)
-		let tx = div_binary_search x 1000 0 10 in
-		let dx = tx * 1000 in
-		let x = x - dx in
-		let flg = 
-			if tx <= 0 then false
-			else (print_char (48 + tx); true) in
 		(* 100の位を表示 *)
 		let tx = div_binary_search x 100 0 10 in
 		let dx = tx * 100 in
 		let x = x - dx in
 		let flg = 
-			if tx <= 0 then
-				(if flg then
-					(print_char (48 + tx); true)
-				else
-					false)
-			else
-				(print_char (48 + tx); true) in
+			if tx <= 0 then false
+			else (print_char (48 + tx); true) in
 		(* 10の位を表示 *)
 		let tx = div_binary_search x 10 0 10 in
 		let dx = tx * 10 in
