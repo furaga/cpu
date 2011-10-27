@@ -1,0 +1,998 @@
+
+simulate.o:     file format elf64-x86-64
+
+
+Disassembly of section .text:
+
+0000000000000000 <_Z10get_opcodej>:
+   0:	89 f8                	mov    %edi,%eax
+   2:	c1 e8 1a             	shr    $0x1a,%eax
+   5:	c3                   	retq   
+   6:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+   d:	00 00 00 
+
+0000000000000010 <_Z7get_rsij>:
+  10:	89 f8                	mov    %edi,%eax
+  12:	c1 e8 15             	shr    $0x15,%eax
+  15:	83 e0 1f             	and    $0x1f,%eax
+  18:	c3                   	retq   
+  19:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+
+0000000000000020 <_Z7get_rtij>:
+  20:	89 f8                	mov    %edi,%eax
+  22:	c1 e8 10             	shr    $0x10,%eax
+  25:	83 e0 1f             	and    $0x1f,%eax
+  28:	c3                   	retq   
+  29:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+
+0000000000000030 <_Z7get_rdij>:
+  30:	89 f8                	mov    %edi,%eax
+  32:	c1 e8 0b             	shr    $0xb,%eax
+  35:	83 e0 1f             	and    $0x1f,%eax
+  38:	c3                   	retq   
+  39:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+
+0000000000000040 <_Z9get_shamtj>:
+  40:	89 f8                	mov    %edi,%eax
+  42:	c1 e8 06             	shr    $0x6,%eax
+  45:	83 e0 1f             	and    $0x1f,%eax
+  48:	c3                   	retq   
+  49:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+
+0000000000000050 <_Z9get_functj>:
+  50:	89 f8                	mov    %edi,%eax
+  52:	83 e0 3f             	and    $0x3f,%eax
+  55:	c3                   	retq   
+  56:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+  5d:	00 00 00 
+
+0000000000000060 <_Z10get_targetj>:
+  60:	89 f8                	mov    %edi,%eax
+  62:	25 ff ff ff 03       	and    $0x3ffffff,%eax
+  67:	c3                   	retq   
+  68:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+  6f:	00 
+
+0000000000000070 <_Z7get_immj>:
+  70:	89 f8                	mov    %edi,%eax
+  72:	0f b7 d7             	movzwl %di,%edx
+  75:	0d 00 00 ff ff       	or     $0xffff0000,%eax
+  7a:	66 85 ff             	test   %di,%di
+  7d:	0f 49 c2             	cmovns %edx,%eax
+  80:	c3                   	retq   
+  81:	66 66 66 66 66 66 2e 	nopw   %cs:0x0(%rax,%rax,1)
+  88:	0f 1f 84 00 00 00 00 
+  8f:	00 
+
+0000000000000090 <_Z8simulatePc>:
+  90:	41 57                	push   %r15
+  92:	31 f6                	xor    %esi,%esi
+  94:	31 c0                	xor    %eax,%eax
+  96:	41 56                	push   %r14
+  98:	41 55                	push   %r13
+  9a:	41 54                	push   %r12
+  9c:	55                   	push   %rbp
+  9d:	48 89 fd             	mov    %rdi,%rbp
+  a0:	53                   	push   %rbx
+  a1:	48 83 ec 28          	sub    $0x28,%rsp
+  a5:	e8 00 00 00 00       	callq  aa <_Z8simulatePc+0x1a>
+  aa:	85 c0                	test   %eax,%eax
+  ac:	89 c3                	mov    %eax,%ebx
+  ae:	0f 88 13 0a 00 00    	js     ac7 <_Z8simulatePc+0xa37>
+  b4:	ba 00 00 00 01       	mov    $0x1000000,%edx
+  b9:	be 00 00 00 00       	mov    $0x0,%esi
+  be:	89 c7                	mov    %eax,%edi
+  c0:	e8 00 00 00 00       	callq  c5 <_Z8simulatePc+0x35>
+  c5:	89 df                	mov    %ebx,%edi
+  c7:	e8 00 00 00 00       	callq  cc <_Z8simulatePc+0x3c>
+  cc:	44 8b 0d 00 00 00 00 	mov    0x0(%rip),%r9d        # d3 <_Z8simulatePc+0x43>
+  d3:	48 c7 05 00 00 00 00 	movq   $0x0,0x0(%rip)        # de <_Z8simulatePc+0x4e>
+  da:	00 00 00 00 
+  de:	c7 05 00 00 00 00 00 	movl   $0x400000,0x0(%rip)        # e8 <_Z8simulatePc+0x58>
+  e5:	00 40 00 
+  e8:	c7 05 00 00 00 00 00 	movl   $0x400000,0x0(%rip)        # f2 <_Z8simulatePc+0x62>
+  ef:	00 40 00 
+  f2:	c7 05 00 00 00 00 01 	movl   $0x1,0x0(%rip)        # fc <_Z8simulatePc+0x6c>
+  f9:	00 00 00 
+  fc:	45 85 c9             	test   %r9d,%r9d
+  ff:	0f 84 e9 00 00 00    	je     1ee <_Z8simulatePc+0x15e>
+ 105:	41 8d 49 e0          	lea    -0x20(%r9),%ecx
+ 109:	8b 05 00 00 00 00    	mov    0x0(%rip),%eax        # 10f <_Z8simulatePc+0x7f>
+ 10f:	44 8b 15 00 00 00 00 	mov    0x0(%rip),%r10d        # 116 <_Z8simulatePc+0x86>
+ 116:	ba 00 00 00 00       	mov    $0x0,%edx
+ 11b:	bf 02 00 00 00       	mov    $0x2,%edi
+ 120:	bb 03 00 00 00       	mov    $0x3,%ebx
+ 125:	41 89 c8             	mov    %ecx,%r8d
+ 128:	41 c1 e8 05          	shr    $0x5,%r8d
+ 12c:	89 05 00 00 00 00    	mov    %eax,0x0(%rip)        # 132 <_Z8simulatePc+0xa2>
+ 132:	41 8d 72 04          	lea    0x4(%r10),%esi
+ 136:	41 83 e0 03          	and    $0x3,%r8d
+ 13a:	85 c9                	test   %ecx,%ecx
+ 13c:	b8 00 00 00 00       	mov    $0x0,%eax
+ 141:	0f 84 9b 00 00 00    	je     1e2 <_Z8simulatePc+0x152>
+ 147:	45 85 c0             	test   %r8d,%r8d
+ 14a:	74 64                	je     1b0 <_Z8simulatePc+0x120>
+ 14c:	41 83 f8 01          	cmp    $0x1,%r8d
+ 150:	74 42                	je     194 <_Z8simulatePc+0x104>
+ 152:	41 83 f8 02          	cmp    $0x2,%r8d
+ 156:	74 25                	je     17d <_Z8simulatePc+0xed>
+ 158:	44 8b 25 00 00 00 00 	mov    0x0(%rip),%r12d        # 15f <_Z8simulatePc+0xcf>
+ 15f:	41 8d 72 08          	lea    0x8(%r10),%esi
+ 163:	41 8d 49 c0          	lea    -0x40(%r9),%ecx
+ 167:	ba 00 00 00 00       	mov    $0x0,%edx
+ 16c:	b8 00 00 00 00       	mov    $0x0,%eax
+ 171:	bb 04 00 00 00       	mov    $0x4,%ebx
+ 176:	44 89 25 00 00 00 00 	mov    %r12d,0x0(%rip)        # 17d <_Z8simulatePc+0xed>
+ 17d:	44 8b 2a             	mov    (%rdx),%r13d
+ 180:	83 c6 04             	add    $0x4,%esi
+ 183:	83 e9 20             	sub    $0x20,%ecx
+ 186:	48 83 c2 04          	add    $0x4,%rdx
+ 18a:	83 c3 01             	add    $0x1,%ebx
+ 18d:	44 89 28             	mov    %r13d,(%rax)
+ 190:	48 83 c0 04          	add    $0x4,%rax
+ 194:	44 8b 1a             	mov    (%rdx),%r11d
+ 197:	83 c6 04             	add    $0x4,%esi
+ 19a:	48 83 c2 04          	add    $0x4,%rdx
+ 19e:	89 df                	mov    %ebx,%edi
+ 1a0:	83 c3 01             	add    $0x1,%ebx
+ 1a3:	44 89 18             	mov    %r11d,(%rax)
+ 1a6:	48 83 c0 04          	add    $0x4,%rax
+ 1aa:	83 e9 20             	sub    $0x20,%ecx
+ 1ad:	74 33                	je     1e2 <_Z8simulatePc+0x152>
+ 1af:	90                   	nop
+ 1b0:	8b 7a 0c             	mov    0xc(%rdx),%edi
+ 1b3:	44 8b 12             	mov    (%rdx),%r10d
+ 1b6:	83 c6 10             	add    $0x10,%esi
+ 1b9:	44 8b 4a 04          	mov    0x4(%rdx),%r9d
+ 1bd:	44 8b 42 08          	mov    0x8(%rdx),%r8d
+ 1c1:	48 83 c2 10          	add    $0x10,%rdx
+ 1c5:	89 78 0c             	mov    %edi,0xc(%rax)
+ 1c8:	44 89 10             	mov    %r10d,(%rax)
+ 1cb:	8d 7b 03             	lea    0x3(%rbx),%edi
+ 1ce:	44 89 48 04          	mov    %r9d,0x4(%rax)
+ 1d2:	44 89 40 08          	mov    %r8d,0x8(%rax)
+ 1d6:	83 c3 04             	add    $0x4,%ebx
+ 1d9:	48 83 c0 10          	add    $0x10,%rax
+ 1dd:	83 c1 80             	add    $0xffffffffffffff80,%ecx
+ 1e0:	75 ce                	jne    1b0 <_Z8simulatePc+0x120>
+ 1e2:	89 35 00 00 00 00    	mov    %esi,0x0(%rip)        # 1e8 <_Z8simulatePc+0x158>
+ 1e8:	89 3d 00 00 00 00    	mov    %edi,0x0(%rip)        # 1ee <_Z8simulatePc+0x15e>
+ 1ee:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 1f5 <_Z8simulatePc+0x165>
+ 1f5:	48 89 e9             	mov    %rbp,%rcx
+ 1f8:	ba 00 00 00 00       	mov    $0x0,%edx
+ 1fd:	be 01 00 00 00       	mov    $0x1,%esi
+ 202:	31 c0                	xor    %eax,%eax
+ 204:	45 31 ed             	xor    %r13d,%r13d
+ 207:	49 bc fd ce 61 84 11 	mov    $0xabcc77118461cefd,%r12
+ 20e:	77 cc ab 
+ 211:	e8 00 00 00 00       	callq  216 <_Z8simulatePc+0x186>
+ 216:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 21d <_Z8simulatePc+0x18d>
+ 21d:	e8 00 00 00 00       	callq  222 <_Z8simulatePc+0x192>
+ 222:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+ 228:	48 8b 0d 00 00 00 00 	mov    0x0(%rip),%rcx        # 22f <_Z8simulatePc+0x19f>
+ 22f:	8b 35 00 00 00 00    	mov    0x0(%rip),%esi        # 235 <_Z8simulatePc+0x1a5>
+ 235:	48 83 c1 01          	add    $0x1,%rcx
+ 239:	89 f3                	mov    %esi,%ebx
+ 23b:	83 c6 01             	add    $0x1,%esi
+ 23e:	48 89 c8             	mov    %rcx,%rax
+ 241:	44 8b 34 9d 00 00 00 	mov    0x0(,%rbx,4),%r14d
+ 248:	00 
+ 249:	48 89 0d 00 00 00 00 	mov    %rcx,0x0(%rip)        # 250 <_Z8simulatePc+0x1c0>
+ 250:	49 f7 e4             	mul    %r12
+ 253:	89 35 00 00 00 00    	mov    %esi,0x0(%rip)        # 259 <_Z8simulatePc+0x1c9>
+ 259:	44 89 f3             	mov    %r14d,%ebx
+ 25c:	45 89 f3             	mov    %r14d,%r11d
+ 25f:	41 83 e3 3f          	and    $0x3f,%r11d
+ 263:	c1 eb 1a             	shr    $0x1a,%ebx
+ 266:	48 c1 ea 1a          	shr    $0x1a,%rdx
+ 26a:	44 89 dd             	mov    %r11d,%ebp
+ 26d:	48 69 d2 00 e1 f5 05 	imul   $0x5f5e100,%rdx,%rdx
+ 274:	48 39 d1             	cmp    %rdx,%rcx
+ 277:	0f 84 c3 00 00 00    	je     340 <_Z8simulatePc+0x2b0>
+ 27d:	80 fb 3a             	cmp    $0x3a,%bl
+ 280:	77 4e                	ja     2d0 <_Z8simulatePc+0x240>
+ 282:	44 0f b6 fb          	movzbl %bl,%r15d
+ 286:	42 ff 24 fd 00 00 00 	jmpq   *0x0(,%r15,8)
+ 28d:	00 
+ 28e:	45 89 f2             	mov    %r14d,%r10d
+ 291:	41 c1 ea 15          	shr    $0x15,%r10d
+ 295:	41 83 e2 1f          	and    $0x1f,%r10d
+ 299:	f3 42 0f 10 0c 95 00 	movss  0x0(,%r10,4),%xmm1
+ 2a0:	00 00 00 
+ 2a3:	f3 0f 51 c1          	sqrtss %xmm1,%xmm0
+ 2a7:	0f 2e c0             	ucomiss %xmm0,%xmm0
+ 2aa:	7a 02                	jp     2ae <_Z8simulatePc+0x21e>
+ 2ac:	74 08                	je     2b6 <_Z8simulatePc+0x226>
+ 2ae:	0f 28 c1             	movaps %xmm1,%xmm0
+ 2b1:	e8 00 00 00 00       	callq  2b6 <_Z8simulatePc+0x226>
+ 2b6:	44 89 f6             	mov    %r14d,%esi
+ 2b9:	c1 ee 0b             	shr    $0xb,%esi
+ 2bc:	83 e6 1f             	and    $0x1f,%esi
+ 2bf:	66 0f 7e 04 b5 00 00 	movd   %xmm0,0x0(,%rsi,4)
+ 2c6:	00 00 
+ 2c8:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+ 2cf:	00 
+ 2d0:	84 db                	test   %bl,%bl
+ 2d2:	0f 85 50 ff ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 2d8:	40 80 fd 3f          	cmp    $0x3f,%bpl
+ 2dc:	0f 85 46 ff ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 2e2:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 2e9 <_Z8simulatePc+0x259>
+ 2e9:	ba 00 00 00 00       	mov    $0x0,%edx
+ 2ee:	be 01 00 00 00       	mov    $0x1,%esi
+ 2f3:	31 c0                	xor    %eax,%eax
+ 2f5:	e8 00 00 00 00       	callq  2fa <_Z8simulatePc+0x26a>
+ 2fa:	48 8b 0d 00 00 00 00 	mov    0x0(%rip),%rcx        # 301 <_Z8simulatePc+0x271>
+ 301:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 308 <_Z8simulatePc+0x278>
+ 308:	ba 00 00 00 00       	mov    $0x0,%edx
+ 30d:	be 01 00 00 00       	mov    $0x1,%esi
+ 312:	31 c0                	xor    %eax,%eax
+ 314:	e8 00 00 00 00       	callq  319 <_Z8simulatePc+0x289>
+ 319:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 320 <_Z8simulatePc+0x290>
+ 320:	e8 00 00 00 00       	callq  325 <_Z8simulatePc+0x295>
+ 325:	48 83 c4 28          	add    $0x28,%rsp
+ 329:	31 c0                	xor    %eax,%eax
+ 32b:	5b                   	pop    %rbx
+ 32c:	5d                   	pop    %rbp
+ 32d:	41 5c                	pop    %r12
+ 32f:	41 5d                	pop    %r13
+ 331:	41 5e                	pop    %r14
+ 333:	41 5f                	pop    %r15
+ 335:	c3                   	retq   
+ 336:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+ 33d:	00 00 00 
+ 340:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 347 <_Z8simulatePc+0x2b7>
+ 347:	ba 00 00 00 00       	mov    $0x0,%edx
+ 34c:	be 01 00 00 00       	mov    $0x1,%esi
+ 351:	31 c0                	xor    %eax,%eax
+ 353:	e8 00 00 00 00       	callq  358 <_Z8simulatePc+0x2c8>
+ 358:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 35f <_Z8simulatePc+0x2cf>
+ 35f:	e8 00 00 00 00       	callq  364 <_Z8simulatePc+0x2d4>
+ 364:	e9 14 ff ff ff       	jmpq   27d <_Z8simulatePc+0x1ed>
+ 369:	44 8b 0d 00 00 00 00 	mov    0x0(%rip),%r9d        # 370 <_Z8simulatePc+0x2e0>
+ 370:	4d 63 d1             	movslq %r9d,%r10
+ 373:	41 83 e9 04          	sub    $0x4,%r9d
+ 377:	46 89 2c 95 00 00 00 	mov    %r13d,0x0(,%r10,4)
+ 37e:	00 
+ 37f:	44 8b 2d 00 00 00 00 	mov    0x0(%rip),%r13d        # 386 <_Z8simulatePc+0x2f6>
+ 386:	44 89 0d 00 00 00 00 	mov    %r9d,0x0(%rip)        # 38d <_Z8simulatePc+0x2fd>
+ 38d:	41 81 e6 ff ff ff 03 	and    $0x3ffffff,%r14d
+ 394:	84 db                	test   %bl,%bl
+ 396:	44 89 35 00 00 00 00 	mov    %r14d,0x0(%rip)        # 39d <_Z8simulatePc+0x30d>
+ 39d:	0f 85 85 fe ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 3a3:	e9 30 ff ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 3a8:	40 84 ed             	test   %bpl,%bpl
+ 3ab:	0f 85 45 07 00 00    	jne    af6 <_Z8simulatePc+0xa66>
+ 3b1:	41 c1 ee 0b          	shr    $0xb,%r14d
+ 3b5:	31 c0                	xor    %eax,%eax
+ 3b7:	bf 00 00 00 00       	mov    $0x0,%edi
+ 3bc:	41 83 e6 1f          	and    $0x1f,%r14d
+ 3c0:	45 89 f7             	mov    %r14d,%r15d
+ 3c3:	4a 8d 34 bd 00 00 00 	lea    0x0(,%r15,4),%rsi
+ 3ca:	00 
+ 3cb:	e8 00 00 00 00       	callq  3d0 <_Z8simulatePc+0x340>
+ 3d0:	45 85 f6             	test   %r14d,%r14d
+ 3d3:	0f 84 f7 fe ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 3d9:	42 8b 1c bd 00 00 00 	mov    0x0(,%r15,4),%ebx
+ 3e0:	00 
+ 3e1:	81 e3 ff 00 00 00    	and    $0xff,%ebx
+ 3e7:	42 89 1c bd 00 00 00 	mov    %ebx,0x0(,%r15,4)
+ 3ee:	00 
+ 3ef:	e9 34 fe ff ff       	jmpq   228 <_Z8simulatePc+0x198>
+ 3f4:	40 80 fd 30          	cmp    $0x30,%bpl
+ 3f8:	0f 87 d2 fe ff ff    	ja     2d0 <_Z8simulatePc+0x240>
+ 3fe:	44 0f b6 c5          	movzbl %bpl,%r8d
+ 402:	42 ff 24 c5 00 00 00 	jmpq   *0x0(,%r8,8)
+ 409:	00 
+ 40a:	45 89 f1             	mov    %r14d,%r9d
+ 40d:	45 89 f0             	mov    %r14d,%r8d
+ 410:	41 c1 e9 10          	shr    $0x10,%r9d
+ 414:	41 c1 e8 15          	shr    $0x15,%r8d
+ 418:	41 83 e1 1f          	and    $0x1f,%r9d
+ 41c:	41 83 e0 1f          	and    $0x1f,%r8d
+ 420:	f3 42 0f 10 04 8d 00 	movss  0x0(,%r9,4),%xmm0
+ 427:	00 00 00 
+ 42a:	42 0f 2e 04 85 00 00 	ucomiss 0x0(,%r8,4),%xmm0
+ 431:	00 00 
+ 433:	0f 86 97 fe ff ff    	jbe    2d0 <_Z8simulatePc+0x240>
+ 439:	44 89 f7             	mov    %r14d,%edi
+ 43c:	45 0f b7 c6          	movzwl %r14w,%r8d
+ 440:	81 cf 00 00 ff ff    	or     $0xffff0000,%edi
+ 446:	66 45 85 f6          	test   %r14w,%r14w
+ 44a:	41 0f 49 f8          	cmovns %r8d,%edi
+ 44e:	01 3d 00 00 00 00    	add    %edi,0x0(%rip)        # 454 <_Z8simulatePc+0x3c4>
+ 454:	84 db                	test   %bl,%bl
+ 456:	0f 85 cc fd ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 45c:	e9 77 fe ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 461:	45 89 f7             	mov    %r14d,%r15d
+ 464:	44 89 f2             	mov    %r14d,%edx
+ 467:	41 0f b7 ce          	movzwl %r14w,%ecx
+ 46b:	41 c1 ef 10          	shr    $0x10,%r15d
+ 46f:	81 ca 00 00 ff ff    	or     $0xffff0000,%edx
+ 475:	41 83 e7 1f          	and    $0x1f,%r15d
+ 479:	66 45 85 f6          	test   %r14w,%r14w
+ 47d:	42 8b 04 bd 00 00 00 	mov    0x0(,%r15,4),%eax
+ 484:	00 
+ 485:	0f 49 d1             	cmovns %ecx,%edx
+ 488:	29 d0                	sub    %edx,%eax
+ 48a:	44 8d 58 03          	lea    0x3(%rax),%r11d
+ 48e:	85 c0                	test   %eax,%eax
+ 490:	41 0f 48 c3          	cmovs  %r11d,%eax
+ 494:	41 c1 ee 15          	shr    $0x15,%r14d
+ 498:	4c 89 f6             	mov    %r14,%rsi
+ 49b:	c1 f8 02             	sar    $0x2,%eax
+ 49e:	83 e6 1f             	and    $0x1f,%esi
+ 4a1:	48 98                	cltq   
+ 4a3:	84 db                	test   %bl,%bl
+ 4a5:	44 8b 14 b5 00 00 00 	mov    0x0(,%rsi,4),%r10d
+ 4ac:	00 
+ 4ad:	44 89 14 85 00 00 00 	mov    %r10d,0x0(,%rax,4)
+ 4b4:	00 
+ 4b5:	0f 85 6d fd ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 4bb:	e9 18 fe ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 4c0:	8b 05 00 00 00 00    	mov    0x0(%rip),%eax        # 4c6 <_Z8simulatePc+0x436>
+ 4c6:	44 89 2d 00 00 00 00 	mov    %r13d,0x0(%rip)        # 4cd <_Z8simulatePc+0x43d>
+ 4cd:	83 c0 04             	add    $0x4,%eax
+ 4d0:	84 db                	test   %bl,%bl
+ 4d2:	89 05 00 00 00 00    	mov    %eax,0x0(%rip)        # 4d8 <_Z8simulatePc+0x448>
+ 4d8:	48 98                	cltq   
+ 4da:	44 8b 2c 85 00 00 00 	mov    0x0(,%rax,4),%r13d
+ 4e1:	00 
+ 4e2:	0f 85 40 fd ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 4e8:	e9 eb fd ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 4ed:	45 89 f3             	mov    %r14d,%r11d
+ 4f0:	44 89 f6             	mov    %r14d,%esi
+ 4f3:	41 c1 eb 15          	shr    $0x15,%r11d
+ 4f7:	c1 ee 10             	shr    $0x10,%esi
+ 4fa:	41 83 e3 1f          	and    $0x1f,%r11d
+ 4fe:	83 e6 1f             	and    $0x1f,%esi
+ 501:	f3 42 0f 10 0c 9d 00 	movss  0x0(,%r11,4),%xmm1
+ 508:	00 00 00 
+ 50b:	0f 2e 0c b5 00 00 00 	ucomiss 0x0(,%rsi,4),%xmm1
+ 512:	00 
+ 513:	0f 85 b7 fd ff ff    	jne    2d0 <_Z8simulatePc+0x240>
+ 519:	0f 8b 1a ff ff ff    	jnp    439 <_Z8simulatePc+0x3a9>
+ 51f:	e9 ac fd ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ 524:	0f 1f 40 00          	nopl   0x0(%rax)
+ 528:	45 89 f3             	mov    %r14d,%r11d
+ 52b:	44 89 f6             	mov    %r14d,%esi
+ 52e:	41 0f b7 ce          	movzwl %r14w,%ecx
+ 532:	41 c1 eb 10          	shr    $0x10,%r11d
+ 536:	81 ce 00 00 ff ff    	or     $0xffff0000,%esi
+ 53c:	41 83 e3 1f          	and    $0x1f,%r11d
+ 540:	66 45 85 f6          	test   %r14w,%r14w
+ 544:	42 8b 04 9d 00 00 00 	mov    0x0(,%r11,4),%eax
+ 54b:	00 
+ 54c:	0f 49 f1             	cmovns %ecx,%esi
+ 54f:	41 c1 ee 15          	shr    $0x15,%r14d
+ 553:	4d 89 f2             	mov    %r14,%r10
+ 556:	41 83 e2 1f          	and    $0x1f,%r10d
+ 55a:	29 f0                	sub    %esi,%eax
+ 55c:	8d 50 03             	lea    0x3(%rax),%edx
+ 55f:	85 c0                	test   %eax,%eax
+ 561:	0f 48 c2             	cmovs  %edx,%eax
+ 564:	c1 f8 02             	sar    $0x2,%eax
+ 567:	84 db                	test   %bl,%bl
+ 569:	48 98                	cltq   
+ 56b:	44 8b 34 85 00 00 00 	mov    0x0(,%rax,4),%r14d
+ 572:	00 
+ 573:	46 89 34 95 00 00 00 	mov    %r14d,0x0(,%r10,4)
+ 57a:	00 
+ 57b:	0f 85 a7 fc ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 581:	e9 52 fd ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 586:	45 89 f1             	mov    %r14d,%r9d
+ 589:	44 89 f7             	mov    %r14d,%edi
+ 58c:	45 0f b7 c6          	movzwl %r14w,%r8d
+ 590:	41 c1 e9 10          	shr    $0x10,%r9d
+ 594:	81 cf 00 00 ff ff    	or     $0xffff0000,%edi
+ 59a:	41 83 e1 1f          	and    $0x1f,%r9d
+ 59e:	66 45 85 f6          	test   %r14w,%r14w
+ 5a2:	42 8b 04 8d 00 00 00 	mov    0x0(,%r9,4),%eax
+ 5a9:	00 
+ 5aa:	41 0f 49 f8          	cmovns %r8d,%edi
+ 5ae:	29 f8                	sub    %edi,%eax
+ 5b0:	44 8d 78 03          	lea    0x3(%rax),%r15d
+ 5b4:	85 c0                	test   %eax,%eax
+ 5b6:	41 0f 48 c7          	cmovs  %r15d,%eax
+ 5ba:	41 c1 ee 15          	shr    $0x15,%r14d
+ 5be:	4d 89 f3             	mov    %r14,%r11
+ 5c1:	c1 f8 02             	sar    $0x2,%eax
+ 5c4:	41 83 e3 1f          	and    $0x1f,%r11d
+ 5c8:	48 98                	cltq   
+ 5ca:	84 db                	test   %bl,%bl
+ 5cc:	42 8b 0c 9d 00 00 00 	mov    0x0(,%r11,4),%ecx
+ 5d3:	00 
+ 5d4:	89 0c 85 00 00 00 00 	mov    %ecx,0x0(,%rax,4)
+ 5db:	0f 85 47 fc ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 5e1:	e9 f2 fc ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 5e6:	44 89 f2             	mov    %r14d,%edx
+ 5e9:	c1 ea 10             	shr    $0x10,%edx
+ 5ec:	83 e2 1f             	and    $0x1f,%edx
+ 5ef:	0f 84 db fc ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 5f5:	45 89 f3             	mov    %r14d,%r11d
+ 5f8:	44 89 f1             	mov    %r14d,%ecx
+ 5fb:	41 0f b7 f6          	movzwl %r14w,%esi
+ 5ff:	41 c1 eb 15          	shr    $0x15,%r11d
+ 603:	81 c9 00 00 ff ff    	or     $0xffff0000,%ecx
+ 609:	41 83 e3 1f          	and    $0x1f,%r11d
+ 60d:	66 45 85 f6          	test   %r14w,%r14w
+ 611:	41 89 d6             	mov    %edx,%r14d
+ 614:	42 8b 04 9d 00 00 00 	mov    0x0(,%r11,4),%eax
+ 61b:	00 
+ 61c:	0f 49 ce             	cmovns %esi,%ecx
+ 61f:	d3 f8                	sar    %cl,%eax
+ 621:	84 db                	test   %bl,%bl
+ 623:	42 89 04 b5 00 00 00 	mov    %eax,0x0(,%r14,4)
+ 62a:	00 
+ 62b:	0f 85 f7 fb ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 631:	e9 a2 fc ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 636:	66 2e 0f 1f 84 00 00 	nopw   %cs:0x0(%rax,%rax,1)
+ 63d:	00 00 00 
+ 640:	44 89 f2             	mov    %r14d,%edx
+ 643:	c1 ea 10             	shr    $0x10,%edx
+ 646:	83 e2 1f             	and    $0x1f,%edx
+ 649:	0f 84 81 fc ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 64f:	44 89 f7             	mov    %r14d,%edi
+ 652:	44 89 f1             	mov    %r14d,%ecx
+ 655:	45 0f b7 fe          	movzwl %r14w,%r15d
+ 659:	c1 ef 15             	shr    $0x15,%edi
+ 65c:	81 c9 00 00 ff ff    	or     $0xffff0000,%ecx
+ 662:	89 d2                	mov    %edx,%edx
+ 664:	83 e7 1f             	and    $0x1f,%edi
+ 667:	66 45 85 f6          	test   %r14w,%r14w
+ 66b:	44 8b 1c bd 00 00 00 	mov    0x0(,%rdi,4),%r11d
+ 672:	00 
+ 673:	41 0f 49 cf          	cmovns %r15d,%ecx
+ 677:	41 d3 e3             	shl    %cl,%r11d
+ 67a:	84 db                	test   %bl,%bl
+ 67c:	44 89 1c 95 00 00 00 	mov    %r11d,0x0(,%rdx,4)
+ 683:	00 
+ 684:	0f 85 9e fb ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 68a:	e9 49 fc ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 68f:	90                   	nop
+ 690:	44 89 f1             	mov    %r14d,%ecx
+ 693:	41 c1 ee 15          	shr    $0x15,%r14d
+ 697:	c1 e9 0b             	shr    $0xb,%ecx
+ 69a:	4d 89 f7             	mov    %r14,%r15
+ 69d:	83 e1 1f             	and    $0x1f,%ecx
+ 6a0:	41 83 e7 1f          	and    $0x1f,%r15d
+ 6a4:	84 db                	test   %bl,%bl
+ 6a6:	f3 42 0f 2a 1c bd 00 	cvtsi2ssl 0x0(,%r15,4),%xmm3
+ 6ad:	00 00 00 
+ 6b0:	66 0f 7e 1c 8d 00 00 	movd   %xmm3,0x0(,%rcx,4)
+ 6b7:	00 00 
+ 6b9:	0f 85 69 fb ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 6bf:	e9 14 fc ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 6c4:	44 89 f7             	mov    %r14d,%edi
+ 6c7:	c1 ef 15             	shr    $0x15,%edi
+ 6ca:	89 f9                	mov    %edi,%ecx
+ 6cc:	83 e1 1f             	and    $0x1f,%ecx
+ 6cf:	0f 84 fb fb ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 6d5:	44 89 f6             	mov    %r14d,%esi
+ 6d8:	45 89 f2             	mov    %r14d,%r10d
+ 6db:	41 0f b7 d6          	movzwl %r14w,%edx
+ 6df:	c1 ee 10             	shr    $0x10,%esi
+ 6e2:	41 81 ca 00 00 ff ff 	or     $0xffff0000,%r10d
+ 6e9:	41 89 c8             	mov    %ecx,%r8d
+ 6ec:	83 e6 1f             	and    $0x1f,%esi
+ 6ef:	66 45 85 f6          	test   %r14w,%r14w
+ 6f3:	8b 04 b5 00 00 00 00 	mov    0x0(,%rsi,4),%eax
+ 6fa:	44 0f 49 d2          	cmovns %edx,%r10d
+ 6fe:	44 29 d0             	sub    %r10d,%eax
+ 701:	44 8d 48 03          	lea    0x3(%rax),%r9d
+ 705:	85 c0                	test   %eax,%eax
+ 707:	41 0f 48 c1          	cmovs  %r9d,%eax
+ 70b:	c1 f8 02             	sar    $0x2,%eax
+ 70e:	84 db                	test   %bl,%bl
+ 710:	48 98                	cltq   
+ 712:	44 8b 34 85 00 00 00 	mov    0x0(,%rax,4),%r14d
+ 719:	00 
+ 71a:	46 89 34 85 00 00 00 	mov    %r14d,0x0(,%r8,4)
+ 721:	00 
+ 722:	0f 85 00 fb ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 728:	e9 ab fb ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 72d:	0f 1f 00             	nopl   (%rax)
+ 730:	44 89 f1             	mov    %r14d,%ecx
+ 733:	c1 e9 10             	shr    $0x10,%ecx
+ 736:	83 e1 1f             	and    $0x1f,%ecx
+ 739:	0f 84 91 fb ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 73f:	45 89 f3             	mov    %r14d,%r11d
+ 742:	45 89 f2             	mov    %r14d,%r10d
+ 745:	41 0f b7 f6          	movzwl %r14w,%esi
+ 749:	41 c1 eb 15          	shr    $0x15,%r11d
+ 74d:	41 81 ca 00 00 ff ff 	or     $0xffff0000,%r10d
+ 754:	41 89 c9             	mov    %ecx,%r9d
+ 757:	41 83 e3 1f          	and    $0x1f,%r11d
+ 75b:	66 45 85 f6          	test   %r14w,%r14w
+ 75f:	42 8b 14 9d 00 00 00 	mov    0x0(,%r11,4),%edx
+ 766:	00 
+ 767:	44 0f 49 d6          	cmovns %esi,%r10d
+ 76b:	89 d0                	mov    %edx,%eax
+ 76d:	c1 fa 1f             	sar    $0x1f,%edx
+ 770:	41 f7 fa             	idiv   %r10d
+ 773:	84 db                	test   %bl,%bl
+ 775:	42 89 04 8d 00 00 00 	mov    %eax,0x0(,%r9,4)
+ 77c:	00 
+ 77d:	0f 85 a5 fa ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 783:	e9 50 fb ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 788:	0f 1f 84 00 00 00 00 	nopl   0x0(%rax,%rax,1)
+ 78f:	00 
+ 790:	44 89 f0             	mov    %r14d,%eax
+ 793:	c1 e8 0b             	shr    $0xb,%eax
+ 796:	83 e0 1f             	and    $0x1f,%eax
+ 799:	0f 84 31 fb ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 79f:	45 89 f3             	mov    %r14d,%r11d
+ 7a2:	89 c6                	mov    %eax,%esi
+ 7a4:	41 c1 eb 15          	shr    $0x15,%r11d
+ 7a8:	41 83 e3 1f          	and    $0x1f,%r11d
+ 7ac:	84 db                	test   %bl,%bl
+ 7ae:	f3 42 0f 10 14 9d 00 	movss  0x0(,%r11,4),%xmm2
+ 7b5:	00 00 00 
+ 7b8:	f3 44 0f 2c f2       	cvttss2si %xmm2,%r14d
+ 7bd:	44 89 34 b5 00 00 00 	mov    %r14d,0x0(,%rsi,4)
+ 7c4:	00 
+ 7c5:	0f 85 5d fa ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 7cb:	e9 08 fb ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 7d0:	45 89 f7             	mov    %r14d,%r15d
+ 7d3:	44 89 f1             	mov    %r14d,%ecx
+ 7d6:	41 c1 ef 15          	shr    $0x15,%r15d
+ 7da:	c1 e9 10             	shr    $0x10,%ecx
+ 7dd:	41 83 e7 1f          	and    $0x1f,%r15d
+ 7e1:	83 e1 1f             	and    $0x1f,%ecx
+ 7e4:	42 8b 14 bd 00 00 00 	mov    0x0(,%r15,4),%edx
+ 7eb:	00 
+ 7ec:	3b 14 8d 00 00 00 00 	cmp    0x0(,%rcx,4),%edx
+ 7f3:	0f 8d d7 fa ff ff    	jge    2d0 <_Z8simulatePc+0x240>
+ 7f9:	e9 3b fc ff ff       	jmpq   439 <_Z8simulatePc+0x3a9>
+ 7fe:	45 89 f0             	mov    %r14d,%r8d
+ 801:	41 c1 e8 10          	shr    $0x10,%r8d
+ 805:	44 89 c2             	mov    %r8d,%edx
+ 808:	83 e2 1f             	and    $0x1f,%edx
+ 80b:	0f 84 bf fa ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 811:	44 89 f0             	mov    %r14d,%eax
+ 814:	45 89 f1             	mov    %r14d,%r9d
+ 817:	41 0f b7 ce          	movzwl %r14w,%ecx
+ 81b:	c1 e8 15             	shr    $0x15,%eax
+ 81e:	41 81 c9 00 00 ff ff 	or     $0xffff0000,%r9d
+ 825:	41 89 d2             	mov    %edx,%r10d
+ 828:	83 e0 1f             	and    $0x1f,%eax
+ 82b:	66 45 85 f6          	test   %r14w,%r14w
+ 82f:	44 0f 49 c9          	cmovns %ecx,%r9d
+ 833:	44 0f af 0c 85 00 00 	imul   0x0(,%rax,4),%r9d
+ 83a:	00 00 
+ 83c:	84 db                	test   %bl,%bl
+ 83e:	46 89 0c 95 00 00 00 	mov    %r9d,0x0(,%r10,4)
+ 845:	00 
+ 846:	0f 85 dc f9 ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 84c:	e9 87 fa ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 851:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ 858:	45 89 f2             	mov    %r14d,%r10d
+ 85b:	41 c1 ea 15          	shr    $0x15,%r10d
+ 85f:	41 83 e2 1f          	and    $0x1f,%r10d
+ 863:	42 8b 14 95 00 00 00 	mov    0x0(,%r10,4),%edx
+ 86a:	00 
+ 86b:	89 54 24 0c          	mov    %edx,0xc(%rsp)
+ 86f:	f3 0f 10 44 24 0c    	movss  0xc(%rsp),%xmm0
+ 875:	e8 00 00 00 00       	callq  87a <_Z8simulatePc+0x7ea>
+ 87a:	41 c1 ee 0b          	shr    $0xb,%r14d
+ 87e:	f3 0f 11 44 24 0c    	movss  %xmm0,0xc(%rsp)
+ 884:	44 8b 4c 24 0c       	mov    0xc(%rsp),%r9d
+ 889:	4c 89 f0             	mov    %r14,%rax
+ 88c:	83 e0 1f             	and    $0x1f,%eax
+ 88f:	84 db                	test   %bl,%bl
+ 891:	44 89 0c 85 00 00 00 	mov    %r9d,0x0(,%rax,4)
+ 898:	00 
+ 899:	0f 85 89 f9 ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 89f:	e9 34 fa ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 8a4:	45 89 f0             	mov    %r14d,%r8d
+ 8a7:	45 89 f7             	mov    %r14d,%r15d
+ 8aa:	41 c1 e8 15          	shr    $0x15,%r8d
+ 8ae:	41 c1 ef 10          	shr    $0x10,%r15d
+ 8b2:	41 83 e0 1f          	and    $0x1f,%r8d
+ 8b6:	41 83 e7 1f          	and    $0x1f,%r15d
+ 8ba:	42 8b 3c 85 00 00 00 	mov    0x0(,%r8,4),%edi
+ 8c1:	00 
+ 8c2:	42 3b 3c bd 00 00 00 	cmp    0x0(,%r15,4),%edi
+ 8c9:	00 
+ 8ca:	0f 85 69 fb ff ff    	jne    439 <_Z8simulatePc+0x3a9>
+ 8d0:	e9 fb f9 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ 8d5:	40 80 fd 07          	cmp    $0x7,%bpl
+ 8d9:	0f 87 f1 f9 ff ff    	ja     2d0 <_Z8simulatePc+0x240>
+ 8df:	40 0f b6 fd          	movzbl %bpl,%edi
+ 8e3:	0f 1f 44 00 00       	nopl   0x0(%rax,%rax,1)
+ 8e8:	ff 24 fd 00 00 00 00 	jmpq   *0x0(,%rdi,8)
+ 8ef:	44 89 f0             	mov    %r14d,%eax
+ 8f2:	c1 e8 10             	shr    $0x10,%eax
+ 8f5:	83 e0 1f             	and    $0x1f,%eax
+ 8f8:	0f 84 d2 f9 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 8fe:	45 89 f2             	mov    %r14d,%r10d
+ 901:	45 89 f0             	mov    %r14d,%r8d
+ 904:	45 0f b7 ce          	movzwl %r14w,%r9d
+ 908:	41 c1 ea 15          	shr    $0x15,%r10d
+ 90c:	41 81 c8 00 00 ff ff 	or     $0xffff0000,%r8d
+ 913:	41 83 e2 1f          	and    $0x1f,%r10d
+ 917:	66 45 85 f6          	test   %r14w,%r14w
+ 91b:	41 89 c6             	mov    %eax,%r14d
+ 91e:	42 8b 3c 95 00 00 00 	mov    0x0(,%r10,4),%edi
+ 925:	00 
+ 926:	45 0f 49 c1          	cmovns %r9d,%r8d
+ 92a:	44 29 c7             	sub    %r8d,%edi
+ 92d:	84 db                	test   %bl,%bl
+ 92f:	42 89 3c b5 00 00 00 	mov    %edi,0x0(,%r14,4)
+ 936:	00 
+ 937:	0f 85 eb f8 ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 93d:	e9 96 f9 ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 942:	66 0f 1f 44 00 00    	nopw   0x0(%rax,%rax,1)
+ 948:	44 89 f0             	mov    %r14d,%eax
+ 94b:	c1 e8 10             	shr    $0x10,%eax
+ 94e:	83 e0 1f             	and    $0x1f,%eax
+ 951:	0f 84 79 f9 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ 957:	44 89 f6             	mov    %r14d,%esi
+ 95a:	45 0f b7 de          	movzwl %r14w,%r11d
+ 95e:	81 ce 00 00 ff ff    	or     $0xffff0000,%esi
+ 964:	66 45 85 f6          	test   %r14w,%r14w
+ 968:	41 89 c6             	mov    %eax,%r14d
+ 96b:	41 0f 49 f3          	cmovns %r11d,%esi
+ 96f:	84 db                	test   %bl,%bl
+ 971:	66 42 89 34 b5 00 00 	mov    %si,0x0(,%r14,4)
+ 978:	00 00 
+ 97a:	0f 85 a8 f8 ff ff    	jne    228 <_Z8simulatePc+0x198>
+ 980:	e9 53 f9 ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ 985:	0f 1f 00             	nopl   (%rax)
+ 988:	45 89 f0             	mov    %r14d,%r8d
+ 98b:	41 c1 e8 15          	shr    $0x15,%r8d
+ 98f:	41 83 e0 1f          	and    $0x1f,%r8d
+ 993:	42 8b 3c 85 00 00 00 	mov    0x0(,%r8,4),%edi
+ 99a:	00 
+ 99b:	89 7c 24 0c          	mov    %edi,0xc(%rsp)
+ 99f:	f3 0f 10 44 24 0c    	movss  0xc(%rsp),%xmm0
+ 9a5:	e8 00 00 00 00       	callq  9aa <_Z8simulatePc+0x91a>
+ 9aa:	e9 cb fe ff ff       	jmpq   87a <_Z8simulatePc+0x7ea>
+ 9af:	44 89 f7             	mov    %r14d,%edi
+ 9b2:	45 89 f7             	mov    %r14d,%r15d
+ 9b5:	c1 ef 15             	shr    $0x15,%edi
+ 9b8:	41 c1 ef 10          	shr    $0x10,%r15d
+ 9bc:	83 e7 1f             	and    $0x1f,%edi
+ 9bf:	41 83 e7 1f          	and    $0x1f,%r15d
+ 9c3:	8b 14 bd 00 00 00 00 	mov    0x0(,%rdi,4),%edx
+ 9ca:	42 3b 14 bd 00 00 00 	cmp    0x0(,%r15,4),%edx
+ 9d1:	00 
+ 9d2:	0f 85 f8 f8 ff ff    	jne    2d0 <_Z8simulatePc+0x240>
+ 9d8:	66 45 85 f6          	test   %r14w,%r14w
+ 9dc:	0f 88 4b 01 00 00    	js     b2d <_Z8simulatePc+0xa9d>
+ 9e2:	41 81 e6 ff ff 00 00 	and    $0xffff,%r14d
+ 9e9:	44 01 35 00 00 00 00 	add    %r14d,0x0(%rip)        # 9f0 <_Z8simulatePc+0x960>
+ 9f0:	e9 db f8 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ 9f5:	45 89 f1             	mov    %r14d,%r9d
+ 9f8:	41 c1 e9 10          	shr    $0x10,%r9d
+ 9fc:	44 89 ca             	mov    %r9d,%edx
+ 9ff:	83 e2 1f             	and    $0x1f,%edx
+ a02:	0f 84 c8 f8 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ a08:	44 89 f0             	mov    %r14d,%eax
+ a0b:	45 89 f2             	mov    %r14d,%r10d
+ a0e:	41 0f b7 f6          	movzwl %r14w,%esi
+ a12:	c1 e8 15             	shr    $0x15,%eax
+ a15:	41 81 ca 00 00 ff ff 	or     $0xffff0000,%r10d
+ a1c:	83 e0 1f             	and    $0x1f,%eax
+ a1f:	66 45 85 f6          	test   %r14w,%r14w
+ a23:	41 89 d6             	mov    %edx,%r14d
+ a26:	44 0f 49 d6          	cmovns %esi,%r10d
+ a2a:	44 03 14 85 00 00 00 	add    0x0(,%rax,4),%r10d
+ a31:	00 
+ a32:	84 db                	test   %bl,%bl
+ a34:	46 89 14 b5 00 00 00 	mov    %r10d,0x0(,%r14,4)
+ a3b:	00 
+ a3c:	0f 85 e6 f7 ff ff    	jne    228 <_Z8simulatePc+0x198>
+ a42:	e9 91 f8 ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ a47:	66 0f 1f 84 00 00 00 	nopw   0x0(%rax,%rax,1)
+ a4e:	00 00 
+ a50:	44 89 f0             	mov    %r14d,%eax
+ a53:	c1 e8 10             	shr    $0x10,%eax
+ a56:	83 e0 1f             	and    $0x1f,%eax
+ a59:	0f 84 71 f8 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ a5f:	89 c2                	mov    %eax,%edx
+ a61:	45 89 f7             	mov    %r14d,%r15d
+ a64:	45 0f b7 c6          	movzwl %r14w,%r8d
+ a68:	8b 3c 95 00 00 00 00 	mov    0x0(,%rdx,4),%edi
+ a6f:	41 81 cf 00 00 ff ff 	or     $0xffff0000,%r15d
+ a76:	66 45 85 f6          	test   %r14w,%r14w
+ a7a:	45 0f 49 f8          	cmovns %r8d,%r15d
+ a7e:	66 31 ff             	xor    %di,%di
+ a81:	41 09 ff             	or     %edi,%r15d
+ a84:	84 db                	test   %bl,%bl
+ a86:	44 89 3c 95 00 00 00 	mov    %r15d,0x0(,%rdx,4)
+ a8d:	00 
+ a8e:	0f 85 94 f7 ff ff    	jne    228 <_Z8simulatePc+0x198>
+ a94:	e9 3f f8 ff ff       	jmpq   2d8 <_Z8simulatePc+0x248>
+ a99:	0f 1f 80 00 00 00 00 	nopl   0x0(%rax)
+ aa0:	45 89 f7             	mov    %r14d,%r15d
+ aa3:	41 c1 ef 15          	shr    $0x15,%r15d
+ aa7:	41 83 e7 1f          	and    $0x1f,%r15d
+ aab:	42 8b 0c bd 00 00 00 	mov    0x0(,%r15,4),%ecx
+ ab2:	00 
+ ab3:	89 4c 24 0c          	mov    %ecx,0xc(%rsp)
+ ab7:	f3 0f 10 44 24 0c    	movss  0xc(%rsp),%xmm0
+ abd:	e8 00 00 00 00       	callq  ac2 <_Z8simulatePc+0xa32>
+ ac2:	e9 b3 fd ff ff       	jmpq   87a <_Z8simulatePc+0x7ea>
+ ac7:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # ace <_Z8simulatePc+0xa3e>
+ ace:	48 89 e9             	mov    %rbp,%rcx
+ ad1:	ba 00 00 00 00       	mov    $0x0,%edx
+ ad6:	be 01 00 00 00       	mov    $0x1,%esi
+ adb:	31 c0                	xor    %eax,%eax
+ add:	e8 00 00 00 00       	callq  ae2 <_Z8simulatePc+0xa52>
+ ae2:	48 83 c4 28          	add    $0x28,%rsp
+ ae6:	b8 01 00 00 00       	mov    $0x1,%eax
+ aeb:	5b                   	pop    %rbx
+ aec:	5d                   	pop    %rbp
+ aed:	41 5c                	pop    %r12
+ aef:	41 5d                	pop    %r13
+ af1:	41 5e                	pop    %r14
+ af3:	41 5f                	pop    %r15
+ af5:	c3                   	retq   
+ af6:	40 80 fd 01          	cmp    $0x1,%bpl
+ afa:	0f 85 d0 f7 ff ff    	jne    2d0 <_Z8simulatePc+0x240>
+ b00:	44 89 f5             	mov    %r14d,%ebp
+ b03:	48 8b 35 00 00 00 00 	mov    0x0(%rip),%rsi        # b0a <_Z8simulatePc+0xa7a>
+ b0a:	c1 ed 15             	shr    $0x15,%ebp
+ b0d:	83 e5 1f             	and    $0x1f,%ebp
+ b10:	8b 3c ad 00 00 00 00 	mov    0x0(,%rbp,4),%edi
+ b17:	e8 00 00 00 00       	callq  b1c <_Z8simulatePc+0xa8c>
+ b1c:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # b23 <_Z8simulatePc+0xa93>
+ b23:	e8 00 00 00 00       	callq  b28 <_Z8simulatePc+0xa98>
+ b28:	e9 fb f6 ff ff       	jmpq   228 <_Z8simulatePc+0x198>
+ b2d:	41 81 ce 00 00 ff ff 	or     $0xffff0000,%r14d
+ b34:	e9 b0 fe ff ff       	jmpq   9e9 <_Z8simulatePc+0x959>
+ b39:	44 89 f7             	mov    %r14d,%edi
+ b3c:	44 89 f1             	mov    %r14d,%ecx
+ b3f:	45 89 f3             	mov    %r14d,%r11d
+ b42:	c1 ef 15             	shr    $0x15,%edi
+ b45:	c1 e9 10             	shr    $0x10,%ecx
+ b48:	41 c1 eb 0b          	shr    $0xb,%r11d
+ b4c:	83 e7 1f             	and    $0x1f,%edi
+ b4f:	83 e1 1f             	and    $0x1f,%ecx
+ b52:	41 83 e3 1f          	and    $0x1f,%r11d
+ b56:	44 8b 3c bd 00 00 00 	mov    0x0(,%rdi,4),%r15d
+ b5d:	00 
+ b5e:	44 89 7c 24 1c       	mov    %r15d,0x1c(%rsp)
+ b63:	f3 0f 10 74 24 1c    	movss  0x1c(%rsp),%xmm6
+ b69:	f3 0f 5c 34 8d 00 00 	subss  0x0(,%rcx,4),%xmm6
+ b70:	00 00 
+ b72:	66 42 0f 7e 34 9d 00 	movd   %xmm6,0x0(,%r11,4)
+ b79:	00 00 00 
+ b7c:	e9 4f f7 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ b81:	44 89 f6             	mov    %r14d,%esi
+ b84:	44 89 f2             	mov    %r14d,%edx
+ b87:	45 89 f1             	mov    %r14d,%r9d
+ b8a:	c1 ee 10             	shr    $0x10,%esi
+ b8d:	c1 ea 15             	shr    $0x15,%edx
+ b90:	41 c1 e9 0b          	shr    $0xb,%r9d
+ b94:	83 e6 1f             	and    $0x1f,%esi
+ b97:	83 e2 1f             	and    $0x1f,%edx
+ b9a:	41 83 e1 1f          	and    $0x1f,%r9d
+ b9e:	44 8b 14 b5 00 00 00 	mov    0x0(,%rsi,4),%r10d
+ ba5:	00 
+ ba6:	44 89 54 24 1c       	mov    %r10d,0x1c(%rsp)
+ bab:	f3 0f 10 6c 24 1c    	movss  0x1c(%rsp),%xmm5
+ bb1:	f3 0f 58 2c 95 00 00 	addss  0x0(,%rdx,4),%xmm5
+ bb8:	00 00 
+ bba:	66 42 0f 7e 2c 8d 00 	movd   %xmm5,0x0(,%r9,4)
+ bc1:	00 00 00 
+ bc4:	e9 5f f6 ff ff       	jmpq   228 <_Z8simulatePc+0x198>
+ bc9:	44 89 f0             	mov    %r14d,%eax
+ bcc:	45 89 f0             	mov    %r14d,%r8d
+ bcf:	c1 e8 15             	shr    $0x15,%eax
+ bd2:	41 c1 e8 0b          	shr    $0xb,%r8d
+ bd6:	83 e0 1f             	and    $0x1f,%eax
+ bd9:	41 83 e0 1f          	and    $0x1f,%r8d
+ bdd:	44 8b 34 85 00 00 00 	mov    0x0(,%rax,4),%r14d
+ be4:	00 
+ be5:	46 89 34 85 00 00 00 	mov    %r14d,0x0(,%r8,4)
+ bec:	00 
+ bed:	e9 de f6 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ bf2:	44 89 f7             	mov    %r14d,%edi
+ bf5:	44 89 f1             	mov    %r14d,%ecx
+ bf8:	45 89 f3             	mov    %r14d,%r11d
+ bfb:	c1 ef 15             	shr    $0x15,%edi
+ bfe:	c1 e9 10             	shr    $0x10,%ecx
+ c01:	41 c1 eb 0b          	shr    $0xb,%r11d
+ c05:	83 e7 1f             	and    $0x1f,%edi
+ c08:	83 e1 1f             	and    $0x1f,%ecx
+ c0b:	41 83 e3 1f          	and    $0x1f,%r11d
+ c0f:	44 8b 3c bd 00 00 00 	mov    0x0(,%rdi,4),%r15d
+ c16:	00 
+ c17:	44 89 7c 24 1c       	mov    %r15d,0x1c(%rsp)
+ c1c:	f3 0f 10 7c 24 1c    	movss  0x1c(%rsp),%xmm7
+ c22:	f3 0f 5e 3c 8d 00 00 	divss  0x0(,%rcx,4),%xmm7
+ c29:	00 00 
+ c2b:	66 42 0f 7e 3c 9d 00 	movd   %xmm7,0x0(,%r11,4)
+ c32:	00 00 00 
+ c35:	e9 96 f6 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ c3a:	44 89 f0             	mov    %r14d,%eax
+ c3d:	44 89 f3             	mov    %r14d,%ebx
+ c40:	44 89 f5             	mov    %r14d,%ebp
+ c43:	c1 e8 10             	shr    $0x10,%eax
+ c46:	c1 eb 15             	shr    $0x15,%ebx
+ c49:	c1 ed 0b             	shr    $0xb,%ebp
+ c4c:	83 e0 1f             	and    $0x1f,%eax
+ c4f:	83 e3 1f             	and    $0x1f,%ebx
+ c52:	83 e5 1f             	and    $0x1f,%ebp
+ c55:	44 8b 04 85 00 00 00 	mov    0x0(,%rax,4),%r8d
+ c5c:	00 
+ c5d:	44 89 44 24 1c       	mov    %r8d,0x1c(%rsp)
+ c62:	f3 0f 10 64 24 1c    	movss  0x1c(%rsp),%xmm4
+ c68:	f3 0f 59 24 9d 00 00 	mulss  0x0(,%rbx,4),%xmm4
+ c6f:	00 00 
+ c71:	66 0f 7e 24 ad 00 00 	movd   %xmm4,0x0(,%rbp,4)
+ c78:	00 00 
+ c7a:	e9 a9 f5 ff ff       	jmpq   228 <_Z8simulatePc+0x198>
+ c7f:	45 89 f1             	mov    %r14d,%r9d
+ c82:	41 c1 e9 15          	shr    $0x15,%r9d
+ c86:	41 83 e1 1f          	and    $0x1f,%r9d
+ c8a:	42 8b 04 8d 00 00 00 	mov    0x0(,%r9,4),%eax
+ c91:	00 
+ c92:	85 c0                	test   %eax,%eax
+ c94:	0f 88 76 02 00 00    	js     f10 <_Z8simulatePc+0xe80>
+ c9a:	0d 00 00 00 80       	or     $0x80000000,%eax
+ c9f:	44 89 f2             	mov    %r14d,%edx
+ ca2:	c1 ea 0b             	shr    $0xb,%edx
+ ca5:	83 e2 1f             	and    $0x1f,%edx
+ ca8:	89 04 95 00 00 00 00 	mov    %eax,0x0(,%rdx,4)
+ caf:	e9 1c f6 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ cb4:	44 8b 15 00 00 00 00 	mov    0x0(%rip),%r10d        # cbb <_Z8simulatePc+0xc2b>
+ cbb:	49 63 d2             	movslq %r10d,%rdx
+ cbe:	41 83 ea 04          	sub    $0x4,%r10d
+ cc2:	44 89 2c 95 00 00 00 	mov    %r13d,0x0(,%rdx,4)
+ cc9:	00 
+ cca:	44 8b 2d 00 00 00 00 	mov    0x0(%rip),%r13d        # cd1 <_Z8simulatePc+0xc41>
+ cd1:	44 89 15 00 00 00 00 	mov    %r10d,0x0(%rip)        # cd8 <_Z8simulatePc+0xc48>
+ cd8:	44 89 f6             	mov    %r14d,%esi
+ cdb:	c1 ee 15             	shr    $0x15,%esi
+ cde:	83 e6 1f             	and    $0x1f,%esi
+ ce1:	44 8b 34 b5 00 00 00 	mov    0x0(,%rsi,4),%r14d
+ ce8:	00 
+ ce9:	44 89 35 00 00 00 00 	mov    %r14d,0x0(%rip)        # cf0 <_Z8simulatePc+0xc60>
+ cf0:	e9 db f5 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ cf5:	44 89 f0             	mov    %r14d,%eax
+ cf8:	c1 e8 0b             	shr    $0xb,%eax
+ cfb:	83 e0 1f             	and    $0x1f,%eax
+ cfe:	0f 84 cc f5 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ d04:	41 89 c2             	mov    %eax,%r10d
+ d07:	45 89 f3             	mov    %r14d,%r11d
+ d0a:	44 89 f0             	mov    %r14d,%eax
+ d0d:	c1 e8 10             	shr    $0x10,%eax
+ d10:	41 c1 eb 15          	shr    $0x15,%r11d
+ d14:	83 e0 1f             	and    $0x1f,%eax
+ d17:	41 83 e3 1f          	and    $0x1f,%r11d
+ d1b:	44 8b 0c 85 00 00 00 	mov    0x0(,%rax,4),%r9d
+ d22:	00 
+ d23:	46 0b 0c 9d 00 00 00 	or     0x0(,%r11,4),%r9d
+ d2a:	00 
+ d2b:	46 89 0c 95 00 00 00 	mov    %r9d,0x0(,%r10,4)
+ d32:	00 
+ d33:	e9 98 f5 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ d38:	44 89 f0             	mov    %r14d,%eax
+ d3b:	c1 e8 0b             	shr    $0xb,%eax
+ d3e:	83 e0 1f             	and    $0x1f,%eax
+ d41:	0f 84 89 f5 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ d47:	45 89 f0             	mov    %r14d,%r8d
+ d4a:	44 89 f1             	mov    %r14d,%ecx
+ d4d:	89 c7                	mov    %eax,%edi
+ d4f:	41 c1 e8 10          	shr    $0x10,%r8d
+ d53:	c1 e9 15             	shr    $0x15,%ecx
+ d56:	41 83 e0 1f          	and    $0x1f,%r8d
+ d5a:	83 e1 1f             	and    $0x1f,%ecx
+ d5d:	46 8b 34 85 00 00 00 	mov    0x0(,%r8,4),%r14d
+ d64:	00 
+ d65:	44 23 34 8d 00 00 00 	and    0x0(,%rcx,4),%r14d
+ d6c:	00 
+ d6d:	44 89 34 bd 00 00 00 	mov    %r14d,0x0(,%rdi,4)
+ d74:	00 
+ d75:	e9 56 f5 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ d7a:	44 89 f0             	mov    %r14d,%eax
+ d7d:	c1 e8 0b             	shr    $0xb,%eax
+ d80:	83 e0 1f             	and    $0x1f,%eax
+ d83:	0f 84 47 f5 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ d89:	44 89 f7             	mov    %r14d,%edi
+ d8c:	44 89 f1             	mov    %r14d,%ecx
+ d8f:	41 89 c7             	mov    %eax,%r15d
+ d92:	c1 ef 15             	shr    $0x15,%edi
+ d95:	c1 e9 10             	shr    $0x10,%ecx
+ d98:	83 e7 1f             	and    $0x1f,%edi
+ d9b:	83 e1 1f             	and    $0x1f,%ecx
+ d9e:	44 8b 1c bd 00 00 00 	mov    0x0(,%rdi,4),%r11d
+ da5:	00 
+ da6:	44 2b 1c 8d 00 00 00 	sub    0x0(,%rcx,4),%r11d
+ dad:	00 
+ dae:	46 89 1c bd 00 00 00 	mov    %r11d,0x0(,%r15,4)
+ db5:	00 
+ db6:	e9 15 f5 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ dbb:	44 89 f0             	mov    %r14d,%eax
+ dbe:	c1 e8 0b             	shr    $0xb,%eax
+ dc1:	83 e0 1f             	and    $0x1f,%eax
+ dc4:	0f 84 5e f4 ff ff    	je     228 <_Z8simulatePc+0x198>
+ dca:	89 c3                	mov    %eax,%ebx
+ dcc:	45 89 f1             	mov    %r14d,%r9d
+ dcf:	44 89 f0             	mov    %r14d,%eax
+ dd2:	c1 e8 10             	shr    $0x10,%eax
+ dd5:	41 c1 e9 15          	shr    $0x15,%r9d
+ dd9:	83 e0 1f             	and    $0x1f,%eax
+ ddc:	41 83 e1 1f          	and    $0x1f,%r9d
+ de0:	8b 2c 85 00 00 00 00 	mov    0x0(,%rax,4),%ebp
+ de7:	42 03 2c 8d 00 00 00 	add    0x0(,%r9,4),%ebp
+ dee:	00 
+ def:	89 2c 9d 00 00 00 00 	mov    %ebp,0x0(,%rbx,4)
+ df6:	e9 2d f4 ff ff       	jmpq   228 <_Z8simulatePc+0x198>
+ dfb:	44 89 f0             	mov    %r14d,%eax
+ dfe:	c1 e8 0b             	shr    $0xb,%eax
+ e01:	83 e0 1f             	and    $0x1f,%eax
+ e04:	0f 84 c6 f4 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ e0a:	45 89 f7             	mov    %r14d,%r15d
+ e0d:	44 89 f6             	mov    %r14d,%esi
+ e10:	41 89 c3             	mov    %eax,%r11d
+ e13:	41 c1 ef 15          	shr    $0x15,%r15d
+ e17:	c1 ee 10             	shr    $0x10,%esi
+ e1a:	41 83 e7 1f          	and    $0x1f,%r15d
+ e1e:	83 e6 1f             	and    $0x1f,%esi
+ e21:	42 8b 14 bd 00 00 00 	mov    0x0(,%r15,4),%edx
+ e28:	00 
+ e29:	89 d0                	mov    %edx,%eax
+ e2b:	c1 fa 1f             	sar    $0x1f,%edx
+ e2e:	f7 3c b5 00 00 00 00 	idivl  0x0(,%rsi,4)
+ e35:	42 89 04 9d 00 00 00 	mov    %eax,0x0(,%r11,4)
+ e3c:	00 
+ e3d:	e9 8e f4 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ e42:	44 89 f0             	mov    %r14d,%eax
+ e45:	c1 e8 0b             	shr    $0xb,%eax
+ e48:	83 e0 1f             	and    $0x1f,%eax
+ e4b:	0f 84 7f f4 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ e51:	41 89 c1             	mov    %eax,%r9d
+ e54:	45 89 f2             	mov    %r14d,%r10d
+ e57:	44 89 f0             	mov    %r14d,%eax
+ e5a:	c1 e8 10             	shr    $0x10,%eax
+ e5d:	41 c1 ea 15          	shr    $0x15,%r10d
+ e61:	83 e0 1f             	and    $0x1f,%eax
+ e64:	41 83 e2 1f          	and    $0x1f,%r10d
+ e68:	44 8b 04 85 00 00 00 	mov    0x0(,%rax,4),%r8d
+ e6f:	00 
+ e70:	46 0f af 04 95 00 00 	imul   0x0(,%r10,4),%r8d
+ e77:	00 00 
+ e79:	46 89 04 8d 00 00 00 	mov    %r8d,0x0(,%r9,4)
+ e80:	00 
+ e81:	e9 4a f4 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ e86:	44 89 f0             	mov    %r14d,%eax
+ e89:	c1 e8 0b             	shr    $0xb,%eax
+ e8c:	83 e0 1f             	and    $0x1f,%eax
+ e8f:	0f 84 3b f4 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ e95:	45 89 f7             	mov    %r14d,%r15d
+ e98:	44 89 f7             	mov    %r14d,%edi
+ e9b:	89 c2                	mov    %eax,%edx
+ e9d:	41 c1 ef 15          	shr    $0x15,%r15d
+ ea1:	c1 ef 10             	shr    $0x10,%edi
+ ea4:	41 83 e7 1f          	and    $0x1f,%r15d
+ ea8:	83 e7 1f             	and    $0x1f,%edi
+ eab:	8b 0c bd 00 00 00 00 	mov    0x0(,%rdi,4),%ecx
+ eb2:	42 8b 34 bd 00 00 00 	mov    0x0(,%r15,4),%esi
+ eb9:	00 
+ eba:	d3 e6                	shl    %cl,%esi
+ ebc:	89 34 95 00 00 00 00 	mov    %esi,0x0(,%rdx,4)
+ ec3:	e9 08 f4 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ ec8:	44 89 f0             	mov    %r14d,%eax
+ ecb:	c1 e8 0b             	shr    $0xb,%eax
+ ece:	83 e0 1f             	and    $0x1f,%eax
+ ed1:	0f 84 f9 f3 ff ff    	je     2d0 <_Z8simulatePc+0x240>
+ ed7:	45 89 f1             	mov    %r14d,%r9d
+ eda:	45 89 f2             	mov    %r14d,%r10d
+ edd:	41 89 c0             	mov    %eax,%r8d
+ ee0:	41 c1 e9 15          	shr    $0x15,%r9d
+ ee4:	41 c1 ea 10          	shr    $0x10,%r10d
+ ee8:	41 83 e1 1f          	and    $0x1f,%r9d
+ eec:	41 83 e2 1f          	and    $0x1f,%r10d
+ ef0:	42 8b 0c 95 00 00 00 	mov    0x0(,%r10,4),%ecx
+ ef7:	00 
+ ef8:	46 8b 34 8d 00 00 00 	mov    0x0(,%r9,4),%r14d
+ eff:	00 
+ f00:	41 d3 fe             	sar    %cl,%r14d
+ f03:	46 89 34 85 00 00 00 	mov    %r14d,0x0(,%r8,4)
+ f0a:	00 
+ f0b:	e9 c0 f3 ff ff       	jmpq   2d0 <_Z8simulatePc+0x240>
+ f10:	25 ff ff ff 7f       	and    $0x7fffffff,%eax
+ f15:	e9 85 fd ff ff       	jmpq   c9f <_Z8simulatePc+0xc0f>

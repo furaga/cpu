@@ -191,7 +191,7 @@ uint32_t encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "fabs") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fabs(rs,0,rd,0);
+		    return _fabs(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "fmov") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
@@ -308,7 +308,7 @@ DEFINE_F(fsub,FPI,FSUB_F);
 DEFINE_F(fmul,FPI,FMUL_F);
 DEFINE_F(fdiv,FPI,FDIV_F);
 DEFINE_F(fsqrt,FPI,FSQRT_F);
-DEFINE_F(fabs,FPI,FABS_F);
+DEFINE_F(_fabs,FPI,FABS_F);
 DEFINE_F(fmov,FPI,FMOV_F);
 DEFINE_F(fneg,FPI,FNEG_F);
 
