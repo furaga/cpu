@@ -19,19 +19,14 @@ let rec count env = function
 	| Let ((x, _), SetL(Id.L(l)), Let (_, LdDF(y, C(i)), e)) when x = y -> count (inc l i env) e
 	| Ans exp -> count' env exp
 	| Let (_, exp, e) -> count (count' env exp) e
+	| Forget(_, e) -> count env e
+
 and count' env = function
 	| IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) | IfGE(_, _, e1, e2) | IfFEq(_, _, e1, e2) | IfFLE(_, _, e1, e2) -> count (count env e1) e2
 	| _ -> env
 
 let rec g = function
-	(* setL %gX, label1; fld %gY, %gX, i => fmov %gZ, %gY *)
-(*	| Let ((x, _), SetL(Id.L(l)), Ans (LdDF(y, C(i)))) when x = y && List.mem_assoc (l, i) !gtable ->
-		Let ((y, Type.Float), FMovD(List.assoc (l, i) !gtable), Ans (Nop))
-*)
-	| Let ((x, _), SetL(Id.L(l)), Let (zt, LdDF(y, C(i)), e)) when x = y && List.mem_assoc (l, i) !gtable ->
-
-		Let (zt, FMovD(List.assoc (l, i) !gtable), g e)
-
+	| Let ((x, _), SetL(Id.L(l)), Let (zt, LdDF(y, C(i)), e)) when x = y && List.mem_assoc (l, i) !gtable -> Let (zt, FMovD(List.assoc (l, i) !gtable), g e)
 	| Let (x, exp, e) -> Let (x, g' exp, g e)
 	| Ans exp -> Ans (g' exp)
 	| e -> e
@@ -66,20 +61,16 @@ let f (Prog(data, fundefs, e)) =
 	  )
 	  0 gls
 	in
-	
-(* for debug *)
-let rec show ls =
-	match ls with
-		| [] -> (Printf.printf "\tlen = %d\n" (List.length gls); flush stdout)
-		| ((l, i), r) :: xs -> 
-			begin
-				Printf.printf "\t%s[%d] => %s\n" l i r;
-				show xs
-			end in
-show !gtable;
-	
-	(*
-	let fundefs = List.map h fundefs in (* この2行いるの？ *)*)
+	(*(* for debug *)
+	let rec show ls =
+		match ls with
+			| [] -> (Printf.printf "\tlen = %d\n" (List.length gls); flush stdout)
+			| ((l, i), r) :: xs -> 
+				begin
+					Printf.printf "\t%s[%d] => %s\n" l i r;
+					show xs
+				end in
+	show !gtable;*)
 	let e = g e in
 	let e' = List.fold_left
 	  (fun e ((l, i), r) ->
@@ -89,5 +80,4 @@ show !gtable;
 	  ) e !gtable in
 	
 	let ans = Prog(data, List.map h fundefs, e') in
-(*	Asm.print_prog 1 ans;*)
 	ans

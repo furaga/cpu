@@ -29,7 +29,7 @@ let pih = pi *. 0.5 in
 (* atan *)
 let rec atan_sub i xx y =
 	if i < 0.5 then y
-	else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (i +. i +. y))
+	else atan_sub (i -. 1.0) xx ((i *. i *. xx) /. (i +. i +. 1.0 +. y))
 in
 let rec atan x =
 	let sgn =
