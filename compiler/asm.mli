@@ -3,7 +3,7 @@ type id_or_imm = V of Id.t | C of int
 type t =
 	| Ans of exp
 	| Let of (Id.t * Type.t) * exp * t
-(*	| Forget of Id.t * t*)
+	| Forget of Id.t * t
 and exp =
 	| Nop
 	| Set of int
@@ -40,6 +40,20 @@ and exp =
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 type prog = Prog of (Id.l * float) list * fundef list * t
 
+(*
+	args_regs :引数として使用するレジスタ
+	ret_regs : 戻り値が入っているレジスタ
+	use_regs : 関数内で使用する（内容を書き換えうる）レジスタ
+	need_ra :  リンクレジスタを使用するか（末尾再帰とかなら使用しない？）
+*)
+type fundata = {arg_regs : Id.t list; ret_reg : Id.t; use_regs : S.t}
+
+val fundata : fundata M.t ref
+
+val get_arg_regs : Id.t -> Id.t list
+val get_ret_reg : Id.t -> Id.t
+val get_use_regs : Id.t -> S.t
+ 
 val fletd : Id.t * exp * t -> t (* shorthand of Let for float *)
 val seq : exp * t -> t (* shorthand of Let for unit *)
 

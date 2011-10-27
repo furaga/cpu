@@ -27,6 +27,7 @@ let rec target' src (dest, t) = function
 	     target_args src fregs 0 zs)
   | _ -> false, []
 and target src dest = function (* register targeting (caml2html: regalloc_target) *)
+  | Forget(id, e) -> target src dest e
   | Ans(exp) -> target' src dest exp
   | Let(xt, exp, e) ->
       let c1, rs1 = target' src xt exp in
@@ -99,6 +100,7 @@ let find' x' regenv =
   | c -> c
 
 let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (caml2html: regalloc_g) *)
+  | Forget(id, t) -> assert false
   | Ans(exp) -> g'_and_restore dest cont regenv exp
   | Let((x, t) as xt, exp, e) ->
       assert (not (M.mem x regenv));

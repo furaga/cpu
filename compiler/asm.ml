@@ -4,7 +4,7 @@ type id_or_imm = V of Id.t | C of int
 type t =
 	| Ans of exp
 	| Let of (Id.t * Type.t) * exp * t
-(*	| Forget of Id.t * t*)
+	| Forget of Id.t * t
 and exp =
 	| Nop
 	| Set of int
@@ -41,6 +41,23 @@ and exp =
 type fundef = { name : Id.l; args : Id.t list; fargs : Id.t list; body : t; ret : Type.t }
 (* プログラム全体 = 浮動小数点数テーブル + トップレベル関数 + メインの式 (caml2html: sparcasm_prog) *)
 type prog = Prog of (Id.l * float) list * fundef list * t
+
+type fundata = {arg_regs : Id.t list; ret_reg : Id.t; use_regs : S.t}
+
+let fundata = ref (M.add_list
+  [("min_caml_floor", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
+   ("min_caml_ceil", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
+   ("min_caml_float_of_int", { arg_regs = ["%g3"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
+   ("min_caml_int_of_float", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
+   ("min_caml_truncate", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
+   ("min_caml_create_array", { arg_regs = ["%g3"; "%g4"]; ret_reg = "%g3"; use_regs = S.of_list ["%g2"; "%g3"; "%g4"; "%g5"]});
+   ("min_caml_create_array_float", { arg_regs = ["%g3"; "%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g2"; "%g3"; "%g4"; "%f0"]});
+  ] M.empty)
+
+let get_arg_regs x = (M.find x !fundata).arg_regs
+let get_ret_reg x = (M.find x !fundata).ret_reg
+let get_use_regs x = (M.find x !fundata).use_regs
+
 
 let fletd(x, e1, e2) = Let((x, Type.Float), e1, e2)
 let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
@@ -108,13 +125,14 @@ and fv = function
   | Ans(exp) -> fv_exp exp
   | Let((x, t), exp, e) ->
       fv_exp exp @ remove_and_uniq (S.singleton x) (fv e)
-(*  | Forget(x, e) -> fv (S.add x env) cont e*)
+  | Forget (x, e) -> remove_and_uniq (S.singleton x) (fv e)
 let fv e = remove_and_uniq S.empty (fv e)
 
 let rec concat e1 xt e2 =
   match e1 with
   | Ans(exp) -> Let(xt, exp, e2)
   | Let(yt, exp, e1') -> Let(yt, exp, concat e1' xt e2)
+  | Forget(y, e1') -> Forget(y, concat e1' xt e2)
 
 let align i = (if i mod 8 = 0 then i else i + 4)
 
@@ -124,6 +142,7 @@ let indent = Global.indent
 let rec print n = function
 	| Ans e -> (indent n; Printf.printf "Ans (\n"; print_exp (n + 1) e; indent n; Printf.printf ")\n")
 	| Let ((id, typ), exp, e) -> (indent n; Printf.printf "Let %s =\n" id; print_exp (n + 1) exp; indent n; Printf.printf "In\n"; print n e)
+	| Forget (id, e) -> ()
 
 and print_exp n = function
 	| Nop -> (indent n; print_endline "Nop")
