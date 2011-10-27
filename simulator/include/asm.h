@@ -99,7 +99,7 @@ PROTO_F(fsub);
 PROTO_F(fmul);
 PROTO_F(fdiv);
 PROTO_F(fsqrt);
-PROTO_F(fabs);
+PROTO_F(_fabs);
 PROTO_F(fmov);
 PROTO_F(fneg);
 
