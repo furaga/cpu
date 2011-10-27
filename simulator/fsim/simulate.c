@@ -74,152 +74,57 @@ int simulate(char *sfile) {
 		}
 
 		switch(opcode){
-			case SPECIAL:
-				switch(funct) {
-					case ADD_F: 
-						IF0_BREAK_D
-						_GRD = _GRS + _GRT;
-						break;
-					case SUB_F:
-						IF0_BREAK_D
-						_GRD = _GRS - _GRT;
-						break;
-					case MUL_F:
-						IF0_BREAK_D
-						_GRD = _GRS * _GRT;
-						break;
-					case DIV_F:
-						IF0_BREAK_D
-						_GRD = _GRS / _GRT;
-						break;
-					case AND_F:
-						IF0_BREAK_D
-						_GRD = _GRS & _GRT;
-						break;
-					case OR_F:
-						IF0_BREAK_D
-						_GRD = _GRS | _GRT;
-						break;
-					case SLL_F:
-						IF0_BREAK_D
-						_GRD = _GRS << _GRT;
-						break;
-					case SRL_F:
-						IF0_BREAK_D
-						_GRD = _GRS >> _GRT;
-						break;
-					case B_F:
-						pc = _GRS;
-						break;
-					case CALLR_F:
-						ram[reg[1]] = lr;
-						reg[1] -= 4;
-						lr = pc;
-						pc = _GRS;
-						break;
-					case HALT_F:
-						break;
-					default: break;		
-				}
+			case LD:
+				IF0_BREAK_S
+				_GRS = ram[(_GRT - _IMM)/4];
 				break;
-			case IO:
-				switch(funct) {
-					case INPUT_F:
-						ret = scanf("%c", (char*)&_GRD);
-						IF0_BREAK_D
-						_GRD = _GRD & 0xff;
-						break;
-					case OUTPUT_F:
-						a.i = _GRS;
-						putchar(_GRS);
-						fflush(stdout);
-						break;
-					}
+			case ST:
+				ram[(_GRT - _IMM)/4] = _GRS;
 				break;
-			case FPI:
-				switch(funct) {
-					case FADD_F:
-						a.i = _FRS;
-						b.i = _FRT;
-						ans.f = a.f + b.f;
-						_FRD = ans.i;
-						break;
-					case FSUB_F:
-						a.i = _FRS;
-						b.i = _FRT;
-						ans.f = a.f - b.f;
-						_FRD = ans.i;
-						break;
-					case FMUL_F:
-						a.i = _FRS;
-						b.i = _FRT;
-						ans.f = a.f * b.f;
-						_FRD = ans.i;
-						break;
-					case FDIV_F:
-						a.i = _FRS;
-						b.i = _FRT;
-						ans.f = a.f / b.f;
-						_FRD = ans.i;
-						break;
-					case FSQRT_F:
-						a.i = _FRS;
-						ans.f = sqrtf(a.f);
-						_FRD = ans.i;
-						break;
-					case FMOV_F:
-						_FRD = _FRS;
-						break;
-					case FNEG_F:
-						_FRD = (_FRS & (0x1 << 31)) ?
-										 (_FRS & 0x7fffffff) : // minus
-										 (_FRS | (0x1 << 31)) ; // plus
-						break;
-					default: break;
-
-				}
+			case FLD:
+				_FRS = ram[(_GRT - _IMM)/4];
 				break;
-			case MVHI: 
-				IF0_BREAK_T
-				_GRT = ((uint32_t) _IMM << 16) | (_GRT & 0xffff);
-				break;
-			case MVLO: 
-				IF0_BREAK_T
-				_GRT = (_GRT & (0xffff<<16)) | _IMM;
+			case JNE:
+				if (_GRS != _GRT)
+					pc += _IMM;
 				break;
 			case ADDI:
 				IF0_BREAK_T
 				_GRT = _GRS + _IMM;
 				break;
-			case SUBI:
-				IF0_BREAK_T
-				_GRT = _GRS - _IMM;
-				break;
-			case MULI:
-				IF0_BREAK_T
-				_GRT = _GRS * _IMM;
-				break;
-			case DIVI:
-				IF0_BREAK_T
-				_GRT = _GRS / _IMM;
-				break;
 			case SLLI:
 				IF0_BREAK_T
 				_GRT = _GRS << _IMM;
 				break;
-			case SRLI:
-				IF0_BREAK_T
-				_GRT = _GRS >> _IMM;
-				break;
 			case JMP:
 				pc = get_target(ir);
 				break;
-			case JEQ:
-				if (_GRS == _GRT)
+			case FJLT:
+				a.i = _FRS;
+				b.i = _FRT;
+				if (a.f < b.f) {
+	//				printf("fjlt : true\n");
 					pc += _IMM;
+				} else {
+		//			printf("fjlt : false\n");
+				}
 				break;
-			case JNE:
-				if (_GRS != _GRT)
+			case FST:
+				ram[(_GRT - _IMM)/4] = _FRS;
+				break;
+			case SUBI:
+				IF0_BREAK_T
+				_GRT = _GRS - _IMM;
+				break;
+			case RETURN:
+				pc = lr;
+				reg[1] += 4;
+				lr = ram[reg[1]];
+				break;
+			case FJEQ:
+				a.i = _FRS;
+				b.i = _FRT;
+				if (a.f == b.f) 
 					pc += _IMM;
 				break;
 			case JLT:
@@ -232,39 +137,30 @@ int simulate(char *sfile) {
 				lr = pc;
 				pc = get_target(ir);
 				break;
-			case RETURN:
-				pc = lr;
-				reg[1] += 4;
-				lr = ram[reg[1]];
+			case SRLI:
+				IF0_BREAK_T
+				_GRT = _GRS >> _IMM;
 				break;
-			case LD:
-				IF0_BREAK_S
-				_GRS = ram[(_GRT - _IMM)/4];
-				break;
-			case ST:
-				ram[(_GRT - _IMM)/4] = _GRS;
-				break;
-			case FLD:
-				_FRS = ram[(_GRT - _IMM)/4];
-				break;
-			case FST:
-				ram[(_GRT - _IMM)/4] = _FRS;
-				break;
-			case FJEQ:
-				a.i = _FRS;
-				b.i = _FRT;
-				if (a.f == b.f) 
+			case JEQ:
+				if (_GRS == _GRT)
 					pc += _IMM;
 				break;
-			case FJLT:
-				a.i = _FRS;
-				b.i = _FRT;
-				if (a.f < b.f) {
-	//				printf("fjlt : true\n");
-					pc += _IMM;
-				} else {
-		//			printf("fjlt : false\n");
-				}
+			case MULI:
+				IF0_BREAK_T
+				_GRT = _GRS * _IMM;
+				break;
+
+			case MVHI: 
+				IF0_BREAK_T
+				_GRT = ((uint32_t) _IMM << 16) | (_GRT & 0xffff);
+				break;
+			case MVLO: 
+				IF0_BREAK_T
+				_GRT = (_GRT & (0xffff<<16)) | _IMM;
+				break;
+			case DIVI:
+				IF0_BREAK_T
+				_GRT = _GRS / _IMM;
 				break;
 			case SIN:
 				a.i = _FRS;
@@ -295,9 +191,116 @@ int simulate(char *sfile) {
 				_FRD = a.i;
 	//fprintf(stderr, "fofi before:%X after:%f\n", _GRS, _FRD);
 				break;
+			case FPI:
+				switch(funct) {
+					case FMUL_F:
+						a.i = _FRS;
+						b.i = _FRT;
+						ans.f = a.f * b.f;
+						_FRD = ans.i;
+						break;
+					case FADD_F:
+						a.i = _FRS;
+						b.i = _FRT;
+						ans.f = a.f + b.f;
+						_FRD = ans.i;
+						break;
+					case FSUB_F:
+						a.i = _FRS;
+						b.i = _FRT;
+						ans.f = a.f - b.f;
+						_FRD = ans.i;
+						break;
+					case FMOV_F:
+						_FRD = _FRS;
+						break;
+					case FNEG_F:
+						_FRD = (_FRS & (0x1 << 31)) ?
+										 (_FRS & 0x7fffffff) : // minus
+										 (_FRS | (0x1 << 31)) ; // plus
+						break;
+					case FSQRT_F:
+						a.i = _FRS;
+						ans.f = sqrtf(a.f);
+						_FRD = ans.i;
+						break;
+					case FDIV_F:
+						a.i = _FRS;
+						b.i = _FRT;
+						ans.f = a.f / b.f;
+						_FRD = ans.i;
+						break;
+					default: break;
+
+				}
+				break;
+
+			case SPECIAL:
+				switch(funct) {
+					case ADD_F: 
+						IF0_BREAK_D
+						_GRD = _GRS + _GRT;
+						break;
+					case CALLR_F:
+						ram[reg[1]] = lr;
+						reg[1] -= 4;
+						lr = pc;
+						pc = _GRS;
+						break;
+					case B_F:
+						pc = _GRS;
+						break;
+					case SUB_F:
+						IF0_BREAK_D
+						_GRD = _GRS - _GRT;
+						break;
+					case MUL_F:
+						IF0_BREAK_D
+						_GRD = _GRS * _GRT;
+						break;
+
+					case DIV_F:
+						IF0_BREAK_D
+						_GRD = _GRS / _GRT;
+						break;
+					case AND_F:
+						IF0_BREAK_D
+						_GRD = _GRS & _GRT;
+						break;
+					case OR_F:
+						IF0_BREAK_D
+						_GRD = _GRS | _GRT;
+						break;
+					case SLL_F:
+						IF0_BREAK_D
+						_GRD = _GRS << _GRT;
+						break;
+					case SRL_F:
+						IF0_BREAK_D
+						_GRD = _GRS >> _GRT;
+						break;
+					case HALT_F:
+						break;
+					default: break;		
+				}
+				break;
+			case IO:
+				switch(funct) {
+					case OUTPUT_F:
+						a.i = _GRS;
+						putchar(_GRS);
+						fflush(stdout);
+						break;
+					case INPUT_F:
+						ret = scanf("%c", (char*)&_GRD);
+						IF0_BREAK_D
+						_GRD = _GRD & 0xff;
+						break;
+					}
+				break;
 			default	:	break;
 		}
-	} while(!((opcode == SPECIAL) && (funct == HALT_F)));
+	} while(!((funct == HALT_F) && (opcode == SPECIAL)));
 
 
 	fprintf(stderr, "\nCPU Simulator Results\n");

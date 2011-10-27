@@ -11,6 +11,20 @@ int operate(uint32_t ir) {
 	uint8_t opcode = get_opcode(ir);
 	uint8_t funct = get_funct(ir);
 	switch(opcode){
+		case IO:
+			switch(funct) {
+				case INPUT_F:
+					ret = scanf("%c", (char*)&_GRD);
+					IF0_BREAK_D
+					_GRD = _GRD & 0xff;
+					break;
+				case OUTPUT_F:
+					a.i = _GRS;
+					putchar(_GRS);
+					fflush(stdout);
+					break;
+				}
+			break;
 		case SPECIAL:
 			switch(funct) {
 				case ADD_F: 
@@ -58,20 +72,6 @@ int operate(uint32_t ir) {
 					break;
 				default: break;		
 			}
-			break;
-		case IO:
-			switch(funct) {
-				case INPUT_F:
-					ret = scanf("%c", (char*)&_GRD);
-					IF0_BREAK_D
-					_GRD = _GRD & 0xff;
-					break;
-				case OUTPUT_F:
-					a.i = _GRS;
-					putchar(_GRS);
-					fflush(stdout);
-					break;
-				}
 			break;
 		case FPI:
 			switch(funct) {

@@ -10,8 +10,8 @@ LDFLAGS = -Wall -O2 -lm
 ###################################
 # Set Vars below
 ###################################
-TEST_TARGET = non-tail-if2
-RT_TARGET = base hoe
+TEST_TARGET = fib
+RT_TARGET = base
 #RT_TARGET = $(subst .sld,, $(shell ls ../sld))
 SIM_FLAGS =
 MIN_RT = ../../compiler/test/min-rt/min-rt

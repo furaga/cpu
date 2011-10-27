@@ -2,7 +2,7 @@
 #include "sim.h"
 
 // 命令実行回数の計数
-void statistics(FILE* fp) {
+int statistics(FILE* fp) {
 	static int count[INST_NUM][INST_NUM];
 	const char *format = "%8s: %f %10d\n";
 	uint32_t ir = rom[pc];
@@ -12,26 +12,29 @@ void statistics(FILE* fp) {
 	funct = get_funct(ir);
 
 	switch (opcode) {
-		case SPECIAL:
-		case IO:
-		case FPI:
-			count[opcode][funct]++;
-			break;
+		case SPECIAL: 
+			count[074][0]++;count[opcode][funct]++;break;
+		case IO: 
+			count[075][0]++;count[opcode][funct]++;break;
+		case FPI: 
+			count[076][0]++;count[opcode][funct]++;break;
 		default:
+			count[077][0]++;
 			count[opcode][0]++;
 			break;
 	}
 
 	if ((opcode == SPECIAL) && (funct == HALT_F)) {
 		fprintf(fp, "\n");
+
 		for (i = 0; i < INST_NUM; i++) {
 			switch (i) {
-				case SPECIAL:
-				case IO:
+				case SPECIAL: 
+				case IO: 
 				case FPI:
 					for (j = 0; j < INST_NUM; j++) {
 						if (count[i][j] > 0) {
-							fprintf(fp, format, FunctMap[j], count[i][j]*1.0/cnt, count[i][j]);
+							fprintf(fp, format, FunctMap[i][j], count[i][j]*1.0/cnt, count[i][j]);
 						}
 					}
 				break;
@@ -43,6 +46,9 @@ void statistics(FILE* fp) {
 			
 			}
 		}
-	}
+		fprintf(fp, "\n");
 
+		return 1;
+	}
+	return 0;
 }

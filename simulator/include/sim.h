@@ -47,9 +47,11 @@ void decode_ir(uint32_t,FILE*);
 #define IF0_BREAK_D	if (get_rdi(ir) == 0) { break; }
 extern const char *InstMap[INST_NUM];
 extern const char *InstTyMap[INST_NUM];
-extern const char *FunctMap[INST_NUM];
-extern const char *FunctTyMap[INST_NUM];
-void statistics(FILE*);
+extern const char *FunctMap[18][INST_NUM];
+extern const char *FunctTyMap[18][INST_NUM];
+int statistics(FILE*);
 int operate(uint32_t);
+int op_stat(char *sfile);
+
 
 #endif

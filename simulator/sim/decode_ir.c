@@ -1,10 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "sim.h"
-extern const char *InstMap[INST_NUM];
-extern const char *InstTyMap[INST_NUM];
-extern const char *FunctMap[INST_NUM];
-extern const char *FunctTyMap[INST_NUM];
 
 // decoding instruction register ////////////////////
 void decode_ir(uint32_t ir, FILE *fp) {
@@ -28,8 +24,8 @@ void decode_ir(uint32_t ir, FILE *fp) {
 	funct = get_funct(ir);
 	name = InstMap[opcode];
 	type = InstTyMap[opcode];
-	f_type = FunctTyMap[funct];
-	f_name = FunctMap[funct];
+	f_type = FunctTyMap[opcode][funct];
+	f_name = FunctMap[opcode][funct];
 
 	if (strcmp(type, "special") == 0) {
 		if (strcmp(f_type, "fggg") == 0) {
