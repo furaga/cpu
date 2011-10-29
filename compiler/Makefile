@@ -26,7 +26,7 @@ inline.mli inline.ml \
 movelet.mli movelet.ml elim.mli elim.ml constArray.mli constArray.ml \
 cse.mli cse.ml constFold.mli constFold.ml constArg.mli constArg.ml \
 closure.mli closure.ml asm.mli asm.ml virtual.mli virtual.ml sglobal.mli sglobal.ml\
-simm.mli simm.ml regAlloc.mli regAlloc.ml emit.mli emit.ml \
+simm.mli simm.ml regAlloc.mli regAlloc.ml regAlloc2.mli regAlloc2.ml emit.mli emit.ml \
 main.mli main.ml
 
 # ↓テストプログラムが増えたら、これも増やす

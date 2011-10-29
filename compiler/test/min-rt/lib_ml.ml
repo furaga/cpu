@@ -19,7 +19,7 @@ let rec fneg a = -. a in
 let rec fhalf a = a *. 0.5 in
 let rec fsqr a = a *. a in
 
-(* sqrt, floor, int_of_float, float_of_int はlib_asm.sで定義 *)
+(* floor, int_of_float, float_of_int はlib_asm.sで定義 *)
 
 (* 算術関数 *)
 let pi = 3.14159265358979323846264 in
