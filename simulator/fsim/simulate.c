@@ -211,6 +211,9 @@ int simulate(char *sfile) {
 						ans.f = a.f - b.f;
 						_FRD = ans.i;
 						break;
+					case FABS_F:
+						_FRD = 0x7fffffff & _FRS;
+						break;
 					case FMOV_F:
 						_FRD = _FRS;
 						break;
