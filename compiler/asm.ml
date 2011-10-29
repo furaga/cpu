@@ -45,19 +45,22 @@ type prog = Prog of (Id.l * float) list * fundef list * t
 type fundata = {arg_regs : Id.t list; ret_reg : Id.t; use_regs : S.t}
 
 let fundata = ref (M.add_list
-  [("min_caml_floor", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
+  [
+  ("min_caml_floor", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
    ("min_caml_ceil", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
    ("min_caml_float_of_int", { arg_regs = ["%g3"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
    ("min_caml_int_of_float", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
    ("min_caml_truncate", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
-   ("min_caml_create_array", { arg_regs = ["%g3"; "%g4"]; ret_reg = "%g3"; use_regs = S.of_list ["%g2"; "%g3"; "%g4"; "%g5"]});
-   ("min_caml_create_array_float", { arg_regs = ["%g3"; "%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g2"; "%g3"; "%g4"; "%f0"]});
+   ("min_caml_create_array", { arg_regs = ["%g3"; "%g4"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"]});
+   ("min_caml_create_float_array", { arg_regs = ["%g3"; "%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"]});
+   ("min_caml_print_char", { arg_regs = ["%g3"]; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_print_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_write", { arg_regs = ["%g3"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_sqrt", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%f0"]});
+   ("min_caml_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_read_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_input_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]} )
   ] M.empty)
-
-let get_arg_regs x = (M.find x !fundata).arg_regs
-let get_ret_reg x = (M.find x !fundata).ret_reg
-let get_use_regs x = (M.find x !fundata).use_regs
-
 
 let fletd(x, e1, e2) = Let((x, Type.Float), e1, e2)
 let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
@@ -90,6 +93,10 @@ let reg_hp = "%g2" (* heap pointer (caml2html: sparcasm_reghp) *)
 let reg_ra = "%g31" (* return address *)
 
 let reg_fgs = Array.to_list (Array.init (31 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
+
+let get_arg_regs x = (M.find x !fundata).arg_regs
+let get_ret_reg x = (M.find x !fundata).ret_reg
+let get_use_regs x = try (M.find x !fundata).use_regs with Not_found -> S.of_list (allregs @ allfregs)
 
 let is_reg x = (x.[0] = '%')
 (*let co_freg_table =

@@ -27,7 +27,7 @@ let expand xts ini addf addi =
     ini
     (fun (offset, acc) x ->
       let offset = align offset in
-      (offset + 8, addf x offset acc))
+      (offset + 4, addf x offset acc))
     (fun (offset, acc) x t ->
       (offset + 4, addi x t offset acc))
 
@@ -172,30 +172,43 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
   | Closure.ExtArray(Id.L(x)) -> Ans(SetL(Id.L("min_caml_" ^ x)))
 
 (* 関数の仮想マシンコード生成 (caml2html: virtual_h) *)
-let h { Closure.name = (Id.L(x), t); Closure.args = yts; Closure.formal_fv = zts; Closure.body = e } =
-  let (int, float) = separate yts in
-  let (offset, load) =
-    expand
-      zts
-      (4, g (M.add x t (M.add_list yts (M.add_list zts M.empty))) e)
-      (fun z offset load -> fletd(z, LdDF(reg_cl, C(-offset)), load)) (* TODO *)
-      (fun z t offset load -> Let((z, t), Ld(reg_cl, C(-offset)), load)) (* TODO *) in
-  match t with
-  | Type.Fun(_, t2) ->
-      { name = Id.L(x); args = int; fargs = float; body = load; ret = t2 }
-  | _ -> assert false
-(*
-(* プログラム全体の仮想マシンコード生成 (caml2html: virtual_f) *)
-let f (Closure.Prog(fundefs, e)) =
-  data := [];
-  let fundefs = List.map h fundefs in
-  let e = g M.empty e in
-  Prog(!data, fundefs, e)
-*)
+let h { Closure.name = (Id.L x, t); Closure.args = yts; Closure.formal_fv = zts; Closure.body = e } =
+	let (int, float) = separate yts in
+	let (offset, load) = expand
+							zts
+							(4, g (M.add x t (M.add_list yts (M.add_list zts M.empty))) e)
+							(fun z offset load -> fletd(z, LdDF(reg_cl, C(-offset)), load)) (* TODO *)
+							(fun z t offset load -> Let((z, t), Ld(reg_cl, C(-offset)), load)) (* TODO *) in
+	(* xの引数ytsに適当にレジスタを割り振っていく *)
+	let (_, _, _, rs, frs) = List.fold_left
+							(fun (iregs, fregs, xs, rs, frs) (x, t) -> match t with
+								| Type.Unit -> (iregs, fregs, xs, rs, frs)
+								| Type.Float -> (iregs, List.tl fregs, xs @ [x], rs, frs @ [List.hd fregs])
+								| _ -> (List.tl iregs, fregs, xs @ [x], rs @ [List.hd iregs], frs)
+							) (allregs, allfregs, [], [], []) yts in
+	match t with
+		| Type.Fun(_, t2) ->
+			let ret_reg = 
+				(match t2 with
+					| Type.Unit -> "%dummy"
+					| Type.Float -> List.hd allfregs
+					| _ -> List.hd allregs) in
+			fundata := M.add x {arg_regs = rs @ frs; ret_reg = ret_reg; use_regs = S.of_list (allregs @ allfregs)} !fundata;
+			{name = Id.L x; args = int; fargs = float; body = load; ret = t2}
+		| _ -> assert false
 
 (* プログラム全体の仮想マシンコード生成 (caml2html: virtual_f) *)
 let f flg (Closure.Prog(fundefs, e)) =
 	data := [];
+	(* fundataの初期化時点で登録されいない外部関数 *)	
+	M.iter (fun x t ->
+				match t with
+					| Type.Fun(ts, y) when not (M.mem ("min_caml_" ^ x) !fundata) ->
+						let args = List.map (fun t -> ("", t)) ts in
+						let _ = h { Closure.name = (Id.L ("min_caml_" ^ x), t); Closure.args = args; Closure.formal_fv = []; Closure.body = Closure.Unit } in
+						()
+					| _ -> ()
+				) !Typing.extenv;
 	let fundefs = List.map h fundefs in
 	let e = g M.empty e in
 	let program = Prog(!data, fundefs, e) in
