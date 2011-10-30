@@ -69,11 +69,7 @@ let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
 let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
   [| "%g3"; "%g4"; "%g5"; "%g6"; "%g7"; "%g8"; "%g9";
   	 "%g10"; "%g11"; "%g12"; "%g13"; "%g14"; "%g15"; "%g16"; "%g17"; "%g18"; "%g19"; 
-     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; "%g26"; "%g27";  |](*"%g28"; "%g29"*)
-(*  [| "%i2"; "%i3"; "%i4"; "%i5";
-     "%l0"; "%l1"; "%l2"; "%l3"; "%l4"; "%l5"; "%l6"; "%l7";
-     "%o0"; "%o1"; "%o2"; "%o3"; "%o4"; "%o5" |]
-*)
+     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; "%g26"; "%g27"|]
 
 let freg_num = 16
 
@@ -115,9 +111,40 @@ let rec remove_and_uniq xs = function
   | [] -> []
   | x :: ys when S.mem x xs -> remove_and_uniq xs ys
   | x :: ys -> x :: remove_and_uniq (S.add x xs) ys
-
+let rec cat xs ys env =
+	match xs with
+		| [] -> ys
+		| x :: xs when S.mem x env -> cat xs ys env
+		| x :: xs -> x :: cat xs ys (S.add x env)
 (* free variables in the order of use (for spilling) (caml2html: sparcasm_fv) *)
+
 let fv_id_or_imm = function V(x) -> [x] | _ -> []
+let rec fv' = function
+	| Nop | Set(_) | SetL(_) | Comment(_) | Restore(_) -> []
+	| Mov(x) | Neg(x) | FMovD(x) | FNegD(x) | Save(x, _) -> [x]
+	| Add(x, y') | Sub(x, y') | Mul(x, y') | Div(x, y') | SLL(x, y') | Ld(x, y') | LdDF(x, y') -> x :: fv_id_or_imm y'
+	| St(x, y, z') | StDF(x, y, z') -> x :: y :: fv_id_or_imm z'
+	| FAddD(x, y) | FSubD(x, y) | FMulD(x, y) | FDivD(x, y) -> [x; y]
+	| IfEq(x, y', e1, e2) | IfLE(x, y', e1, e2) | IfGE(x, y', e1, e2) -> x :: fv_id_or_imm y'
+	| IfFEq(x, y, e1, e2) | IfFLE(x, y, e1, e2) -> [x; y]
+	| CallCls(x, ys, zs) -> x :: ys @ zs
+	| CallDir(_, ys, zs) -> ys @ zs
+
+let rec fv_exp env cont e =
+	let xs = fv' e in
+	match e with
+		| IfEq (_, _, e1, e2) | IfLE (_, _, e1, e2) | IfGE (_, _, e1, e2) | IfFEq (_, _, e1, e2) | IfFLE (_, _, e1, e2) ->
+		 	cat xs (fv env (fv env cont e2) e1) env
+		| _ -> cat xs cont env
+and fv env cont = function
+	| Ans exp -> fv_exp env cont exp
+	| Let ((x, t), exp, e) ->
+		let cont' = fv (S.add x env) cont e in
+		fv_exp env cont' exp
+	| Forget (x, e) -> fv (S.add x env) cont e
+let fv e = remove_and_uniq S.empty (fv S.empty [] e)
+	
+(*
 let rec fv_exp = function
   | Nop | Set(_) | SetL(_) | Comment(_) | Restore(_) -> []
   | Mov(x) | Neg(x) | FMovD(x) | FNegD(x) | Save(x, _) -> [x]
@@ -134,7 +161,7 @@ and fv = function
       fv_exp exp @ remove_and_uniq (S.singleton x) (fv e)
   | Forget (x, e) -> remove_and_uniq (S.singleton x) (fv e)
 let fv e = remove_and_uniq S.empty (fv e)
-
+*)
 let rec concat e1 xt e2 =
   match e1 with
   | Ans(exp) -> Let(xt, exp, e2)
