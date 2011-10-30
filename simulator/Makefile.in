@@ -11,9 +11,9 @@ LDFLAGS = -Wall -O2 -lm
 # Set Vars below
 ###################################
 TEST_TARGET = fib
-RT_TARGET = contest
+RT_TARGET = base
 #RT_TARGET = $(subst .sld,, $(shell ls ../sld))
-SIM_FLAGS =
+SIM_FLAGS = 
 MIN_RT = ../../compiler/test/min-rt/min-rt
 ###################################
 ###################################

@@ -32,7 +32,7 @@ int32_t get_imm(uint32_t ir) {
 
 // rom の命令実行列(バイナリ)に従いシミュレートする
 int simulate(char *sfile) {
-	uint32_t ir, lr, heap_size;
+	uint32_t ir, heap_size;
 	int fd,ret,i;
 	uint8_t opcode, funct;
 	union {
@@ -48,7 +48,7 @@ int simulate(char *sfile) {
 	ret = read(fd, rom, ROM_NUM*4);
 	close(fd);
 
-	lr = cnt = pc = 0;
+	cnt = pc = 0;
 	reg[1] = reg[31] = RAM_NUM;
 
 	heap_size = rom[0]; 
@@ -72,7 +72,7 @@ int simulate(char *sfile) {
 			fprintf(stderr, ".");
 			fflush(stderr);
 		}
-
+   
 		switch(opcode){
 			case LD:
 				IF0_BREAK_S
@@ -117,9 +117,9 @@ int simulate(char *sfile) {
 				_GRT = _GRS - _IMM;
 				break;
 			case RETURN:
-				pc = lr;
+				pc = reg[30];
 				reg[1] += 4;
-				lr = ram[reg[1]];
+				reg[30] = ram[reg[1]];
 				break;
 			case FJEQ:
 				a.i = _FRS;
@@ -132,9 +132,9 @@ int simulate(char *sfile) {
 					pc += _IMM;
 				break;
 			case CALL:
-				ram[reg[1]] = lr;
+				ram[reg[1]] = reg[30];
 				reg[1] -= 4;
-				lr = pc;
+				reg[30] = pc;
 				pc = get_target(ir);
 				break;
 			case SRLI:
@@ -156,7 +156,7 @@ int simulate(char *sfile) {
 				break;
 			case MVLO: 
 				IF0_BREAK_T
-				_GRT = (_GRT & (0xffff<<16)) | _IMM;
+				_GRT = (_GRT & (0xffff<<16)) | (_IMM & 0xffff);
 				break;
 			case DIVI:
 				IF0_BREAK_T
@@ -245,9 +245,9 @@ int simulate(char *sfile) {
 						_GRD = _GRS + _GRT;
 						break;
 					case CALLR_F:
-						ram[reg[1]] = lr;
+						ram[reg[1]] = reg[30];
 						reg[1] -= 4;
-						lr = pc;
+						reg[30] = pc;
 						pc = _GRS;
 						break;
 					case B_F:
@@ -303,6 +303,7 @@ int simulate(char *sfile) {
 				break;
 			default	:	break;
 		}
+
 	} while(!((funct == HALT_F) && (opcode == SPECIAL)));
 
 

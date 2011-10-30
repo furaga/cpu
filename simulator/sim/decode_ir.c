@@ -24,8 +24,12 @@ void decode_ir(uint32_t ir, FILE *fp) {
 	funct = get_funct(ir);
 	name = InstMap[opcode];
 	type = InstTyMap[opcode];
-	f_type = FunctTyMap[opcode][funct];
-	f_name = FunctMap[opcode][funct];
+	if (opcode == 0 ||
+		opcode == 1 ||
+		opcode == 17) {
+		f_type = FunctTyMap[opcode][funct];
+		f_name = FunctMap[opcode][funct];
+	}
 
 	if (strcmp(type, "special") == 0) {
 		if (strcmp(f_type, "fggg") == 0) {
@@ -91,6 +95,7 @@ void decode_ir(uint32_t ir, FILE *fp) {
 		fprintf(fp, fggg, name, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
 	}else 
 	if (strcmp(type, "fggi") == 0) {
+		
 		// addi,subi,muli,divi,slli,st,ld
 		if ((strcmp(name, "ld") == 0) ||
 			(strcmp(name, "st") == 0)) {
