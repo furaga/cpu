@@ -1,23 +1,25 @@
 open KNormal
 (* let式の位置の最適化（elim.mlを改造） *)
-(* A正規化など *)
+(* 関数本体の最初にlet式をいれまくって自由変数を極力なくしている *)
+(* こうすることでclosure.mlでクロージャが作られにくくなる *)
+
 
 (* 副作用がないと分かっている関数群 *)
-let noeffectfun = S.of_list [] (*[
+let noeffectfun = S.of_list [
 	"fequal"; "fless"; "fispos"; "fisneg"; "fiszero"; 
 	"xor"; "not"; 
 	"fabs"; "fneg"; 
 	"fsqr"; "fhalf"; "floor";
 	"float_of_int"; "int_of_float";
 	"sin"; "cos"; "atan"; "sqrt"]
-*)
+
 (* 副作用があるか *)
 let rec effect env = function
-	| Let(_, e1, e2) | IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) -> effect env e1 || effect env e2
-	| LetRec({name=(x,_);body=e1}, e2) -> if effect_fun x env e1 then effect env e2 else effect (S.add x env) e2
-	| LetTuple(_, _, e) -> effect env e
-	| App (x,_) -> not (S.mem x env)
-	| ExtFunApp (x,_) -> not (S.mem x noeffectfun)
+	| Let (_, e1, e2) | IfEq (_, _, e1, e2) | IfLE (_, _, e1, e2) -> effect env e1 || effect env e2
+	| LetRec ({name = (x,_); body = e1}, e2) -> if effect_fun x env e1 then effect env e2 else effect (S.add x env) e2
+	| LetTuple (_, _, e) -> effect env e
+	| App (x, _) -> not (S.mem x env)
+	| ExtFunApp (x, _) -> not (S.mem x noeffectfun)
 	| Put _  -> true
 	| _ -> false
 (* 関数idが副作用がないと仮定した上でeffect関数を呼ぶ *)
@@ -28,13 +30,13 @@ and effect_fun id env exp =
 
 (* let x を削除 *)
 let rec remove x = function
-	| Let ((x',t),e1,e2)  -> if x = x' then e2 else Let ((x',t),remove x e1,remove x e2)
-	| IfEq (y,z,e1,e2) -> IfEq (y,z,remove x e1,remove x e2)
-	| IfLE (y,z,e1,e2) -> IfLE (y,z,remove x e1,remove x e2)
+	| Let ((x', t), e1, e2)  -> if x = x' then e2 else Let ((x', t), remove x e1, remove x e2)
+	| IfEq (y, z, e1, e2) -> IfEq (y, z, remove x e1, remove x e2)
+	| IfLE (y, z, e1, e2) -> IfLE (y, z, remove x e1, remove x e2)
 	| LetRec ({body = e1} as fundef, e2) ->
 		LetRec ({fundef with body = remove x e1}, remove x e2)
 	| LetTuple (xts, y, e) ->
-		if (List.mem x (fst (List.split xts))) then
+		if List.mem x (fst (List.split xts)) then
 			e
 		else
 			LetTuple (xts, y, remove x e)

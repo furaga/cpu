@@ -46,20 +46,20 @@ type fundata = {arg_regs : Id.t list; ret_reg : Id.t; use_regs : S.t}
 
 let fundata = ref (M.add_list
   [
-  ("min_caml_floor", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
-   ("min_caml_ceil", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"]});
+(*   ("min_caml_floor", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"; "%f4"]});
+   ("min_caml_ceil", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"; "%f4"]});*)
    ("min_caml_float_of_int", { arg_regs = ["%g3"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
    ("min_caml_int_of_float", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
    ("min_caml_truncate", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
    ("min_caml_create_array", { arg_regs = ["%g3"; "%g4"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"]});
-   ("min_caml_create_float_array", { arg_regs = ["%g3"; "%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"]});
+   ("min_caml_create_float_array", { arg_regs = ["%g3"; "%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g2"; "%g3"; "%g4"; "%f0"]});
    ("min_caml_print_char", { arg_regs = ["%g3"]; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
    ("min_caml_print_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
    ("min_caml_write", { arg_regs = ["%g3"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
    ("min_caml_sqrt", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%f0"]});
-   ("min_caml_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
-   ("min_caml_read_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
-   ("min_caml_input_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]} )
+   ("min_caml_newline", { arg_regs = ["%dummy"]; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_read_char", { arg_regs = ["%dummy"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_input_char", { arg_regs = ["%dummy"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]})
   ] M.empty)
 
 let fletd(x, e1, e2) = Let((x, Type.Float), e1, e2)
@@ -144,24 +144,6 @@ and fv env cont = function
 	| Forget (x, e) -> fv (S.add x env) cont e
 let fv e = remove_and_uniq S.empty (fv S.empty [] e)
 	
-(*
-let rec fv_exp = function
-  | Nop | Set(_) | SetL(_) | Comment(_) | Restore(_) -> []
-  | Mov(x) | Neg(x) | FMovD(x) | FNegD(x) | Save(x, _) -> [x]
-  | Add(x, y') | Sub(x, y') | Mul(x, y') | Div(x, y') | SLL(x, y') | Ld(x, y') | LdDF(x, y') -> x :: fv_id_or_imm y'
-  | St(x, y, z') | StDF(x, y, z') -> x :: y :: fv_id_or_imm z'
-  | FAddD(x, y) | FSubD(x, y) | FMulD(x, y) | FDivD(x, y) -> [x; y]
-  | IfEq(x, y', e1, e2) | IfLE(x, y', e1, e2) | IfGE(x, y', e1, e2) -> x :: fv_id_or_imm y' @ remove_and_uniq S.empty (fv e1 @ fv e2) (* uniq here just for efficiency *)
-  | IfFEq(x, y, e1, e2) | IfFLE(x, y, e1, e2) -> x :: y :: remove_and_uniq S.empty (fv e1 @ fv e2) (* uniq here just for efficiency *)
-  | CallCls(x, ys, zs) -> x :: ys @ zs
-  | CallDir(_, ys, zs) -> ys @ zs
-and fv = function
-  | Ans(exp) -> fv_exp exp
-  | Let((x, t), exp, e) ->
-      fv_exp exp @ remove_and_uniq (S.singleton x) (fv e)
-  | Forget (x, e) -> remove_and_uniq (S.singleton x) (fv e)
-let fv e = remove_and_uniq S.empty (fv e)
-*)
 let rec concat e1 xt e2 =
   match e1 with
   | Ans(exp) -> Let(xt, exp, e2)

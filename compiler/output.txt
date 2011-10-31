@@ -1,316 +1,823 @@
-Print KNormal_t(kNormal.ml):
-  let rec f : Int -> Unit ( n ) =
-    if 0 <= n then
-      let Tu1 : Unit =
-        print_int n 
-      in
-      let a : Array(Int -> Unit) =
-        let Ti3 : Int =
-          1
-        in
-        create_array Ti3 f 
-      in
-      let Tf5 : Int -> Unit =
-        let Ti4 : Int =
-          0
-        in
-        a.(Ti4)      in
-      let Ti7 : Int =
-        let Ti6 : Int =
-          1
-        in
-        n - Ti6
-      in
-      Tf5 Ti7 
-    else
-      ()
-  in
-  let Ti2 : Int =
-    9
-  in
-  f Ti2 
+compile  test/funcomp.ml
 
-Print KNormal_t (Alpha.ml)
-  let rec f.8 : Int -> Unit ( n.9 ) =
-    if 0 <= n.9 then
-      let Tu1.11 : Unit =
-        print_int n.9 
-      in
-      let a.12 : Array(Int -> Unit) =
-        let Ti3.17 : Int =
-          1
-        in
-        create_array Ti3.17 f.8 
-      in
-      let Tf5.13 : Int -> Unit =
-        let Ti4.16 : Int =
-          0
-        in
-        a.12.(Ti4.16)      in
-      let Ti7.14 : Int =
-        let Ti6.15 : Int =
-          1
-        in
-        n.9 - Ti6.15
-      in
-      Tf5.13 Ti7.14 
-    else
-      ()
-  in
-  let Ti2.10 : Int =
-    9
-  in
-  f.8 Ti2.10 
+	hello
 
-Print KNormal_t(Cse.ml):
-  let rec f.8 : Int -> Unit ( n.9 ) =
-    if 0 <= n.9 then
-      let Tu1.11 : Unit =
-        print_int n.9 
-      in
-      let Ti3.17 : Int =
-        1
-      in
-      let a.12 : Array(Int -> Unit) =
-        create_array Ti3.17 f.8 
-      in
-      let Ti4.16 : Int =
-        0
-      in
-      let Tf5.13 : Int -> Unit =
-        a.12.(Ti4.16)      in
-      let Ti6.15 : Int =
-        Ti3.17
-      in
-      let Ti7.14 : Int =
-        n.9 - Ti6.15
-      in
-      Tf5.13 Ti7.14 
-    else
-      ()
-  in
-  let Ti2.10 : Int =
-    9
-  in
-  f.8 Ti2.10 
 
-Print KNormal_T (constArg.ml)
-  let rec f.8 : Unit ( ) =
-    let n.9 : Int =
-      9
-    in
-    if 0 <= n.9 then
-      let Tu1.11 : Unit =
-        print_int n.9 
-      in
-      let Ti3.17 : Int =
-        1
-      in
-      let a.12 : Array(Int -> Unit) =
-        create_array Ti3.17 f.8 
-      in
-      let Ti4.16 : Int =
-        0
-      in
-      let Tf5.13 : Int -> Unit =
-        a.12.(Ti4.16)      in
-      let Ti6.15 : Int =
-        1
-      in
-      let Ti7.14 : Int =
-        n.9 - Ti6.15
-      in
-      Tf5.13 Ti7.14 
-    else
-      ()
-  in
-  let Ti2.10 : Int =
-    9
-  in
-  f.8 
-
-Print KNormal_t(Cse.ml):
-  let rec f.8 : Unit ( ) =
-    let n.9 : Int =
-      9
-    in
-    if 0 <= n.9 then
-      let Tu1.11 : Unit =
-        print_int n.9 
-      in
-      let Ti3.17 : Int =
-        1
-      in
-      let a.12 : Array(Int -> Unit) =
-        create_array Ti3.17 f.8 
-      in
-      let Ti4.16 : Int =
-        0
-      in
-      let Tf5.13 : Int -> Unit =
-        a.12.(Ti4.16)      in
-      let Ti6.15 : Int =
-        Ti3.17
-      in
-      let Ti7.14 : Int =
-        n.9 - Ti6.15
-      in
-      Tf5.13 Ti7.14 
-    else
-      ()
-  in
-  f.8 
-
-Print KNormal_T (constArg.ml)
-  let rec f.8 : Unit ( ) =
-    let n.9 : Int =
-      9
-    in
-    let Tu1.11 : Unit =
-      print_int n.9 
-    in
-    let Ti3.17 : Int =
-      1
-    in
-    let a.12 : Array(Int -> Unit) =
-      create_array Ti3.17 f.8 
-    in
-    let Ti4.16 : Int =
-      0
-    in
-    let Tf5.13 : Int -> Unit =
-      a.12.(Ti4.16)    in
-    let Ti6.15 : Int =
-      1
-    in
-    let Ti7.14 : Int =
-      8
-    in
-    Tf5.13 Ti7.14 
-  in
-  f.8 
-
-Print KNormal_t(Cse.ml):
-  let rec f.8 : Unit ( ) =
-    let n.9 : Int =
-      9
-    in
-    let Tu1.11 : Unit =
-      print_int n.9 
-    in
-    let Ti3.17 : Int =
-      1
-    in
-    let a.12 : Array(Int -> Unit) =
-      create_array Ti3.17 f.8 
-    in
-    let Ti4.16 : Int =
-      0
-    in
-    let Tf5.13 : Int -> Unit =
-      a.12.(Ti4.16)    in
-    let Ti7.14 : Int =
-      8
-    in
-    Tf5.13 Ti7.14 
-  in
-  f.8 
-
-Print KNormal_T (constArg.ml)
-  let rec f.8 : Unit ( ) =
-    let n.9 : Int =
-      9
-    in
-    let Tu1.11 : Unit =
-      print_int n.9 
-    in
-    let Ti3.17 : Int =
-      1
-    in
-    let a.12 : Array(Int -> Unit) =
-      create_array Ti3.17 f.8 
-    in
-    let Ti4.16 : Int =
-      0
-    in
-    let Tf5.13 : Int -> Unit =
-      a.12.(Ti4.16)    in
-    let Ti7.14 : Int =
-      8
-    in
-    Tf5.13 Ti7.14 
-  in
-  f.8 
-
-Print KNormal_t(Closure.ml):
-  let rec f.8 : Unit ( ) =
-    let n.9 : Int =
-      9
-    in
-    let Tu1.11 : Unit =
-      print_int n.9 
-    in
-    let Ti3.17 : Int =
-      1
-    in
-    let a.12 : Array(Int -> Unit) =
-      create_array Ti3.17 f.8 
-    in
-    let Ti4.16 : Int =
-      0
-    in
-    let Tf5.13 : Int -> Unit =
-      a.12.(Ti4.16)    in
-    let Ti7.14 : Int =
-      8
-    in
-    Tf5.13 Ti7.14 
-  in
-  f.8 
-
-Print Asm_t(Virtual.ml):
-  Unit f.8 () =
-    Let n.9 =
-      Set (9)
+CLOSURE EXISTS
+[div_binary_search.333]
+	(%g3, )
+	(%g3, )
+div_binary_search.333
+	args: %g3, %g4, %g5, %g6, 
+	fargs: 
+	use_regs: %g3, %g7, %g8, %g9, 
+[print_int.338]
+	(tx.361, )
+	(x.339, %g3)
+	(x.363, %g10)
+	(tx.365, )
+	(x.363, %g10)
+	(flg.364, %g3)
+	(x.367, %g10)
+	(x.367, %g10)
+	(x.367, %g10)
+	(tx.369, )
+	(x.367, %g10)
+	(flg.368, %g3)
+	(x.371, %g10)
+	(x.371, %g10)
+	(x.371, %g10)
+	(tx.373, )
+	(x.371, %g10)
+	(flg.372, %g3)
+	(x.375, %g10)
+	(x.375, %g10)
+	(x.375, %g10)
+	(tx.377, )
+	(x.375, %g10)
+	(flg.376, %g3)
+	(x.379, %g10)
+	(x.379, %g10)
+	(x.379, %g10)
+	(tx.381, )
+	(x.379, %g10)
+	(flg.380, %g3)
+	(x.383, %g10)
+	(x.383, %g10)
+	(x.383, %g10)
+	(tx.385, )
+	(x.383, %g10)
+	(flg.384, %g3)
+	(x.387, %g10)
+	(x.387, %g10)
+	(x.387, %g10)
+	(tx.389, )
+	(x.387, %g10)
+	(flg.388, %g3)
+	(x.391, %g10)
+	(x.391, %g10)
+	(x.391, %g10)
+	(%dummy, )
+	(x.339, %g3)
+	(%dummy, )
+print_int.338
+	args: %g3, 
+	fargs: 
+	use_regs: %dummy, %g0, %g10, %g11, %g3, %g4, %g5, %g6, %g7, %g8, %g9, Tu688, Tu689, Tu690, Tu691, Tu692, Tu693, Tu694, Tu695, Tu696, 
+[composed.355]
+	(g.342, %g4)
+	(Ti51.357, )
+	(%g3, )
+composed.355
+	args: %g3, 
+	fargs: 
+	use_regs: %f0, %f1, %f10, %f11, %f12, %f13, %f14, %f15, %f2, %f3, %f4, %f5, %f6, %f7, %f8, %f9, %g10, %g11, %g12, %g13, %g14, %g15, %g16, %g17, %g18, %g19, %g20, %g21, %g22, %g23, %g24, %g25, %g26, %g27, %g3, %g4, %g5, %g6, %g7, %g8, %g9, Tu697, 
+[compose.340]
+SETL
+compose.340
+	args: %g3, %g4, 
+	fargs: 
+	use_regs: %f0, %f1, %f10, %f11, %f12, %f13, %f14, %f15, %f2, %f3, %f4, %f5, %f6, %f7, %f8, %f9, %g0, %g10, %g11, %g12, %g13, %g14, %g15, %g16, %g17, %g18, %g19, %g2, %g20, %g21, %g22, %g23, %g24, %g25, %g26, %g27, %g3, %g4, %g5, %g6, %g7, %g8, %g9, Tu697, 
+[dbl.343]
+dbl.343
+	args: %g3, 
+	fargs: 
+	use_regs: %g3, 
+[inc.345]
+inc.345
+	args: %g3, 
+	fargs: 
+	use_regs: %g3, 
+[dec.347]
+dec.347
+	args: %g3, 
+	fargs: 
+	use_regs: %g3, 
+	(%g2, )
+	(%g2, )
+	(%g2, )
+	(%g2, )
+	(%g2, )
+	(%g2, )
+	(inc.345, %g4)
+	(Tf46.352, )
+	(h.349, )
+	(Ti48.350, )
+  Int div_binary_search.333 (%g3 %g4 %g5 %g6 ) =
+    Let %g7 =
+      %g5 + %g6
     In
-    Let Tu1.11 =
-      CallDir min_caml_print_int n.9 
+    Let %g7 =
+      %g7 << -1
     In
-    Let Ti3.17 =
-      Set (1)
+    Let %g8 =
+      %g7 * %g4
     In
-    Let a.12 =
-      CallDir min_caml_create_array Ti3.17 f.8 
-    In
-    Let Ti4.16 =
-      Set (0)
-    In
-    Let o.18 =
-      Ti4.16 << 2
-    In
-    Let Tf5.13 =
-      Lord a.12[o.18]
-    In
-    Let Ti7.14 =
-      Set (8)
+    Let %g9 =
+      %g6 - %g5
     In
     Ans (
-      CallCls Tf5.13 Ti7.14 
+      If %g9 <= 1 Then
+        Ans (
+          Mov (%g5)
+        )
+      Then
+        Ans (
+          If %g3 <= %g8 Then
+            Ans (
+              If %g8 = %g3 Then
+                Ans (
+                  Mov (%g7)
+                )
+              Then
+                Ans (
+                  CallDir div_binary_search.333 %g3 %g4 %g5 %g7 
+                )
+            )
+          Then
+            Ans (
+              CallDir div_binary_search.333 %g3 %g4 %g7 %g6 
+            )
+        )
     )
-  Let f.8 =
+  Unit print_int.338 (%g3 ) =
+    Ans (
+      If %g3 >= 0 Then
+        Let %g4 =
+          Set (100000000)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (3)
+        In
+        Let Tu688 =
+          Save %g3, x.339
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g3 %g4 %g5 %g6 
+        In
+        Let %g10 =
+          Set (100000000)
+        In
+        Let %g10 =
+          %g3 * %g10
+        In
+        Let %g11 =
+          Restore x.339
+        In
+        Let %g10 =
+          %g11 - %g10
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Ans (
+              Set (0)
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (10000000)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu689 =
+          Save %g3, flg.364
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          Set (10000000)
+        In
+        Let %g11 =
+          %g3 * %g11
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.364
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (1000000)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu690 =
+          Save %g3, flg.368
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          Set (1000000)
+        In
+        Let %g11 =
+          %g3 * %g11
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.368
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (100000)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu691 =
+          Save %g3, flg.372
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          Set (100000)
+        In
+        Let %g11 =
+          %g3 * %g11
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.372
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (10000)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu692 =
+          Save %g3, flg.376
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          Set (10000)
+        In
+        Let %g11 =
+          %g3 * %g11
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.376
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (1000)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu693 =
+          Save %g3, flg.380
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          %g3 * 1000
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.380
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (100)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu694 =
+          Save %g3, flg.384
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          %g3 * 100
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.384
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g4 =
+          Set (10)
+        In
+        Let %g5 =
+          Set (0)
+        In
+        Let %g6 =
+          Set (10)
+        In
+        Let Tu695 =
+          Save %g3, flg.388
+        In
+        Let %g3 =
+          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        In
+        Let %g11 =
+          %g3 * 10
+        In
+        Let %g10 =
+          %g10 - %g11
+        In
+        Let %g3 =
+          If %g3 <= 0 Then
+            Let %g11 =
+              Restore flg.388
+            In
+            Ans (
+              If %g11 = 0 Then
+                Ans (
+                  Set (0)
+                )
+              Then
+                Let %g11 =
+                  Set (48)
+                In
+                Let %g3 =
+                  %g11 + %g3
+                In
+                Let %g0 =
+                  CallDir min_caml_print_char %g3 
+                In
+                Ans (
+                  Set (1)
+                )
+            )
+          Then
+            Let %g11 =
+              Set (48)
+            In
+            Let %g3 =
+              %g11 + %g3
+            In
+            Let %g0 =
+              CallDir min_caml_print_char %g3 
+            In
+            Ans (
+              Set (1)
+            )
+        In
+        Let %g3 =
+          Set (48)
+        In
+        Let %g3 =
+          %g3 + %g10
+        In
+        Ans (
+          CallDir min_caml_print_char %g3 
+        )
+      Then
+        Let %g10 =
+          Set (45)
+        In
+        Let Tu696 =
+          Save %g3, x.339
+        In
+        Let %g0 =
+          CallDir min_caml_print_char %g10 
+        In
+        Let %g3 =
+          Restore x.339
+        In
+        Let %g3 =
+          Neg (%g3)
+        In
+        Ans (
+          CallDir print_int.338 %g3 
+        )
+    )
+  Int composed.355 (%g3 ) =
+    Let %g4 =
+      Lord %g27[-8]
+    In
+    Let %g27 =
+      Lord %g27[-4]
+    In
+    Let Tu697 =
+      Save %g4, g.342
+    In
+    Let %g3 =
+      CallCls %g27 %g3 
+    In
+    Let %g27 =
+      Restore g.342
+    In
+    Ans (
+      CallCls %g27 %g3 
+    )
+  Int -> Int compose.340 (%g3 %g4 ) =
+    Let %g5 =
+      Mov (%g2)
+    In
+    Let %g2 =
+      %g2 + 16
+    In
+    Let %g6 =
+      Set (composed.355)
+    In
+    Let %g0 =
+      Store %g6 to %g5[0]
+    In
+    Let %g0 =
+      Store %g4 to %g5[-8]
+    In
+    Let %g0 =
+      Store %g3 to %g5[-4]
+    In
+    Ans (
+      Mov (%g5)
+    )
+  Int dbl.343 (%g3 ) =
+    Ans (
+      %g3 + %g3
+    )
+  Int inc.345 (%g3 ) =
+    Ans (
+      %g3 + 1
+    )
+  Int dec.347 (%g3 ) =
+    Ans (
+      %g3 - 1
+    )
+  Let %g3 =
+    Set (1)
+  In
+  Let %g4 =
+    Set (0)
+  In
+  Let %g3 =
+    CallDir min_caml_create_array %g3 %g4 
+  In
+  Let %g3 =
+    Set (1)
+  In
+  Let %g4 =
+    Set (0)
+  In
+  Let %g3 =
+    CallDir min_caml_create_array %g3 %g4 
+  In
+  Let %g3 =
+    Set (1)
+  In
+  Let %g4 =
+    Set (0)
+  In
+  Let %g3 =
+    CallDir min_caml_create_array %g3 %g4 
+  In
+  Let %g3 =
+    Set (1)
+  In
+  Let %g4 =
+    Set (0)
+  In
+  Let %g3 =
+    CallDir min_caml_create_array %g3 %g4 
+  In
+  Let %g3 =
+    Set (1)
+  In
+  Let %g4 =
+    Set (1)
+  In
+  Let %g3 =
+    CallDir min_caml_create_array %g3 %g4 
+  In
+  Let %g3 =
+    Set (1)
+  In
+  Let %g4 =
+    Set (0)
+  In
+  Let %g3 =
+    CallDir min_caml_create_array %g3 %g4 
+  In
+  Let %g3 =
     Mov (%g2)
   In
   Let %g2 =
     %g2 + 8
   In
-  Let l.20 =
-    Set (f.8)
+  Let %g4 =
+    Set (dbl.343)
   In
-  Let Tu21 =
-    Store l.20 to f.8[0]
+  Let %g0 =
+    Store %g4 to %g3[0]
+  In
+  Let %g4 =
+    Mov (%g2)
+  In
+  Let %g2 =
+    %g2 + 8
+  In
+  Let %g5 =
+    Set (inc.345)
+  In
+  Let %g0 =
+    Store %g5 to %g4[0]
+  In
+  Let %g5 =
+    Mov (%g2)
+  In
+  Let %g2 =
+    %g2 + 8
+  In
+  Let %g6 =
+    Set (dec.347)
+  In
+  Let %g0 =
+    Store %g6 to %g5[0]
+  In
+  Let Tu699 =
+    Save %g4, inc.345
+  In
+  Let %g3 =
+    CallDir compose.340 %g3 %g5 
+  In
+  Let %g4 =
+    Restore inc.345
+  In
+  Let %g27 =
+    CallDir compose.340 %g4 %g3 
+  In
+  Let %g3 =
+    Set (123)
+  In
+  Let %g3 =
+    CallCls %g27 %g3 
   In
   Ans (
-    CallCls f.8 
+    CallDir print_int.338 %g3 
   )
+div_binary_search.333::
+print_int.338::
+composed.355::
+compose.340::
+dbl.343::
+inc.345::
+dec.347::
+output files : test/funcomp.s
+input files : lib/lib_asm.s tmp.s 
+.init_heap_size	192 => 192
+.init_heap_size	0 => 0
+.init_heap_size	192
 
-	len = 0
+		skip

@@ -3,47 +3,6 @@ open Asm
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
 
-(* create_arrayなどのライブラリ関数をハードコーディング *)
-let define_library oc =
-Printf.fprintf oc "
-!#####################################################################
-! * ここからライブラリ関数
-!#####################################################################
-
-! * create_array
-min_caml_create_array:
-	slli %%g3, %%g3, 2
-	add %%g5, %%g3, %%g2
-	mov %%g3, %%g2
-CREATE_ARRAY_LOOP:
-	jlt %%g5, %%g2, CREATE_ARRAY_END
-	jeq %%g5, %%g2, CREATE_ARRAY_END
-	st %%g4, %%g2, 0
-	addi %%g2, %%g2, 4
-	jmp CREATE_ARRAY_LOOP
-CREATE_ARRAY_END:
-	return
-
-! * create_float_array
-min_caml_create_float_array:
-	slli %%g3, %%g3, 2
-	add %%g4, %%g3, %%g2
-	mov %%g3, %%g2
-CREATE_FLOAT_ARRAY_LOOP:
-	jlt %%g4, %%g2, CREATE_FLOAT_ARRAY_END
-	jeq %%g4, %%g2, CREATE_ARRAY_END
-	fst %%f0, %%g2, 0
-	addi %%g2, %%g2, 4
-	jmp CREATE_FLOAT_ARRAY_LOOP
-CREATE_FLOAT_ARRAY_END:
-	return
-
-!#####################################################################
-! * ここまでライブラリ関数
-!#####################################################################
-
-";;
-
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
 let save x =
@@ -60,7 +19,9 @@ let locate x =
     | y :: zs when x = y -> 0 :: List.map succ (loc zs)
     | y :: zs -> List.map succ (loc zs) in
   loc !stackmap
-let offset x = 4 * List.hd (locate x)
+let offset x = 
+	let loc = locate x in
+	if List.length loc <= 0 then assert false else 4 * List.hd loc
 let stacksize () = align ((List.length !stackmap + 1) * 4)
 
 let pp_id_or_imm = function
@@ -291,12 +252,12 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		(match x with
 	  		| "min_caml_fabs" | "min_caml_abs_float" ->
 		  		begin
-					Printf.fprintf oc "\tfabs\t%%f0, %s\n" (List.hd zs);
+					Printf.fprintf oc "\tfabs\t%%f0, %s\n" (if List.length zs  <= 0 then assert false else List.hd zs);
 					Printf.fprintf oc "\treturn\n"
 				end
 	  		| "min_caml_sqrt" ->
 		  		begin
-					Printf.fprintf oc "\tfsqrt\t%%f0, %s\n" (List.hd zs);
+					Printf.fprintf oc "\tfsqrt\t%%f0, %s\n" (if List.length zs <= 0 then assert false else List.hd zs);
 					Printf.fprintf oc "\treturn\n"
 				end
 		  	| "min_caml_print_newline" ->
@@ -320,7 +281,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| "min_caml_print_char"
 		  	| "min_caml_write" ->
 		  		begin
-				  	Printf.fprintf oc "\toutput\t%s\n" (List.hd ys);
+				  	Printf.fprintf oc "\toutput\t%s\n" (if List.length ys <= 0 then assert false else List.hd ys);
 					Printf.fprintf oc "\treturn\n"
 		  		end
 			| "min_caml_input_char"
@@ -337,12 +298,12 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(a), CallCls(x, ys, zs) -> (* レジスタで飛ぶジャンプ *)
 		g'_args oc [(x, reg_cl)] ys zs;
 		let ss = stacksize () in
-		Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
+(*		Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);*)
 		Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
 		Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
 		Printf.fprintf oc "\tcallR\t%s\n" reg_sw;
 		Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
-		Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
+(*		Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);*)
 		if List.mem a allregs && a <> regs.(0) then
 			Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 		else if List.mem a allfregs && a <> fregs.(0) then
@@ -352,11 +313,11 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  	(match x with
 	  		| "min_caml_fabs" | "min_caml_abs_float" ->
 		  		begin
-					Printf.fprintf oc "\tfabs\t%s, %s\n" a (List.hd zs);
+					Printf.fprintf oc "\tfabs\t%s, %s\n" a (if List.length zs <= 0 then assert false else List.hd zs);
 				end
 	  		| "min_caml_sqrt" ->
 		  		begin
-					Printf.fprintf oc "\tfsqrt\t%s, %s\n" a (List.hd zs);
+					Printf.fprintf oc "\tfsqrt\t%s, %s\n" a (if List.length zs <= 0 then assert false else List.hd zs);
 				end
 		  	| "min_caml_print_newline" ->
 		  		begin
@@ -379,7 +340,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| "min_caml_print_char"
 		  	| "min_caml_write" ->
 		  		begin
-					Printf.fprintf oc "\toutput\t%s\n" (List.hd ys);
+					Printf.fprintf oc "\toutput\t%s\n" (if List.length ys <= 0 then assert false else List.hd ys);
 				end
 			| "min_caml_input_char"
 			| "min_caml_read_char" ->
@@ -390,11 +351,11 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		begin
 				  g'_args oc [] ys zs;
 				  let ss = stacksize () in
-				  Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
+(*				  Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);*)
 				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
 				  Printf.fprintf oc "\tcall\t%s\n" x;
 				  Printf.fprintf oc "\taddi\t%s, %s, %d\n" reg_sp reg_sp ss;
-				  Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);
+(*				  Printf.fprintf oc "\tld\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);*)
 				  if List.mem a allregs && a <> regs.(0) then
 			   	  	Printf.fprintf oc "\tmov\t%s, %s\n" a regs.(0)
 				  else if List.mem a allfregs && a <> fregs.(0) then
@@ -447,6 +408,8 @@ and g'_args oc x_reg_cl ys zs =
 
 let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
   Printf.fprintf oc "%s:\n" x;
+  Printf.printf "%s::\n" x;
+  flush stderr;
   stackset := S.empty;
   stackmap := [];
   g oc (Tail, e)
@@ -476,7 +439,6 @@ let f oc (Prog(data, fundefs, e)) =
 		end)
     data;
   Printf.fprintf oc "\tjmp\tmin_caml_start\n";
-  define_library oc;
   List.iter (fun fundef -> h oc fundef) fundefs;
   Printf.fprintf oc "min_caml_start:\n";
   stackset := S.empty;
