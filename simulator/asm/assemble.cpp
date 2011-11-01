@@ -154,7 +154,7 @@ int	assemble(char *sfile) {
 
 
 		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
-		num = DATA_NUM*4;
+		num = output_line_cnt*4;
 		while ((ret = write(fd, output_data, num)) > 0) {
 			num -= ret;
 		}

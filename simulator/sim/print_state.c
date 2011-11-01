@@ -77,6 +77,10 @@ int __print_state(int init_flag, int argc, char **argv) {
 			decode_ir(rom[pc],fp);
 
 			if (flag[REG]) {
+				for (i = 0; i < 32; i++) {
+					fprintf(fp, "g%d:%x\n", i, reg[i]);
+				}
+				/*
 				fprintf(fp, "g0:%X g1:%X g2:%X g3:%X g4:%X g5:%X g6:%X g7:%X\n",
 							reg[0],reg[1],reg[2],reg[3],reg[4],reg[5],reg[6],reg[7]);
 				fprintf(fp, "g8:%X g9:%X g10:%X g11:%X g12:%X g13:%X g14:%X g15:%X\n",
@@ -95,6 +99,7 @@ int __print_state(int init_flag, int argc, char **argv) {
 				fprintf(fp, "f24:%f f25:%f f26:%f f27:%f f28:%f f29:%f f30:%f f31:%f\n",
 							(float)freg[24],(float)freg[25],(float)freg[26],(float)freg[27],(float)freg[28],(float)freg[29],(float)freg[30],(float)freg[31]);
 				fflush(fp);
+				*/
 			}
 			if (flag[RAM]) {
 				for (i = ram_s; i < ram_f; i++) {

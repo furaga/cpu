@@ -10,17 +10,18 @@ LDFLAGS = -Wall -O2 -lm
 ###################################
 # Set Vars below
 ###################################
-TEST_TARGET = fib
+TEST_TARGET = $(subst ../../compiler/test/,, $(subst .s,, $(shell ls ../../compiler/test/*.s)))
+#TEST_TARGET = non-tail-if
 RT_TARGET = base
 #RT_TARGET = $(subst .sld,, $(shell ls ../sld))
-SIM_FLAGS = 
+SIM_FLAGS =
 MIN_RT = ../../compiler/test/min-rt/min-rt
 ###################################
 ###################################
 
 
-.PHONY: all asm sim clean rt fsim frt
+.PHONY: all asm sim clean rt
 all: $(TARGET)
 clean:
-	$(RM) $(TARGET) *.o asmlog simlog
+	$(RM) $(TARGET) $(RM_TARGET) *.o asmlog simlog *.lst
 	
