@@ -1,5 +1,4 @@
-#include <stdio.h>
-#include <stdint.h>
+#include <stdio.h> #include <stdint.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -103,10 +102,8 @@ int simulate(char *sfile) {
 				a.i = _FRS;
 				b.i = _FRT;
 				if (a.f < b.f) {
-	//				printf("fjlt : true\n");
 					pc += _IMM;
 				} else {
-		//			printf("fjlt : false\n");
 				}
 				break;
 			case FST:
@@ -128,8 +125,10 @@ int simulate(char *sfile) {
 					pc += _IMM;
 				break;
 			case JLT:
-				if (_GRS < _GRT)
+				if (_GRS < _GRT) {
 					pc += _IMM;
+				} else {
+				}
 				break;
 			case CALL:
 				ram[reg[1]] = reg[30];

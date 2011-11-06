@@ -34,7 +34,9 @@ int	assemble(char *sfile) {
 	puts("bits	64");
 	puts("section .text");
 	puts("global _start:");
-	puts("%include \"x86asm/lib.inc\"");
+	puts("%define DEBUG");
+	puts("%include \"debug64.inc\"");
+	puts("%include \"stdio64.inc\"");
 
 
 	if (fgets(buf, LINE_MAX, fp) != NULL) {
@@ -76,9 +78,6 @@ int	assemble(char *sfile) {
 					fprintf(stderr,"%s", buf);
 					kill(0,SIGINT);
 				}
-				//OP(call),S(Chk),NL;
-				//OP(call),S(GetChar),NL;
-				putchar('\n');
 			}
 		}
 		fflush(stdout);
@@ -94,6 +93,16 @@ int	assemble(char *sfile) {
 	puts("	mov		dword [GR1], BOTTOM");
 	puts("	mov		dword [GR2], TOP");
 	puts("	mov		dword [GR31], BOTTOM");
+	puts("	xor		r8, r8");
+	puts("	xor		r9, r9");
+	puts("	xor		r10, r10");
+	puts("	xor		r11, r11");
+	puts("	xor		r12, r12");
+	puts("	xor		r13, r13");
+	puts("	xor		r14, r14");
+	puts("	xor		r15, r15");
+	puts("	mov		r11d, dword [GR1]");
+	puts("	mov		r12d, dword [GR2]");
 	puts("	call	min_caml_start\n");
 
 	puts("section .data");

@@ -10,9 +10,9 @@ LDFLAGS = -Wall -O2 -lm
 ###################################
 # Set Vars below
 ###################################
-TEST_TARGET = $(subst ../../compiler/test/,, $(subst .s,, $(shell ls ../../compiler/test/*.s)))
-#TEST_TARGET = non-tail-if
-RT_TARGET = base
+#TEST_TARGET = $(subst ../../compiler/test/,, $(subst .s,, $(shell ls ../../compiler/test/*.s)))
+TEST_TARGET = matmul
+RT_TARGET = contest
 #RT_TARGET = $(subst .sld,, $(shell ls ../sld))
 SIM_FLAGS =
 MIN_RT = ../../compiler/test/min-rt/min-rt

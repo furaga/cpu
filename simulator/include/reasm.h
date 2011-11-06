@@ -8,18 +8,20 @@
 #define L(name) printf("%s", name)
 #define LC(name) printf(", %s", name)
 #define SC(name) printf(", %s", #name)
-#define G(i) printf("[GR%d]", i)
-#define GC(i) printf(", [GR%d]", i)
-#define GA(a,b) printf("[GR%d - %d]", a,b)
-#define GAC(a,b) printf(", [GR%d - %d]", a,b)
+//#define G(i) printf("[GR%d]", i)
+//#define GC(i) printf(", [GR%d]", i)
+#define G(i) print_gr(i, 0)
+#define GC(i) print_gr(i, 1)
 #define F(i) printf("dword [FR%d]", i)
 #define FC(i) printf(", dword [FR%d]", i)
-#define FA(a,b) printf("dword [FR%d - %d]", a,b)
-#define FAC(a,b) printf(", dword [FR%d - %d]", a,b)
 #define IM(i) printf(", %d", i)
+#define IMDW(i) printf(", dword %d", i)
 #define ADR(a,b) printf("[%s - %d]", #a,b)
 #define ADRC(a,b) printf(", [%s - %d]", #a,b)
 #define WORD printf("word ")
 #define DWORD printf("dword ")
 
+void print_gr(int,int);
+int is_const(int);
+int is_xreg(int);
 #endif

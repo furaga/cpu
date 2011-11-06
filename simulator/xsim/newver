@@ -1,3 +1,20 @@
+g++ -Wall -O2 -funroll-loops -I ../include/   -c -o encode_op.o encode_op.c
+g++ -Wall -O2 -funroll-loops -I ../include/   -c -o assemble.o assemble.c
+g++ -Wall -O2 -funroll-loops -I ../include/   -c -o asmcho.o asmcho.c
+g++ -Wall -O2 -lm  asmcho.o assemble.o encode_op.o   -o asmcho
+./asmcho ../../compiler/test/min-rt/min-rt.s > x86asm/min-rt.asm; \
+	nasm -f elf64 -I inc/ x86asm/min-rt.asm -l lst/min-rt.lst -o obj/min-rt.o; \
+	ld obj/min-rt.o -o xrt
+for name in contest ; do \
+		sld='../pict/sld/'$name'.sld'; \
+		ppm='../pict/ppm/'$name'.ppm'; \
+		original='../pict/ppm0/'$name'.ppm'; \
+		diff='../diff/'$name'.dif'; \
+		./xrt < $sld > $ppm; \
+		diff $original $ppm | cat > $diff; \
+		cat $diff; \
+		(eog $ppm &); \
+	done 
 1598c1598
 < 255 231 255
 ---

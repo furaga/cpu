@@ -30,7 +30,6 @@ xrt:
 	@cd xsim; make rt
 
 clean:
-	rm diff/*
 	cd asm; make clean
 	cd sim; make clean
 	cd fsim; make clean

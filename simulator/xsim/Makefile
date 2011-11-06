@@ -6,7 +6,10 @@ RM_TARGET = ./bin/* ./lst/* ./obj/* ./x86asm/*.asm xrt
 
 CFLAGS += -I ../include/
 CXXFLAGS += -I ../include/
+NASMFLAGS = -f elf64 -I inc/
+LIB_INC = debug64.inc stdio64.inc syscall64.inc
 vpath %.h ../include/
+vpath %.inc inc/
 ASM_TARGET = $(TEST_TARGET:%=../../compiler/test/%.s)
 
 asmcho: asmcho.o assemble.o encode_op.o 
@@ -14,9 +17,9 @@ asmcho.o: $(ASMH) assemble.o
 assemble.o: $(ASMH) encode_op.o
 encode_op.o: $(ASMH)
 
-xrt: $(MIN_RT:%=%.s) asmcho x86asm/lib.inc
+xrt: $(MIN_RT:%=%.s) asmcho  $(LIB_INC)
 	./asmcho $(MIN_RT:%=%.s) > x86asm/min-rt.asm; \
-	nasm -f elf64 x86asm/min-rt.asm -l lst/min-rt.lst -o obj/min-rt.o; \
+	nasm $(NASMFLAGS) x86asm/min-rt.asm -l lst/min-rt.lst -o obj/min-rt.o; \
 	ld obj/min-rt.o -o xrt
 
 rt: xrt
@@ -25,18 +28,18 @@ rt: xrt
 		ppm='../pict/ppm/'$$name'.ppm'; \
 		original='../pict/ppm0/'$$name'.ppm'; \
 		diff='../diff/'$$name'.dif'; \
-		./xrt < $$sld ;\
+		./xrt < $$sld > $$ppm; \
+		diff $$original $$ppm | cat > $$diff; \
+		cat $$diff; \
+		(eog $$ppm &); \
 	done 
 
-#> $$ppm; \
-#diff $$original $$ppm | cat > $$diff; \
-#cat $$diff; \
-#(eog $$ppm &); \
+
 	
 
 
 TEST = $(TEST_TARGET)
-$(TEST:%=bin/%): asmcho x86asm/lib.inc
+$(TEST:%=bin/%): asmcho $(ASM_TARGET) $(LIB_INC)
 	for name in $(TEST) ; do \
 		target='../../compiler/test/'$$name'.s'; \
 		x86asm='x86asm/'$$name'.asm'; \
@@ -44,7 +47,7 @@ $(TEST:%=bin/%): asmcho x86asm/lib.inc
 		obj='obj/'$$name'.o'; \
 		bin='bin/'$$name; \
 		./asmcho $$target > $$x86asm;	\
-		nasm -f elf64 $$x86asm -l $$lst -o $$obj;	\
+		nasm $(NASMFLAGS) $$x86asm -l $$lst -o $$obj;	\
 		ld $$obj -o $$bin; \
 	done 
 
