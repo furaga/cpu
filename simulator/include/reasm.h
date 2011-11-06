@@ -10,8 +10,9 @@
 #define SC(name) printf(", %s", #name)
 //#define G(i) printf("[GR%d]", i)
 //#define GC(i) printf(", [GR%d]", i)
-#define G(i) print_gr(i, 0)
-#define GC(i) print_gr(i, 1)
+#define G(i) print_gr(i, 0, 0)
+#define GC(i) print_gr(i, 1, 0)
+#define GQ(i) print_gr(i, 0, 1)
 #define F(i) printf("dword [FR%d]", i)
 #define FC(i) printf(", dword [FR%d]", i)
 #define IM(i) printf(", %d", i)
@@ -21,7 +22,7 @@
 #define WORD printf("word ")
 #define DWORD printf("dword ")
 
-void print_gr(int,int);
+void print_gr(int,int,int);
 int is_const(int);
 int is_xreg(int);
 #endif

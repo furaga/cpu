@@ -2,25 +2,28 @@
 TARGET = asmcho
 ASMH = common.h asm.h reasm.h
 include ../Makefile.in
-RM_TARGET = ./bin/* ./lst/* ./obj/* ./x86asm/*.asm xrt
+RM_TARGET = ./bin/* ./lst/* ./obj/* ./x86asm/* xrt
+ASM = nasm
 
 CFLAGS += -I ../include/
 CXXFLAGS += -I ../include/
 NASMFLAGS = -f elf64 -I inc/
 LIB_INC = debug64.inc stdio64.inc syscall64.inc
+LIB_OBJ = inc/stdio64.o
 vpath %.h ../include/
 vpath %.inc inc/
-ASM_TARGET = $(TEST_TARGET:%=../../compiler/test/%.s)
+ASM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%.s)
 
 asmcho: asmcho.o assemble.o encode_op.o 
 asmcho.o: $(ASMH) assemble.o
 assemble.o: $(ASMH) encode_op.o
 encode_op.o: $(ASMH)
 
+
 xrt: $(MIN_RT:%=%.s) asmcho  $(LIB_INC)
 	./asmcho $(MIN_RT:%=%.s) > x86asm/min-rt.asm; \
 	nasm $(NASMFLAGS) x86asm/min-rt.asm -l lst/min-rt.lst -o obj/min-rt.o; \
-	ld obj/min-rt.o -o xrt
+	ld obj/min-rt.o $(LIB_OBJ) -o xrt
 
 rt: xrt
 	for name in $(RT_TARGET) ; do \
@@ -48,7 +51,7 @@ $(TEST:%=bin/%): asmcho $(ASM_TARGET) $(LIB_INC)
 		bin='bin/'$$name; \
 		./asmcho $$target > $$x86asm;	\
 		nasm $(NASMFLAGS) $$x86asm -l $$lst -o $$obj;	\
-		ld $$obj -o $$bin; \
+		ld $$obj $(LIB_OBJ) -o $$bin; \
 	done 
 
 sim: $(TEST:%=bin/%)

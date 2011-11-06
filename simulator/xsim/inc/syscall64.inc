@@ -6,6 +6,9 @@
 
 %ifndef __SYSCALL64_INC
 %define __SYSCALL64_INC
+global SYS_read:data
+global SYS_write:data
+global SYS_exit:data
 
 %assign SYS_read                    0
 %assign SYS_write                   1

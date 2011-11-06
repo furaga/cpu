@@ -34,9 +34,10 @@ int	assemble(char *sfile) {
 	puts("bits	64");
 	puts("section .text");
 	puts("global _start:");
-	puts("%define DEBUG");
-	puts("%include \"debug64.inc\"");
-	puts("%include \"stdio64.inc\"");
+	//puts("%define DEBUG");
+	puts("extern InChar");
+	puts("extern OutChar");
+	puts("extern Exit");
 
 
 	if (fgets(buf, LINE_MAX, fp) != NULL) {
@@ -93,6 +94,11 @@ int	assemble(char *sfile) {
 	puts("	mov		dword [GR1], BOTTOM");
 	puts("	mov		dword [GR2], TOP");
 	puts("	mov		dword [GR31], BOTTOM");
+	puts("	xor		rbx, rbx");
+	puts("	xor		rcx, rcx");
+	puts("	xor		rsi, rsi");
+	puts("	xor		rdi, rdi");
+	puts("	xor		rbp, rbp");
 	puts("	xor		r8, r8");
 	puts("	xor		r9, r9");
 	puts("	xor		r10, r10");

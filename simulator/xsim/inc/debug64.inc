@@ -8,7 +8,7 @@
 %define __DEBUG_INC
 
 %ifndef __STDIO_INC
-%include "stdio64.inc"
+;%include "stdio64.inc"
 %endif
 
 %define quote   '

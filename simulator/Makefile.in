@@ -11,11 +11,12 @@ LDFLAGS = -Wall -O2 -lm
 # Set Vars below
 ###################################
 #TEST_TARGET = $(subst ../../compiler/test/,, $(subst .s,, $(shell ls ../../compiler/test/*.s)))
-TEST_TARGET = matmul
-RT_TARGET = contest
-#RT_TARGET = $(subst .sld,, $(shell ls ../sld))
+#TEST_TARGET = fib
+#RT_TARGET = contest
+RT_TARGET = $(subst .sld,, $(shell ls ../pict/sld))
 SIM_FLAGS =
-MIN_RT = ../../compiler/test/min-rt/min-rt
+COMPILER_DIR = ../../compiler
+MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 ###################################
 ###################################
 

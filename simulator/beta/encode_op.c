@@ -2,321 +2,597 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "asm.h"
-extern char label_name[LABEL_MAX][256];
-extern uint32_t label_cnt;
+#include "reasm.h"
 
-uint32_t encode_op(char *opcode, char *op_data)
+const char *fg = "%s %%g%d";
+const char *fl = "%s %s";
+const char *fgi = "%s %%g%d, %d";
+const char *fgl = "%s %%g%d, %s";
+const char *fgg = "%s %%g%d, %%g%d";
+const char *fggl = "%s %%g%d, %%g%d, %s";
+const char *fggi = "%s %%g%d, %%g%d, %d";
+const char *fggg = "%s %%g%d, %%g%d, %%g%d";
+const char *fff = "%s %%f%d, %%f%d";
+const char *fgf = "%s %%g%d, %%f%d";
+const char *ffg = "%s %%f%d, %%g%d";
+const char *fffl = "%s %%f%d, %%f%d, %s";
+const char *ffff = "%s %%f%d, %%f%d, %%f%d";
+const char *ffgi = "%s %%f%d, %%g%d, %d";
+
+static int aacnt[32];
+
+int encode_op(char *opcode, char *op_data)
 {
 	int rd,rs,rt,imm,funct,shaft,target;
 	char tmp[256];
-	/*
-	 * format
-	 * g: general register
-	 * i: immediate
-	 * l: label
-	 */
-	const char *fg = "%s %%g%d";
-	const char *fl = "%s %s";
-	const char *fgi = "%s %%g%d, %d";
-	const char *fgl = "%s %%g%d, %s";
-	const char *fgg = "%s %%g%d, %%g%d";
-	const char *fggl = "%s %%g%d, %%g%d, %s";
-	const char *fggi = "%s %%g%d, %%g%d, %d";
-	const char *fggg = "%s %%g%d, %%g%d, %%g%d";
-	const char *fff = "%s %%f%d, %%f%d";
-	const char *fgf = "%s %%g%d, %%f%d";
-	const char *ffg = "%s %%f%d, %%g%d";
-	const char *fffl = "%s %%f%d, %%f%d, %s";
-	const char *ffff = "%s %%f%d, %%f%d, %%f%d";
-	const char *ffgi = "%s %%f%d, %%g%d, %d";
-
 	char lname[256];
+	int i;
 	shaft = funct = target = 0;
-	//fprintf(stderr, "opcode:%s", opcode);
-	//fflush(stderr);
+
 	if(strcmp(opcode, "mov") == 0){
-		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
-		    return mov(rs,0,rd,0);
+		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3) {
+	 		if (is_xreg(rs) || is_xreg(rd)) {
+				OP(mov),G(rd),GC(rs),NL;
+			} else {
+				OP(mov),S(eax),GC(rs),NL;
+				OP(mov),G(rd),SC(eax),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "mvhi") == 0){
-		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3)
-		    return mvhi(0,rt,imm);
+		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3) {
+			OP(and),G(rt),S(0xffff),NL;
+			OP(or),G(rt),IM((imm&0xffff)<<16),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "mvlo") == 0){
-		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3)
-		    return mvlo(0,rt,imm);
+		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3) {
+			OP(and),G(rt),S(0xffff0000),NL;
+			OP(or),G(rt),IM(imm&0xffff),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "add") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return add(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(add),G(rs),GC(rt),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(add),S(edx),GC(rt),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "sub") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return sub(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(sub),G(rs),GC(rt),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(sub),S(edx),GC(rt),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "mul") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return mul(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(imul),G(rs),GC(rt),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(imul),S(edx),GC(rt),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "div") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _div(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(div),G(rs),GC(rt),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(div),S(edx),GC(rt),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "addi") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return addi(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
+
+	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(add),G(rt),IMDW(imm),NL;
+			} else if (is_xreg(rs) || is_xreg(rt)) {
+				OP(mov),G(rt),GC(rs),NL;
+				OP(add),G(rt),IMDW(imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(add),S(edx),IMDW(imm),NL;
+				OP(mov),G(rt),SC(edx),NL;
+			}
+
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "subi") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return subi(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
+	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(sub),G(rt),IMDW(imm),NL;
+			} else if (is_xreg(rs) || is_xreg(rt)) {
+				OP(mov),G(rt),GC(rs),NL;
+				OP(sub),G(rt),IMDW(imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(sub),S(edx),IMDW(imm),NL;
+				OP(mov),G(rt),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "muli") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return muli(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
+	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(imul),G(rt),IMDW(imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(imul),S(edx),IMDW(imm),NL;
+				OP(mov),G(rt),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "divi") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return divi(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
+	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(div),G(rt),IMDW(imm),NL;
+			} else if (is_xreg(rs) || is_xreg(rt)) {
+				OP(mov),G(rt),GC(rs),NL;
+				OP(div),G(rt),IMDW(imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(div),S(edx),IMDW(imm),NL;
+				OP(mov),G(rt),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "input") == 0){
-		if(sscanf(op_data, fg, tmp, &rd) == 2)
-		    return input(0,0,rd,0);
+		if(sscanf(op_data, fg, tmp, &rd) == 2) {
+			OP(xor),S(rax),SC(rax),NL;
+			OP(call),S(InChar),NL;
+			OP(mov),G(rd),SC(eax),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "output") == 0){
-		if(sscanf(op_data, fg, tmp, &rs) == 2)
-		    return output(rs,0,0,0);
+		if(sscanf(op_data, fg, tmp, &rs) == 2) {
+			OP(mov),S(eax),GC(rs),NL;
+			OP(call),S(OutChar),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "and") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _and(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+
+			OP(mov),S(edx),GC(rs),NL;
+			OP(and),S(edx),GC(rt),NL;
+			OP(mov),G(rd),SC(edx),NL;
+
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "or") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _or(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+
+			OP(mov),S(edx),GC(rs),NL;
+			OP(or),S(edx),GC(rt),NL;
+			OP(mov),G(rd),SC(edx),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "not") == 0){
-		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
-		    return _not(rs,0,rd,0);
+		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3) {
+			if (rd == rs) {
+				OP(not),G(rd),NL;
+			} else if (is_xreg(rs) || is_xreg(rd)) {
+				OP(mov),G(rd),GC(rs),NL;
+				OP(not),G(rd),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(not),S(edx),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "sll") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return sll(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(shl),G(rs),GC(rt),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(shl),S(edx),GC(rt),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "srl") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return srl(rs,rt,rd,0);
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
+	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(shr),G(rs),GC(rt),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(shr),S(edx),GC(rt),NL;
+				OP(mov),G(rd),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "slli") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return slli(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
+
+	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(shl),G(rt),IM(imm),NL;
+			} else if (is_xreg(rs) || is_xreg(rt)) {
+				OP(mov),G(rt),GC(rs),NL;
+				OP(shl),DWORD, G(rt),IM(imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(shl),S(edx),IM(imm),NL;
+				OP(mov),G(rt),SC(edx),NL;
+			}
+
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "srli") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return srli(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
+
+	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+				OP(shr),G(rt),IM(imm),NL;
+			} else if (is_xreg(rs) || is_xreg(rt)) {
+				OP(mov),G(rt),GC(rs),NL;
+				OP(shr),DWORD, G(rt),IM(imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(shr),S(edx),IM(imm),NL;
+				OP(mov),G(rt),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "b") == 0){
-		if(sscanf(op_data, fg, tmp, &rs) == 2)
-		    return b(rs,0,0,0);
+		if(sscanf(op_data, fg, tmp, &rs) == 2) {
+			if (is_xreg(rs)) {
+				OP(jmp),GQ(rs),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(jmp),S(rdx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "jmp") == 0){
-		if(sscanf(op_data, fl, tmp, lname) == 2) {
-			strcpy(label_name[label_cnt],lname);
-		    return jmp(label_cnt++);
+		if(sscanf(op_data, fl, tmp, lname) == 2) { 
+			if (strcmp(lname, "min_caml_start") != 0) {
+				OP(jmp),L(lname),NL;
+				return 0;
+			} else {
+				return 0;
+			}
 		}
 	}
 	if(strcmp(opcode, "jeq") == 0){
-		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) {
-			strcpy(label_name[label_cnt],lname);
-		    return jeq(rs,rt,label_cnt++);
+		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) { 
+			OP(mov),S(edx),GC(rs),NL;
+			OP(cmp),S(edx),GC(rt),NL;
+			OP(je),L(lname),NL;
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "jne") == 0){
-		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) {
-			strcpy(label_name[label_cnt],lname);
-		    return jne(rs,rt,label_cnt++);
+		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) { 
+			if (is_xreg(rt) || is_xreg(rs)) {
+				OP(cmp),G(rs),GC(rt),NL;
+				OP(jne),L(lname),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(cmp),S(edx),GC(rt),NL;
+				OP(jne),L(lname),NL;
+			}
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "jlt") == 0){
-		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) {
-			strcpy(label_name[label_cnt],lname);
-		    return jlt(rs,rt,label_cnt++);
+		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) { 
+			
+			if (is_xreg(rt) || is_xreg(rs)) {
+				if (is_const(rs)) {
+					OP(cmp),G(rt),GC(rs),NL;
+					OP(jg),L(lname),NL;
+				} else {
+					OP(cmp),G(rs),GC(rt),NL;
+					OP(jl),L(lname),NL;
+				}
+			} else {
+				OP(mov),S(eax),GC(rs),NL;
+				OP(cmp),S(eax),GC(rt),NL;
+				OP(jl),L(lname),NL;
+			}
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "jle") == 0){
-		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) {
-			strcpy(label_name[label_cnt],lname);
-		    return jle(rs,rt,label_cnt++);
+		if(sscanf(op_data, fggl, tmp, &rs, &rt, lname) == 4) { 
+			OP(mov),S(eax),GC(rs),NL;
+			OP(cmp),S(eax),GC(rt),NL;
+			OP(jle),L(lname),NL;
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "call") == 0){
-		if(sscanf(op_data, fl, tmp, lname) == 2)  {
-			strcpy(label_name[label_cnt],lname);
-		    return call(label_cnt++);
+		if(sscanf(op_data, fl, tmp, lname) == 2)  { 
+			OP(call),L(lname),NL;
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "callR") == 0){
-		if(sscanf(op_data, fg, tmp, &rs) == 2)
-		    return callr(rs,0,0,0);
+		if(sscanf(op_data, fg, tmp, &rs) == 2) {
+			if (is_xreg(rs)) {
+				OP(call),GQ(rs),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(call),S(rdx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "return") == 0){
-		    return _return(0);
+			OP(ret),NL;
+		    return 0;
 	}
 	if(strcmp(opcode, "ld") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4)
-		    return ld(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4) {
+
+			if (is_xreg(rs) && is_xreg(rt)) {
+				OP(mov),G(rs),
+				printf(", ["),G(rt),printf(" - %d]\n", imm);
+			} else if (is_xreg(rs)) {
+				OP(mov),S(edx),GC(rt),NL;
+				OP(mov),G(rs),ADRC(edx,imm),NL;
+			} else {
+				OP(mov),S(edx),GC(rt),NL;
+				OP(mov),S(eax),ADRC(edx,imm),NL;
+				OP(mov),G(rs),SC(eax),NL;
+			}
+
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "st") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4)
-		    return st(rs,rt,imm);
+		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4) {
+
+			if (is_xreg(rs) && is_xreg(rt)) {
+				OP(mov),
+				printf("["),G(rt),printf(" - %d]", imm),
+				GC(rs), NL;
+			} else if (is_xreg(rs)) {
+				OP(mov),S(eax),GC(rt),NL;
+				OP(mov),ADR(eax,imm),GC(rs),NL;
+			} else {
+				OP(mov),S(edx),GC(rs),NL;
+				OP(mov),S(eax),GC(rt),NL;
+				OP(mov),ADR(eax,imm),SC(edx),NL;
+			}
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fadd") == 0){
-		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fadd(rs,rt,rd,0);
+		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
+			OP(fld),F(rs),NL;
+			OP(fadd),F(rt),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fsub") == 0){
-		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fsub(rs,rt,rd,0);
+		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
+			OP(fld),F(rs),NL;
+			OP(fsub),F(rt),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fmul") == 0){
-		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fmul(rs,rt,rd,0);
+		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
+			OP(fld),F(rs),NL;
+			OP(fmul),F(rt),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fdiv") == 0){
-		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
-		    return fdiv(rs,rt,rd,0);
+		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
+			OP(fld),F(rs),NL;
+			OP(fdiv),F(rt),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fsqrt") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fsqrt(rs,0,rd,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+			OP(fld),F(rs),NL;
+			OP(fsqrt),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fabs") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _fabs(rs,0,rd,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+			OP(fld),F(rs),NL;
+			OP(fabs),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fmov") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fmov(rs,0,rd,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+			OP(fld),F(rs),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fneg") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return fneg(rs,0,rd,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+			OP(fld),F(rs),NL;
+			OP(fchs),NL;
+			OP(fstp),F(rd),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fld") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4)
-		    return fld(rs,rt,imm);
+		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
+			OP(mov),S(edx),GC(rt),NL;
+			OP(mov),S(eax),ADRC(edx,imm),NL;
+			OP(mov),F(rs),SC(eax),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fst") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4)
-		    return fst(rs,rt,imm);
+		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
+			OP(mov),S(edx),FC(rs),NL;
+			OP(mov),S(eax),GC(rt),NL;
+			OP(mov),ADR(eax,imm),SC(edx),NL;
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "fjeq") == 0){
 		if(sscanf(op_data, fffl, tmp, &rs, &rt, lname) == 4) {
-			strcpy(label_name[label_cnt],lname);
-		    return fjeq(rs,rt,label_cnt++);
+			OP(fld),F(rt),NL;
+			OP(fld),F(rs),NL;
+			OP(fcompp),NL;
+			OP(fnstsw),S(ax),NL;
+			OP(sahf),NL;
+			OP(je),L(lname),NL;
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "fjlt") == 0){
 		if(sscanf(op_data, fffl, tmp, &rs, &rt, lname) == 4) {
-			strcpy(label_name[label_cnt],lname);
-		    return fjlt(rs,rt,label_cnt++);
+			OP(fld),F(rt),NL;
+			OP(fld),F(rs),NL;
+			OP(fcompp),NL;
+			OP(fnstsw),S(ax),NL;
+			OP(sahf),NL;
+			OP(jb),L(lname),NL;
+		    return 0;
 		}
 	}
 	if(strcmp(opcode, "nop") == 0){
-		    return nop(0,0,0,0);
+		OP(nop),NL;
+		return 0;
 	}
 	if(strcmp(opcode, "halt") == 0){
-		    return halt(0,0,0,0);
+		OP(call),S(Exit),NL;
+		for (i = 0; i < 32; i++) {
+			fprintf(stderr, "g%3d : %d\n", i, aacnt[i]);
+		}
+		return 0;
 	}
 	if(strcmp(opcode, "setL") == 0){
 		if(sscanf(op_data, fgl, tmp, &rd, lname) == 3) {
-			strcpy(label_name[label_cnt],lname);
-		    return setl(0,rd,label_cnt++);
+			OP(mov),DWORD,G(rd),LC(lname),NL;
+		    return 0;
 		}
 	}
+
 	/*
 	if(strcmp(opcode, "sqrt") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _sin(rs,0,rd,0,0);
+		    return 0;
 	}
-	*/
 	if(strcmp(opcode, "sin") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _sin(rs,0,rd,0,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "cos") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _cos(rs,0,rd,0,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "atan") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _atan(rs,0,rd,0,0);
+		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "int_of_float") == 0){
-		if(sscanf(op_data, fgf, tmp, &rd, &rs) == 3)
-		    return _int_of_float(rs,0,rd,0,0);
+		if(sscanf(op_data, fgf, tmp, &rd, &rs) == 3) {
+		    return 0;
+		}
 	}
 	if(strcmp(opcode, "float_of_int") == 0){
-		if(sscanf(op_data, ffg, tmp, &rd, &rs) == 3)
-		    return _float_of_int(rs,0,rd,0,0);
+		if(sscanf(op_data, ffg, tmp, &rd, &rs) == 3) {
+		    return 0;
+		}
 	}
+	*/
 
 	return -1;
 }
 
-DEFINE_I(mvhi, MVHI);
-DEFINE_I(mvlo, MVLO);
-DEFINE_I(addi,ADDI);
-DEFINE_I(subi,SUBI);
-DEFINE_I(muli,MULI);
-DEFINE_I(divi,DIVI);
-DEFINE_I(slli,SLLI);
-DEFINE_I(srli,SRLI);
-DEFINE_J(jmp,JMP);
-DEFINE_I(jeq,JEQ);
-DEFINE_I(jne,JNE);
-DEFINE_I(jlt,JLT);
-DEFINE_I(jle,JLE);
-DEFINE_J(call,CALL);
-DEFINE_J(_return,RETURN);
-DEFINE_I(ld,LD);
-DEFINE_I(st,ST);
-DEFINE_I(fld,FLD);
-DEFINE_I(fst,FST);
-DEFINE_I(fjeq,FJEQ);
-DEFINE_I(fjlt,FJLT);
-DEFINE_I(setl,SETL);
-
-DEFINE_F(mov,SPECIAL,MOV_F);
-DEFINE_F(_not,SPECIAL,NOT_F);
-DEFINE_F(input,IO,INPUT_F);
-DEFINE_F(output,IO,OUTPUT_F);
-DEFINE_F(nop,SPECIAL,NOP_F);
-DEFINE_F(sll,SPECIAL,SLL_F);
-DEFINE_F(srl,SPECIAL,SRL_F);
-DEFINE_F(b,SPECIAL,B_F);
-DEFINE_F(add,SPECIAL,ADD_F);
-DEFINE_F(sub,SPECIAL,SUB_F);
-DEFINE_F(mul,SPECIAL,MUL_F);
-DEFINE_F(_div,SPECIAL,DIV_F);
-DEFINE_F(_and,SPECIAL,AND_F);
-DEFINE_F(_or,SPECIAL,OR_F);
-DEFINE_F(halt,SPECIAL,HALT_F);
-DEFINE_F(callr,SPECIAL,CALLR_F);
-
-DEFINE_F(fadd,FPI,FADD_F);
-DEFINE_F(fsub,FPI,FSUB_F);
-DEFINE_F(fmul,FPI,FMUL_F);
-DEFINE_F(fdiv,FPI,FDIV_F);
-DEFINE_F(fsqrt,FPI,FSQRT_F);
-DEFINE_F(_fabs,FPI,FABS_F);
-DEFINE_F(fmov,FPI,FMOV_F);
-DEFINE_F(fneg,FPI,FNEG_F);
-
-///////////////////////////////
-DEFINE_R(_sin,SIN);
-DEFINE_R(_cos,COS);
-DEFINE_R(_atan,ATAN);
-DEFINE_R(_sqrt,SQRT);
-DEFINE_R(_int_of_float,I_OF_F);
-DEFINE_R(_float_of_int,F_OF_I);
-//////////////////////////////
+void print_gr(int register_index, int comma_flag, int quad_flag) {
+	char *datalen1 = (quad_flag) ? (char *)"" : (char *)"d";
+	char *datalen2 = (quad_flag) ? (char *)"r" : (char *)"e";
+	if (comma_flag) {
+		printf(", ");
+	} else {
+		if (is_const(register_index)) {
+			printf("eax");
+			return ;
+		}
+	}
+	switch (register_index) {
+		case 0 : printf("dword 0"); break;
+		case 28: printf("dword 1"); break;
+		case 29: printf("dword -1"); break;
+		case 1 :
+		case 2 :
+		case 3 :
+		case 4 :
+		case 5 :
+				printf("r1%d%s", register_index, datalen1); break;
+		case 6:
+				printf("r10%s", datalen1); break;
+		case 10:
+				printf("%sbx", datalen2); break;
+		case 11:
+				printf("%scx", datalen2); break;
+		case 12:
+				printf("%ssi", datalen2); break;
+		case 13:
+				printf("%sdi", datalen2); break;
+		case 15:
+				printf("%sbp", datalen2); break;
+		case 26:
+				printf("r8%s", datalen1); break;
+		case 27:
+				printf("r9%s", datalen1); break;
+		default :
+				aacnt[register_index]++;
+				printf("[GR%d]", register_index); break;
+	}
+}
+int is_const(int i) {
+	return (i == 0 || i == 28 || i == 29);
+}
+int is_xreg(int i) {
+	return ((1 <= i && i <= 5) || i == 6 || (10<=i&&i<=13) ||
+	i == 15 || i == 26 || i == 27 || is_const(i));
+}
