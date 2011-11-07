@@ -1,0 +1,7 @@
+TARGET = asmcho
+HOME_DIR = ../..
+include $(HOME_DIR)/Makefile.in
+CFLAGS += -I $(HOME_DIR)/include/
+CXXFLAGS += -I $(HOME_DIR)/include/
+vpath %.h $(HOME_DIR)/include/
+vpath %.inc inc/

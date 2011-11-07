@@ -49,7 +49,7 @@ extern const char *InstMap[INST_NUM];
 extern const char *InstTyMap[INST_NUM];
 extern const char *FunctMap[18][INST_NUM];
 extern const char *FunctTyMap[18][INST_NUM];
-int statistics(FILE*);
+int statistics(FILE*, int);
 int operate(uint32_t);
 int op_stat(char *sfile);
 

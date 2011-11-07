@@ -2,7 +2,7 @@
 #include "sim.h"
 
 // 命令実行回数の計数
-int statistics(FILE* fp) {
+int statistics(FILE* fp,int init) {
 	static int count[INST_NUM][INST_NUM];
 	const char *format = "%8s: %f %10d\n";
 	uint32_t ir = rom[pc];
@@ -10,6 +10,15 @@ int statistics(FILE* fp) {
 	int i,j;
 	opcode = get_opcode(ir);
 	funct = get_funct(ir);
+	if (init) {
+		for (i = 0; i < INST_NUM; i++) {
+			for (j = 0; j < INST_NUM; j++) {
+				count[i][j] = 0;
+			}
+		}
+		return 0;
+	}
+	
 
 	switch (opcode) {
 		case SPECIAL: 

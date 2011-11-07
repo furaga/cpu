@@ -58,12 +58,13 @@ int simulate(char *sfile) {
 	fprintf(stderr, "simulate %s\n", sfile);
 	fflush(stderr);
 
+		statistics(NULL,1);
 	// 命令列を実行
 	do{
 		
 		ir = rom[pc];
 		print_state();
-		statistics(stderr);
+		statistics(stderr,0);
 		cnt++;
 		pc++;
 		if (!(cnt % 100000000)) {

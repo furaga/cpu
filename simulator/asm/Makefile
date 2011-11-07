@@ -1,6 +1,7 @@
 # asm/Makefile
 TARGET = asmcho
 ASMH = common.h asm.h
+HOME_DIR = ../
 include ../Makefile.in
 
 CFLAGS += -I ../include/

@@ -1,6 +1,7 @@
 # sim/Makefile
 TARGET = simcho
 SIMH = common.h sim.h
+HOME_DIR = ../
 include ../Makefile.in
 
 CFLAGS += -I ../include/

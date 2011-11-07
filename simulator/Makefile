@@ -30,8 +30,8 @@ xrt:
 	@cd xsim; make rt
 
 clean:
-	cd asm; make clean
-	cd sim; make clean
-	cd fsim; make clean
-	cd xsim; make clean
+	cd asm; make -s clean
+	cd sim; make -s clean
+	cd fsim; make -s clean
+	cd xsim; make -s clean
 
