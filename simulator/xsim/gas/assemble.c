@@ -72,6 +72,9 @@ int	assemble(char *sfile) {
  	 	 		// -- コメントなので何もしない
  	 	 	}else{
  	 	 		// 命令行
+				if (count_flag) {
+					OP(incq), S((CNT)), NL;
+				}
  	 	 		if (encode_op(opcode, buf) < 0) {
 					fprintf(stderr,"While Reassembling %s,\n", sfile);
 					fprintf(stderr,"Unknown operation L.%d\n", input_line_cnt);
@@ -118,6 +121,7 @@ int	assemble(char *sfile) {
 	for (i = 0; i < 32; i++) {
 		printf("FR%d: .long 0\n", i);
 	}
+	puts("CNT: .quad 0");
 	puts(".section .bss");
 	puts(".lcomm TOP, 0");
 	printf(".lcomm RAM, %u\n", (unsigned)1<<25);

@@ -25,4 +25,5 @@
 void print_gr(int,int,int);
 int is_const(int);
 int is_xreg(int);
+extern int count_flag;
 #endif

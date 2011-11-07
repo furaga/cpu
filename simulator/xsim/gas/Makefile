@@ -11,8 +11,8 @@ asmcho.o: $(ASMH) assemble.o
 assemble.o: $(ASMH) encode_op.o
 encode_op.o: $(ASMH)
 
-xrt: $(MIN_RT:%=%.s) asmcho  $(LIB_OBJ)
-	./asmcho $(MIN_RT:%=%.s) > x86asm/min-rt.asm; \
+xrt: $(MIN_RT:%=%.s) asmcho  $(LIB_OBJ) $(HOME_DIR:%=%/Makefile.in)
+	./asmcho $(XSIM_FLAGS) $(MIN_RT:%=%.s) > x86asm/min-rt.asm; \
 	$(AS)  x86asm/min-rt.asm -o obj/min-rt.o; \
 	ld obj/min-rt.o $(LIB_OBJ) -o xrt
 
@@ -32,14 +32,14 @@ rt: xrt
 
 	
 TEST = $(TEST_TARGET)
-$(TEST:%=bin/%): asmcho $(ASM_TARGET) $(LIB_OBJ)
+$(TEST:%=bin/%): asmcho $(ASM_TARGET) $(LIB_OBJ) $(HOME_DIR:%=%/Makefile.in)
 	for name in $(TEST) ; do \
 		target=$(COMPILER_DIR)'/test/'$$name'.s'; \
 		x86asm='x86asm/'$$name'.asm'; \
 		lst='lst/'$$name'.lst'; \
 		obj='obj/'$$name'.o'; \
 		bin='bin/'$$name; \
-		./asmcho $$target > $$x86asm;	\
+		./asmcho $(XSIM_FLAGS) $$target > $$x86asm;	\
 		$(AS) $$x86asm -o $$obj;	\
 		ld $$obj $(LIB_OBJ) -o $$bin; \
 	done 

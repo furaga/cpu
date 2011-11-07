@@ -3,12 +3,39 @@
 .global Exit
 .global OutChar
 .global PrintHex8
+.global PrintHex16
+.global NewLine
 .global InChar
+
+.equ SYS_read,      0
+.equ SYS_write,     1
+.equ SYS_exit,     60
 
 Exit:
 	xorl	%edi, %edi
 	movl	$60, %eax
 	syscall
+
+#------------------------------------
+# print n characters in rax to fd
+#   rdx : no. of characters
+#   rdi : file descriptor
+#   destroyed : rax
+PrintCharN:
+                pushq    %rcx
+                pushq    %rsi
+                pushq    %rax                 # work buffer on stack
+                movl     $SYS_write, %eax
+                movq    %rsp, %rsi
+				pushq	%r10
+				pushq	%r11
+                syscall
+				popq	%r11
+				popq	%r10
+                popq    %rax
+                popq    %rsi
+                popq    %rcx
+                ret
 
 #------------------------------------
 # print 1 character to stdout
@@ -26,24 +53,38 @@ OutChar:
 #   rdx : no. of characters
 #   destroyed : rax
 OutCharN:
-                pushq    %rcx
-                pushq    %rsi
-                pushq    %rdi
-                pushq    %rax                 # work buffer on stack
-                xorl     %eax, %eax
-                incl     %eax                 # 1:to stdout
-                movl     %eax, %edi
-                movq    %rsp, %rsi
-				pushq	%r10
-				pushq	%r11
-                syscall
-				popq	%r11
-				popq	%r10
-                popq    %rax
-                popq    %rdi
-                popq    %rsi
-                popq    %rcx
+				pushq	%rdi
+				xorl	%edi, %edi
+				incl	%edi
+				call	PrintCharN
+				popq 	%rdi
+				ret
+
+
+#------------------------------------
+# print 1 character to stderr
+# rax : put char
+ErrChar:
+                pushq    %rdx
+                xorl    %edx, %edx
+                incl    %edx
+                call    ErrCharN
+                popq    %rdx
                 ret
+
+#------------------------------------
+# print n characters in rax to stderr
+#   rdx : no. of characters
+#   destroyed : rax
+ErrCharN:
+				pushq	%rdi
+				xorl	%edi, %edi
+				incl	%edi
+				incl	%edi
+				call	PrintCharN
+				popq 	%rdi
+				ret
+
 #------------------------------------
 # input 1 character from stdin
 # rax : get char
@@ -53,8 +94,8 @@ InChar:
                 pushq   %rdi
                 pushq   %rsi
                 pushq   %rax                 # work buffer on stack
-                xorq     %rax, %rax
-                xorq     %rdi, %rdi            # 0:from stdin
+                movl     $SYS_read, %eax
+                xorl     %edi, %edi            # 0:from stdin
                 movq     %rsp, %rsi            # into Input Buffer
                 movl    %edi, %edx
                 incl     %edx                 # 1 char
@@ -93,12 +134,11 @@ PrintHex:
                 loop    .loop1
                 movb     %dl, %cl
     .loop2:     popq     %rax
-                call    OutChar
+                call    ErrChar
                 loop    .loop2
                 popq     %rbx
                 popq     %rcx
                 popq     %rax
-				call NewLine
                 ret
 
 
@@ -110,9 +150,13 @@ PrintHex8:
                 movb    $8, %dl
                 jmp    PrintHex
 
+PrintHex16:
+                movb    $16, %dl
+                jmp    PrintHex
+
 NewLine:
                 pushq    %rax
                 movb     $0xA, %al
-                call    OutChar
+                call    ErrChar
                 popq     %rax
                 ret

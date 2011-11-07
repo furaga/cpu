@@ -538,6 +538,12 @@ int encode_op(char *opcode, char *op_data)
 		return 0;
 	}
 	if(strcmp(opcode, "halt") == 0){
+		if (count_flag) {
+			OP(call),S(NewLine),NL;
+			OP(movq),S((CNT)),SC(%rax),NL;
+			OP(call),S(PrintHex16),NL;
+			OP(call),S(NewLine),NL;
+		}
 		OP(call),S(Exit),NL;
 		return 0;
 	}
