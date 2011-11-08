@@ -170,7 +170,7 @@ int encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "input") == 0){
 		if(sscanf(op_data, fg, tmp, &rd) == 2) {
-			OP(xorq),S(%rax),SC(%rax),NL;
+			OP(xorl),S(%eax),SC(%eax),NL;
 			OP(call),S(InChar),NL;
 			OP(movl),S(%eax),GC(rd),NL;
 		    return 0;
@@ -437,6 +437,8 @@ int encode_op(char *opcode, char *op_data)
 
 	 		if ((rd == rs) && (is_xmm(rs))) {
 				OP(addss),F(rt),FC(rs),NL;
+			} else if ((rd == rt) && (is_xmm(rd))) {
+				OP(addss),F(rs),FC(rd),NL;
 			} else {
 				OP(movss),F(rs),SC(%xmm15),NL;
 				OP(addss),F(rt),SC(%xmm15),NL;
@@ -462,6 +464,8 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
 	 		if ((rd == rs) && (is_xmm(rs))) {
 				OP(mulss),F(rt),FC(rs),NL;
+			} else if ((rd == rt) && (is_xmm(rd))) {
+				OP(mulss),F(rs),FC(rd),NL;
 			} else {
 				OP(movss),F(rs),SC(%xmm15),NL;
 				OP(mulss),F(rt),SC(%xmm15),NL;
@@ -537,8 +541,14 @@ int encode_op(char *opcode, char *op_data)
 	if(strcmp(opcode, "fld") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
 			if (is_xmm(rs)) {
-				OP(movl),G(rt),SC(%edx),NL;
-				OP(movss),ADR(%edx,imm), FC(rs),NL;
+				if (is_xreg(rt)) {
+					OP(movss),
+					printf("-%d(",imm),G(rt),printf(")"),
+					FC(rs),NL;
+				} else {
+					OP(movl),G(rt),SC(%edx),NL;
+					OP(movss),ADR(%edx,imm), FC(rs),NL;
+				}
 			} else {
 				OP(movl),G(rt),SC(%edx),NL;
 				OP(movl),ADR(%edx,imm), SC(%eax),NL;
@@ -550,8 +560,13 @@ int encode_op(char *opcode, char *op_data)
 	if(strcmp(opcode, "fst") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
 			if (is_xmm(rs)) {
-				OP(movl),G(rt),SC(%eax),NL;
-				OP(movss),F(rs),ADRC(%eax,imm),NL;
+				if (is_xreg(rt)) {
+					OP(movss),F(rs),
+					printf(", -%d(",imm),G(rt),printf(")\n");
+				} else {
+					OP(movl),G(rt),SC(%eax),NL;
+					OP(movss),F(rs),ADRC(%eax,imm),NL;
+				}
 			} else {
 				OP(movl),F(rs),SC(%edx),NL;
 				OP(movl),G(rt),SC(%eax),NL;
