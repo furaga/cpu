@@ -8,6 +8,11 @@ SIM_FLAGS			: sim(make sim) のオプション
 XSIM_FLAGS [-cnt]	: xsim のオプション
 EOG					: xrt完了時のbashの命令(eog $$ppm &)なら画像出力
 
+xsim/Makefile内の変数
+AS					: gas or nasm or beta(gas beta ver.)
+gasは大方安定しているかと。
+betaは一応いけるがbeta ver.ということで。
+
 実行例
 $ make
 $ make rt

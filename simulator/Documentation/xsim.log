@@ -1,0 +1,20 @@
+xsim 高速化ログ
+
+##2011/11/09 01:36 gax(beta)。xmmレジスタ。
+ 28764  78233 581697 x86asm/min-rt.asm
+   399   1543 219236 xrt
+all real	0m27.706s
+contest real	0m1.470s
+
+##2011/11/09 01:19 gax(beta)。浮動小数演算の仕方を変更。
+28857  78512 584071 x86asm/min-rt.asm
+  389   1429 220828 xrt
+all real	0m28.052s
+contest real	0m1.487s
+
+##2011/11/08 gas。
+ 34868  85642 623099 x86asm/min-rt.asm
+   306   1900 259644 xrt
+all real	0m35.705s
+contest real	0m1.883s
+

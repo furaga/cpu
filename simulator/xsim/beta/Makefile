@@ -1,4 +1,4 @@
-ASMH = common.h asm.h reasm2.h
+ASMH = common.h asm.h reasm3.h
 include ../MakefileX.in
 RM_TARGET = ./bin/*.x ./obj/*.o ./x86asm/*.asm xrt
 AS = as
@@ -28,6 +28,7 @@ rt: xrt
 		cat $$diff; \
 		$(EOG) \
 	done 
+		#./xrt < $$sld; \
 
 
 	

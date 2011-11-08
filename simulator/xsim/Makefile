@@ -1,6 +1,7 @@
 
 #AS = nasm
-AS = gas
+#AS = gas
+AS = beta
 .PHONY: sim rt clean
 
 all:
@@ -12,3 +13,4 @@ rt:
 clean:
 	cd nasm; make clean
 	cd gas; make clean
+	cd beta; make clean
