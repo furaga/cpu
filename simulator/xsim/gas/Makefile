@@ -1,6 +1,6 @@
 ASMH = common.h asm.h reasm2.h
 include ../MakefileX.in
-RM_TARGET = ./bin/* ./lst/* ./obj/* ./x86asm/* xrt
+RM_TARGET = ./bin/*.x ./obj/*.o ./x86asm/*.asm xrt
 AS = as
 
 LIB_OBJ = inc/lib.o
@@ -16,9 +16,9 @@ xrt: $(MIN_RT:%=%.s) asmcho  $(LIB_OBJ) $(HOME_DIR:%=%/Makefile.in)
 	$(AS)  x86asm/min-rt.asm -o obj/min-rt.o; \
 	ld obj/min-rt.o $(LIB_OBJ) -o xrt
 
-#(eog $$ppm &); 
 rt: xrt
 	for name in $(RT_TARGET) ; do \
+		echo $$name; \
 		sld=$(PICT_DIR)'/sld/'$$name'.sld'; \
 		ppm=$(PICT_DIR)'/ppm/'$$name'.ppm'; \
 		original=$(PICT_DIR)'/ppm0/'$$name'.ppm'; \
@@ -26,7 +26,7 @@ rt: xrt
 		./xrt < $$sld > $$ppm; \
 		diff $$original $$ppm | cat > $$diff; \
 		cat $$diff; \
-		echo $$name; \
+		$(EOG) \
 	done 
 
 
@@ -36,9 +36,8 @@ $(TEST:%=bin/%): asmcho $(ASM_TARGET) $(LIB_OBJ) $(HOME_DIR:%=%/Makefile.in)
 	for name in $(TEST) ; do \
 		target=$(COMPILER_DIR)'/test/'$$name'.s'; \
 		x86asm='x86asm/'$$name'.asm'; \
-		lst='lst/'$$name'.lst'; \
 		obj='obj/'$$name'.o'; \
-		bin='bin/'$$name; \
+		bin='bin/'$$name'.x'; \
 		./asmcho $(XSIM_FLAGS) $$target > $$x86asm;	\
 		$(AS) $$x86asm -o $$obj;	\
 		ld $$obj $(LIB_OBJ) -o $$bin; \
@@ -46,7 +45,7 @@ $(TEST:%=bin/%): asmcho $(ASM_TARGET) $(LIB_OBJ) $(HOME_DIR:%=%/Makefile.in)
 
 sim: $(TEST:%=bin/%)
 	for name in $(TEST) ; do \
-		bin='bin/'$$name; \
+		bin='bin/'$$name'.x'; \
 		./$$bin; \
 	done 
 	

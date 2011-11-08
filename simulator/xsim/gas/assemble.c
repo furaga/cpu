@@ -75,6 +75,7 @@ int	assemble(char *sfile) {
 				if (count_flag) {
 					OP(incq), S((CNT)), NL;
 				}
+				fflush(stdout);
  	 	 		if (encode_op(opcode, buf) < 0) {
 					fprintf(stderr,"While Reassembling %s,\n", sfile);
 					fprintf(stderr,"Unknown operation L.%d\n", input_line_cnt);

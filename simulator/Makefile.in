@@ -10,17 +10,17 @@ LDFLAGS = -Wall -O2 -lm
 COMPILER_DIR = $(HOME_DIR)/../compiler
 PICT_DIR = $(HOME_DIR)/pict
 DIFF_DIR = $(HOME_DIR)/diff
+MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 ###################################
 # Set Vars below
 ###################################
 #TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
 TEST_TARGET = fib
-#adder even-odd gcd cls-bug cls-bug2
-RT_TARGET = contest
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
+RT_TARGET = contest
 SIM_FLAGS =
-XSIM_FLAGS =  -cnt
-MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
+XSIM_FLAGS =  #-cnt
+EOG =  # (eog $$ppm &);
 ###################################
 ###################################
 

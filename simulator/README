@@ -1,20 +1,19 @@
 
-Makefile.in内の
-TEST_TARGET
-SIM_FLAGS
-RT_TARGET
-を設定して以下のコマンド。
-すべてのsldファイルをppmファイルにするなら、
-コメントアウトしてあるRT_TARGETをコメントアウトアウトしてmake frt
-いちいち画像出力するのがウザいときはfsim/Makefile,sim/Makefileの
-ラベルrt内のeogコマンドの行を削除してください。
+Documentationディレクトリにxsim.txtを追加
+Makefile.in内の変数
 
-make
+TEST_TARGET			: sim,fsim,xsimのターゲット
+RT_TARGET			: rt,frt,xrtのターゲット
+SIM_FLAGS			: sim(make sim) のオプション
+XSIM_FLAGS [-cnt]	: xsim のオプション
+EOG					: xrt完了時のbashの命令(eog $$ppm &)なら画像出力
 
-make rt
-
-make frt
-
-make asm
-make sim
-等々
+実行例
+$ make
+$ make rt
+$ make frt
+$ make xrt
+$ make asm
+$ make sim
+$ make fsim
+$ make xsim

@@ -1,0 +1,186 @@
+
+文責 occho イカちゃん班シミュレータ係
+
+make xsim時の動作の概要を説明する。CPU実験イカちゃん班のCPU
+を暫定的にイカちゃんとよぶこと にする。 gasはnasmに置換して
+読んでもよい。 但し、今後サポートするのは gas versionのみ。
+
+make xsim: 	イカちゃんのシミュレートをする。
+	1. asmchoの生成。
+	2. asmchoにイカちゃん用のアセンブラコード(test.s)を食わ
+	   せて、gas(GNU as)用のアセンブラコード(test.asm)に変換する。
+	3. gasにtest.asmを食わせてtest.oを出力
+	4. ld(リンカ)でライブラリも合わせてリンク。実行ファイル(test)生成。
+	5. ./test (x86_64上で実行される。)
+
+	$ ./asmcho $(XSIM_FLAGS) $(MIN_RT:%=%.s) > x86asm/min-rt.asm
+	$ $(AS)  x86asm/min-rt.asm -o obj/min-rt.o 
+	$ ld obj/min-rt.o $(LIB_OBJ) -o xrt
+	$ ./xrt < $(SLD) > $(PPM)
+
+asmcho:	イカちゃん用のアセンブラコードをgas用のアセンブラコー
+		ドに変換するコンバータ。 asmcho.c, assemble.c 
+		encode_op.c その他ヘッダファイルからなる。
+		ネーミングがもはやちげえ。が、まあいいや。
+
+イカ、変換の際にポイントとなる点をあげる。
+
+1. レジスタ
+　イカちゃんは汎用レジスタ(32bit)を32個、単精度浮動小数点演算
+用レジスタ(32bit)が32個ある。これらを以下のようにx86_64のレジ
+スタ又はメモリに割り当てた。 この割り当てはいまのところ適当（
+オペランドでよく現れる順(汎用レジスタのみ)）なので、(x86上の)
+命令実行数とメモリアクセスのタイムロスを減らす余地がある。
+
+x86_64の関数呼出規約は守っていなく、以下のレジスタは関数が
+値を退避し、変化のないようにする。(syscallの前後等）
+
+gr1		=>	r11（下位32bit）
+gr2		=>	r12（下位32bit）
+gr3		=>	r13（下位32bit）
+gr4		=>	r14（下位32bit）
+gr5		=>	r15（下位32bit）
+gr6		=>	r10（下位32bit）
+gr10	=>	rbx（下位32bit）
+gr11	=>	rcx（下位32bit）
+gr12	=>	rsi（下位32bit）
+gr13	=>	rdi（下位32bit）
+gr15	=>	rbp（下位32bit）
+gr26	=>	r8 （下位32bit）
+gr27	=>	r9 （下位32bit）
+その他のgr,frはメモリ(data section(初期値つき))上にとった。
+gr0,gr28,gr29は命令のオペランドに指定されると、それぞれ、 
+$0,$-1,$1に変換される。 また、gr0,gr28,gr29が代入先に指定
+されると、%eax(tmp的な)に変換される。
+
+gr1,gr2,gr31はそれぞれの役割にしたがった値に初期化され、
+それ以外は0で初期化される。
+
+2. RAM
+　bss section(初期値なし)に1<<25(32*1024*1024)bytes(もう少し
+小さくてもよさげか？)確保する。初期状態で、gr1,gr31はこの領域
+のbottomを指し、gr2はこの領域のtopを指す。
+---- fib.asm ---- ---- ---- ---- ----
+.section .bss
+.lcomm TOP, 0				<- gr2
+.lcomm RAM, 33554432
+.lcomm BOTTOM, 0			<- gr1, gr31
+---- ---- ---- ---- ---- ---- ---- 
+
+
+3. HEAP
+　イカちゃん用のコードの始めに宣言されたheap_size分のdataは
+data section(レジスタ群の上）に格納される。
+.long は32bit
+.quad は64bit
+
+---- fib.asm ---- ---- ---- ---- ----
+.section .data
+FLOAT_ZERO:	.long	0x0
+FLOAT_ONE:	.long	0x3f800000
+FLOAT_MONE:	.long	0xbf800000
+FLOAT_MAGICI:	.long	0x800000
+FLOAT_MAGICF:	.long	0x4b000000
+FLOAT_MAGICFHX:	.long	0x4b000000
+
+GR0: .long 0
+GR1: .long 0
+GR2: .long 0
+GR3: .long 0
+GR4: .long 0
+GR5: .long 0
+GR6: .long 0
+GR7: .long 0
+GR8: .long 0
+GR9: .long 0
+GR10: .long 0
+GR11: .long 0
+GR12: .long 0
+GR13: .long 0
+GR14: .long 0
+GR15: .long 0
+GR16: .long 0
+GR17: .long 0
+GR18: .long 0
+GR19: .long 0
+GR20: .long 0
+GR21: .long 0
+GR22: .long 0
+GR23: .long 0
+GR24: .long 0
+GR25: .long 0
+GR26: .long 0
+GR27: .long 0
+GR28: .long 0
+GR29: .long 0
+GR30: .long 0
+GR31: .long 0
+FR0: .long 0
+FR1: .long 0
+FR2: .long 0
+FR3: .long 0
+FR4: .long 0
+FR5: .long 0
+FR6: .long 0
+FR7: .long 0
+FR8: .long 0
+FR9: .long 0
+FR10: .long 0
+FR11: .long 0
+FR12: .long 0
+FR13: .long 0
+FR14: .long 0
+FR15: .long 0
+FR16: .long 0
+FR17: .long 0
+FR18: .long 0
+FR19: .long 0
+FR20: .long 0
+FR21: .long 0
+FR22: .long 0
+FR23: .long 0
+FR24: .long 0
+FR25: .long 0
+FR26: .long 0
+FR27: .long 0
+FR28: .long 0
+FR29: .long 0
+FR30: .long 0
+FR31: .long 0
+CNT: .quad 0
+---- ---- ---- ---- ---- ---- ---- 
+
+4. 初期化
+　x86_64は_startラベルの命令列から実行されるので、ここで、
+初期化を行い、call min_caml_start(jmpでもいいな)を実行している。
+初期化は今のところレジスタの値の初期化のみしかしていない。
+
+5. 命令発行数カウントオプション
+  Makefile.in内のXSIM_FLAGSで'-cnt'を有効にすると、イカちゃん用
+のコードを変換する度に変換後の命令の前にincq (CNT)をコードに加え、
+haltの際に(CNT)の値を16進で出力する。
+
+6. ライブラリ inc/lib.s
+  入出力系のInChar,OutChar,PrintHex8(16),NewLine,Exitがあり、
+callでよびだせる。inc/lib.s参照。 ここを充実させれば、もっと使い
+勝手がよくなるかも。あらかじめアセンブルしたのちにリンクされる。
+global宣言とかわすれがち。
+
+7. 命令の変換
+　イカちゃんと同じ挙動をするように命令を変換するよう意図している。
+命令数はイカちゃんのコードと比べて1.8倍くらいに増えている。
+x86_64のコードにおいて、命令数が増える要因を挙げる。
+・1命令でオペランドの２つ以上がメモリアクセスを要するのはおそらく
+  許されていないので、一旦レジスタを模倣したメモリの値をレジスタに
+  格納する必要が出てくる。
+  ここの一旦格納するレジスタ(tmp的な）はrax,rdxを用いている。
+・add a,b,c (a <- b + c)等の命令がない。(add a,b (a <- a + b) のみ)
+・float演算ではコードが少なくとも3倍以上に（これは不可避？）。
+
+一つ目に挙げたものに関していうと、オペランドがx86_64のレジスタに
+割り当てられているレジスタであれば、明らかなところ（安全に正しく
+実行できそうなところ）では命令数を少なくするような工夫を施している.
+
+
+こんなところかな。
+
