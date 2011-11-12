@@ -1,823 +1,1288 @@
-compile  test/funcomp.ml
-
-	hello
+compile  test/matmul-flat.ml
 
 
-CLOSURE EXISTS
-[div_binary_search.333]
-	(%g3, )
-	(%g3, )
-div_binary_search.333
-	args: %g3, %g4, %g5, %g6, 
-	fargs: 
-	use_regs: %g3, %g7, %g8, %g9, 
-[print_int.338]
-	(tx.361, )
-	(x.339, %g3)
-	(x.363, %g10)
-	(tx.365, )
-	(x.363, %g10)
-	(flg.364, %g3)
-	(x.367, %g10)
-	(x.367, %g10)
-	(x.367, %g10)
-	(tx.369, )
-	(x.367, %g10)
-	(flg.368, %g3)
-	(x.371, %g10)
-	(x.371, %g10)
-	(x.371, %g10)
-	(tx.373, )
-	(x.371, %g10)
-	(flg.372, %g3)
-	(x.375, %g10)
-	(x.375, %g10)
-	(x.375, %g10)
-	(tx.377, )
-	(x.375, %g10)
-	(flg.376, %g3)
-	(x.379, %g10)
-	(x.379, %g10)
-	(x.379, %g10)
-	(tx.381, )
-	(x.379, %g10)
-	(flg.380, %g3)
-	(x.383, %g10)
-	(x.383, %g10)
-	(x.383, %g10)
-	(tx.385, )
-	(x.383, %g10)
-	(flg.384, %g3)
-	(x.387, %g10)
-	(x.387, %g10)
-	(x.387, %g10)
-	(tx.389, )
-	(x.387, %g10)
-	(flg.388, %g3)
-	(x.391, %g10)
-	(x.391, %g10)
-	(x.391, %g10)
-	(%dummy, )
-	(x.339, %g3)
-	(%dummy, )
-print_int.338
-	args: %g3, 
-	fargs: 
-	use_regs: %dummy, %g0, %g10, %g11, %g3, %g4, %g5, %g6, %g7, %g8, %g9, Tu688, Tu689, Tu690, Tu691, Tu692, Tu693, Tu694, Tu695, Tu696, 
-[composed.355]
-	(g.342, %g4)
-	(Ti51.357, )
-	(%g3, )
-composed.355
-	args: %g3, 
-	fargs: 
-	use_regs: %f0, %f1, %f10, %f11, %f12, %f13, %f14, %f15, %f2, %f3, %f4, %f5, %f6, %f7, %f8, %f9, %g10, %g11, %g12, %g13, %g14, %g15, %g16, %g17, %g18, %g19, %g20, %g21, %g22, %g23, %g24, %g25, %g26, %g27, %g3, %g4, %g5, %g6, %g7, %g8, %g9, Tu697, 
-[compose.340]
-SETL
-compose.340
-	args: %g3, %g4, 
-	fargs: 
-	use_regs: %f0, %f1, %f10, %f11, %f12, %f13, %f14, %f15, %f2, %f3, %f4, %f5, %f6, %f7, %f8, %f9, %g0, %g10, %g11, %g12, %g13, %g14, %g15, %g16, %g17, %g18, %g19, %g2, %g20, %g21, %g22, %g23, %g24, %g25, %g26, %g27, %g3, %g4, %g5, %g6, %g7, %g8, %g9, Tu697, 
-[dbl.343]
-dbl.343
-	args: %g3, 
-	fargs: 
-	use_regs: %g3, 
-[inc.345]
-inc.345
-	args: %g3, 
-	fargs: 
-	use_regs: %g3, 
-[dec.347]
-dec.347
-	args: %g3, 
-	fargs: 
-	use_regs: %g3, 
-	(%g2, )
-	(%g2, )
-	(%g2, )
-	(%g2, )
-	(%g2, )
-	(%g2, )
-	(inc.345, %g4)
-	(Tf46.352, )
-	(h.349, )
-	(Ti48.350, )
-  Int div_binary_search.333 (%g3 %g4 %g5 %g6 ) =
-    Let %g7 =
-      %g5 + %g6
+globalEnv.env(globalEnv.ml) = 
+	a.489 b.490 c.491 dummy.476 read_float_exp.460 read_float_f.459 read_float_i.458 read_float_s.461 read_int_ans.451 read_int_s.452 
+
+CLOSURE NOT EXISTS
+CLOSURE_LET: read_int_ans.451
+CLOSURE_LET: read_int_s.452
+CLOSURE_LET: read_float_i.458
+CLOSURE_LET: read_float_f.459
+CLOSURE_LET: read_float_exp.460
+CLOSURE_LET: read_float_s.461
+CLOSURE_LET: dummy.476
+CLOSURE_LET: a.489
+CLOSURE_LET: b.490
+CLOSURE_LET: c.491
+Print Asm_t(Virtual.ml):
+  l.1033 : 12.000000
+  l.1028 : 11.000000
+  l.1023 : 10.000000
+  l.1018 : 9.000000
+  l.1013 : 8.000000
+  l.1008 : 7.000000
+  l.1003 : 6.000000
+  l.998 : 5.000000
+  l.993 : 4.000000
+  l.988 : 3.000000
+  l.980 : 1.000000
+  l.976 : 0.000000
+  l.974 : 2.000000
+  Int div_binary_search.469 (a.470 b.471 left.472 right.473 ) =
+    Let Ti254.771 =
+      left.472 + right.473
     In
-    Let %g7 =
-      %g7 << -1
+    Let Ti255.772 =
+      Set (-1)
     In
-    Let %g8 =
-      %g7 * %g4
+    Let mid.768 =
+      Ti254.771 << Ti255.772
     In
-    Let %g9 =
-      %g6 - %g5
+    Let x.769 =
+      mid.768 * b.471
+    In
+    Let Ti256.770 =
+      right.473 - left.472
     In
     Ans (
-      If %g9 <= 1 Then
+      If Ti256.770 <= 1 Then
         Ans (
-          Mov (%g5)
+          Mov (left.472)
         )
       Then
         Ans (
-          If %g3 <= %g8 Then
+          If a.470 <= x.769 Then
             Ans (
-              If %g8 = %g3 Then
+              If x.769 = a.470 Then
                 Ans (
-                  Mov (%g7)
+                  Mov (mid.768)
                 )
               Then
                 Ans (
-                  CallDir div_binary_search.333 %g3 %g4 %g5 %g7 
+                  CallDir div_binary_search.469 a.470 b.471 left.472 mid.768 
                 )
             )
           Then
             Ans (
-              CallDir div_binary_search.333 %g3 %g4 %g7 %g6 
+              CallDir div_binary_search.469 a.470 b.471 mid.768 right.473 
             )
         )
     )
-  Unit print_int.338 (%g3 ) =
+  Unit print_int.474 (x.475 ) =
     Ans (
-      If %g3 >= 0 Then
-        Let %g4 =
+      If x.475 >= 0 Then
+        Let Ti188.765 =
           Set (100000000)
         In
-        Let %g5 =
+        Let Ti189.766 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti190.767 =
           Set (3)
         In
-        Let Tu688 =
-          Save %g3, x.339
+        Let tx.657 =
+          CallDir div_binary_search.469 x.475 Ti188.765 Ti189.766 Ti190.767 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g3 %g4 %g5 %g6 
-        In
-        Let %g10 =
+        Let Ti191.764 =
           Set (100000000)
         In
-        Let %g10 =
-          %g3 * %g10
+        Let dx.658 =
+          tx.657 * Ti191.764
         In
-        Let %g11 =
-          Restore x.339
+        Let x.659 =
+          x.475 - dx.658
         In
-        Let %g10 =
-          %g11 - %g10
-        In
-        Let %g3 =
-          If %g3 <= 0 Then
+        Let flg.660 =
+          If tx.657 <= 0 Then
             Ans (
               Set (0)
             )
           Then
-            Let %g11 =
+            Let Ti192.763 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti193.762 =
+              Ti192.763 + tx.657
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu17.761 =
+              CallDir min_caml_print_char Ti193.762 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti194.758 =
           Set (10000000)
         In
-        Let %g5 =
+        Let Ti195.759 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti196.760 =
           Set (10)
         In
-        Let Tu689 =
-          Save %g3, flg.364
+        Let tx.661 =
+          CallDir div_binary_search.469 x.659 Ti194.758 Ti195.759 Ti196.760 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
-        In
-        Let %g11 =
+        Let Ti197.757 =
           Set (10000000)
         In
-        Let %g11 =
-          %g3 * %g11
+        Let dx.662 =
+          tx.661 * Ti197.757
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.663 =
+          x.659 - dx.662
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.364
-            In
+        Let flg.664 =
+          If tx.661 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.660 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti198.756 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti199.755 =
+                  Ti198.756 + tx.661
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu18.754 =
+                  CallDir min_caml_print_char Ti199.755 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti200.753 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti201.752 =
+              Ti200.753 + tx.661
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu19.751 =
+              CallDir min_caml_print_char Ti201.752 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti202.748 =
           Set (1000000)
         In
-        Let %g5 =
+        Let Ti203.749 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti204.750 =
           Set (10)
         In
-        Let Tu690 =
-          Save %g3, flg.368
+        Let tx.665 =
+          CallDir div_binary_search.469 x.663 Ti202.748 Ti203.749 Ti204.750 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
-        In
-        Let %g11 =
+        Let Ti205.747 =
           Set (1000000)
         In
-        Let %g11 =
-          %g3 * %g11
+        Let dx.666 =
+          tx.665 * Ti205.747
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.667 =
+          x.663 - dx.666
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.368
-            In
+        Let flg.668 =
+          If tx.665 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.664 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti206.746 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti207.745 =
+                  Ti206.746 + tx.665
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu20.744 =
+                  CallDir min_caml_print_char Ti207.745 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti208.743 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti209.742 =
+              Ti208.743 + tx.665
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu21.741 =
+              CallDir min_caml_print_char Ti209.742 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti210.738 =
           Set (100000)
         In
-        Let %g5 =
+        Let Ti211.739 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti212.740 =
           Set (10)
         In
-        Let Tu691 =
-          Save %g3, flg.372
+        Let tx.669 =
+          CallDir div_binary_search.469 x.667 Ti210.738 Ti211.739 Ti212.740 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
-        In
-        Let %g11 =
+        Let Ti213.737 =
           Set (100000)
         In
-        Let %g11 =
-          %g3 * %g11
+        Let dx.670 =
+          tx.669 * Ti213.737
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.671 =
+          x.667 - dx.670
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.372
-            In
+        Let flg.672 =
+          If tx.669 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.668 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti214.736 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti215.735 =
+                  Ti214.736 + tx.669
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu22.734 =
+                  CallDir min_caml_print_char Ti215.735 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti216.733 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti217.732 =
+              Ti216.733 + tx.669
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu23.731 =
+              CallDir min_caml_print_char Ti217.732 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti218.728 =
           Set (10000)
         In
-        Let %g5 =
+        Let Ti219.729 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti220.730 =
           Set (10)
         In
-        Let Tu692 =
-          Save %g3, flg.376
+        Let tx.673 =
+          CallDir div_binary_search.469 x.671 Ti218.728 Ti219.729 Ti220.730 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
-        In
-        Let %g11 =
+        Let Ti221.727 =
           Set (10000)
         In
-        Let %g11 =
-          %g3 * %g11
+        Let dx.674 =
+          tx.673 * Ti221.727
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.675 =
+          x.671 - dx.674
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.376
-            In
+        Let flg.676 =
+          If tx.673 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.672 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti222.726 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti223.725 =
+                  Ti222.726 + tx.673
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu24.724 =
+                  CallDir min_caml_print_char Ti223.725 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti224.723 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti225.722 =
+              Ti224.723 + tx.673
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu25.721 =
+              CallDir min_caml_print_char Ti225.722 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti226.718 =
           Set (1000)
         In
-        Let %g5 =
+        Let Ti227.719 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti228.720 =
           Set (10)
         In
-        Let Tu693 =
-          Save %g3, flg.380
+        Let tx.677 =
+          CallDir div_binary_search.469 x.675 Ti226.718 Ti227.719 Ti228.720 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        Let Ti229.717 =
+          Set (1000)
         In
-        Let %g11 =
-          %g3 * 1000
+        Let dx.678 =
+          tx.677 * Ti229.717
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.679 =
+          x.675 - dx.678
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.380
-            In
+        Let flg.680 =
+          If tx.677 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.676 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti230.716 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti231.715 =
+                  Ti230.716 + tx.677
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu26.714 =
+                  CallDir min_caml_print_char Ti231.715 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti232.713 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti233.712 =
+              Ti232.713 + tx.677
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu27.711 =
+              CallDir min_caml_print_char Ti233.712 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti234.708 =
           Set (100)
         In
-        Let %g5 =
+        Let Ti235.709 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti236.710 =
           Set (10)
         In
-        Let Tu694 =
-          Save %g3, flg.384
+        Let tx.681 =
+          CallDir div_binary_search.469 x.679 Ti234.708 Ti235.709 Ti236.710 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        Let Ti237.707 =
+          Set (100)
         In
-        Let %g11 =
-          %g3 * 100
+        Let dx.682 =
+          tx.681 * Ti237.707
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.683 =
+          x.679 - dx.682
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.384
-            In
+        Let flg.684 =
+          If tx.681 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.680 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti238.706 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti239.705 =
+                  Ti238.706 + tx.681
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu28.704 =
+                  CallDir min_caml_print_char Ti239.705 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti240.703 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti241.702 =
+              Ti240.703 + tx.681
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu29.701 =
+              CallDir min_caml_print_char Ti241.702 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g4 =
+        Let Ti242.698 =
           Set (10)
         In
-        Let %g5 =
+        Let Ti243.699 =
           Set (0)
         In
-        Let %g6 =
+        Let Ti244.700 =
           Set (10)
         In
-        Let Tu695 =
-          Save %g3, flg.388
+        Let tx.685 =
+          CallDir div_binary_search.469 x.683 Ti242.698 Ti243.699 Ti244.700 
         In
-        Let %g3 =
-          CallDir div_binary_search.333 %g10 %g4 %g5 %g6 
+        Let Ti245.697 =
+          Set (10)
         In
-        Let %g11 =
-          %g3 * 10
+        Let dx.686 =
+          tx.685 * Ti245.697
         In
-        Let %g10 =
-          %g10 - %g11
+        Let x.687 =
+          x.683 - dx.686
         In
-        Let %g3 =
-          If %g3 <= 0 Then
-            Let %g11 =
-              Restore flg.388
-            In
+        Let flg.688 =
+          If tx.685 <= 0 Then
             Ans (
-              If %g11 = 0 Then
+              If flg.684 = 0 Then
                 Ans (
                   Set (0)
                 )
               Then
-                Let %g11 =
+                Let Ti246.696 =
                   Set (48)
                 In
-                Let %g3 =
-                  %g11 + %g3
+                Let Ti247.695 =
+                  Ti246.696 + tx.685
                 In
-                Let %g0 =
-                  CallDir min_caml_print_char %g3 
+                Let Tu30.694 =
+                  CallDir min_caml_print_char Ti247.695 
                 In
                 Ans (
                   Set (1)
                 )
             )
           Then
-            Let %g11 =
+            Let Ti248.693 =
               Set (48)
             In
-            Let %g3 =
-              %g11 + %g3
+            Let Ti249.692 =
+              Ti248.693 + tx.685
             In
-            Let %g0 =
-              CallDir min_caml_print_char %g3 
+            Let Tu31.691 =
+              CallDir min_caml_print_char Ti249.692 
             In
             Ans (
               Set (1)
             )
         In
-        Let %g3 =
+        Let Ti250.690 =
           Set (48)
         In
-        Let %g3 =
-          %g3 + %g10
+        Let Ti251.689 =
+          Ti250.690 + x.687
         In
         Ans (
-          CallDir min_caml_print_char %g3 
+          CallDir min_caml_print_char Ti251.689 
         )
       Then
-        Let %g10 =
+        Let Ti252.656 =
           Set (45)
         In
-        Let Tu696 =
-          Save %g3, x.339
+        Let Tu16.654 =
+          CallDir min_caml_print_char Ti252.656 
         In
-        Let %g0 =
-          CallDir min_caml_print_char %g10 
-        In
-        Let %g3 =
-          Restore x.339
-        In
-        Let %g3 =
-          Neg (%g3)
+        Let Ti253.655 =
+          Neg (x.475)
         In
         Ans (
-          CallDir print_int.338 %g3 
+          CallDir print_int.474 Ti253.655 
         )
     )
-  Int composed.355 (%g3 ) =
-    Let %g4 =
-      Lord %g27[-8]
+  Unit init.477 (i.478 n.479 mat.480 ) =
+    Ans (
+      If i.478 >= 0 Then
+        Let l.1062 =
+          Set (l.976)
+        In
+        Let Td184.651 =
+          FLord l.1062[0]
+        In
+        Let Ta185.650 =
+          CallDir min_caml_create_float_array n.479 Td184.651 
+        In
+        Let o.1063 =
+          i.478 << 2
+        In
+        Let Tu32.647 =
+          Store Ta185.650 to mat.480[o.1063]
+        In
+        Let Ti186.649 =
+          Set (1)
+        In
+        Let Ti187.648 =
+          i.478 - Ti186.649
+        In
+        Ans (
+          CallDir init.477 Ti187.648 n.479 mat.480 
+        )
+      Then
+        Ans (
+          Nop
+        )
+    )
+  Array(Array(Float)) make.485 (m.486 n.487 dummy.488 ) =
+    Let mat.639 =
+      CallDir min_caml_create_array m.486 dummy.488 
     In
-    Let %g27 =
-      Lord %g27[-4]
+    Let Ti180.642 =
+      Set (1)
     In
-    Let Tu697 =
-      Save %g4, g.342
+    Let Ti181.641 =
+      m.486 - Ti180.642
     In
-    Let %g3 =
-      CallCls %g27 %g3 
-    In
-    Let %g27 =
-      Restore g.342
+    Let Tu34.640 =
+      CallDir init.477 Ti181.641 n.487 mat.639 
     In
     Ans (
-      CallCls %g27 %g3 
+      Mov (mat.639)
     )
-  Int -> Int compose.340 (%g3 %g4 ) =
-    Let %g5 =
-      Mov (%g2)
+  Unit loop3.504 (i.505 k.506 j.507 ) =
+    Let c.491 =
+      Lord %g31[0]
     In
-    Let %g2 =
-      %g2 + 16
+    Let a.489 =
+      Lord %g31[8]
     In
-    Let %g6 =
-      Set (composed.355)
-    In
-    Let %g0 =
-      Store %g6 to %g5[0]
-    In
-    Let %g0 =
-      Store %g4 to %g5[-8]
-    In
-    Let %g0 =
-      Store %g3 to %g5[-4]
+    Let b.490 =
+      Lord %g31[4]
     In
     Ans (
-      Mov (%g5)
+      If k.506 >= 0 Then
+        Let o.1064 =
+          i.505 << 2
+        In
+        Let Ta169.576 =
+          Lord c.491[o.1064]
+        In
+        Let o.1066 =
+          j.507 << 2
+        In
+        Let Td171.578 =
+          FLord Ta169.576[o.1066]
+        In
+        Let o.1068 =
+          i.505 << 2
+        In
+        Let Ta172.583 =
+          Lord a.489[o.1068]
+        In
+        Let o.1070 =
+          k.506 << 2
+        In
+        Let Td173.580 =
+          FLord Ta172.583[o.1070]
+        In
+        Let o.1072 =
+          k.506 << 2
+        In
+        Let Ta174.582 =
+          Lord b.490[o.1072]
+        In
+        Let o.1074 =
+          j.507 << 2
+        In
+        Let Td175.581 =
+          FLord Ta174.582[o.1074]
+        In
+        Let Td176.579 =
+          Td173.580 *. Td175.581
+        In
+        Let Td177.577 =
+          Td171.578 +. Td176.579
+        In
+        Let o.1076 =
+          j.507 << 2
+        In
+        Let Tu35.573 =
+          FStore Td177.577 to Ta169.576[o.1076]
+        In
+        Let Ti178.575 =
+          Set (1)
+        In
+        Let Ti179.574 =
+          k.506 - Ti178.575
+        In
+        Ans (
+          CallDir loop3.504 i.505 Ti179.574 j.507 
+        )
+      Then
+        Ans (
+          Nop
+        )
     )
-  Int dbl.343 (%g3 ) =
+  Unit loop2.508 (i.509 m.510 j.511 ) =
     Ans (
-      %g3 + %g3
+      If j.511 >= 0 Then
+        Let Ti165.572 =
+          Set (1)
+        In
+        Let Ti166.571 =
+          m.510 - Ti165.572
+        In
+        Let Tu36.568 =
+          CallDir loop3.504 i.509 Ti166.571 j.511 
+        In
+        Let Ti167.570 =
+          Set (1)
+        In
+        Let Ti168.569 =
+          j.511 - Ti167.570
+        In
+        Ans (
+          CallDir loop2.508 i.509 m.510 Ti168.569 
+        )
+      Then
+        Ans (
+          Nop
+        )
     )
-  Int inc.345 (%g3 ) =
+  Unit loop1.512 (i.513 m.514 n.515 ) =
     Ans (
-      %g3 + 1
+      If i.513 >= 0 Then
+        Let Ti161.567 =
+          Set (1)
+        In
+        Let Ti162.566 =
+          n.515 - Ti161.567
+        In
+        Let Tu37.563 =
+          CallDir loop2.508 i.513 m.514 Ti162.566 
+        In
+        Let Ti163.565 =
+          Set (1)
+        In
+        Let Ti164.564 =
+          i.513 - Ti163.565
+        In
+        Ans (
+          CallDir loop1.512 Ti164.564 m.514 n.515 
+        )
+      Then
+        Ans (
+          Nop
+        )
     )
-  Int dec.347 (%g3 ) =
+  Unit mul.516 (l.517 m.518 n.519 ) =
+    Let Ti159.562 =
+      Set (1)
+    In
+    Let Ti160.561 =
+      l.517 - Ti159.562
+    In
     Ans (
-      %g3 - 1
+      CallDir loop1.512 Ti160.561 m.518 n.519 
     )
-  Let %g3 =
+  Let l.975 =
+    Set (l.974)
+  In
+  Let Td58.968 =
+    FLord l.975[0]
+  In
+  Let Ti60.895 =
     Set (1)
   In
-  Let %g4 =
+  Let Ti61.896 =
     Set (0)
   In
-  Let %g3 =
-    CallDir min_caml_create_array %g3 %g4 
+  Let read_int_ans.451 =
+    CallDir min_caml_create_array Ti60.895 Ti61.896 
   In
-  Let %g3 =
+  Let Tu1061 =
+    Store read_int_ans.451 to %g31[36]
+  In
+  Let Ti62.893 =
     Set (1)
   In
-  Let %g4 =
+  Let Ti63.894 =
     Set (0)
   In
-  Let %g3 =
-    CallDir min_caml_create_array %g3 %g4 
+  Let read_int_s.452 =
+    CallDir min_caml_create_array Ti62.893 Ti63.894 
   In
-  Let %g3 =
+  Let Tu1060 =
+    Store read_int_s.452 to %g31[32]
+  In
+  Let Ti64.855 =
     Set (1)
   In
-  Let %g4 =
+  Let Ti65.856 =
     Set (0)
   In
-  Let %g3 =
-    CallDir min_caml_create_array %g3 %g4 
+  Let read_float_i.458 =
+    CallDir min_caml_create_array Ti64.855 Ti65.856 
   In
-  Let %g3 =
+  Let Tu1059 =
+    Store read_float_i.458 to %g31[28]
+  In
+  Let Ti66.853 =
     Set (1)
   In
-  Let %g4 =
+  Let Ti67.854 =
     Set (0)
   In
-  Let %g3 =
-    CallDir min_caml_create_array %g3 %g4 
+  Let read_float_f.459 =
+    CallDir min_caml_create_array Ti66.853 Ti67.854 
   In
-  Let %g3 =
+  Let Tu1058 =
+    Store read_float_f.459 to %g31[24]
+  In
+  Let Ti68.851 =
     Set (1)
   In
-  Let %g4 =
+  Let Ti69.852 =
     Set (1)
   In
-  Let %g3 =
-    CallDir min_caml_create_array %g3 %g4 
+  Let read_float_exp.460 =
+    CallDir min_caml_create_array Ti68.851 Ti69.852 
   In
-  Let %g3 =
+  Let Tu1057 =
+    Store read_float_exp.460 to %g31[20]
+  In
+  Let Ti70.849 =
     Set (1)
   In
-  Let %g4 =
+  Let Ti71.850 =
     Set (0)
   In
-  Let %g3 =
-    CallDir min_caml_create_array %g3 %g4 
+  Let read_float_s.461 =
+    CallDir min_caml_create_array Ti70.849 Ti71.850 
   In
-  Let %g3 =
-    Mov (%g2)
+  Let Tu1056 =
+    Store read_float_s.461 to %g31[16]
   In
-  Let %g2 =
-    %g2 + 8
+  Let Ti72.652 =
+    Set (0)
   In
-  Let %g4 =
-    Set (dbl.343)
+  Let l.977 =
+    Set (l.976)
   In
-  Let %g0 =
-    Store %g4 to %g3[0]
+  Let Td73.653 =
+    FLord l.977[0]
   In
-  Let %g4 =
-    Mov (%g2)
+  Let dummy.476 =
+    CallDir min_caml_create_float_array Ti72.652 Td73.653 
   In
-  Let %g2 =
-    %g2 + 8
+  Let Tu1055 =
+    Store dummy.476 to %g31[12]
   In
-  Let %g5 =
-    Set (inc.345)
+  Let Ti74.637 =
+    Set (2)
   In
-  Let %g0 =
-    Store %g5 to %g4[0]
+  Let Ti75.638 =
+    Set (3)
   In
-  Let %g5 =
-    Mov (%g2)
+  Let a.489 =
+    CallDir make.485 Ti74.637 Ti75.638 dummy.476 
   In
-  Let %g2 =
-    %g2 + 8
+  Let Tu1054 =
+    Store a.489 to %g31[8]
   In
-  Let %g6 =
-    Set (dec.347)
+  Let Ti76.635 =
+    Set (3)
   In
-  Let %g0 =
-    Store %g6 to %g5[0]
+  Let Ti77.636 =
+    Set (2)
   In
-  Let Tu699 =
-    Save %g4, inc.345
+  Let b.490 =
+    CallDir make.485 Ti76.635 Ti77.636 dummy.476 
   In
-  Let %g3 =
-    CallDir compose.340 %g3 %g5 
+  Let Tu1053 =
+    Store b.490 to %g31[4]
   In
-  Let %g4 =
-    Restore inc.345
+  Let Ti78.633 =
+    Set (2)
   In
-  Let %g27 =
-    CallDir compose.340 %g4 %g3 
+  Let Ti79.634 =
+    Set (2)
   In
-  Let %g3 =
-    Set (123)
+  Let c.491 =
+    CallDir make.485 Ti78.633 Ti79.634 dummy.476 
   In
-  Let %g3 =
-    CallCls %g27 %g3 
+  Let Tu1052 =
+    Store c.491 to %g31[0]
+  In
+  Let Ti80.632 =
+    Set (0)
+  In
+  Let o.978 =
+    Ti80.632 << 2
+  In
+  Let Ta81.629 =
+    Lord a.489[o.978]
+  In
+  Let Ti82.630 =
+    Set (0)
+  In
+  Let l.981 =
+    Set (l.980)
+  In
+  Let Td83.631 =
+    FLord l.981[0]
+  In
+  Let o.982 =
+    Ti82.630 << 2
+  In
+  Let Tu57.492 =
+    FStore Td83.631 to Ta81.629[o.982]
+  In
+  Let Ti84.628 =
+    Set (0)
+  In
+  Let o.983 =
+    Ti84.628 << 2
+  In
+  Let Ta85.625 =
+    Lord a.489[o.983]
+  In
+  Let Ti86.626 =
+    Set (1)
+  In
+  Let o.985 =
+    Ti86.626 << 2
+  In
+  Let Tu56.493 =
+    FStore Td58.968 to Ta85.625[o.985]
+  In
+  Let Ti88.624 =
+    Set (0)
+  In
+  Let o.986 =
+    Ti88.624 << 2
+  In
+  Let Ta89.621 =
+    Lord a.489[o.986]
+  In
+  Let Ti90.622 =
+    Set (2)
+  In
+  Let l.989 =
+    Set (l.988)
+  In
+  Let Td91.623 =
+    FLord l.989[0]
+  In
+  Let o.990 =
+    Ti90.622 << 2
+  In
+  Let Tu55.494 =
+    FStore Td91.623 to Ta89.621[o.990]
+  In
+  Let Ti92.620 =
+    Set (1)
+  In
+  Let o.991 =
+    Ti92.620 << 2
+  In
+  Let Ta93.617 =
+    Lord a.489[o.991]
+  In
+  Let Ti94.618 =
+    Set (0)
+  In
+  Let l.994 =
+    Set (l.993)
+  In
+  Let Td95.619 =
+    FLord l.994[0]
+  In
+  Let o.995 =
+    Ti94.618 << 2
+  In
+  Let Tu54.495 =
+    FStore Td95.619 to Ta93.617[o.995]
+  In
+  Let Ti96.616 =
+    Set (1)
+  In
+  Let o.996 =
+    Ti96.616 << 2
+  In
+  Let Ta97.613 =
+    Lord a.489[o.996]
+  In
+  Let Ti98.614 =
+    Set (1)
+  In
+  Let l.999 =
+    Set (l.998)
+  In
+  Let Td99.615 =
+    FLord l.999[0]
+  In
+  Let o.1000 =
+    Ti98.614 << 2
+  In
+  Let Tu53.496 =
+    FStore Td99.615 to Ta97.613[o.1000]
+  In
+  Let Ti100.612 =
+    Set (1)
+  In
+  Let o.1001 =
+    Ti100.612 << 2
+  In
+  Let Ta101.609 =
+    Lord a.489[o.1001]
+  In
+  Let Ti102.610 =
+    Set (2)
+  In
+  Let l.1004 =
+    Set (l.1003)
+  In
+  Let Td103.611 =
+    FLord l.1004[0]
+  In
+  Let o.1005 =
+    Ti102.610 << 2
+  In
+  Let Tu52.497 =
+    FStore Td103.611 to Ta101.609[o.1005]
+  In
+  Let Ti104.608 =
+    Set (0)
+  In
+  Let o.1006 =
+    Ti104.608 << 2
+  In
+  Let Ta105.605 =
+    Lord b.490[o.1006]
+  In
+  Let Ti106.606 =
+    Set (0)
+  In
+  Let l.1009 =
+    Set (l.1008)
+  In
+  Let Td107.607 =
+    FLord l.1009[0]
+  In
+  Let o.1010 =
+    Ti106.606 << 2
+  In
+  Let Tu51.498 =
+    FStore Td107.607 to Ta105.605[o.1010]
+  In
+  Let Ti108.604 =
+    Set (0)
+  In
+  Let o.1011 =
+    Ti108.604 << 2
+  In
+  Let Ta109.601 =
+    Lord b.490[o.1011]
+  In
+  Let Ti110.602 =
+    Set (1)
+  In
+  Let l.1014 =
+    Set (l.1013)
+  In
+  Let Td111.603 =
+    FLord l.1014[0]
+  In
+  Let o.1015 =
+    Ti110.602 << 2
+  In
+  Let Tu50.499 =
+    FStore Td111.603 to Ta109.601[o.1015]
+  In
+  Let Ti112.600 =
+    Set (1)
+  In
+  Let o.1016 =
+    Ti112.600 << 2
+  In
+  Let Ta113.597 =
+    Lord b.490[o.1016]
+  In
+  Let Ti114.598 =
+    Set (0)
+  In
+  Let l.1019 =
+    Set (l.1018)
+  In
+  Let Td115.599 =
+    FLord l.1019[0]
+  In
+  Let o.1020 =
+    Ti114.598 << 2
+  In
+  Let Tu49.500 =
+    FStore Td115.599 to Ta113.597[o.1020]
+  In
+  Let Ti116.596 =
+    Set (1)
+  In
+  Let o.1021 =
+    Ti116.596 << 2
+  In
+  Let Ta117.593 =
+    Lord b.490[o.1021]
+  In
+  Let Ti118.594 =
+    Set (1)
+  In
+  Let l.1024 =
+    Set (l.1023)
+  In
+  Let Td119.595 =
+    FLord l.1024[0]
+  In
+  Let o.1025 =
+    Ti118.594 << 2
+  In
+  Let Tu48.501 =
+    FStore Td119.595 to Ta117.593[o.1025]
+  In
+  Let Ti120.592 =
+    Set (2)
+  In
+  Let o.1026 =
+    Ti120.592 << 2
+  In
+  Let Ta121.589 =
+    Lord b.490[o.1026]
+  In
+  Let Ti122.590 =
+    Set (0)
+  In
+  Let l.1029 =
+    Set (l.1028)
+  In
+  Let Td123.591 =
+    FLord l.1029[0]
+  In
+  Let o.1030 =
+    Ti122.590 << 2
+  In
+  Let Tu47.502 =
+    FStore Td123.591 to Ta121.589[o.1030]
+  In
+  Let Ti124.588 =
+    Set (2)
+  In
+  Let o.1031 =
+    Ti124.588 << 2
+  In
+  Let Ta125.585 =
+    Lord b.490[o.1031]
+  In
+  Let Ti126.586 =
+    Set (1)
+  In
+  Let l.1034 =
+    Set (l.1033)
+  In
+  Let Td127.587 =
+    FLord l.1034[0]
+  In
+  Let o.1035 =
+    Ti126.586 << 2
+  In
+  Let Tu46.503 =
+    FStore Td127.587 to Ta125.585[o.1035]
+  In
+  Let Ti128.558 =
+    Set (2)
+  In
+  Let Ti129.559 =
+    Set (3)
+  In
+  Let Ti130.560 =
+    Set (2)
+  In
+  Let Tu45.520 =
+    CallDir mul.516 Ti128.558 Ti129.559 Ti130.560 
+  In
+  Let Ti135.554 =
+    Set (0)
+  In
+  Let o.1036 =
+    Ti135.554 << 2
+  In
+  Let Ta136.552 =
+    Lord c.491[o.1036]
+  In
+  Let Ti137.553 =
+    Set (0)
+  In
+  Let o.1038 =
+    Ti137.553 << 2
+  In
+  Let Td138.551 =
+    FLord Ta136.552[o.1038]
+  In
+  Let Ti139.550 =
+    CallDir min_caml_truncate Td138.551 
+  In
+  Let Tu44.524 =
+    CallDir print_int.474 Ti139.550 
+  In
+  Let Tu140.549 =
+    Nop
+  In
+  Let Tu43.525 =
+    CallDir min_caml_print_newline 
+  In
+  Let Ti141.548 =
+    Set (0)
+  In
+  Let o.1040 =
+    Ti141.548 << 2
+  In
+  Let Ta142.546 =
+    Lord c.491[o.1040]
+  In
+  Let Ti143.547 =
+    Set (1)
+  In
+  Let o.1042 =
+    Ti143.547 << 2
+  In
+  Let Td144.545 =
+    FLord Ta142.546[o.1042]
+  In
+  Let Ti145.544 =
+    CallDir min_caml_truncate Td144.545 
+  In
+  Let Tu42.526 =
+    CallDir print_int.474 Ti145.544 
+  In
+  Let Tu41.527 =
+    CallDir min_caml_print_newline 
+  In
+  Let Ti147.542 =
+    Set (1)
+  In
+  Let o.1044 =
+    Ti147.542 << 2
+  In
+  Let Ta148.540 =
+    Lord c.491[o.1044]
+  In
+  Let Ti149.541 =
+    Set (0)
+  In
+  Let o.1046 =
+    Ti149.541 << 2
+  In
+  Let Td150.539 =
+    FLord Ta148.540[o.1046]
+  In
+  Let Ti151.538 =
+    CallDir min_caml_truncate Td150.539 
+  In
+  Let Tu40.528 =
+    CallDir print_int.474 Ti151.538 
+  In
+  Let Tu39.529 =
+    CallDir min_caml_print_newline 
+  In
+  Let Ti153.536 =
+    Set (1)
+  In
+  Let o.1048 =
+    Ti153.536 << 2
+  In
+  Let Ta154.534 =
+    Lord c.491[o.1048]
+  In
+  Let Ti155.535 =
+    Set (1)
+  In
+  Let o.1050 =
+    Ti155.535 << 2
+  In
+  Let Td156.533 =
+    FLord Ta154.534[o.1050]
+  In
+  Let Ti157.532 =
+    CallDir min_caml_truncate Td156.533 
+  In
+  Let Tu38.530 =
+    CallDir print_int.474 Ti157.532 
   In
   Ans (
-    CallDir print_int.338 %g3 
+    CallDir min_caml_print_newline 
   )
-div_binary_search.333::
-print_int.338::
-composed.355::
-compose.340::
-dbl.343::
-inc.345::
-dec.347::
-output files : test/funcomp.s
+
+div_binary_search.469
+	args: %g3, %g4, %g5, %g6, 
+	fargs: 
+	use_regs: %g3, %g4, %g5, %g6, %g7, %g8, %g9, 
+print_int.474
+	args: %g3, 
+	fargs: 
+	use_regs: %dummy, %g0, %g10, %g11, %g3, %g4, %g5, %g6, %g7, %g8, %g9, 
+init.477
+	args: %g3, %g4, %g5, 
+	fargs: 
+	use_regs: %dummy, %f0, %g0, %g2, %g3, %g4, %g5, %g6, 
+make.485
+	args: %g3, %g4, %g5, 
+	fargs: 
+	use_regs: %dummy, %f0, %g0, %g2, %g3, %g4, %g5, %g6, 
+loop3.504
+	args: %g3, %g4, %g5, 
+	fargs: 
+	use_regs: %dummy, %f0, %f1, %f2, %g0, %g3, %g4, %g5, %g6, %g7, %g8, %g9, 
+loop2.508
+	args: %g3, %g4, %g5, 
+	fargs: 
+	use_regs: %dummy, %f0, %f1, %f2, %g0, %g10, %g3, %g4, %g5, %g6, %g7, %g8, %g9, 
+loop1.512
+	args: %g3, %g4, %g5, 
+	fargs: 
+	use_regs: %dummy, %f0, %f1, %f2, %g0, %g10, %g11, %g3, %g4, %g5, %g6, %g7, %g8, %g9, 
+mul.516
+	args: %g3, %g4, %g5, 
+	fargs: 
+	use_regs: %dummy, %f0, %f1, %f2, %g0, %g10, %g11, %g3, %g4, %g5, %g6, %g7, %g8, %g9, 
+main
+output files : test/matmul-flat.s
 input files : lib/lib_asm.s tmp.s 
 .init_heap_size	192 => 192
-.init_heap_size	0 => 0
-.init_heap_size	192
+.init_heap_size	416 => 416
+.init_heap_size	608
 
 		skip

@@ -34,7 +34,8 @@ let rec g env = function (* α変換ルーチン本体 (caml2html: alpha_g) *)
       Let((x', t), g env e1, g (M.add x x' env) e2)
   | Var(x) -> Var(find x env)
   | LetRec({ name = (x, t); args = yts; body = e1 }, e2) -> (* let recのα変換 (caml2html: alpha_letrec) *)
-      let env = M.add x (Id.genid x) env in
+      let x' = Id.genid x in
+      let env = M.add x x' env in
       let ys = List.map fst yts in
       let env' = M.add_list2 ys (List.map Id.genid ys) env in
       LetRec({ name = (find x env, t);
@@ -45,7 +46,13 @@ let rec g env = function (* α変換ルーチン本体 (caml2html: alpha_g) *)
   | Tuple(xs) -> Tuple(List.map (fun x -> find x env) xs)
   | LetTuple(xts, y, e) -> (* LetTupleのα変換 (caml2html: alpha_lettuple) *)
       let xs = List.map fst xts in
-      let env' = M.add_list2 xs (List.map Id.genid xs) env in
+      let env' = M.add_list2 xs (List.map 
+      								(fun (x, t) -> 
+      									let x' = Id.genid x in
+									    x'
+      								)
+      								xts)
+      							env in
       LetTuple(List.map (fun (x, t) -> (find x env', t)) xts,
 	       find y env,
 	       g env' e)

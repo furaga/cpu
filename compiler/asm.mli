@@ -69,7 +69,7 @@ val reg_m1 : Id.t	(* ¾ï¤Ë-£± *)
 val reg_cl : Id.t
 val reg_sw : Id.t
 val reg_fsw : Id.t
-val reg_ra : Id.t
+val reg_bottom : Id.t
 val reg_hp : Id.t
 val reg_sp : Id.t
 val reg_fgs : Id.t list

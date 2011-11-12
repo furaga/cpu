@@ -159,5 +159,7 @@ let f e =
   extenv := M.empty;
   (* 型検査はしてない *)
   ignore(g M.empty e);
+  print_newline ();
+  print_newline ();
   extenv := M.map deref_typ !extenv;
   deref_term e

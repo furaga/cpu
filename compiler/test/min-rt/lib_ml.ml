@@ -59,10 +59,14 @@ in
 
 (* sin *)
 let rec sin_sub x = 
+	let pi2 = pi *. 2.0 in
 	if x > pi2 then sin_sub (x -. pi2)
 	else if x < 0.0 then sin_sub (x +. pi2)
 	else x in
 let rec sin x =
+	let pi = 3.14159265358979323846264 in
+	let pi2 = pi *. 2.0 in
+	let pih = pi *. 0.5 in
 	(* tan *)
 	let s1 = x > 0.0 in
 	let x0 = fabs x in
@@ -75,7 +79,9 @@ let rec sin x =
 	if s2 then ans else fneg ans in
 
 (* cos *)
-let rec cos x = sin (pih -. x) in
+let rec cos x = 
+	let pih = pi *. 0.5 in
+	sin (pih -. x) in
 
 (* create_array系はコンパイル時にコードを生成。compiler/emit.ml参照 *)
 let rec mul10 x = x * 8 + x * 2 in
@@ -99,7 +105,7 @@ let rec read_int_token in_token prev =
 			());
 		read_int_ans.(0) <- mul10 read_int_ans.(0) + (c - 48);
 		read_int_token true c) in
-let rec read_int _ =
+let rec read_int _ = 
 	read_int_ans.(0) <- 0;
 	read_int_s.(0) <- 0;
 	read_int_token false 32 in
@@ -138,7 +144,7 @@ let rec read_float_token2 in_token =
 		(read_float_f.(0) <- mul10 read_float_f.(0) + (c - 48);
 		read_float_exp.(0) <- mul10 read_float_exp.(0);
 		read_float_token2 true) in
-let rec read_float _ =
+let rec read_float _ = 
 	read_float_i.(0) <- 0;
 	read_float_f.(0) <- 0;
 	read_float_exp.(0) <- 1;

@@ -1,5 +1,6 @@
 type t = string (* 変数の名前 (caml2html: id_t) *)
 type l = L of string (* トップレベル関数やグローバル配列のラベル (caml2html: id_l) *)
+type id_or_imm = V of t | C of int
 
 let rec pp_list = function
   | [] -> ""

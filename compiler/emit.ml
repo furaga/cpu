@@ -3,6 +3,9 @@ open Asm
 external gethi : float -> int32 = "gethi"
 external getlo : float -> int32 = "getlo"
 
+let global_vars = ref M.empty
+let global_flg = ref true
+
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
 let save x =
@@ -134,17 +137,41 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   (* 退避の仮想命令の実装 (caml2html: emit_save) *)
   | NonTail(_), Save(x, y) when List.mem x allregs && not (S.mem y !stackset) ->
       save y;
-      Printf.fprintf oc "\tst\t%s, %s, %d\n" x reg_sp (offset y)
+      let offset = offset y in
+(*	  let ch = int_of_char y.[0] in
+	  if !global_flg && int_of_char 'a' <= ch && ch <= int_of_char 'z' && M.mem y !GlobalEnv.env && not (M.mem y !global_vars) then
+		(Printf.printf "\t\tsavei global_var %s\n" y;
+		global_vars := M.add y offset !global_vars;
+ 	  	Printf.fprintf oc "\tst\t%s, %s, %d\n" x reg_bottom offset)
+	  else*)
+	  	Printf.fprintf oc "\tst\t%s, %s, %d\n" x reg_sp offset
   | NonTail(_), Save(x, y) when List.mem x allfregs && not (S.mem y !stackset) ->
       savef y;
-      Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_sp (offset y)
-  | NonTail(_), Save(x, y) -> assert (S.mem y !stackset); ()
+      let offset = offset y in
+(*	  let ch = int_of_char y.[0] in
+	  if !global_flg && int_of_char 'a' <= ch && ch <= int_of_char 'z' && M.mem y !GlobalEnv.env && not (M.mem y !global_vars) then
+		(Printf.printf "\t\tsavef global_var %s\n" y;
+		global_vars := M.add y offset !global_vars;
+ 	  	Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_bottom offset)
+	  else*)
+	  	Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_sp offset
+  | NonTail(_), Save(x, y) -> assert (S.mem y !stackset || M.mem y !global_vars); () (* すでにyがセーブされている場合 *)
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
   | NonTail(x), Restore(y) when List.mem x allregs ->
+(*	if M.mem y !global_vars then
+  	  (Printf.printf "\t%s <- Restore1 %s\n" x y; flush stdout;
+      Printf.fprintf oc "\tld\t%s, %s, %d\n" x reg_bottom (M.find y !global_vars))
+	else*)
       Printf.fprintf oc "\tld\t%s, %s, %d\n" x reg_sp (offset y)
+
   | NonTail(x), Restore(y) ->
       assert (List.mem x allfregs);
+(*	if M.mem y !global_vars then
+	  (Printf.printf "\t%s <- Restore2 %s\n" x y; flush stdout;
+      Printf.fprintf oc "\tfld\t%s, %s, %d\n" x reg_bottom (M.find y !global_vars))
+	else*)
       Printf.fprintf oc "\tfld\t%s, %s, %d\n" x reg_sp (offset y)
+      
   (* 末尾だったら計算結果を第一レジスタにセットしてret (caml2html: emit_tailret) *)
   | Tail, (Nop | St _ | StDF _ | Comment _ | Save _ as exp) ->
       g' oc (NonTail(Id.gentmp Type.Unit), exp);
@@ -408,8 +435,7 @@ and g'_args oc x_reg_cl ys zs =
 
 let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
   Printf.fprintf oc "%s:\n" x;
-  Printf.printf "%s::\n" x;
-  flush stderr;
+(*  Printf.printf "%s\n" x; flush stdout;*)
   stackset := S.empty;
   stackmap := [];
   g oc (Tail, e)
@@ -439,15 +465,24 @@ let f oc (Prog(data, fundefs, e)) =
 		end)
     data;
   Printf.fprintf oc "\tjmp\tmin_caml_start\n";
-  List.iter (fun fundef -> h oc fundef) fundefs;
+
   Printf.fprintf oc "min_caml_start:\n";
   stackset := S.empty;
   stackmap := [];
 
-  (* reg_p1, reg_m1の初期化 *)  
+  (* %g31はスタックの底を指す *)
+  Printf.fprintf oc "\tmov\t%s, %s\n" reg_bottom reg_sp;
+  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp (!Virtual.global_cnt + 4);
+
+  (* reg_p1, reg_m1の初期化 *)
   Printf.fprintf oc "\taddi\t%s, %s, 1\n" reg_p1 reg_0;
   Printf.fprintf oc "\taddi\t%s, %s, -1\n" reg_m1 reg_0;
-  
   g oc (NonTail("%g0"), e);
   Printf.fprintf oc "\thalt\n";
-    
+
+  global_flg := false;
+
+  List.iter (fun fundef -> h oc fundef) fundefs;
+
+  M.iter (Printf.printf "GLOBAL : %s %d\n") !global_vars;
+

@@ -127,7 +127,7 @@ exp: /* ∞Ï»Ã§Œº∞ (caml2html: parser_exp) */
 | exp AST exp
     { if is_log2_exp $3 then get_syntax (sll_of_mul $1 $3) else get_syntax (Mul($1, $3)) }
 | exp SLASH exp
-    { if (print_endline "\n\thello\n\n"; is_log2_exp $3) then get_syntax (sll_of_div $1 $3) else assert false(*get_syntax (Div($1, $3))*) }
+    { if is_log2_exp $3 then get_syntax (sll_of_div $1 $3) else assert false(*get_syntax (Div($1, $3))*) }
 | exp EQUAL exp
     { get_syntax (Eq($1, $3)) }
 | exp LESS_GREATER exp

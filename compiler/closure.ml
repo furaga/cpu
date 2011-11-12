@@ -57,7 +57,7 @@ let rec fv = function
   | AppDir(_, xs) | Tuple(xs) -> S.of_list xs
   | LetTuple(xts, y, e) -> S.add y (S.diff (fv e) (S.of_list (List.map fst xts)))
   | Put(x, y, z) -> S.of_list [x; y; z]
-
+  
 let toplevel : fundef list ref = ref []
 
 let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure_g) *)
@@ -92,35 +92,50 @@ let rec g env known = function (* クロージャ変換ルーチン本体 (caml2html: closure
 	(* 関数定義let rec x y1 ... yn = e1 in e2の場合は、
 	xに自由変数がない(closureを介さずdirectに呼び出せる)
 	と仮定し、knownに追加してe1をクロージャ変換してみる *)
+	
+(*	Printf.printf "LetRec %s\n" x;*)
+
 	let toplevel_backup = !toplevel in
 	let env' = M.add x t env in
 	let known' = S.add x known in
 	let e1' = g (M.add_list yts env') known' e1 in
+
 	(* 本当に自由変数がなかったか、変換結果e1'を確認する *)
 	(* 注意: e1'にx自身が変数として出現する場合はclosureが必要!
 	(thanks to nuevo-namasute and azounoman; test/cls-bug2.ml参照) *)
 	let zs = S.diff (fv e1') (S.of_list (List.map fst yts)) in
+
+	(* GlobalEnv.envはグローバル変数の集合 *)
+	let zs = S.filter (fun x -> not (M.mem x !GlobalEnv.env)) zs in
+
 	let known', e1' =
 		if S.is_empty zs then known', e1' else
 			(* 駄目だったら状態(toplevelの値)を戻して、クロージャ変換をやり直す *)
-			(Format.eprintf "free variable(s) %s found in function %s@." (Id.pp_list (S.elements zs)) x;
-			Format.eprintf "function %s cannot be directly applied in fact@." x;
+			((*Format.eprintf "free variable(s) %s found in function %s@." (Id.pp_list (S.elements zs)) x;
+			Format.eprintf "function %s cannot be directly applied in fact@." x;*)
 			toplevel := toplevel_backup;
 			let e1' = g (M.add_list yts env') known e1 in
 			known, e1') in
+
 	let zs = S.elements (S.diff (fv e1') (S.add x (S.of_list (List.map fst yts)))) in (* 自由変数のリスト *)
+
+	let zs = List.filter (fun x -> not (M.mem x !GlobalEnv.env)) zs in
+
 	let zts = List.map (fun z -> (z, M.find z env')) zs in (* ここで自由変数zの型を引くために引数envが必要 *)
 	toplevel := { name = (Id.L(x), t); args = yts; formal_fv = zts; body = e1' } :: !toplevel; (* トップレベル関数を追加 *)
 	let e2' = g env' known' e2 in
 	if S.mem x (fv e2') then (* xが変数としてe2'に出現するか *)
+		(
+		Printf.printf "\tMakeCls %s\n" x;
 		MakeCls((x, t), { entry = Id.L(x); actual_fv = zs }, e2') (* 出現していたら削除しない *)
+		)
 	else
-		(Format.eprintf "eliminating closure(s) %s@." x;
+		((*Format.eprintf "eliminating closure(s) %s@." x;*)
 		e2') (* 出現しなければMakeClsを削除 *)
   | KNormal.App(x, ys) when S.mem x known -> (* 関数適用の場合 (caml2html: closure_app) *)
-      Format.eprintf "directly applying %s@." x;
+      (*Format.eprintf "directly applying %s@." x;*)
       AppDir(Id.L(x), ys)
-  | KNormal.App(f, xs) -> (exist_cls := true; AppCls(f, xs))
+  | KNormal.App(f, xs) -> (exist_cls := true; Printf.printf "\tAppCls %s\n" f; AppCls(f, xs))
   | KNormal.Tuple(xs) -> Tuple(xs)
   | KNormal.LetTuple(xts, y, e) -> LetTuple(xts, y, g (M.add_list xts env) known e)
   | KNormal.Get(x, y) -> Get(x, y)
@@ -182,7 +197,7 @@ let rec print n = function
 	| MakeCls ((id, typ), cls, e) ->
 		begin
 			indent n;
-			Printf.printf "Fun %s " id; Type.print typ;
+			Printf.printf "MakeCls %s " id; Type.print typ;
 			Printf.printf "| %s (" ((fun (Id.L x) -> x) cls.entry);
 			List.iter (fun x -> Printf.printf "%s " x) cls.actual_fv;
 			Printf.printf ") =\n";
@@ -198,7 +213,7 @@ let rec print n = function
 	| AppDir (Id.L f, args) ->
 		begin
 			indent n;
-			Printf.printf "AppClosure %s (" f;
+			Printf.printf "AppDir %s (" f;
 			List.iter (fun x -> Printf.printf "%s " x) args;
 			Printf.printf ")\n";
 		end
@@ -251,19 +266,19 @@ and print_prog n (Prog (fs, e)) =
 
 let f flg e =
 	toplevel := [];
-	let e' = g M.empty S.empty e in
+	let e' = g M.empty (S.of_list ["floor"; "ceil"; "float_of_int"; "int_of_float"; "truncate"; "create_array"; "create_float_array"; "print_char"; "print_newline"; "print_newline"; "write"; "sqrt"; "read_char"; "input_char"]) e in
 	let program = Prog(List.rev !toplevel, e') in
 	if (*flg*) true then
 		begin
 (*			print_endline "Print KNormal_t(Closure.ml):";
-			KNormal.print 1 e;
+			KNormal.print 0 e;
 			print_newline();
 
 			print_endline "Print Closure_t(Closure.ml):";
-			print_prog 1 program;
-			print_newline();*)
-			
-			(if !exist_cls then print_endline "CLOSURE EXISTS");
+			print_prog 0 program;
+			print_newline();
+*)			
+			(if !exist_cls then print_endline "CLOSURE EXISTS" else print_endline "CLOSURE NOT EXISTS");
 			
 			flush stdout;
 		end;

@@ -4,6 +4,19 @@ open Asm
 
 let data = ref [] (* 浮動小数点数の定数テーブル (caml2html: virtual_data) *)
 
+let global_cnt = ref 0
+
+let global_offset = ref M.empty
+
+let set_global_offset x =
+	global_offset := M.add x !global_cnt !global_offset;
+	global_cnt := 4 + !global_cnt;
+	!global_cnt - 4
+	
+let get_global_offset x = try M.find x !global_offset with Not_found -> assert false
+
+let is_global x = int_of_char 'a' <= int_of_char x.[0] && int_of_char x.[0] <= int_of_char 'z' && M.mem x !GlobalEnv.env
+
 let classify xts ini addf addi =
   List.fold_left
     (fun acc (x, t) ->
@@ -88,6 +101,19 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       | _ -> failwith "equality supported only for bool and int")
   | Closure.IfLE(Closure.C x, Closure.C y, e1, e2) -> (print_endline "ifeq (C x, C y)はありえません"; assert false)
 
+  | Closure.Let((x, t1), e1, e2) when t1 <> Type.Unit && is_global x ->
+(*  	  Printf.printf "CLOSURE_LET: %s\n" x;*)
+      let e1' = g env e1 in
+      let e2' = g (M.add x t1 env) e2 in
+      let st =
+      	match t1 with
+      		| Type.Unit -> assert false
+      		| Type.Float -> Ans (StDF (x, reg_bottom, C (set_global_offset x)))
+      		| _ -> Ans (St (x, reg_bottom, C (set_global_offset x))) in
+      concat
+      	(concat e1' (x, t1) st)
+      	(Id.gentmp Type.Unit, Type.Unit)
+      	e2'
   | Closure.Let((x, t1), e1, e2) ->
       let e1' = g env e1 in
       let e2' = g (M.add x t1 env) e2 in
@@ -129,6 +155,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       Let((y, Type.Tuple(List.map (fun x -> M.find x env) xs)), Mov(reg_hp),
 		  Let((reg_hp, Type.Int), Add(reg_hp, C(align offset)),
 			  store))
+
   | Closure.LetTuple(xts, y, e2) ->
       let s = Closure.fv e2 in
       let (offset, load) =
@@ -137,10 +164,12 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
 	  (0, g (M.add_list xts env) e2)
 	  (fun x offset load ->
 	    if not (S.mem x s) then load else (* [XX] a little ad hoc optimization TODO*)
-	    fletd(x, LdDF(y, C(-offset)), load))
+	    ((*Printf.printf "LetTupleF offset = %d (GLOBAL: %s)\n" (-offset) (string_of_bool (is_global x));*)
+	    fletd(x, LdDF(y, C(-offset)), load)))
 	  (fun x t offset load ->
 	    if not (S.mem x s) then load else (* [XX] a little ad hoc optimization TODO*)
-	    Let((x, t), Ld(y, C(-offset)), load)) in
+	    ((*Printf.printf "LetTupleI offset = %d (GLOBAL: %s)\n" (-offset) (string_of_bool (is_global x));*)
+	    Let((x, t), Ld(y, C(-offset)), load))) in
       load
   | Closure.Get(x, y) -> (* 配列の読み出し (caml2html: virtual_get) *)
       let offset = Id.genid "o" in
@@ -169,12 +198,19 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
 
 (* 関数の仮想マシンコード生成 (caml2html: virtual_h) *)
 let h { Closure.name = (Id.L x, t); Closure.args = yts; Closure.formal_fv = zts; Closure.body = e } =
+(*	print_endline x;*)
+
 	let (int, float) = separate yts in
 	let (offset, load) = expand
 							zts
-							(4, g (M.add x t (M.add_list yts (M.add_list zts M.empty))) e)
-							(fun z offset load -> fletd(z, LdDF(reg_cl, C(-offset)), load)) (* TODO *)
-							(fun z t offset load -> Let((z, t), Ld(reg_cl, C(-offset)), load)) (* TODO *) in
+							(4, g (M.add x t (M.add_list yts (M.add_list zts (*M.empty*)!GlobalEnv.env))) e)
+							(fun z offset load -> fletd(z, LdDF(reg_cl, C(-offset)), load))
+							(fun z t offset load -> Let((z, t), Ld(reg_cl, C(-offset)), load)) in
+	let (offset, load) = expand
+							(List.fold_left (fun ls x -> if is_global x then (x, M.find x !GlobalEnv.env) :: ls else ls) [] (fv load))
+							(0, load)
+							(fun z offset load -> fletd(z, LdDF(reg_bottom, C(get_global_offset z)), load))
+							(fun z t offset load -> Let((z, t), Ld(reg_bottom, C(get_global_offset z)), load)) in
 	(* xの引数ytsに適当にレジスタを割り振っていく *)
 	let (_, _, _, rs, frs) = List.fold_left
 							(fun (iregs, fregs, xs, rs, frs) (x, t) -> match t with
@@ -205,10 +241,10 @@ let f flg (Closure.Prog(fundefs, e)) =
 						()
 					| _ -> ()
 				) !Typing.extenv;
+	let e = g (*M.empty*)!GlobalEnv.env e in
 	let fundefs = List.map h fundefs in
-	let e = g M.empty e in
 	let program = Prog(!data, fundefs, e) in
-	if flg then
+	if false then
 		begin
 			print_endline "Print Asm_t(Virtual.ml):";
 			Asm.print_prog 1 program;

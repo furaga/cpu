@@ -32,8 +32,8 @@ let find_simple_if x env =
 
 let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 	| Var(x) when memi x env -> Int(findi x env)
-	(* | Var(x) when memf x env -> Float(findf x env) *)
-	(* | Var(x) when memt x env -> Tuple(findt x env) *)
+(*	| Var(x) when memf x env -> Float(findf x env)
+	| Var(x) when memt x env -> Tuple(findt x env)*)
 	| Neg(x) when memi x env -> Int(-(findi x env))
 
 	| Add(x, y) when memi x env && memi y env -> Int(findi x env + findi y env) (* 足し算のケース (caml2html: constfold_add) *)
@@ -157,6 +157,13 @@ let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 			xts
 			(findt y env)
 	| LetTuple(xts, y, e) -> LetTuple(xts, y, g env e)
+	(*
+	| App ("sqrt", [x]) when memf x env -> Float (sqrt (findf x env))
+	| App ("sin", [x]) when memf x env -> Float (sin (findf x env))
+	| App ("cos", [x]) when memf x env -> Float (cos (findf x env))
+	| App ("tan", [x]) when memf x env -> Float (tan (findf x env))
+	| App ("atan", [x]) when memf x env -> Float (atan (findf x env))
+	*)
 	| e -> e
 
 let f = g M.empty

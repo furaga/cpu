@@ -35,11 +35,12 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 				(Sglobal.f
 					(Virtual.f !print_flg
 						(Closure.f !print_flg
-							(iter !limit
-								(Alpha.f !print_flg
-									(KNormal.f !print_flg
-										(Typing.f
-											(Parser.exp Lexer.token l))))))))))
+							(GlobalEnv.f (* グローバル変数を取得 *)
+								(iter !limit
+									(Alpha.f !print_flg
+										(KNormal.f !print_flg
+											(Typing.f
+												(Parser.exp Lexer.token l)))))))))))
 
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 

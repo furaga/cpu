@@ -94,6 +94,10 @@ let add x r regenv =
   if is_reg x then (assert (x = r); regenv) else
   M.add x r regenv
 
+let a_ch = int_of_char 'a'
+let z_ch = int_of_char 'z'
+let save_flg = ref false
+
 (* auxiliary functions for g' *)
 exception NoReg of Id.t * Type.t
 let find x t regenv =
@@ -105,10 +109,21 @@ let find' x' regenv =
   | V(x) -> V(find x Type.Int regenv)
   | c -> c
 
+let is_global x exp =
+	if not !save_flg then false
+	else if int_of_char x.[0] < a_ch then false
+	else if int_of_char x.[0] > z_ch then false
+	else if not (M.mem x !GlobalEnv.env) then false
+	else
+		(match exp with
+			| Restore y when x = y -> false
+			| _ -> true) 
+
 let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (caml2html: regalloc_g) *)
   | Forget(id, t) -> assert false
   | Ans(exp) -> g'_and_restore dest cont regenv exp
   | Let((x, t) as xt, exp, e) ->
+(*      print_endline x; flush stdout;*)
       assert (not (M.mem x regenv));
       let cont' = concat e dest cont in
       let (e1', regenv1) = g'_and_restore xt cont' regenv exp in
@@ -126,7 +141,7 @@ let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (c
 and g'_and_restore dest cont regenv exp = (* 使用される変数をスタックからレジスタへRestore (caml2html: regalloc_unspill) *)
   try g' dest cont regenv exp
   with NoReg(x, t) ->
-    ((* Format.eprintf "restoring %s@." x; *)
+    ( (*Format.eprintf "restoring %s@." x;*)
      g dest cont regenv (Let((x, t), Restore(x), Ans(exp))))
 and g' dest cont regenv = function (* 各命令のレジスタ割り当て (caml2html: regalloc_gprime) *)
   | Nop | Set _ | SetL _ | Comment _ | Restore _ as exp -> (Ans(exp), regenv)
@@ -180,41 +195,46 @@ and g'_if dest cont regenv exp constr e1 e2 = (* ifのレジスタ割り当て (
 and g'_call id dest cont regenv exp constr ys zs = (* 関数呼び出しのレジスタ割り当て (caml2html: regalloc_call) *)
 	(List.fold_left
 		(fun (e, env) x ->
-			Printf.printf "\t(%s, %s)\n" x (if M.mem x regenv then M.find x regenv else "");
-			if x = fst dest || not (M.mem x regenv) then
+		(*	Printf.printf "\t(%s, %s)\n" x (if M.mem x regenv then M.find x regenv else "");
+		*)	if x = fst dest || not (M.mem x regenv) then (* 返り値と同じレジスタ/まだ登録されていない変数は退避しない *)
 				(e, env)
-			else if not (S.mem (M.find x regenv) (Asm.get_use_regs id)) then
-				(e, M.add x (M.find x regenv) env)
+			else if S.mem (M.find x regenv) (Asm.get_use_regs id) then (* 登録されてはいるが退避しなくてもいいレジスタ *)
+				(seq (Save (M.find x regenv, x), e), env)
 			else
-				(seq (Save (M.find x regenv, x), e), env))
-
+				(e, M.add x (M.find x regenv) env))
 		(Ans (constr
 				(List.map (fun y -> find y Type.Int regenv) ys)
 				(List.map (fun z -> find z Type.Float regenv) zs)), M.empty)
-		(fv cont)(*,
-	M.empty*)
+		(fv cont)
 	)
 
 (* 式の中で適用される各関数で使用されるレジスタの集合を返す。tailは関数の末尾かどうか *)
-let rec get_use_regs id tail = function
-	| Ans e -> get_use_regs' id tail e
+let rec get_use_regs id = function
+	| Ans e -> get_use_regs' id e
 	| Let ((x, _), e, t) ->
 		S.add
 			x
 			(S.union
-				(get_use_regs' id false e) (* eはlet x = e in tのeの部分なので当然末尾ではない *)
-				(get_use_regs id tail t))
-	| Forget (x, e) -> S.add x (get_use_regs id tail e)
+				(get_use_regs' id e) (* eはlet x = e in tのeの部分なので当然末尾ではない *)
+				(get_use_regs id t))
+	| Forget (x, e) -> S.add x (get_use_regs id e)
 
-and get_use_regs' id tail = function
-	| IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) | IfGE(_, _, e1, e2) | IfFEq(_, _, e1, e2) | IfLE(_, _, e1, e2) -> S.union (get_use_regs id tail e1) (get_use_regs id tail e2)
-	| CallDir(Id.L x, ys, zs) | CallCls(x, ys, zs) when ((is_reg x && x <> reg_cl) || x <> id) -> Asm.get_use_regs x
-	| SetL (Id.L x) when x <> id -> Asm.get_use_regs x
-	| _ -> S.empty
+and get_use_regs' id = function
+	| IfEq(_, _, e1, e2) | IfLE(_, _, e1, e2) | IfGE(_, _, e1, e2) | IfFEq(_, _, e1, e2) | IfFLE(_, _, e1, e2) -> S.union (get_use_regs id e1) (get_use_regs id e2)
+	| CallDir(Id.L x, ys, zs) when is_reg x -> assert false	(* ラベル名がレジスタとかありえない *)
+	| CallDir(Id.L x, ys, zs) when x = id -> S.empty			(* 自分自身なら得られる情報がないのでS.empty *)
+	| CallDir(Id.L x, ys, zs) -> Asm.get_use_regs x			(* 登録された情報を参照 *)
+	| CallCls(x, ys, zs) when is_reg x && x <> reg_cl -> S.of_list (allregs @ allfregs)	(* 自分以外を指すレジスタなら全部のレジスタを退避すべき *)
+	| CallCls(x, ys, zs) when x = reg_cl || x = id -> S.empty	(* 自分自身なら得られる情報がないのでS.empty *)
+	| CallCls(x, ys, zs) -> Asm.get_use_regs x					(* 登録された情報を参照 *)
+	| SetL (Id.L x) when String.sub x 0 2 = "l." -> S.empty	(* 浮動小数テーブルのラベルなので無視 *)
+	| SetL (Id.L x) when x = id -> S.empty						(* 自分自身なら得られる情報がないのでS.empty *)
+	| SetL (Id.L x) -> Asm.get_use_regs x						(* 登録された情報を参照 *)
+	| _ -> S.empty												(* それ以外の式に現れるレジスタは退避しなくてもいい *)
 	
 let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数のレジスタ割り当て (caml2html: regalloc_h) *)
-	Printf.printf "[%s]\n" x;
-	(* すべての関数はvirtual.mlでfundataに登録されているはず *)
+	(*Printf.printf "[%s]\n" x;
+	*)(* すべての関数はvirtual.mlでfundataに登録されているはず *)
 	let data =
 		if M.mem x !fundata then
 			M.find x !fundata
@@ -232,19 +252,23 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数�
 	let (e', _) = g (data.ret_reg, t) cont regenv e in
 	
 	(* use_regsを正しい値にする。（この時点では allregs @ allfregs がuse_regsに入っている） *)
-	(* 正しい値とは、e'の中で使用されるレジスタ＋返り値を入れるレジスタ（%g3または%f0） *)
-	let data = { data with use_regs = S.add reg_cl S.empty } in
+	(* 正しい値とは、e'の中で使用されるレジスタ＋返り値+引数（%g3または%f0） *)
 	fundata := M.add x data !fundata;
-	let env = S.add data.ret_reg (get_use_regs x true e') in
+	let env = S.union (S.of_list data.arg_regs) (S.add data.ret_reg (get_use_regs x e')) in
+	let env = S.filter is_reg env in
+	let env = S.union (S.of_list [reg_sw; reg_fsw; reg_cl]) env in
+	
 	let data = { data with use_regs = env} in
 	fundata := M.add x data !fundata;
 
 	(* レジスタ割り当てを済ませたのでその結果をhの返り値とする *)
-	print_endline x;
+(*	print_endline x;
 	print_string "\targs: "; List.iter (fun x -> print_string (x ^ ", ")) (List.filter (fun x -> List.mem x allregs) data.arg_regs); print_newline ();
 	print_string "\tfargs: "; List.iter (fun x -> print_string (x ^ ", ")) (List.filter (fun x -> List.mem x allfregs) data.arg_regs); print_newline ();
+	print_string "\tret: "; print_endline data.ret_reg;
 	print_string "\tuse_regs: "; S.iter (fun x -> print_string (x ^ ", ")) data.use_regs; print_newline (); flush stdout;
-	{ 	name = Id.L x;
+	Asm.print 0 e';
+*)	{ 	name = Id.L x;
 		args = List.filter (fun x -> List.mem x allregs) data.arg_regs;
 		fargs = List.filter (fun x -> List.mem x allfregs) data.arg_regs;
 		body = e'; 
@@ -279,7 +303,12 @@ let f (Prog(data, fundefs, e)) = (* プログラム全体のレジスタ割り�
 	Format.eprintf "register allocation: may take some time (up to a few minutes, depending on the size of functions)@.";
 (*	let fundefs' = List.map h (sort fundefs S.empty) in*)
 	let fundefs' = List.map h fundefs in
+	print_endline "main";
+	
+	save_flg := true;
+(*	Asm.print_prog 1 (Prog(data, fundefs, e));*)
+	
 	let e', regenv' = g (Id.gentmp Type.Unit, Type.Unit) (Ans(Nop)) M.empty e in
 	let ans = Prog (data, fundefs', e') in
-	Asm.print_prog 1 ans;
+(*	Asm.print_prog 1 ans;*)
 	ans
