@@ -10,6 +10,7 @@ int operate(uint32_t ir) {
 	} a, b, ans;
 	uint8_t opcode = get_opcode(ir);
 	uint8_t funct = get_funct(ir);
+	static unsigned reg_cnt[64];
 		switch(opcode){
 			case LD:
 				IF0_BREAK_S

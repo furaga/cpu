@@ -11,6 +11,7 @@
 .equ SYS_write,     1
 .equ SYS_exit,     60
 
+.align 16
 Exit:
 	xorl	%edi, %edi
 	movl	$60, %eax
@@ -21,6 +22,7 @@ Exit:
 #   rdx : no. of characters
 #   rdi : file descriptor
 #   destroyed : rax
+.align 16
 PrintCharN:
                 pushq    %rcx
                 pushq    %rsi
@@ -40,6 +42,7 @@ PrintCharN:
 #------------------------------------
 # print 1 character to stdout
 # rax : put char
+.align 16
 OutChar:
                 pushq    %rdx
                 xorl    %edx, %edx
@@ -52,6 +55,7 @@ OutChar:
 # print n characters in rax to stdout
 #   rdx : no. of characters
 #   destroyed : rax
+.align 16
 OutCharN:
 				pushq	%rdi
 				xorl	%edi, %edi
@@ -64,6 +68,7 @@ OutCharN:
 #------------------------------------
 # print 1 character to stderr
 # rax : put char
+.align 16
 ErrChar:
                 pushq    %rdx
                 xorl    %edx, %edx
@@ -76,6 +81,7 @@ ErrChar:
 # print n characters in rax to stderr
 #   rdx : no. of characters
 #   destroyed : rax
+.align 16
 ErrCharN:
 				pushq	%rdi
 				xorl	%edi, %edi
@@ -88,6 +94,7 @@ ErrCharN:
 #------------------------------------
 # input 1 character from stdin
 # rax : get char
+.align 16
 InChar:
                 pushq   %rcx
                 pushq   %rdx
@@ -116,6 +123,7 @@ InChar:
 #------------------------------------
 # print hex number
 #   rax : number     edx : digit
+.align 16
 PrintHex:
                 pushq    %rax
                 pushq    %rcx
@@ -146,6 +154,7 @@ PrintHex:
 # print 8 digit hex number (rax)
 #   rax : number
 #   destroyed : edx
+.align 16
 PrintHex8:
                 movb    $8, %dl
                 jmp    PrintHex

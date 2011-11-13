@@ -65,6 +65,7 @@ int	assemble(char *sfile) {
 	while(fgets(buf, LINE_MAX, fp) != NULL){
 		if(sscanf(buf, "%s", opcode) == 1){
  	 	 	if(strchr(buf,':')) {
+				puts(".align 16");
 				printf("%s",buf);
  	 	 		// ラベル行の場合
 			}else if(opcode[0] == '.'){
@@ -94,9 +95,6 @@ int	assemble(char *sfile) {
 	// Register Init ////////////////////
 
 	puts("\n_start:");
-	puts("	movl	$BOTTOM, (GR1)");
-	puts("	movl	$TOP, (GR2)");
-	puts("	movl	$BOTTOM, (GR31)");
 	puts("	xorq	%rbx, %rbx");
 	puts("	xorq	%rcx, %rcx");
 	puts("	xorq	%rsi, %rsi");
@@ -110,19 +108,26 @@ int	assemble(char *sfile) {
 	puts("	xorq	%r13, %r13");
 	puts("	xorq	%r14, %r14");
 	puts("	xorq	%r15, %r15");
-	puts("	movl	(GR1), %r11d");
-	puts("	movl	(GR2), %r12d");
+	puts("	movl	$BOTTOM, %r9d");
+	puts("	movl	$TOP, (GR2)");
+	puts("	movl	$BOTTOM, %r10d");
 	puts("	call	min_caml_start\n");
 
 	puts(".section .data");
+	puts(".align 16");
 	printf("%s\n", heap_buf);
 	for (i = 0; i < 32; i++) {
-		printf("GR%d: .long 0\n", i);
+		if (!is_xreg(i)) {
+			printf("GR%d: .long 0\n", i);
+		}
 	}
 	for (i = 0; i < 32; i++) {
-		printf("FR%d: .long 0\n", i);
+		if (!is_xmm(i)) {
+			printf("FR%d: .long 0\n", i);
+		}
 	}
 	puts("CNT: .quad 0");
+	printf("FNEG: .quad 0x%d\n", 1<<31);
 	puts(".section .bss");
 	puts(".lcomm TOP, 0");
 	printf(".lcomm RAM, %u\n", (unsigned)1<<25);

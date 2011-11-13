@@ -1,1149 +1,1548 @@
 	.file	"simulate.c"
-	.text
-	.p2align 4,,15
-.globl get_opcode
-	.type	get_opcode, @function
-get_opcode:
-.LFB47:
-	.cfi_startproc
-	movl	%edi, %eax
-	shrl	$26, %eax
-	ret
-	.cfi_endproc
-.LFE47:
-	.size	get_opcode, .-get_opcode
-	.p2align 4,,15
-.globl get_rsi
-	.type	get_rsi, @function
-get_rsi:
-.LFB48:
-	.cfi_startproc
-	movl	%edi, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	ret
-	.cfi_endproc
-.LFE48:
-	.size	get_rsi, .-get_rsi
-	.p2align 4,,15
-.globl get_rti
-	.type	get_rti, @function
-get_rti:
-.LFB49:
-	.cfi_startproc
-	movl	%edi, %eax
-	shrl	$16, %eax
-	andl	$31, %eax
-	ret
-	.cfi_endproc
-.LFE49:
-	.size	get_rti, .-get_rti
-	.p2align 4,,15
-.globl get_rdi
-	.type	get_rdi, @function
-get_rdi:
-.LFB50:
-	.cfi_startproc
-	movl	%edi, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	ret
-	.cfi_endproc
-.LFE50:
-	.size	get_rdi, .-get_rdi
-	.p2align 4,,15
-.globl get_shamt
-	.type	get_shamt, @function
-get_shamt:
-.LFB51:
-	.cfi_startproc
-	movl	%edi, %eax
-	shrl	$6, %eax
-	andl	$31, %eax
-	ret
-	.cfi_endproc
-.LFE51:
-	.size	get_shamt, .-get_shamt
-	.p2align 4,,15
-.globl get_funct
-	.type	get_funct, @function
-get_funct:
-.LFB52:
-	.cfi_startproc
-	movl	%edi, %eax
-	andl	$63, %eax
-	ret
-	.cfi_endproc
-.LFE52:
-	.size	get_funct, .-get_funct
-	.p2align 4,,15
-.globl get_target
-	.type	get_target, @function
-get_target:
-.LFB53:
-	.cfi_startproc
-	movl	%edi, %eax
-	andl	$67108863, %eax
-	ret
-	.cfi_endproc
-.LFE53:
-	.size	get_target, .-get_target
-	.p2align 4,,15
-.globl get_imm
-	.type	get_imm, @function
-get_imm:
-.LFB54:
-	.cfi_startproc
-	movl	%edi, %eax
-	movzwl	%di,%edx
-	orl	$-65536, %eax
-	testw	%di, %di
-	cmovns	%edx, %eax
-	ret
-	.cfi_endproc
-.LFE54:
-	.size	get_imm, .-get_imm
-	.section	.rodata.str1.1,"aMS",@progbits,1
-.LC0:
-	.string	"%s: No such file\n"
-.LC1:
-	.string	"simulate %s\n"
-.LC2:
-	.string	"."
-.LC3:
-	.string	"%c"
-.LC4:
-	.string	"\nCPU Simulator Results\n"
-.LC5:
-	.string	"cnt:%llu\n"
-	.text
-	.p2align 4,,15
-.globl simulate
-	.type	simulate, @function
-simulate:
-.LFB55:
-	.cfi_startproc
-	pushq	%r15
-	.cfi_def_cfa_offset 16
-	xorl	%esi, %esi
-	xorl	%eax, %eax
-	pushq	%r14
-	.cfi_def_cfa_offset 24
-	pushq	%r13
-	.cfi_def_cfa_offset 32
-	pushq	%r12
-	.cfi_def_cfa_offset 40
-	pushq	%rbp
-	.cfi_def_cfa_offset 48
-	movq	%rdi, %rbp
-	.cfi_offset 6, -48
-	.cfi_offset 12, -40
-	.cfi_offset 13, -32
-	.cfi_offset 14, -24
-	.cfi_offset 15, -16
-	pushq	%rbx
-	.cfi_def_cfa_offset 56
-	subq	$40, %rsp
-	.cfi_def_cfa_offset 96
-	.cfi_offset 3, -56
-	call	open
-	testl	%eax, %eax
-	movl	%eax, %ebx
-	js	.L131
-	movl	$16777216, %edx
-	movl	$rom, %esi
-	movl	%eax, %edi
-	call	read
-	movl	%ebx, %edi
-	call	close
-	movl	rom(%rip), %eax
-	movq	$0, cnt(%rip)
-	movl	$4194304, reg+124(%rip)
-	movl	$4194304, reg+4(%rip)
-	movl	$1, pc(%rip)
-	testl	%eax, %eax
-	je	.L22
-	movl	reg+8(%rip), %esi
-	movl	$rom+4, %ebx
-	movl	$ram, %ecx
-	movl	$2, %edx
-	.p2align 4,,10
-	.p2align 3
-.L23:
-	movl	(%rbx), %edi
-	addl	$4, %esi
-	addq	$4, %rbx
-	movl	%edi, (%rcx)
-	addq	$4, %rcx
-	movl	%edx, %edi
-	addl	$1, %edx
-	subl	$32, %eax
-	jne	.L23
-	movl	%esi, reg+8(%rip)
-	movl	%edi, pc(%rip)
-.L22:
-	movq	stderr(%rip), %rdi
-	movq	%rbp, %rcx
-	movl	$.LC1, %edx
-	movl	$1, %esi
-	xorl	%eax, %eax
-	xorl	%r13d, %r13d
-	movabsq	$-6067343680855748867, %r12
-	call	__fprintf_chk
-	movq	stderr(%rip), %rdi
-	call	fflush
-	.p2align 4,,10
-	.p2align 3
-.L122:
-	movl	pc(%rip), %eax
-	movq	cnt(%rip), %rcx
-	mov	%eax, %edx
-	addq	$1, %rcx
-	addl	$1, %eax
-	movl	rom(,%rdx,4), %r14d
-	movl	%eax, pc(%rip)
-	movq	%rcx, %rax
-	movq	%rcx, cnt(%rip)
-	movl	%r14d, %edx
-	movl	%r14d, %ebx
-	andl	$63, %edx
-	shrl	$26, %ebx
-	movl	%edx, %ebp
-	mulq	%r12
-	shrq	$26, %rdx
-	imulq	$100000000, %rdx, %rdx
-	cmpq	%rdx, %rcx
-	je	.L132
-.L24:
-	cmpb	$58, %bl
-	ja	.L25
-	movzbl	%bl, %eax
-	jmp	*.L54(,%rax,8)
-	.section	.rodata
-	.align 8
-	.align 4
-.L54:
-	.quad	.L26
-	.quad	.L27
-	.quad	.L126
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L29
-	.quad	.L30
-	.quad	.L31
-	.quad	.L25
-	.quad	.L32
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L33
-	.quad	.L34
-	.quad	.L35
-	.quad	.L36
-	.quad	.L37
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L38
-	.quad	.L25
-	.quad	.L39
-	.quad	.L25
-	.quad	.L40
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L41
-	.quad	.L25
-	.quad	.L42
-	.quad	.L25
-	.quad	.L25
-	.quad	.L43
-	.quad	.L25
-	.quad	.L25
-	.quad	.L44
-	.quad	.L25
-	.quad	.L45
-	.quad	.L25
-	.quad	.L46
-	.quad	.L47
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L48
-	.quad	.L49
-	.quad	.L50
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L51
-	.quad	.L52
-	.quad	.L53
-	.text
-.L95:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	movss	freg(,%rax,4), %xmm1
-	sqrtss	%xmm1, %xmm0
-	ucomiss	%xmm0, %xmm0
-	jp	.L124
-	je	.L102
-.L124:
-	movaps	%xmm1, %xmm0
-	call	sqrtf
-.L102:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	movd	%xmm0, freg(,%rax,4)
-	.p2align 4,,10
-	.p2align 3
-.L25:
-	testb	%bl, %bl
-	jne	.L122
-.L133:
-	cmpb	$63, %bpl
-	jne	.L122
-	movq	stderr(%rip), %rdi
-	movl	$.LC4, %edx
-	movl	$1, %esi
-	xorl	%eax, %eax
-	call	__fprintf_chk
-	movq	cnt(%rip), %rcx
-	movq	stderr(%rip), %rdi
-	movl	$.LC5, %edx
-	movl	$1, %esi
-	xorl	%eax, %eax
-	call	__fprintf_chk
-	movq	stderr(%rip), %rdi
-	call	fflush
-	addq	$40, %rsp
-	xorl	%eax, %eax
-	popq	%rbx
-	popq	%rbp
-	popq	%r12
-	popq	%r13
-	popq	%r14
-	popq	%r15
-	ret
-	.p2align 4,,10
-	.p2align 3
-.L132:
-	movq	stderr(%rip), %rdi
-	movl	$.LC2, %edx
-	movl	$1, %esi
-	xorl	%eax, %eax
-	call	__fprintf_chk
-	movq	stderr(%rip), %rdi
-	call	fflush
-	jmp	.L24
-.L48:
-	movl	reg+4(%rip), %eax
-	movslq	%eax,%rdx
-	subl	$4, %eax
-	movl	%r13d, ram(,%rdx,4)
-	movl	pc(%rip), %r13d
-	movl	%eax, reg+4(%rip)
-.L126:
-	andl	$67108863, %r14d
-	testb	%bl, %bl
-	movl	%r14d, pc(%rip)
-	jne	.L122
-	jmp	.L133
-.L27:
-	testb	%bpl, %bpl
-	jne	.L134
-	shrl	$11, %r14d
-	xorl	%eax, %eax
-	movl	$.LC3, %edi
-	andl	$31, %r14d
-	mov	%r14d, %r15d
-	leaq	reg(,%r15,4), %rsi
-	call	__isoc99_scanf
-	testl	%r14d, %r14d
-	je	.L25
-	movl	reg(,%r15,4), %eax
-	andl	$255, %eax
-	movl	%eax, reg(,%r15,4)
-	jmp	.L122
-.L26:
-	cmpb	$48, %bpl
-	ja	.L25
-	movzbl	%bpl, %eax
-	jmp	*.L113(,%rax,8)
-	.section	.rodata
-	.align 8
-	.align 4
-.L113:
-	.quad	.L103
-	.quad	.L25
-	.quad	.L104
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L105
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L106
-	.quad	.L25
-	.quad	.L107
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L108
-	.quad	.L25
-	.quad	.L109
-	.quad	.L25
-	.quad	.L110
-	.quad	.L111
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L25
-	.quad	.L112
-	.text
-.L53:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$16, %edx
-	shrl	$21, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movss	freg(,%rdx,4), %xmm0
-	ucomiss	freg(,%rax,4), %xmm0
-	jbe	.L25
-.L128:
-	movl	%r14d, %eax
-	movzwl	%r14w,%edx
-	orl	$-65536, %eax
-	testw	%r14w, %r14w
-	cmovns	%edx, %eax
-	addl	%eax, pc(%rip)
-	testb	%bl, %bl
-	jne	.L122
-	jmp	.L133
-.L52:
-	movl	%r14d, %eax
-	movl	%r14d, %edx
-	movzwl	%r14w,%ecx
-	shrl	$16, %eax
-	orl	$-65536, %edx
-	andl	$31, %eax
-	testw	%r14w, %r14w
-	movl	reg(,%rax,4), %eax
-	cmovns	%ecx, %edx
-	subl	%edx, %eax
-	leal	3(%rax), %edx
-	testl	%eax, %eax
-	cmovs	%edx, %eax
-	shrl	$21, %r14d
-	movq	%r14, %rdx
-	sarl	$2, %eax
-	andl	$31, %edx
-	cltq
-	testb	%bl, %bl
-	movl	freg(,%rdx,4), %edx
-	movl	%edx, ram(,%rax,4)
-	jne	.L122
-	jmp	.L133
-.L51:
-	movl	reg+4(%rip), %eax
-	movl	%r13d, pc(%rip)
-	addl	$4, %eax
-	testb	%bl, %bl
-	movl	%eax, reg+4(%rip)
-	cltq
-	movl	ram(,%rax,4), %r13d
-	jne	.L122
-	jmp	.L133
-.L50:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$16, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movss	freg(,%rdx,4), %xmm0
-	ucomiss	freg(,%rax,4), %xmm0
-	jne	.L25
-	jnp	.L128
-	jmp	.L25
-	.p2align 4,,10
-	.p2align 3
-.L49:
-	movl	%r14d, %eax
-	movl	%r14d, %edx
-	movzwl	%r14w,%ecx
-	shrl	$16, %eax
-	orl	$-65536, %edx
-	andl	$31, %eax
-	testw	%r14w, %r14w
-	movl	reg(,%rax,4), %eax
-	cmovns	%ecx, %edx
-	shrl	$21, %r14d
-	movq	%r14, %rcx
-	andl	$31, %ecx
-	subl	%edx, %eax
-	leal	3(%rax), %edx
-	testl	%eax, %eax
-	cmovs	%edx, %eax
-	sarl	$2, %eax
-	testb	%bl, %bl
-	cltq
-	movl	ram(,%rax,4), %eax
-	movl	%eax, freg(,%rcx,4)
-	jne	.L122
-	jmp	.L133
-.L47:
-	movl	%r14d, %eax
-	movl	%r14d, %edx
-	movzwl	%r14w,%ecx
-	shrl	$16, %eax
-	orl	$-65536, %edx
-	andl	$31, %eax
-	testw	%r14w, %r14w
-	movl	reg(,%rax,4), %eax
-	cmovns	%ecx, %edx
-	subl	%edx, %eax
-	leal	3(%rax), %edx
-	testl	%eax, %eax
-	cmovs	%edx, %eax
-	shrl	$21, %r14d
-	movq	%r14, %rdx
-	sarl	$2, %eax
-	andl	$31, %edx
-	cltq
-	testb	%bl, %bl
-	movl	reg(,%rdx,4), %edx
-	movl	%edx, ram(,%rax,4)
-	jne	.L122
-	jmp	.L133
-.L46:
-	movl	%r14d, %edx
-	shrl	$16, %edx
-	andl	$31, %edx
-	je	.L25
-	movl	%r14d, %eax
-	movl	%r14d, %ecx
-	movzwl	%r14w,%esi
-	shrl	$21, %eax
-	orl	$-65536, %ecx
-	mov	%edx, %edx
-	andl	$31, %eax
-	testw	%r14w, %r14w
-	movl	reg(,%rax,4), %eax
-	cmovns	%esi, %ecx
-	sarl	%cl, %eax
-	testb	%bl, %bl
-	movl	%eax, reg(,%rdx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L45:
-	movl	%r14d, %edx
-	shrl	$16, %edx
-	andl	$31, %edx
-	je	.L25
-	movl	%r14d, %eax
-	movl	%r14d, %ecx
-	movzwl	%r14w,%esi
-	shrl	$21, %eax
-	orl	$-65536, %ecx
-	mov	%edx, %edx
-	andl	$31, %eax
-	testw	%r14w, %r14w
-	movl	reg(,%rax,4), %eax
-	cmovns	%esi, %ecx
-	sall	%cl, %eax
-	testb	%bl, %bl
-	movl	%eax, reg(,%rdx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L44:
-	movl	%r14d, %eax
-	shrl	$21, %r14d
-	shrl	$11, %eax
-	movq	%r14, %rdx
-	andl	$31, %eax
-	andl	$31, %edx
-	testb	%bl, %bl
-	cvtsi2ss	reg(,%rdx,4), %xmm0
-	movd	%xmm0, freg(,%rax,4)
-	jne	.L122
-	jmp	.L133
-.L43:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	movl	%eax, %ecx
-	andl	$31, %ecx
-	je	.L25
-	movl	%r14d, %eax
-	movl	%r14d, %edx
-	movzwl	%r14w,%esi
-	shrl	$16, %eax
-	orl	$-65536, %edx
-	mov	%ecx, %ecx
-	andl	$31, %eax
-	testw	%r14w, %r14w
-	movl	reg(,%rax,4), %eax
-	cmovns	%esi, %edx
-	subl	%edx, %eax
-	leal	3(%rax), %edx
-	testl	%eax, %eax
-	cmovs	%edx, %eax
-	sarl	$2, %eax
-	testb	%bl, %bl
-	cltq
-	movl	ram(,%rax,4), %eax
-	movl	%eax, reg(,%rcx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L42:
-	movl	%r14d, %ecx
-	shrl	$16, %ecx
-	andl	$31, %ecx
-	je	.L25
-	movl	%r14d, %eax
-	movl	%r14d, %esi
-	mov	%ecx, %ecx
-	shrl	$21, %eax
-	orl	$-65536, %esi
-	andl	$31, %eax
-	movl	reg(,%rax,4), %edx
-	movzwl	%r14w,%eax
-	testw	%r14w, %r14w
-	cmovns	%eax, %esi
-	movl	%edx, %eax
-	sarl	$31, %edx
-	idivl	%esi
-	testb	%bl, %bl
-	movl	%eax, reg(,%rcx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L41:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	movl	%r14d, %edx
-	mov	%eax, %eax
-	shrl	$21, %edx
-	andl	$31, %edx
-	testb	%bl, %bl
-	movss	freg(,%rdx,4), %xmm0
-	cvttss2si	%xmm0, %edx
-	movl	%edx, reg(,%rax,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L40:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$16, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	reg(,%rdx,4), %edx
-	cmpl	reg(,%rax,4), %edx
-	jge	.L25
-	jmp	.L128
-.L39:
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	movl	%eax, %edx
-	andl	$31, %edx
-	je	.L25
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	movzwl	%r14w,%esi
-	shrl	$21, %ecx
-	orl	$-65536, %eax
-	mov	%edx, %edx
-	andl	$31, %ecx
-	testw	%r14w, %r14w
-	cmovns	%esi, %eax
-	imull	reg(,%rcx,4), %eax
-	testb	%bl, %bl
-	movl	%eax, reg(,%rdx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L38:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	movl	freg(,%rax,4), %eax
-	movl	%eax, 12(%rsp)
-	movss	12(%rsp), %xmm0
-	call	atanf
-.L129:
-	shrl	$11, %r14d
-	movss	%xmm0, 12(%rsp)
-	movl	12(%rsp), %edx
-	movq	%r14, %rax
-	andl	$31, %eax
-	testb	%bl, %bl
-	movl	%edx, freg(,%rax,4)
-	jne	.L122
-	jmp	.L133
-.L37:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$16, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	reg(,%rdx,4), %edx
-	cmpl	reg(,%rax,4), %edx
-	jne	.L128
-	jmp	.L25
-.L36:
-	cmpb	$7, %bpl
-	ja	.L25
-	movzbl	%bpl, %eax
-	.p2align 4,,7
-	.p2align 3
-	jmp	*.L98(,%rax,8)
-	.section	.rodata
-	.align 8
-	.align 4
-.L98:
-	.quad	.L91
-	.quad	.L92
-	.quad	.L93
-	.quad	.L94
-	.quad	.L95
-	.quad	.L25
-	.quad	.L96
-	.quad	.L97
-	.text
-.L35:
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	andl	$31, %eax
-	je	.L25
-	movl	%r14d, %edx
-	movl	%r14d, %ecx
-	movzwl	%r14w,%esi
-	shrl	$21, %edx
-	orl	$-65536, %ecx
-	mov	%eax, %eax
-	andl	$31, %edx
-	testw	%r14w, %r14w
-	movl	reg(,%rdx,4), %edx
-	cmovns	%esi, %ecx
-	subl	%ecx, %edx
-	testb	%bl, %bl
-	movl	%edx, reg(,%rax,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L34:
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	andl	$31, %eax
-	je	.L25
-	movl	%r14d, %edx
-	movzwl	%r14w,%ecx
-	mov	%eax, %eax
-	orl	$-65536, %edx
-	testw	%r14w, %r14w
-	cmovns	%ecx, %edx
-	testb	%bl, %bl
-	movw	%dx, reg+2(,%rax,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L33:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	movl	freg(,%rax,4), %eax
-	movl	%eax, 12(%rsp)
-	movss	12(%rsp), %xmm0
-	call	cosf
-	jmp	.L129
-.L32:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$16, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	reg(,%rdx,4), %edx
-	cmpl	reg(,%rax,4), %edx
-	jne	.L25
-	testw	%r14w, %r14w
-	js	.L135
-	andl	$65535, %r14d
-.L82:
-	addl	%r14d, pc(%rip)
-	jmp	.L25
-.L31:
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	movl	%eax, %edx
-	andl	$31, %edx
-	je	.L25
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	movzwl	%r14w,%esi
-	shrl	$21, %ecx
-	orl	$-65536, %eax
-	mov	%edx, %edx
-	andl	$31, %ecx
-	testw	%r14w, %r14w
-	cmovns	%esi, %eax
-	addl	reg(,%rcx,4), %eax
-	testb	%bl, %bl
-	movl	%eax, reg(,%rdx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L30:
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %eax
-	movzwl	%r14w,%esi
-	movl	reg(,%rdx,4), %ecx
-	orl	$-65536, %eax
-	testw	%r14w, %r14w
-	cmovns	%esi, %eax
-	xorw	%cx, %cx
-	orl	%ecx, %eax
-	testb	%bl, %bl
-	movl	%eax, reg(,%rdx,4)
-	jne	.L122
-	jmp	.L133
-	.p2align 4,,10
-	.p2align 3
-.L29:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	movl	freg(,%rax,4), %eax
-	movl	%eax, 12(%rsp)
-	movss	12(%rsp), %xmm0
-	call	sinf
-	jmp	.L129
-.L131:
-	movq	stderr(%rip), %rdi
-	movq	%rbp, %rcx
-	movl	$.LC0, %edx
-	movl	$1, %esi
-	xorl	%eax, %eax
-	call	__fprintf_chk
-	addq	$40, %rsp
-	movl	$1, %eax
-	popq	%rbx
-	popq	%rbp
-	popq	%r12
-	popq	%r13
-	popq	%r14
-	popq	%r15
-	ret
-.L134:
-	cmpb	$1, %bpl
-	jne	.L25
-	movl	%r14d, %eax
-	movq	stdout(%rip), %rsi
-	shrl	$21, %eax
-	andl	$31, %eax
-	movl	reg(,%rax,4), %edi
-	call	_IO_putc
-	movq	stdout(%rip), %rdi
-	call	fflush
-	jmp	.L122
-.L135:
-	orl	$-65536, %r14d
-	jmp	.L82
-.L92:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$11, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	freg(,%rdx,4), %edx
-	movl	%edx, 28(%rsp)
-	movl	%r14d, %edx
-	shrl	$16, %edx
-	movss	28(%rsp), %xmm0
-	andl	$31, %edx
-	subss	freg(,%rdx,4), %xmm0
-	movd	%xmm0, freg(,%rax,4)
-	jmp	.L25
-.L91:
-	movl	%r14d, %ecx
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$16, %ecx
-	shrl	$21, %edx
-	shrl	$11, %eax
-	andl	$31, %ecx
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	freg(,%rcx,4), %ecx
-	movl	%ecx, 28(%rsp)
-	movss	28(%rsp), %xmm0
-	addss	freg(,%rdx,4), %xmm0
-	movd	%xmm0, freg(,%rax,4)
-	jmp	.L122
-.L96:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$11, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	freg(,%rdx,4), %edx
-	movl	%edx, freg(,%rax,4)
-	jmp	.L25
-.L94:
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$21, %edx
-	shrl	$11, %eax
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	freg(,%rdx,4), %edx
-	movl	%edx, 28(%rsp)
-	movl	%r14d, %edx
-	shrl	$16, %edx
-	movss	28(%rsp), %xmm0
-	andl	$31, %edx
-	divss	freg(,%rdx,4), %xmm0
-	movd	%xmm0, freg(,%rax,4)
-	jmp	.L25
-.L93:
-	movl	%r14d, %ecx
-	movl	%r14d, %edx
-	movl	%r14d, %eax
-	shrl	$16, %ecx
-	shrl	$21, %edx
-	shrl	$11, %eax
-	andl	$31, %ecx
-	andl	$31, %edx
-	andl	$31, %eax
-	movl	freg(,%rcx,4), %ecx
-	movl	%ecx, 28(%rsp)
-	movss	28(%rsp), %xmm0
-	mulss	freg(,%rdx,4), %xmm0
-	movd	%xmm0, freg(,%rax,4)
-	jmp	.L122
-.L97:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	movl	freg(,%rax,4), %eax
-	testl	%eax, %eax
-	js	.L136
-	orl	$-2147483648, %eax
-.L101:
-	movl	%r14d, %edx
-	shrl	$11, %edx
-	andl	$31, %edx
-	movl	%eax, freg(,%rdx,4)
-	jmp	.L25
-.L112:
-	movl	reg+4(%rip), %eax
-	movslq	%eax,%rdx
-	subl	$4, %eax
-	movl	%r13d, ram(,%rdx,4)
-	movl	pc(%rip), %r13d
-	movl	%eax, reg+4(%rip)
-.L105:
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	andl	$31, %eax
-	movl	reg(,%rax,4), %eax
-	movl	%eax, pc(%rip)
-	jmp	.L25
-.L111:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	shrl	$21, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rax,4), %eax
-	orl	reg(,%rcx,4), %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L25
-.L110:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	shrl	$21, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rax,4), %eax
-	andl	reg(,%rcx,4), %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L25
-.L109:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	shrl	$16, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rax,4), %eax
-	subl	reg(,%rcx,4), %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L25
-.L108:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L122
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	shrl	$21, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rax,4), %eax
-	addl	reg(,%rcx,4), %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L122
-.L107:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %ecx
-	movl	%r14d, %eax
-	movl	%r14d, %esi
-	shrl	$21, %eax
-	shrl	$16, %esi
-	andl	$31, %eax
-	andl	$31, %esi
-	movl	reg(,%rax,4), %edx
-	movl	%edx, %eax
-	sarl	$31, %edx
-	idivl	reg(,%rsi,4)
-	movl	%eax, reg(,%rcx,4)
-	jmp	.L25
-.L106:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$16, %eax
-	shrl	$21, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rax,4), %eax
-	imull	reg(,%rcx,4), %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L25
-.L103:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	shrl	$16, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rcx,4), %ecx
-	movl	reg(,%rax,4), %eax
-	sall	%cl, %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L25
-.L104:
-	movl	%r14d, %eax
-	shrl	$11, %eax
-	andl	$31, %eax
-	je	.L25
-	mov	%eax, %edx
-	movl	%r14d, %ecx
-	movl	%r14d, %eax
-	shrl	$21, %eax
-	shrl	$16, %ecx
-	andl	$31, %eax
-	andl	$31, %ecx
-	movl	reg(,%rcx,4), %ecx
-	movl	reg(,%rax,4), %eax
-	sarl	%cl, %eax
-	movl	%eax, reg(,%rdx,4)
-	jmp	.L25
-.L136:
-	andl	$2147483647, %eax
-	jmp	.L101
-	.cfi_endproc
-.LFE55:
-	.size	simulate, .-simulate
 	.comm	reg,128,32
 	.comm	freg,128,32
 	.comm	rom,16777216,32
 	.comm	ram,16777216,32
 	.comm	pc,4,4
 	.comm	cnt,8,8
-	.ident	"GCC: (Ubuntu 4.4.3-4ubuntu5) 4.4.3"
+	.text
+	.globl	get_opcode
+	.type	get_opcode, @function
+get_opcode:
+.LFB0:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	shrl	$26, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE0:
+	.size	get_opcode, .-get_opcode
+	.globl	get_rsi
+	.type	get_rsi, @function
+get_rsi:
+.LFB1:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	shrl	$21, %eax
+	andl	$31, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE1:
+	.size	get_rsi, .-get_rsi
+	.globl	get_rti
+	.type	get_rti, @function
+get_rti:
+.LFB2:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	shrl	$16, %eax
+	andl	$31, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE2:
+	.size	get_rti, .-get_rti
+	.globl	get_rdi
+	.type	get_rdi, @function
+get_rdi:
+.LFB3:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	shrl	$11, %eax
+	andl	$31, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE3:
+	.size	get_rdi, .-get_rdi
+	.globl	get_shamt
+	.type	get_shamt, @function
+get_shamt:
+.LFB4:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	shrl	$6, %eax
+	andl	$31, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE4:
+	.size	get_shamt, .-get_shamt
+	.globl	get_funct
+	.type	get_funct, @function
+get_funct:
+.LFB5:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	andl	$63, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE5:
+	.size	get_funct, .-get_funct
+	.globl	get_target
+	.type	get_target, @function
+get_target:
+.LFB6:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	andl	$67108863, %eax
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE6:
+	.size	get_target, .-get_target
+	.globl	get_imm
+	.type	get_imm, @function
+get_imm:
+.LFB7:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	movl	%edi, -4(%rbp)
+	movl	-4(%rbp), %eax
+	andl	$32768, %eax
+	testl	%eax, %eax
+	je	.L9
+	movl	-4(%rbp), %eax
+	orl	$-65536, %eax
+	jmp	.L10
+.L9:
+	movl	-4(%rbp), %eax
+	andl	$65535, %eax
+.L10:
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE7:
+	.size	get_imm, .-get_imm
+	.section	.rodata
+.LC0:
+	.string	"%s: No such file\n"
+.LC1:
+	.string	"simulate %s\n"
+.LC2:
+	.string	"%c"
+.LC3:
+	.string	"\nCPU Simulator Results\n"
+.LC4:
+	.string	"cnt:%llu\n"
+	.text
+	.globl	simulate
+	.type	simulate, @function
+simulate:
+.LFB8:
+	.cfi_startproc
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	.cfi_offset 6, -16
+	movq	%rsp, %rbp
+	.cfi_def_cfa_register 6
+	pushq	%r12
+	pushq	%rbx
+	subq	$80, %rsp
+	movq	%rdi, -88(%rbp)
+	movq	-88(%rbp), %rax
+	movl	$0, %esi
+	movq	%rax, %rdi
+	movl	$0, %eax
+	.cfi_offset 3, -32
+	.cfi_offset 12, -24
+	call	open
+	movl	%eax, -32(%rbp)
+	cmpl	$0, -32(%rbp)
+	jns	.L12
+	movl	$.LC0, %ecx
+	movq	stderr(%rip), %rax
+	movq	-88(%rbp), %rdx
+	movq	%rcx, %rsi
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	fprintf
+	movl	$1, %eax
+	jmp	.L13
+.L12:
+	movl	-32(%rbp), %eax
+	movl	$16777216, %edx
+	movl	$rom, %esi
+	movl	%eax, %edi
+	call	read
+	movl	%eax, -28(%rbp)
+	movl	-32(%rbp), %eax
+	movl	%eax, %edi
+	call	close
+	movl	$0, pc(%rip)
+	movq	$0, cnt(%rip)
+	movl	$4194304, reg+124(%rip)
+	movl	reg+124(%rip), %eax
+	movl	%eax, reg+4(%rip)
+	movl	rom(%rip), %eax
+	movl	%eax, -40(%rbp)
+	movl	pc(%rip), %eax
+	addl	$1, %eax
+	movl	%eax, pc(%rip)
+	movl	$0, -36(%rbp)
+	jmp	.L14
+.L15:
+	movl	pc(%rip), %eax
+	mov	%eax, %eax
+	movl	rom(,%rax,4), %edx
+	movl	-36(%rbp), %eax
+	cltq
+	movl	%edx, ram(,%rax,4)
+	movl	reg+8(%rip), %eax
+	addl	$4, %eax
+	movl	%eax, reg+8(%rip)
+	subl	$32, -40(%rbp)
+	addl	$1, -36(%rbp)
+	movl	pc(%rip), %eax
+	addl	$1, %eax
+	movl	%eax, pc(%rip)
+.L14:
+	cmpl	$0, -40(%rbp)
+	jne	.L15
+	movl	$.LC1, %ecx
+	movq	stderr(%rip), %rax
+	movq	-88(%rbp), %rdx
+	movq	%rcx, %rsi
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	fprintf
+	movq	stderr(%rip), %rax
+	movq	%rax, %rdi
+	call	fflush
+.L86:
+	movl	pc(%rip), %eax
+	mov	%eax, %eax
+	movl	rom(,%rax,4), %eax
+	movl	%eax, -24(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_opcode
+	movb	%al, -18(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_funct
+	movb	%al, -17(%rbp)
+	movq	cnt(%rip), %rax
+	addq	$1, %rax
+	movq	%rax, cnt(%rip)
+	movl	pc(%rip), %eax
+	addl	$1, %eax
+	movl	%eax, pc(%rip)
+	movq	cnt(%rip), %rcx
+	movabsq	$-6067343680855748867, %rdx
+	movq	%rcx, %rax
+	mulq	%rdx
+	movq	%rdx, %rax
+	shrq	$26, %rax
+	imulq	$100000000, %rax, %rax
+	movq	%rcx, %rdx
+	subq	%rax, %rdx
+	movq	%rdx, %rax
+	testq	%rax, %rax
+	jne	.L16
+	movq	stderr(%rip), %rax
+	movq	%rax, %rsi
+	movl	$46, %edi
+	call	fputc
+	movq	stderr(%rip), %rax
+	movq	%rax, %rdi
+	call	fflush
+.L16:
+	movzbl	-18(%rbp), %eax
+	cmpl	$58, %eax
+	ja	.L89
+	mov	%eax, %eax
+	movq	.L46(,%rax,8), %rax
+	jmp	*%rax
+	.section	.rodata
+	.align 8
+	.align 4
+.L46:
+	.quad	.L18
+	.quad	.L19
+	.quad	.L20
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L21
+	.quad	.L22
+	.quad	.L23
+	.quad	.L89
+	.quad	.L24
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L25
+	.quad	.L26
+	.quad	.L27
+	.quad	.L28
+	.quad	.L29
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L30
+	.quad	.L89
+	.quad	.L31
+	.quad	.L89
+	.quad	.L32
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L33
+	.quad	.L89
+	.quad	.L34
+	.quad	.L89
+	.quad	.L89
+	.quad	.L35
+	.quad	.L89
+	.quad	.L89
+	.quad	.L36
+	.quad	.L89
+	.quad	.L37
+	.quad	.L89
+	.quad	.L38
+	.quad	.L39
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L40
+	.quad	.L41
+	.quad	.L42
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L89
+	.quad	.L43
+	.quad	.L44
+	.quad	.L45
+	.text
+.L35:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%r12d, %ecx
+	subl	%eax, %ecx
+	movl	%ecx, %eax
+	leal	3(%rax), %edx
+	testl	%eax, %eax
+	cmovs	%edx, %eax
+	sarl	$2, %eax
+	cltq
+	movl	ram(,%rax,4), %eax
+	movl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L39:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%ebx, %edx
+	subl	%eax, %edx
+	movl	%edx, %eax
+	leal	3(%rax), %edx
+	testl	%eax, %eax
+	cmovs	%edx, %eax
+	sarl	$2, %eax
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, %edx
+	movslq	%ebx, %rax
+	movl	%edx, ram(,%rax,4)
+	jmp	.L47
+.L41:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%r12d, %ecx
+	subl	%eax, %ecx
+	movl	%ecx, %eax
+	leal	3(%rax), %edx
+	testl	%eax, %eax
+	cmovs	%edx, %eax
+	sarl	$2, %eax
+	cltq
+	movl	ram(,%rax,4), %edx
+	mov	%ebx, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L47
+.L29:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	cmpl	%eax, %ebx
+	je	.L90
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, %edx
+	movl	pc(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, pc(%rip)
+	jmp	.L90
+.L23:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	leal	(%r12,%rax), %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L37:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%r12d, %edx
+	movl	%eax, %ecx
+	sall	%cl, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L20:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_target
+	movl	%eax, pc(%rip)
+	jmp	.L47
+.L45:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -64(%rbp)
+	movss	-80(%rbp), %xmm1
+	movss	-64(%rbp), %xmm0
+	ucomiss	%xmm1, %xmm0
+	seta	%al
+	testb	%al, %al
+	je	.L91
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, %edx
+	movl	pc(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, pc(%rip)
+	jmp	.L91
+.L44:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%ebx, %edx
+	subl	%eax, %edx
+	movl	%edx, %eax
+	leal	3(%rax), %edx
+	testl	%eax, %eax
+	cmovs	%edx, %eax
+	sarl	$2, %eax
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %edx
+	movslq	%ebx, %rax
+	movl	%edx, ram(,%rax,4)
+	jmp	.L47
+.L27:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%r12d, %edx
+	subl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L43:
+	movl	reg+120(%rip), %eax
+	movl	%eax, pc(%rip)
+	movl	reg+4(%rip), %eax
+	addl	$4, %eax
+	movl	%eax, reg+4(%rip)
+	movl	reg+4(%rip), %eax
+	cltq
+	movl	ram(,%rax,4), %eax
+	movl	%eax, reg+120(%rip)
+	jmp	.L47
+.L42:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -64(%rbp)
+	movss	-80(%rbp), %xmm0
+	movss	-64(%rbp), %xmm1
+	ucomiss	%xmm1, %xmm0
+	jp	.L92
+	ucomiss	%xmm1, %xmm0
+	jne	.L88
+.L87:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, %edx
+	movl	pc(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, pc(%rip)
+	jmp	.L92
+.L88:
+	jmp	.L92
+.L32:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	cmpl	%eax, %ebx
+	jge	.L93
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, %edx
+	movl	pc(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, pc(%rip)
+	jmp	.L93
+.L40:
+	movl	reg+4(%rip), %eax
+	movl	reg+120(%rip), %edx
+	cltq
+	movl	%edx, ram(,%rax,4)
+	movl	reg+4(%rip), %eax
+	subl	$4, %eax
+	movl	%eax, reg+4(%rip)
+	movl	pc(%rip), %eax
+	movl	%eax, reg+120(%rip)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_target
+	movl	%eax, pc(%rip)
+	jmp	.L47
+.L38:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%r12d, %edx
+	movl	%eax, %ecx
+	sarl	%cl, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L24:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	cmpl	%eax, %ebx
+	jne	.L94
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, %edx
+	movl	pc(%rip), %eax
+	addl	%edx, %eax
+	movl	%eax, pc(%rip)
+	jmp	.L94
+.L31:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%r12d, %edx
+	imull	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L26:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, %r12d
+	sall	$16, %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	andl	$65535, %eax
+	orl	%r12d, %eax
+	movl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L22:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, %r12d
+	movw	$0, %r12w
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	andl	$65535, %eax
+	movl	%r12d, %edx
+	orl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L34:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_imm
+	movl	%eax, -96(%rbp)
+	movl	%r12d, %eax
+	movl	%eax, %edx
+	sarl	$31, %edx
+	idivl	-96(%rbp)
+	movl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L21:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movss	-80(%rbp), %xmm0
+	call	sinf
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L47
+.L25:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movss	-80(%rbp), %xmm0
+	call	cosf
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L47
+.L30:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movss	-80(%rbp), %xmm0
+	call	atanf
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L47
+.L33:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L47
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movss	-80(%rbp), %xmm0
+	cvttss2si	%xmm0, %edx
+	mov	%eax, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L47
+.L36:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	cvtsi2ss	%eax, %xmm0
+	movss	%xmm0, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-80(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L47
+.L28:
+	movzbl	-17(%rbp), %eax
+	cmpl	$7, %eax
+	ja	.L95
+	mov	%eax, %eax
+	movq	.L63(,%rax,8), %rax
+	jmp	*%rax
+	.section	.rodata
+	.align 8
+	.align 4
+.L63:
+	.quad	.L55
+	.quad	.L56
+	.quad	.L57
+	.quad	.L58
+	.quad	.L59
+	.quad	.L60
+	.quad	.L61
+	.quad	.L62
+	.text
+.L57:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -64(%rbp)
+	movss	-80(%rbp), %xmm1
+	movss	-64(%rbp), %xmm0
+	mulss	%xmm1, %xmm0
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L55:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -64(%rbp)
+	movss	-80(%rbp), %xmm1
+	movss	-64(%rbp), %xmm0
+	addss	%xmm1, %xmm0
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L56:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -64(%rbp)
+	movss	-80(%rbp), %xmm0
+	movss	-64(%rbp), %xmm1
+	subss	%xmm1, %xmm0
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L60:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, %edx
+	andl	$2147483647, %edx
+	mov	%ebx, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L61:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %edx
+	mov	%ebx, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L62:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	testl	%eax, %eax
+	jns	.L65
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	andl	$2147483647, %eax
+	jmp	.L66
+.L65:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	orl	$-2147483648, %eax
+.L66:
+	mov	%ebx, %edx
+	movl	%eax, freg(,%rdx,4)
+	jmp	.L64
+.L59:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movss	-80(%rbp), %xmm1
+	sqrtss	%xmm1, %xmm0
+	ucomiss	%xmm0, %xmm0
+	jp	.L68
+	ucomiss	%xmm0, %xmm0
+	je	.L67
+.L68:
+	movaps	%xmm1, %xmm0
+	call	sqrtf
+.L67:
+	movss	%xmm0, -92(%rbp)
+	movl	-92(%rbp), %eax
+	movl	%eax, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L58:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	freg(,%rax,4), %eax
+	movl	%eax, -64(%rbp)
+	movss	-80(%rbp), %xmm0
+	movss	-64(%rbp), %xmm1
+	divss	%xmm1, %xmm0
+	movss	%xmm0, -48(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	-48(%rbp), %edx
+	mov	%eax, %eax
+	movl	%edx, freg(,%rax,4)
+	jmp	.L64
+.L95:
+	nop
+.L64:
+	jmp	.L47
+.L18:
+	movzbl	-17(%rbp), %eax
+	cmpl	$63, %eax
+	ja	.L96
+	mov	%eax, %eax
+	movq	.L81(,%rax,8), %rax
+	jmp	*%rax
+	.section	.rodata
+	.align 8
+	.align 4
+.L81:
+	.quad	.L70
+	.quad	.L96
+	.quad	.L71
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L72
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L73
+	.quad	.L96
+	.quad	.L74
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L75
+	.quad	.L96
+	.quad	.L76
+	.quad	.L96
+	.quad	.L77
+	.quad	.L78
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L79
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.quad	.L96
+	.text
+.L75:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	leal	(%r12,%rax), %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L79:
+	movl	reg+4(%rip), %eax
+	movl	reg+120(%rip), %edx
+	cltq
+	movl	%edx, ram(,%rax,4)
+	movl	reg+4(%rip), %eax
+	subl	$4, %eax
+	movl	%eax, reg+4(%rip)
+	movl	pc(%rip), %eax
+	movl	%eax, reg+120(%rip)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, pc(%rip)
+	jmp	.L82
+.L72:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, pc(%rip)
+	jmp	.L82
+.L76:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%r12d, %edx
+	subl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L73:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%r12d, %edx
+	imull	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L74:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, -96(%rbp)
+	movl	%r12d, %eax
+	movl	%eax, %edx
+	sarl	$31, %edx
+	idivl	-96(%rbp)
+	movl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L77:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%r12d, %edx
+	andl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L78:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%r12d, %edx
+	orl	%eax, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L70:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%r12d, %edx
+	movl	%eax, %ecx
+	sall	%cl, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L71:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L97
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %r12d
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rti
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%r12d, %edx
+	movl	%eax, %ecx
+	sarl	%cl, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	jmp	.L82
+.L96:
+	nop
+.L82:
+	jmp	.L97
+.L19:
+	movzbl	-17(%rbp), %eax
+	testl	%eax, %eax
+	je	.L84
+	cmpl	$1, %eax
+	jne	.L83
+.L85:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, -80(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rsi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movl	%eax, %edi
+	call	putchar
+	movq	stdout(%rip), %rax
+	movq	%rax, %rdi
+	call	fflush
+	jmp	.L83
+.L84:
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	mov	%eax, %eax
+	salq	$2, %rax
+	leaq	reg(%rax), %rdx
+	movl	$.LC2, %eax
+	movq	%rdx, %rsi
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	__isoc99_scanf
+	movl	%eax, -28(%rbp)
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	testl	%eax, %eax
+	je	.L98
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	movl	%eax, %ebx
+	movl	-24(%rbp), %eax
+	movl	%eax, %edi
+	call	get_rdi
+	mov	%eax, %eax
+	movl	reg(,%rax,4), %eax
+	movzbl	%al, %edx
+	mov	%ebx, %eax
+	movl	%edx, reg(,%rax,4)
+	nop
+.L83:
+	jmp	.L98
+.L89:
+	nop
+	jmp	.L47
+.L90:
+	nop
+	jmp	.L47
+.L91:
+	nop
+	jmp	.L47
+.L92:
+	nop
+	jmp	.L47
+.L93:
+	nop
+	jmp	.L47
+.L94:
+	nop
+	jmp	.L47
+.L97:
+	nop
+	jmp	.L47
+.L98:
+	nop
+.L47:
+	cmpb	$63, -17(%rbp)
+	jne	.L86
+	cmpb	$0, -18(%rbp)
+	jne	.L86
+	movq	stderr(%rip), %rax
+	movq	%rax, %rdx
+	movl	$.LC3, %eax
+	movq	%rdx, %rcx
+	movl	$23, %edx
+	movl	$1, %esi
+	movq	%rax, %rdi
+	call	fwrite
+	movq	cnt(%rip), %rdx
+	movl	$.LC4, %ecx
+	movq	stderr(%rip), %rax
+	movq	%rcx, %rsi
+	movq	%rax, %rdi
+	movl	$0, %eax
+	call	fprintf
+	movq	stderr(%rip), %rax
+	movq	%rax, %rdi
+	call	fflush
+	movl	$0, %eax
+.L13:
+	addq	$80, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%rbp
+	.cfi_def_cfa 7, 8
+	ret
+	.cfi_endproc
+.LFE8:
+	.size	simulate, .-simulate
+	.ident	"GCC: (Ubuntu/Linaro 4.6.1-9ubuntu3) 4.6.1"
 	.section	.note.GNU-stack,"",@progbits
