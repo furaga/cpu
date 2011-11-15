@@ -76,13 +76,13 @@ int simulate(char *sfile) {
 		switch(opcode){
 			case LD:
 				IF0_BREAK_S
-				_GRS = ram[(_GRT - _IMM)/4];
+				_GRT = ram[(_GRS - _IMM)/4];
 				break;
 			case ST:
-				ram[(_GRT - _IMM)/4] = _GRS;
+				ram[(_GRS - _IMM)/4] = _GRT;
 				break;
 			case FLD:
-				_FRS = ram[(_GRT - _IMM)/4];
+				_FRT = ram[(_GRS - _IMM)/4];
 				break;
 			case JNE:
 				if (_GRS != _GRT)
@@ -108,7 +108,7 @@ int simulate(char *sfile) {
 				}
 				break;
 			case FST:
-				ram[(_GRT - _IMM)/4] = _FRS;
+				ram[(_GRS - _IMM)/4] = _FRT;
 				break;
 			case SUBI:
 				IF0_BREAK_T

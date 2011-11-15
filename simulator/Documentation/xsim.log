@@ -7,7 +7,7 @@ xsim 高速化ログ
    622   5351 320438 min-rt
 contest real	0m1.654s
 
-##2011/11/13 21:31 gas beta。alignment。reg最適化
+##2011/11/13 21:31 gas beta。alignment。reg最適化。
 cnt: 1,818,001,672
  26950  69877 525624 x86asm/min-rt.asm
    113   1042 225477 xrt

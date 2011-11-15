@@ -16,7 +16,7 @@
 #define DATA_NUM (1024 * 1024)
 
 using namespace std;
-
+void hex2bin(uint32_t,FILE*);
 uint32_t encode_op(char *, char *);
 int	encoder(int, char*);
 
@@ -152,7 +152,6 @@ int	assemble(char *sfile) {
 			}
 		}
 
-
 		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
 		num = output_line_cnt*4;
 		while ((ret = write(fd, output_data, num)) > 0) {
@@ -160,6 +159,17 @@ int	assemble(char *sfile) {
 		}
 		close(fd);
 
+/*
+		fp = fdopen(fd, "w");
+		for (i = 0; i < output_line_cnt; i++) {
+			//fprintf(fp, "x\"%08X\",\n", output_data[i]);
+			//fprintf(fp, "\"");
+			//hex2bin(output_data[i],fp);
+			//fprintf(fp, "\",\n");
+		}
+		fflush(fp);
+		close(fd); fclose(fp);
+*/
 		ofstream ofs(ASM_LOG);
 		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
 			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
@@ -195,3 +205,21 @@ int	assemble(char *sfile) {
 		return 0;
 	}
 }
+
+void hex2bin(uint32_t a, FILE *fp) {
+	int i, n;
+	uint32_t msb = 0x80000000;
+	for (i = 0; i < 32; i++) {
+		n = ((a & msb) == msb) ? 1 : 0;
+		fprintf(fp,"%d", n);
+		//if (i == 0) {
+			//fprintf(fp," ");
+		//}
+		//if (i == 8) {
+			//fprintf(fp," ");
+		//}
+		a <<= 1;
+	}
+}
+
+
