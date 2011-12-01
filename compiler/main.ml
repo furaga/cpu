@@ -29,18 +29,26 @@ let rec iter n e = (* 最適化処理をくりかえす (caml2html: main_iter) *)
 let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2html: main_lexbuf) *)
 	Id.counter := 0;
 	Typing.extenv := M.empty;
-	Emit.f outchan
-		(RegAlloc3.f
-			(Simm.f
-				(Sglobal.f
-					(Virtual.f !print_flg
-						(Closure.f !print_flg
-							(GlobalEnv.f (* グローバル変数を取得 *)
-								(iter !limit
-									(Alpha.f !print_flg
-										(KNormal.f !print_flg
-											(Typing.f
-												(Parser.exp Lexer.token l)))))))))))
+	let simm = 
+		Simm.f
+			(Sglobal.f
+				(Virtual.f !print_flg
+					(Closure.f !print_flg
+						(GlobalEnv.f (* グローバル変数を取得 *)
+							(iter !limit
+								(Alpha.f !print_flg
+									(KNormal.f !print_flg
+										(Typing.f
+											(Parser.exp Lexer.token l))))))))) in
+	if !Closure.exist_cls then
+		(print_endline "Not Coloring";
+		(* RegAlloc3はクロージャが作られたときにバグるのでRegAllocで代用 *)
+		Emit.f outchan 	(RegAlloc.f simm))
+	else
+		(print_endline "Coloring";
+		let toasm = ToAsm.f (Coloring.f (Block.f simm)) in
+		Printf.printf "asm -> block -> asm %s\n" (string_of_bool (simm = toasm));
+		Emit.f outchan 	(RegAllocWithColoring.f toasm))
 
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 

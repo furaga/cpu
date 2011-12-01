@@ -1,3 +1,5 @@
+(* クロージャありのコードに対するデバッグが不十分 *)
+
 open Asm
 
 let fixed = ref S.empty
@@ -23,7 +25,9 @@ let rec target' src (dest, t) = function
       let c2, rs2 = target src (dest, t) e2 in
       c1 && c2, rs1 @ rs2
   | CallCls(x, ys, zs) ->
-      true, (target_args src regs 0 ys @
+  	  let data = M.find x !fundata in
+      true, (
+      	target_args src regs 0 ys @
 	     target_args src fregs 0 zs @
              if x = src then [reg_cl] else [] @
 	     S.elements (get_safe_regs x))
@@ -234,7 +238,26 @@ and get_use_regs' id = function
 	
 let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数のレジスタ割り当て (caml2html: regalloc_h) *)
 	(*Printf.printf "[%s]\n" x;
-	*)(* すべての関数はvirtual.mlでfundataに登録されているはず *)
+	*)
+	
+	if not !Closure.exist_cls then (
+		let data =
+			if M.mem x !fundata then
+				M.find x !fundata
+			else
+				assert false in
+		let (arg_regs, _) = List.fold_left2
+			(fun (arg_regs, regenv) x r ->
+				let typ = if List.mem r allregs then Type.Int else Type.Float in
+				match (alloc (data.ret_reg, t) e regenv x typ) with
+					| Alloc r -> (arg_regs @ [r], M.add x r regenv)
+					| _ -> assert false
+			) ([], M.empty) (ys @ zs) data.arg_regs in
+		let data = {data with arg_regs = arg_regs} in
+		fundata := M.add x data !fundata
+	);
+
+	(* すべての関数はvirtual.mlでfundataに登録されているはず *)
 	let data =
 		if M.mem x !fundata then
 			M.find x !fundata

@@ -1,4 +1,5 @@
 type id_or_imm = V of Id.t | C of int
+val exist_cls : bool ref
 val pp_id_or_imm : id_or_imm -> string
 
 type closure = { entry : Id.l; actual_fv : Id.t list }

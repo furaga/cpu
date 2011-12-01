@@ -25,9 +25,10 @@ alpha.mli alpha.ml beta.mli beta.ml betaTuple.mli betaTuple.ml assoc.mli assoc.m
 inline.mli inline.ml \
 movelet.mli movelet.ml elim.mli elim.ml constArray.mli constArray.ml \
 cse.mli cse.ml constFold.mli constFold.ml constArg.mli constArg.ml \
-globalEnv.ml closure.mli closure.ml block.ml\
+globalEnv.ml closure.mli closure.ml \
 asm.mli asm.ml virtual.mli virtual.ml sglobal.mli sglobal.ml\
-simm.mli simm.ml regAlloc.mli regAlloc.ml regAlloc2.mli regAlloc2.ml regAlloc3.mli regAlloc3.ml emit.mli emit.ml \
+simm.mli simm.ml block.mli block.ml liveness.ml coloring.ml\
+toAsm.ml regAlloc.mli regAlloc.ml regAlloc2.mli regAlloc2.ml regAlloc3.mli regAlloc3.ml regAllocWithColoring.ml emit.mli emit.ml \
 main.mli main.ml
 
 # ↓テストプログラムが増えたら、これも増やす

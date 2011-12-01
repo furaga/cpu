@@ -138,39 +138,28 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(_), Save(x, y) when List.mem x allregs && not (S.mem y !stackset) ->
       save y;
       let offset = offset y in
-(*	  let ch = int_of_char y.[0] in
-	  if !global_flg && int_of_char 'a' <= ch && ch <= int_of_char 'z' && M.mem y !GlobalEnv.env && not (M.mem y !global_vars) then
-		(Printf.printf "\t\tsavei global_var %s\n" y;
-		global_vars := M.add y offset !global_vars;
- 	  	Printf.fprintf oc "\tst\t%s, %s, %d\n" x reg_bottom offset)
-	  else*)
 	  	Printf.fprintf oc "\tst\t%s, %s, %d\n" x reg_sp offset
   | NonTail(_), Save(x, y) when List.mem x allfregs && not (S.mem y !stackset) ->
       savef y;
       let offset = offset y in
-(*	  let ch = int_of_char y.[0] in
-	  if !global_flg && int_of_char 'a' <= ch && ch <= int_of_char 'z' && M.mem y !GlobalEnv.env && not (M.mem y !global_vars) then
-		(Printf.printf "\t\tsavef global_var %s\n" y;
-		global_vars := M.add y offset !global_vars;
- 	  	Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_bottom offset)
-	  else*)
-	  	Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_sp offset
-  | NonTail(_), Save(x, y) -> assert (S.mem y !stackset || M.mem y !global_vars); () (* すでにyがセーブされている場合 *)
+	  Printf.fprintf oc "\tfst\t%s, %s, %d\n" x reg_sp offset
+  | NonTail(_), Save(x, y) -> (* %f16とか値が固定されているレジスタは意地でも退避しない *)
+  	if S.mem y !stackset || M.mem y !global_vars || Asm.is_reg x then () else 
+  	begin
+	  	Printf.printf "has saved (%s,%s)\n" x y;
+	  	S.iter (Printf.printf "%s ") !stackset;
+	  	print_newline ();
+	  	assert false (* すでにyがセーブされている場合 *)
+  	end
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
   | NonTail(x), Restore(y) when List.mem x allregs ->
-(*	if M.mem y !global_vars then
-  	  (Printf.printf "\t%s <- Restore1 %s\n" x y; flush stdout;
-      Printf.fprintf oc "\tld\t%s, %s, %d\n" x reg_bottom (M.find y !global_vars))
-	else*)
       Printf.fprintf oc "\tld\t%s, %s, %d\n" x reg_sp (offset y)
 
-  | NonTail(x), Restore(y) ->
-      assert (List.mem x allfregs);
-(*	if M.mem y !global_vars then
-	  (Printf.printf "\t%s <- Restore2 %s\n" x y; flush stdout;
-      Printf.fprintf oc "\tfld\t%s, %s, %d\n" x reg_bottom (M.find y !global_vars))
-	else*)
+  | NonTail(x), Restore(y) when List.mem x allfregs ->
       Printf.fprintf oc "\tfld\t%s, %s, %d\n" x reg_sp (offset y)
+
+  | NonTail(x), Restore(y) ->(* %f16とか値が固定されているレジスタは復帰しない（そもそも退避されてない） *)
+  	  assert (Asm.is_reg x); ()
       
   (* 末尾だったら計算結果を第一レジスタにセットしてret (caml2html: emit_tailret) *)
   | Tail, (Nop | St _ | StDF _ | Comment _ | Save _ as exp) ->
@@ -271,7 +260,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 (*jmp : 即値でジャンプ先を指定*)
 (*b : レジスタでジャンプ先を指定*)
   | Tail, CallCls(x, ys, zs) -> (* 末尾呼び出し (caml2html: emit_tailcall) *)
-		g'_args oc [(x, reg_cl)] ys zs;
+		g'_args oc x [(x, reg_cl)] ys zs;
 		Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
 		Printf.fprintf oc "\tb\t%s\n" reg_sw		(*指定されたレジスタが指す位置へ飛ぶ *)
 
@@ -289,14 +278,14 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				end
 		  	| "min_caml_print_newline" ->
 				begin
-					g'_args oc [] ys zs;
+					g'_args oc x [] ys zs;
 					Printf.fprintf oc "\taddi\t%%g3, %%g0, 10\n";
 					Printf.fprintf oc "\toutput\t%%g3\n";
 					Printf.fprintf oc "\treturn\n"
 		  		end
 		  	| "min_caml_print_float" ->(* TODO *) 
 		  		begin
-					g'_args oc [] ys zs;
+					g'_args oc x [] ys zs;
 					let ss = stacksize () in
 					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
 					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss);
@@ -319,11 +308,11 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		end
 		  	| _ ->
 		  		begin
-				  g'_args oc [] ys zs;
+				  g'_args oc x [] ys zs;
 				  Printf.fprintf oc "\tjmp\t%s\n" x
 				end)
   | NonTail(a), CallCls(x, ys, zs) -> (* レジスタで飛ぶジャンプ *)
-		g'_args oc [(x, reg_cl)] ys zs;
+		g'_args oc x [(x, reg_cl)] ys zs;
 		let ss = stacksize () in
 (*		Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);*)
 		Printf.fprintf oc "\tld\t%s, %s, 0\n" reg_sw reg_cl;
@@ -356,7 +345,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				end
 		  	| "min_caml_print_float" ->(* TODO *) 
 		  		begin
-					g'_args oc [] ys zs;
+					g'_args oc x [] ys zs;
 					let ss = stacksize () in
 					Printf.fprintf oc "\tfst\t%%f0, %s, %d\n" reg_sp (ss - 4);
 					Printf.fprintf oc "\tst\t%%g3, %s, %d\n" reg_sp (ss);
@@ -376,7 +365,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				end
 		  	| _ ->
 		  		begin
-				  g'_args oc [] ys zs;
+				  g'_args oc x [] ys zs;
 				  let ss = stacksize () in
 (*				  Printf.fprintf oc "\tst\t%s, %s, %d\n" reg_ra reg_sp (ss - 4);*)
 				  Printf.fprintf oc "\tsubi\t%s, %s, %d\n" reg_sp reg_sp ss;
@@ -414,7 +403,16 @@ and g'_non_tail_if oc dest x y e1 e2 b bn =
   let stackset2 = !stackset in
   stackset := S.inter stackset1 stackset2
 
-and g'_args oc x_reg_cl ys zs =
+and g'_args oc name x_reg_cl ys zs =
+  let (regs, fregs) =
+  	try 
+		let data = M.find name !fundata in
+		let arg_regs = data.arg_regs in
+		let (reg_ls, freg_ls) = List.partition (fun x -> List.mem x Asm.allregs) arg_regs in
+		(Array.of_list reg_ls, Array.of_list freg_ls)
+	with
+  		| Not_found -> print_endline ("not found args: " ^ name); (Asm.regs, Asm.fregs) in
+
   let (i, yrs) =
     List.fold_left
       (fun (i, yrs) y -> (i + 1, (y, regs.(i)) :: yrs))
@@ -433,7 +431,21 @@ and g'_args oc x_reg_cl ys zs =
       Printf.fprintf oc "\tfmov\t%s, %s\n" fr z)
       (shuffle reg_fsw zfrs)
 
-let h oc { name = Id.L(x); args = _; fargs = _; body = e; ret = _ } =
+
+let print_list ls = 
+	let rec print_list = function
+		| [] -> ""
+		| x :: [] -> x
+		| x :: xs -> x ^ ", " ^ (print_list xs) in
+	"[" ^ (print_list ls) ^ "]"
+
+let h oc { name = Id.L(x); args = args; fargs = fargs; body = e; ret = ret } =
+  Printf.fprintf oc "\n!==============================\n";
+  Printf.fprintf oc "! args = %s\n" (print_list args);
+  Printf.fprintf oc "! fargs = %s\n" (print_list fargs);
+  Printf.fprintf oc "! use_regs = %s\n" (print_list (S.fold (fun x env -> x :: env) (Asm.get_use_regs x) []));
+  Printf.fprintf oc "! ret type = %s\n" (Type.string_of_type ret);	
+  Printf.fprintf oc "!================================\n";
   Printf.fprintf oc "%s:\n" x;
 (*  Printf.printf "%s\n" x; flush stdout;*)
   stackset := S.empty;
@@ -485,4 +497,3 @@ let f oc (Prog(data, fundefs, e)) =
   List.iter (fun fundef -> h oc fundef) fundefs;
 
   M.iter (Printf.printf "GLOBAL : %s %d\n") !global_vars;
-

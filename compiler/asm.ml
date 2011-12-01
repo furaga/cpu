@@ -57,9 +57,9 @@ let fundata = ref (M.add_list
    ("min_caml_print_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
    ("min_caml_write", { arg_regs = ["%g3"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
    ("min_caml_sqrt", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%f0"]});
-   ("min_caml_newline", { arg_regs = ["%dummy"]; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
-   ("min_caml_read_char", { arg_regs = ["%dummy"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
-   ("min_caml_input_char", { arg_regs = ["%dummy"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]})
+   ("min_caml_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_read_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
+   ("min_caml_input_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]})
   ] M.empty)
 
 let fletd(x, e1, e2) = Let((x, Type.Float), e1, e2)
@@ -67,18 +67,19 @@ let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
 
 (* %g0には常に0が入る *)
 let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
-  [| "%g3"; "%g4"; "%g5"; "%g6"; "%g7"; "%g8"; "%g9";
+  [| "%g3"; "%g4"; "%g5"; "%g6"; "%g7"; (*"%g8"; "%g9"; 
   	 "%g10"; "%g11"; "%g12"; "%g13"; "%g14"; "%g15"; "%g16"; "%g17"; "%g18"; "%g19"; 
-     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; "%g26"; "%g27"|]
+     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; (*"%g26";*) "%g27"*)|]
 
-let freg_num = 16
+let freg_num = 30
 
-let fregs = Array.init freg_num (fun i -> Printf.sprintf "%%f%d" i)
+let fregs = Array.init (freg_num - 1) (fun i -> Printf.sprintf "%%f%d" i)
 let allregs = Array.to_list regs
 let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
-let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)
-let reg_fsw = fregs.(Array.length fregs - 1) (* temporary for swap *)
+(*let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)*)
+let reg_sw = "%g26" (* temporary for swap *)
+let reg_fsw = "%f15"(*fregs.(Array.length fregs - 1) (* temporary for swap *)*)
 
 let reg_0 = "%g0"	(* 常に０ *)
 let reg_p1 = "%g28"	(* 常に１ *)
@@ -118,6 +119,9 @@ let rec cat xs ys env =
 		| x :: xs when S.mem x env -> cat xs ys env
 		| x :: xs -> x :: cat xs ys (S.add x env)
 (* free variables in the order of use (for spilling) (caml2html: sparcasm_fv) *)
+
+
+| Add (x, y) -> spsub (Add (x, y))
 
 let fv_id_or_imm = function V(x) -> [x] | _ -> []
 let rec fv' = function
@@ -309,3 +313,6 @@ and print_prog n (Prog (datas, fs, e)) =
 	List.iter (fun x -> print_fundef n x) fs;
 	print n e
 
+let pp_id_or_imm = function
+  | V(x) -> x
+  | C(i) -> string_of_int i

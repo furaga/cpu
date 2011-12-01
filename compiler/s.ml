@@ -9,3 +9,5 @@ module S =
 include S
 
 let of_list l = List.fold_left (fun s e -> add e s) empty l
+
+let length env = S.fold (fun env x -> x + 1) env 0

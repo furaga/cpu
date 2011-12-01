@@ -2,7 +2,7 @@ min-rts:
 	cat lib_ml.ml globals.ml min-rt.ml > tmp.ml
 #	../../min-caml.opt tmp
 	../../min-caml.opt -inline 200 tmp
-#	#cat macro.s tmp.s lib_asm.s > min-rt.s
+	cat macro.s tmp.s lib_asm.s > min-rt.s
 	javac Merge.java
 	java Merge min-rt.s lib_asm.s tmp.s
 	rm tmp.ml tmp.s
