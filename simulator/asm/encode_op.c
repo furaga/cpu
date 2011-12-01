@@ -162,11 +162,11 @@ uint32_t encode_op(char *opcode, char *op_data)
 		    return _return(0);
 	}
 	if(strcmp(opcode, "ld") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4)
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
 		    return ld(rs,rt,imm);
 	}
 	if(strcmp(opcode, "st") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4)
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
 		    return st(rs,rt,imm);
 	}
 	if(strcmp(opcode, "fadd") == 0){
@@ -202,11 +202,11 @@ uint32_t encode_op(char *opcode, char *op_data)
 		    return fneg(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "fld") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4)
+		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4)
 		    return fld(rs,rt,imm);
 	}
 	if(strcmp(opcode, "fst") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4)
+		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4)
 		    return fst(rs,rt,imm);
 	}
 	if(strcmp(opcode, "fjeq") == 0){

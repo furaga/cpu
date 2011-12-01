@@ -1,13 +1,14 @@
 # asm/Makefile
 TARGET = asmcho
 ASMH = common.h asm.h
-HOME_DIR = ../
+HOME_DIR = ..
 include ../Makefile.in
 
 CFLAGS += -I ../include/
 CXXFLAGS += -I ../include/
 vpath %.h ../include/
-ASM_TARGET = $(TEST_TARGET:%=../../compiler/test/%.s)
+#ASM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%.s)
+ASM_TARGET = $(TEST_TARGET:%=source/%.s)
 
 asmcho: asmcho.o assemble.o encode_op.o
 asmcho.o: $(ASMH) assemble.o

@@ -62,6 +62,8 @@ int encode_op(char *opcode, char *op_data)
 
 	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
 				OP(addl),G(rt),GC(rs),NL;
+			//} else if ((rd == rt) && (is_xreg(rd))) {
+				//OP(addl),G(rs),GC(rd),NL;
 			} else {
 				OP(movl),G(rs),SC(%edx),NL;
 				OP(addl),G(rt),SC(%edx),NL;
@@ -87,6 +89,8 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4) {
 	 		if ((rd == rs) && (is_xreg(rs) || is_xreg(rt))) {
 				OP(imull),G(rt),GC(rs),NL;
+			//} else if ((rd == rt) && (is_xreg(rd))) {
+				//OP(imull),G(rs),GC(rd),NL;
 			} else {
 				OP(movl),G(rs),SC(%edx),NL;
 				OP(imull),G(rt),SC(%edx),NL;
@@ -110,7 +114,9 @@ int encode_op(char *opcode, char *op_data)
 	if(strcmp(opcode, "addi") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
-	 		if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
+			if (rs == 0) {
+				OP(movl),IM(imm),GC(rt),NL;
+	 		} else if ((rt == rs) && (is_xreg(rs) || is_xreg(rt))) {
 				OP(addl),IM(imm),GC(rt), NL;
 			} else if (is_xreg(rs) || is_xreg(rt)) {
 				OP(movl),G(rs),GC(rt),NL;
@@ -397,36 +403,36 @@ int encode_op(char *opcode, char *op_data)
 		    return 0;
 	}
 	if(strcmp(opcode, "ld") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4) {
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
 			if (is_xreg(rs) && is_xreg(rt)) {
 				OP(movl),
-				printf("-%d(",imm),G(rt),printf(")"),
-				GC(rs),NL;
-			} else if (is_xreg(rs)) {
-				OP(movl),G(rt),SC(%edx),NL;
-				OP(movl),ADR(%edx,imm),GC(rs),NL;
+				printf("-%d(",imm),G(rs),printf(")"),
+				GC(rt),NL;
+			} else if (is_xreg(rt)) {
+				OP(movl),G(rs),SC(%edx),NL;
+				OP(movl),ADR(%edx,imm),GC(rt),NL;
 			} else {
-				OP(movl),G(rt),SC(%edx),NL;
+				OP(movl),G(rs),SC(%edx),NL;
 				OP(movl),ADR(%edx,imm),SC(%eax),NL;
-				OP(movl),S(%eax),GC(rs),NL;
+				OP(movl),S(%eax),GC(rt),NL;
 			}
 
 		    return 0;
 		}
 	}
 	if(strcmp(opcode, "st") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4) {
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
 			if (is_xreg(rs) && is_xreg(rt)) {
-				OP(movl),G(rs),
-				printf(", -%d(",imm),G(rt),printf(")\n");
-			} else if (is_xreg(rs)) {
-				OP(movl),G(rt),SC(%eax),NL;
-				OP(movl),G(rs),ADRC(%eax,imm),NL;
+				OP(movl),G(rt),
+				printf(", -%d(",imm),G(rs),printf(")\n");
+			} else if (is_xreg(rt)) {
+				OP(movl),G(rs),SC(%eax),NL;
+				OP(movl),G(rt),ADRC(%eax,imm),NL;
 			} else {
-				OP(movl),G(rt),SC(%eax),NL;
-				OP(movl),G(rs),SC(%edx),NL;
+				OP(movl),G(rs),SC(%eax),NL;
+				OP(movl),G(rt),SC(%edx),NL;
 				OP(movl),S(%edx),ADRC(%eax,imm),NL;
 			}
 		    return 0;
@@ -478,6 +484,8 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
 	 		if ((rd == rs) && (is_xmm(rs))) {
 				OP(divss),F(rt),FC(rs),NL;
+				//OP(rcpss),F(rt),FC(rt),NL;
+				//OP(mulss),F(rs),FC(rt),NL;
 			} else {
 				OP(movss),F(rs),SC(%xmm15),NL;
 				OP(divss),F(rt),SC(%xmm15),NL;
@@ -493,7 +501,7 @@ int encode_op(char *opcode, char *op_data)
 				OP(sqrtss),F(rs),FC(rd),NL;
 			} else {
 				OP(movss),F(rs),SC(%xmm15),NL;
-				OP(sqrtss),S(%xmm15),NL;
+				OP(sqrtss),S(%xmm15),SC(%xmm15),NL;
 				OP(movss),S(%xmm15),FC(rd),NL;
 			}
 		    return 0;
@@ -539,37 +547,37 @@ int encode_op(char *opcode, char *op_data)
 		}
 	}
 	if(strcmp(opcode, "fld") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
-			if (is_xmm(rs)) {
-				if (is_xreg(rt)) {
+		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4) {
+			if (is_xmm(rt)) {
+				if (is_xreg(rs)) {
 					OP(movss),
-					printf("-%d(",imm),G(rt),printf(")"),
-					FC(rs),NL;
+					printf("-%d(",imm),G(rs),printf(")"),
+					FC(rt),NL;
 				} else {
-					OP(movl),G(rt),SC(%edx),NL;
-					OP(movss),ADR(%edx,imm), FC(rs),NL;
+					OP(movl),G(rs),SC(%edx),NL;
+					OP(movss),ADR(%edx,imm), FC(rt),NL;
 				}
 			} else {
-				OP(movl),G(rt),SC(%edx),NL;
+				OP(movl),G(rs),SC(%edx),NL;
 				OP(movl),ADR(%edx,imm), SC(%eax),NL;
-				OP(movl),S(%eax),FC(rs),NL;
+				OP(movl),S(%eax),FC(rt),NL;
 			}
 		    return 0;
 		}
 	}
 	if(strcmp(opcode, "fst") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
-			if (is_xmm(rs)) {
-				if (is_xreg(rt)) {
-					OP(movss),F(rs),
-					printf(", -%d(",imm),G(rt),printf(")\n");
+		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4) {
+			if (is_xmm(rt)) {
+				if (is_xreg(rs)) {
+					OP(movss),F(rt),
+					printf(", -%d(",imm),G(rs),printf(")\n");
 				} else {
-					OP(movl),G(rt),SC(%eax),NL;
-					OP(movss),F(rs),ADRC(%eax,imm),NL;
+					OP(movl),G(rs),SC(%eax),NL;
+					OP(movss),F(rt),ADRC(%eax,imm),NL;
 				}
 			} else {
-				OP(movl),F(rs),SC(%edx),NL;
-				OP(movl),G(rt),SC(%eax),NL;
+				OP(movl),F(rt),SC(%edx),NL;
+				OP(movl),G(rs),SC(%eax),NL;
 				OP(movl),S(%edx),ADRC(%eax,imm),NL;
 			}
 		    return 0;
@@ -695,28 +703,32 @@ void print_gr(int register_index, int comma_flag, int quad_flag) {
 		case 0 : printf("$0"); break;
 		case 28: printf("$1"); break;
 		case 29: printf("$-1"); break;
-		case 1 :
-		case 2 :
-		case 3 :
-		case 4 :
-		case 5 :
-				printf("%%r1%d%s", register_index, datalen1); break;
-		case 6:
+		case 26:
+				printf("%%r8%s", datalen1); break;
+		case 1:
+				printf("%%r9%s", datalen1); break;
+		case 31:
 				printf("%%r10%s", datalen1); break;
-		case 10:
+		case 3:
+				printf("%%r11%s", datalen1); break;
+		case 18:
+				printf("%%r12%s", datalen1); break;
+		case 4:
+				printf("%%r13%s", datalen1); break;
+		case 5:
+				printf("%%r14%s", datalen1); break;
+		case 19:
+				printf("%%r15%s", datalen1); break;
+		case 6:
 				printf("%%%sbx", datalen2); break;
-		case 11:
+		case 10:
 				printf("%%%scx", datalen2); break;
 		case 12:
 				printf("%%%ssi", datalen2); break;
-		case 13:
+		case 17:
 				printf("%%%sdi", datalen2); break;
-		case 15:
+		case 11:
 				printf("%%%sbp", datalen2); break;
-		case 26:
-				printf("%%r8%s", datalen1); break;
-		case 27:
-				printf("%%r9%s", datalen1); break;
 		default :
 				///aacnt[register_index]++;
 				printf("(GR%d)", register_index); break;
@@ -729,22 +741,35 @@ void print_fr(int register_index, int comma_flag) {
 	}
 	switch (register_index) {
 		case 0 : 
+			printf("%%xmm0"); break;
 		case 1 :
+			printf("%%xmm1"); break;
 		case 2 :
+			printf("%%xmm2"); break;
+		case 12 :
+			printf("%%xmm3"); break;
+		case 10 :
+			printf("%%xmm4"); break;
+		case 11 :
+			printf("%%xmm5"); break;
 		case 3 :
+			printf("%%xmm6"); break;
+		case 13 :
+			printf("%%xmm7"); break;
+		case 14 :
+			printf("%%xmm8"); break;
 		case 4 :
-		case 5 :
-		case 6 :
-		case 7 :
-		case 8 :
-		case 10:
-		case 11:
-		case 12:
-		case 13:
-		case 14:
-			printf("%%xmm%d", register_index); break;
-		case 15:
 			printf("%%xmm9"); break;
+		case 9 :
+			printf("%%xmm10"); break;
+		case 5 :
+			printf("%%xmm11"); break;
+		case 16 :
+			printf("%%xmm12"); break;
+		case 7 :
+			printf("%%xmm13"); break;
+		case 6 :
+			printf("%%xmm14"); break;
 		default :
 			printf("(FR%d)", register_index); break;
 	}
@@ -753,10 +778,30 @@ void print_fr(int register_index, int comma_flag) {
 int is_const(int i) {
 	return (i == 0 || i == 28 || i == 29);
 }
+
 int is_xreg(int i) {
-	return ((1 <= i && i <= 5) || i == 6 || (10<=i&&i<=13) ||
-	i == 15 || i == 26 || i == 27 || is_const(i));
+	int j;
+	const int num = 13;
+	const int a[num] = {26,1,31,3,18,4,5,19,6,10,12,17,11};
+	if (is_const(i)) {
+		return 1;
+	}
+	for (j = 0; j < num; j++) {
+		if (i == a[j]) {
+			return 1;
+		}
+	}
+	return 0;
 }
+
 int is_xmm(int i) {
-	return ((i!=9) && (0 <= i && i <= 15));
+	int j;
+	const int num = 15;
+	const int a[num] = {1,0,2,12,10,11,3,13,14,4,9,5,16,7,6};
+	for (j = 0; j < num; j++) {
+		if (i == a[j]) {
+			return 1;
+		}
+	}
+	return 0;
 }

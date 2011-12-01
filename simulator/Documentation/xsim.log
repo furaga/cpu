@@ -1,20 +1,60 @@
 xsim 高速化ログ
 
-
+[original]
  19725  65037 375983 ../../../compiler/test/min-rt/min-rt.s
-##2011/11/09 02:27 gas (beta)。
+
+[OCaml min-rt]
+   622   5351 320438 min-rt
+contest real	0m1.654s
+
+##2011/11/13 21:31 gas beta。alignment。reg最適化。
+cnt: 1,818,001,672
+ 26950  69877 525624 x86asm/min-rt.asm
+   113   1042 225477 xrt
+all real	0m21.959
+contest real	0m1.169s
+
+##2011/11/13 20:05 gas beta。alignment
+cnt: 1,951,082,158
+ 27789  72885 544213 x86asm/min-rt.asm
+   147   1290 224286 xrt
+all real	0m24.515s
+contest real	0m1.291s
+
+##2011/11/10 02:43 gas beta。
+cnt: 1,951,082,158
+ 25366  68039 519983 x86asm/min-rt.asm
+   100   1021 206510 xrt
+all real	0m24.882s
+contest real	0m1.325s
+
+それぞれ1億回ずつ行ったタイム
+単精度          倍精度
+addss : 0.122s  addsd : 0.124s
+subss : 0.122s  subsd : 0.135s
+mulss : 0.162s  mulsd : 0.209s	!
+divss : 6.547s  divsd : 6.869s
+sqrtss: 0.245s  sqrtsd: 0.263s
+mulssだけか。。。。
+・呼出規約の無視=>レジスタ退避復元のロスがない。
+・リンク、例外処理。
+
+##2011/11/09 02:27 gas beta。
+cnt: 1,951,082,158
  26901  72644 545634 x86asm/min-rt.asm
    331   1333 213612 xrt
 all real	0m25.360s
 contest real	0m1.345s
 
-##2011/11/09 01:19 gas (beta)。
+##2011/11/09 01:19 gas beta。xmmレジスタ
+cnt: 1,951,082,158
  28857  78512 584071 x86asm/min-rt.asm
    389   1429 220828 xrt
 all real	0m28.052s
 contest real	0m1.487s
 
 ##2011/11/08       gas。発表時。
+cnt: 1,951,082,158
  34868  85642 623099 x86asm/min-rt.asm
    306   1900 259644 xrt
 all real	0m35.705s

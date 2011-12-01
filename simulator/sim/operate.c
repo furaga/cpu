@@ -10,16 +10,17 @@ int operate(uint32_t ir) {
 	} a, b, ans;
 	uint8_t opcode = get_opcode(ir);
 	uint8_t funct = get_funct(ir);
+	static unsigned reg_cnt[64];
 		switch(opcode){
 			case LD:
 				IF0_BREAK_S
-				_GRS = ram[(_GRT - _IMM)/4];
+				_GRT = ram[(_GRS - _IMM)/4];
 				break;
 			case ST:
-				ram[(_GRT - _IMM)/4] = _GRS;
+				ram[(_GRS - _IMM)/4] = _GRT;
 				break;
 			case FLD:
-				_FRS = ram[(_GRT - _IMM)/4];
+				_FRT = ram[(_GRS - _IMM)/4];
 				break;
 			case JNE:
 				if (_GRS != _GRT)
@@ -47,7 +48,7 @@ int operate(uint32_t ir) {
 				}
 				break;
 			case FST:
-				ram[(_GRT - _IMM)/4] = _FRS;
+				ram[(_GRS - _IMM)/4] = _FRT;
 				break;
 			case SUBI:
 				IF0_BREAK_T

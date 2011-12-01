@@ -19,8 +19,8 @@ TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
 SIM_FLAGS =
-XSIM_FLAGS = #-cnt
-EOG =  # (eog $$ppm &);
+#XSIM_FLAGS = -cnt
+EOG =   (eog $$ppm &);
 ###################################
 ###################################
 

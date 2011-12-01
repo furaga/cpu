@@ -397,36 +397,36 @@ int encode_op(char *opcode, char *op_data)
 		    return 0;
 	}
 	if(strcmp(opcode, "ld") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4) {
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
 			if (is_xreg(rs) && is_xreg(rt)) {
 				OP(movl),
-				printf("-%d(",imm),G(rt),printf(")"),
-				GC(rs),NL;
-			} else if (is_xreg(rs)) {
-				OP(movl),G(rt),SC(%edx),NL;
-				OP(movl),ADR(%edx,imm),GC(rs),NL;
+				printf("-%d(",imm),G(rs),printf(")"),
+				GC(rt),NL;
+			} else if (is_xreg(rt)) {
+				OP(movl),G(rs),SC(%edx),NL;
+				OP(movl),ADR(%edx,imm),GC(rt),NL;
 			} else {
-				OP(movl),G(rt),SC(%edx),NL;
+				OP(movl),G(rs),SC(%edx),NL;
 				OP(movl),ADR(%edx,imm),SC(%eax),NL;
-				OP(movl),S(%eax),GC(rs),NL;
+				OP(movl),S(%eax),GC(rt),NL;
 			}
 
 		    return 0;
 		}
 	}
 	if(strcmp(opcode, "st") == 0){
-		if(sscanf(op_data, fggi, tmp, &rs, &rt, &imm) == 4) {
+		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
 			if (is_xreg(rs) && is_xreg(rt)) {
-				OP(movl),G(rs),
-				printf(", -%d(",imm),G(rt),printf(")\n");
-			} else if (is_xreg(rs)) {
-				OP(movl),G(rt),SC(%eax),NL;
-				OP(movl),G(rs),ADRC(%eax,imm),NL;
+				OP(movl),G(rt),
+				printf(", -%d(",imm),G(rs),printf(")\n");
+			} else if (is_xreg(rt)) {
+				OP(movl),G(rs),SC(%eax),NL;
+				OP(movl),G(rt),ADRC(%eax,imm),NL;
 			} else {
-				OP(movl),G(rt),SC(%eax),NL;
-				OP(movl),G(rs),SC(%edx),NL;
+				OP(movl),G(rs),SC(%eax),NL;
+				OP(movl),G(rt),SC(%edx),NL;
 				OP(movl),S(%edx),ADRC(%eax,imm),NL;
 			}
 		    return 0;
@@ -496,17 +496,17 @@ int encode_op(char *opcode, char *op_data)
 		}
 	}
 	if(strcmp(opcode, "fld") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
-			OP(movl),G(rt),SC(%edx),NL;
+		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4) {
+			OP(movl),G(rs),SC(%edx),NL;
 			OP(movl),ADR(%edx,imm), SC(%eax),NL;
-			OP(movl),S(%eax),FC(rs),NL;
+			OP(movl),S(%eax),FC(rt),NL;
 		    return 0;
 		}
 	}
 	if(strcmp(opcode, "fst") == 0){
-		if(sscanf(op_data, ffgi, tmp, &rs, &rt, &imm) == 4) {
-			OP(movl),F(rs),SC(%edx),NL;
-			OP(movl),G(rt),SC(%eax),NL;
+		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4) {
+			OP(movl),F(rt),SC(%edx),NL;
+			OP(movl),G(rs),SC(%eax),NL;
 			OP(movl),S(%edx),ADRC(%eax,imm),NL;
 		    return 0;
 		}
