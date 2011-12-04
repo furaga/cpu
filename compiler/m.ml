@@ -14,3 +14,7 @@ let length env = M.fold (fun _ _ z -> 1 + z) env 0
 let union env1 env2 = M.fold (fun x y env -> M.add x y env) env1 env2
 let inter env1 env2 = M.fold (fun x y env -> if M.mem x env2 then M.add x y env else env) env1 M.empty
 let diff env1 env2 = M.fold (fun x y env -> if M.mem x env2 then env else M.add x y env) env1 M.empty
+
+let eprint comment env f = Printf.eprintf "%s\n" comment; M.iter (fun x y -> Printf.eprintf "\t%s => %s\n" x (f y)) env; Printf.eprintf "\n"
+let print comment env f = Printf.eprintf "%s\n" comment; M.iter (fun x y -> Printf.eprintf "\t%s => %s\n" x (f y)) env; Printf.eprintf "\n"
+

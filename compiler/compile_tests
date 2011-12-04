@@ -1,7 +1,7 @@
-for n in test/ack.ml; do
+for n in test/fspill.ml; do
 	echo "compile " ${n}
 	cat lib/lib_ml.ml ${n} > tmp.ml
-#	./min-caml.opt -inline 200 tmp
+#	./min-caml.opt -inline 300 tmp
 	./min-caml.opt tmp
 	javac Merge.java
 	java Merge ${n%.ml}.s lib/lib_asm.s tmp.s

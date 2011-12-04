@@ -24,7 +24,7 @@ let locate x =
   loc !stackmap
 let offset x = 
 	let loc = locate x in
-	if List.length loc <= 0 then assert false else 4 * List.hd loc
+	if List.length loc <= 0 then (Printf.eprintf "OFFSET x = %s\n" x; assert false) else 4 * List.hd loc
 let stacksize () = align ((List.length !stackmap + 1) * 4)
 
 let pp_id_or_imm = function

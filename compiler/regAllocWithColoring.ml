@@ -1,8 +1,8 @@
+(* TODO *)
 open Asm
 
 let fixed = ref S.empty
 
-let fun_color = ref M.empty
 let cur_fun = ref ""
 
 (* auxiliary function for g and g'_and_restore *)
@@ -34,7 +34,7 @@ let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (c
       	else if t = Type.Unit then
       		"%dummy"
       	else
-      		try M.find x !fun_color(*!Coloring.color*) with Not_found -> Printf.printf "not found %s\n" x; assert false in
+      		try M.find x !Coloring.color with Not_found -> Printf.printf "not found %s\n" x; assert false in
 	  let (e2', regenv2) = g dest cont (add x r regenv1) e in
 	  (concat e1' (r, t) e2', regenv2)
 and g'_and_restore dest cont regenv exp = (* 使用される変数をスタックからレジスタへRestore (caml2html: regalloc_unspill) *)
@@ -148,7 +148,6 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数�
 		else
 			assert false in
 
-	fun_color := (try M.find x !Coloring.colorenv with Not_found -> assert false);
 	cur_fun := x;
 
 	(* 関数からクロージャ用レジスタへの写像を追加（再帰用） *)
@@ -183,11 +182,20 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数�
 		body = e'; 
 		ret = t }
 
-let f (Prog(data, fundefs, e) as prog) = (* プログラム全体のレジスタ割り当て (caml2html: regalloc_f) *)
+let f (Block.Prog(data, fundefs, main_fun)) = (* プログラム全体のレジスタ割り当て (caml2html: regalloc_f) *)
 	Format.eprintf "register allocation: may take some time (up to a few minutes, depending on the size of functions)@.";
-	let fundefs' = List.map h fundefs in
-	fun_color := (try M.find "min_caml_start" !Coloring.colorenv with Not_found -> assert false);
+	(* メイン関数以外を彩色してAsmに戻してレジスタ割り当て *)
+	let fundefs' = 
+		List.map (
+			fun fundef ->
+				Coloring.main true fundef;
+				h (ToAsm.h fundef)
+		) fundefs in
+	(* メイン関数を彩色してAsmに戻してレジスタ割り当て *)
+	Coloring.main true main_fun;
+	let e = (ToAsm.h main_fun).body in
 	let e', regenv' = g (Id.gentmp Type.Unit, Type.Unit) (Ans(Nop)) M.empty e in
+
 	let ans = Prog (data, fundefs', e') in
 (*	Asm.print_prog 0 prog;
 	Asm.print_prog 0 ans;*)

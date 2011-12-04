@@ -19,7 +19,7 @@ clean:: nobackup
 
 # ↓もし実装を改造したら、それに合わせて変える
 #elim.mli elim.ml 
-SOURCES = float.c global.ml type.ml id.ml m.ml s.ml \
+SOURCES = float.c global.ml type.ml id.ml m.ml s.ml time.ml \
 syntax.ml parser.mly lexer.mll typing.mli typing.ml kNormal.mli kNormal.ml \
 alpha.mli alpha.ml beta.mli beta.ml betaTuple.mli betaTuple.ml assoc.mli assoc.ml \
 inline.mli inline.ml \
@@ -27,8 +27,8 @@ movelet.mli movelet.ml elim.mli elim.ml constArray.mli constArray.ml \
 cse.mli cse.ml constFold.mli constFold.ml constArg.mli constArg.ml \
 globalEnv.ml closure.mli closure.ml \
 asm.mli asm.ml virtual.mli virtual.ml sglobal.mli sglobal.ml\
-simm.mli simm.ml block.mli block.ml liveness.ml coloring.ml\
-toAsm.ml regAlloc.mli regAlloc.ml regAlloc2.mli regAlloc2.ml regAlloc3.mli regAlloc3.ml regAllocWithColoring.ml emit.mli emit.ml \
+simm.mli simm.ml block.ml liveness.ml coloring.ml\
+toAsm.ml regAlloc.mli regAlloc.ml regAllocWithColoring.ml emit.mli emit.ml \
 main.mli main.ml
 
 # ↓テストプログラムが増えたら、これも増やす

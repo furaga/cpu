@@ -37,7 +37,6 @@ and g' f blk stmt_id =
 	(exp, res_blk)
 	
 and get_exp f blk = function
-	| Block.VMov (xt, x, _) -> (("%dummy", Type.Unit), Asm.Nop, blk)
 	| Block.Nop xt -> (xt, Asm.Nop, blk) 
 	| Block.Set (xt, x) -> (xt, Asm.Set x, blk) 
 	| Block.SetL (xt, Id.L x) -> (xt, Asm.SetL (Id.L x), blk) 
@@ -98,39 +97,7 @@ and get_exp f blk = function
 	| Block.Save (xt, x, y) -> (xt, Asm.Save (x, y), blk)
 	| Block.Restore (xt, x) -> (xt, Asm.Restore x, blk)
 
-(* VMov命令を取り除く。これをしないと、末尾呼び出しがキャンセルされてしまう *)
-let remove_vmov fundef = 
-	M.iter (
-		fun _ blk ->
-			let remove_env = ref S.empty in
-			M.iter (
-				fun _ stmt ->
-					let flg = 
-						match stmt.sInst with
-							| VMov _ -> true
-							| _ -> false in
-					if flg then (
-						remove_env := S.add stmt.sId !remove_env;
-						(if stmt.sPred = "" then
-							blk.bHead <- stmt.sSucc
-						else
-							let pred = find stmt.sPred blk.bStmts in
-							pred.sSucc <- stmt.sSucc);
-							
-						(if stmt.sSucc = "" then
-							blk.bTail <- stmt.sPred
-						else
-							let succ = find stmt.sSucc blk.bStmts in
-							succ.sPred <- stmt.sPred);
-					) else ();
-				) blk.bStmts;
-			S.iter (fun x -> Printf.printf "REMOVE %s\n" x; blk.bStmts <- M.remove x blk.bStmts) !remove_env;
-			Printf.printf "%s : bHead = %s\n" blk.bId blk.bHead
-	) fundef.fBlocks;
-	fundef
-
 let h fundef = 
-	let fundef = remove_vmov fundef in
 	{
 		name = fundef.fName;
 		args = fundef.fArgs;

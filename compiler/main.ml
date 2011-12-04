@@ -40,16 +40,19 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 									(KNormal.f !print_flg
 										(Typing.f
 											(Parser.exp Lexer.token l))))))))) in
+
+(*ignore (Coloring.f (Block.f simm));*)
+											
 	if !Closure.exist_cls then
 		(print_endline "Not Coloring";
 		(* RegAlloc3はクロージャが作られたときにバグるのでRegAllocで代用 *)
 		Emit.f outchan 	(RegAlloc.f simm))
 	else
 		(print_endline "Coloring";
-		let toasm = ToAsm.f (Coloring.f (Block.f simm)) in
-		Printf.printf "asm -> block -> asm %s\n" (string_of_bool (simm = toasm));
-		Emit.f outchan 	(RegAllocWithColoring.f toasm))
-
+(*		let toasm = ToAsm.f (Coloring.f (Block.f simm)) in
+		Printf.printf "asm -> block -> asm %s\n" (string_of_bool (simm = toasm));*)
+		Emit.f outchan 	(RegAllocWithColoring.f (Block.f simm)))
+	
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 
 let file f = (* ファイルをコンパイルしてファイルに出力する (caml2html: main_file) *)

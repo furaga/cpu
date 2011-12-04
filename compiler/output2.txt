@@ -1,66 +1,18 @@
-make[1]: ディレクトリ `/home/furaga/cpu/git/cpu/compiler' に入ります
-ocamlc -c -g global.ml
-ocamlc -c -g type.ml
-ocamlc -c -g id.ml
-ocamlc -c -g m.ml
-ocamlc -c -g s.ml
-ocamlc -c -g syntax.ml
-ocamlc -c -g parser.mli
-ocamlc -c -g parser.ml
-ocamlc -c -g lexer.ml
-ocamlc -c -g typing.mli
-ocamlc -c -g typing.ml
-ocamlc -c -g kNormal.mli
-ocamlc -c -g kNormal.ml
-ocamlc -c -g alpha.mli
-ocamlc -c -g alpha.ml
-ocamlc -c -g beta.mli
-ocamlc -c -g beta.ml
-ocamlc -c -g betaTuple.mli
-ocamlc -c -g betaTuple.ml
-ocamlc -c -g assoc.mli
-ocamlc -c -g assoc.ml
-ocamlc -c -g inline.mli
-ocamlc -c -g inline.ml
-ocamlc -c -g movelet.mli
-ocamlc -c -g movelet.ml
-ocamlc -c -g elim.mli
-ocamlc -c -g elim.ml
-ocamlc -c -g constArray.mli
-ocamlc -c -g constArray.ml
-ocamlc -c -g cse.mli
-ocamlc -c -g cse.ml
-ocamlc -c -g constFold.mli
-ocamlc -c -g constFold.ml
-ocamlc -c -g constArg.mli
-ocamlc -c -g constArg.ml
-ocamlc -c -g globalEnv.ml
-ocamlc -c -g closure.mli
-ocamlc -c -g closure.ml
-ocamlc -c -g asm.mli
-ocamlc -c -g asm.ml
-ocamlc -c -g virtual.mli
-ocamlc -c -g virtual.ml
-ocamlc -c -g sglobal.mli
-ocamlc -c -g sglobal.ml
-ocamlc -c -g simm.mli
-ocamlc -c -g simm.ml
-ocamlc -c -g block.mli
-ocamlc -c -g block.ml
-ocamlc -c -g liveness.ml
-ocamlc -c -g coloring.ml
-ocamlc -c -g toAsm.ml
-ocamlc -c -g regAlloc.mli
-ocamlc -c -g regAlloc.ml
-ocamlc -c -g regAlloc2.mli
-ocamlc -c -g regAlloc2.ml
-ocamlc -c -g regAlloc3.mli
-ocamlc -c -g regAlloc3.ml
-ocamlc -c -g regAllocWithColoring.ml
-ocamlc -c -g emit.mli
-ocamlc -c -g emit.ml
-ocamlc -c -g main.ml
-ocamlc \
-				  \
-				-custom     -g          float.o    -o min-caml \
-				global.cmo type.cmo id.cmo m.cmo s.cmo syntax.cmo parser.cmo lexer.cmo typing.cmo kNormal.cmo alpha.cmo beta.cmo betaTuple.cmo assoc.cmo inline.cmo movelet.cmo elim.cmo constArray.cmo cse.cmo constFold.cmo constArg.cmo globalEnv.cmo closure.cmo asm.cmo virtual.cmo sglobal.cmo simm.cmo block.cmo liveness.cmo coloring.cmo toAsm.cmo regAlloc.cmo regAlloc2.cmo regAlloc3.cmo regAllocWithColoring.cmo emit.cmo main.cmo
+compile  test/matmul-flat.ml
+
+
+globalEnv.env(globalEnv.ml) = 
+	a.489 b.490 c.491 dummy.476 read_float_exp.460 read_float_f.459 read_float_i.458 read_float_s.461 read_int_ans.451 read_int_s.452 
+
+CLOSURE NOT EXISTS
+Coloring
+<div_binary_search.469>
+build
+make_worklist
+H!!
+H!!2
+<print_int.474>
+build
+make_worklist
+H!!
+H!!2

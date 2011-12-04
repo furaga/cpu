@@ -67,13 +67,13 @@ let seq(e1, e2) = Let((Id.gentmp Type.Unit, Type.Unit), e1, e2)
 
 (* %g0には常に0が入る *)
 let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
-  [| "%g3"; "%g4"; "%g5"; "%g6"; "%g7"; (*"%g8"; "%g9"; 
+  [| "%g3"; "%g4"; "%g5"; "%g6"; "%g7"; "%g8"; "%g9";
   	 "%g10"; "%g11"; "%g12"; "%g13"; "%g14"; "%g15"; "%g16"; "%g17"; "%g18"; "%g19"; 
-     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; (*"%g26";*) "%g27"*)|]
+     "%g20"; "%g21"; "%g22"; "%g23"; "%g24"; "%g25"; "%g26"; "%g27"|]
 
-let freg_num = 30
+let freg_num = 16
 
-let fregs = Array.init (freg_num - 1) (fun i -> Printf.sprintf "%%f%d" i)
+let fregs = Array.init (freg_num) (fun i -> Printf.sprintf "%%f%d" i)
 let allregs = Array.to_list regs
 let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
@@ -91,8 +91,8 @@ let reg_bottom = "%g31" (* return address *)
 
 let reg_fgs = Array.to_list (Array.init (31 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
 
-let get_arg_regs x = (M.find x !fundata).arg_regs
-let get_ret_reg x = (M.find x !fundata).ret_reg
+let get_arg_regs x = try (M.find x !fundata).arg_regs with Not_found -> Printf.eprintf "Not_found %s\n" x; assert false
+let get_ret_reg x = try (M.find x !fundata).ret_reg with Not_found -> Printf.eprintf "Not_found %s\n" x; assert false
 let get_use_regs x = 
 	try (M.find x !fundata).use_regs with Not_found -> Printf.printf "\tNotFound %s\n" x; S.of_list (allregs @ allfregs)
 
@@ -119,9 +119,6 @@ let rec cat xs ys env =
 		| x :: xs when S.mem x env -> cat xs ys env
 		| x :: xs -> x :: cat xs ys (S.add x env)
 (* free variables in the order of use (for spilling) (caml2html: sparcasm_fv) *)
-
-
-| Add (x, y) -> spsub (Add (x, y))
 
 let fv_id_or_imm = function V(x) -> [x] | _ -> []
 let rec fv' = function

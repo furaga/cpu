@@ -1,7 +1,8 @@
 open Asm
 
+let debug = true
+
 type t =
-	| VMov of (Id.t * Type.t) * Id.t * Id.t	(* 仮想的なMov命令。関数呼び出しの前に並べる。最後は直後に呼び出す関数 *)
 	| Nop of (Id.t * Type.t)
 	| Set of (Id.t * Type.t) * int
 	| SetL of (Id.t * Type.t) * Id.l
@@ -71,15 +72,11 @@ and fundef = {
 (* プログラム全体 *)
 type prog = Prog of (Id.l * float) list * fundef list * fundef
 
-let move_list = ref M.empty
-let tmp_fundata = ref M.empty
-
 (* 置換 *)
 let replace stmt x y =
 	let rep a = if a = x then y else a in
 	let rep2 (a, t) = (rep a, t) in
 	match stmt.sInst with
-		| VMov (xt, x, name) -> VMov (rep2 xt, rep x, name)
 		| Nop xt -> Nop (rep2 xt)
 		| Set (xt, x) -> Set (rep2 xt, x)
 		| SetL (xt, Id.L x) -> SetL (rep2 xt, Id.L x)
@@ -124,12 +121,18 @@ let replace stmt x y =
 			Save (rep2 xt, rep x, y)
 		| Restore (xt, x) ->
 			Restore (rep2 xt, x)
-(************************)
-(***** Print系関数群 *****)
-(************************)
+			
+(**********************)
+(** デバッグ支援関数群 **)
+(**********************)
+
+let eprint_list comment ls =
+	Printf.eprintf "%s" comment;
+	List.iter (Printf.eprintf "%s, ") ls;
+	Printf.eprintf "\n"
+
 let print_xt (x, t) = Printf.printf "%s:%s" x (Type.string_of_type t)
 let rec print indent f = function
-	| VMov (xt, x, name) -> Global.indent indent; print_xt xt; Printf.printf " = VMov %s (%s)" x name
 	| Nop xt -> Global.indent indent; print_xt xt; print_endline " = Nop"
 	| Set (xt, x) -> Global.indent indent; print_xt xt; Printf.printf " = Set %d" x
 	| SetL (xt, Id.L x) -> Global.indent indent; print_xt xt; Printf.printf " = SetL %s" x
@@ -172,12 +175,12 @@ let rec print indent f = function
 
 and print_block indent f {bId = id; bParent = Id.L parent; bStmts = stmts; bHead = head; bTail = tail; bPreds = preds; bSuccs = succs; bLivein = livein; bLiveout = liveout} =
 	Global.indent indent; Printf.printf "[%s]\n" id;
-	Global.indent indent; Printf.printf "Parent = %s\n" parent;
-	Global.indent indent; Printf.printf "(Head, Tail) = (%s, %s)\n" head tail;
-	Global.indent indent; Printf.printf "Pred Blocks= "; List.iter (Printf.printf "%s ") preds; print_newline (); 
+	Global.indent indent; Printf.printf "{Parent : %s}\n" parent;
+(*	Global.indent indent; Printf.printf "(Head, Tail) = (%s, %s)\n" head tail;
+*)	Global.indent indent; Printf.printf "Pred Blocks= "; List.iter (Printf.printf "%s ") preds; print_newline (); 
 	Global.indent indent; Printf.printf "Succ Blocks= "; List.iter (Printf.printf "%s ") succs; print_newline (); 
-	Global.indent indent; Printf.printf "Live in = "; S.iter (fun v -> Printf.printf "%s " v) livein; print_newline (); 
-	Global.indent indent; Printf.printf "Live out = "; S.iter (fun v -> Printf.printf "%s " v) liveout; print_newline ();
+(*	Global.indent indent; Printf.printf "Live in = "; S.iter (fun v -> Printf.printf "%s " v) livein; print_newline (); 
+	Global.indent indent; Printf.printf "Live out = "; S.iter (fun v -> Printf.printf "%s " v) liveout; print_newline ();*)
 
 	(* print stmts *)
 	let rec print_stmts stmt =
@@ -195,10 +198,10 @@ and print_block indent f {bId = id; bParent = Id.L parent; bStmts = stmts; bHead
 	
 let print_fundef indent ({fName = Id.L name; fArgs = args; fFargs = fargs; fRet = ret; fBlocks = blocks; fHead = head; fDef_regs = def_regs} as f) = 
 	Global.indent indent; Printf.printf "<%s>\n" name;
-	Global.indent indent; Printf.printf "Args = "; List.iter (Printf.printf "%s ") args; print_newline (); 
+(*	Global.indent indent; Printf.printf "Args = "; List.iter (Printf.printf "%s ") args; print_newline (); 
 	Global.indent indent; Printf.printf "Fargs = "; List.iter (Printf.printf "%s ") fargs; print_newline (); 
 	Global.indent indent; Printf.printf "Return type = %s\n" (Type.string_of_type ret);
-	Global.indent indent; Printf.printf "def_regs = "; List.iter (Printf.printf "%s ") def_regs; print_newline (); 
+	Global.indent indent; Printf.printf "def_regs = "; List.iter (Printf.printf "%s ") def_regs; print_newline (); *)
 	print_newline ();
 	M.iter (fun _ blk -> print_block indent f blk) blocks
 
@@ -207,6 +210,109 @@ let print_prog indent (Prog (data, fundefs, main_fun)) =
 	print_newline ();
 	List.iter (print_fundef indent) fundefs;
 	print_fundef indent main_fun
+
+
+(******************************)
+(***** 各種データ取得用関数 *****)
+(******************************)
+
+let def_sites = ref M.empty
+let use_sites = ref M.empty
+let def_as_block = ref M.empty
+let use_as_block = ref M.empty
+let find_assert comment x env = if M.mem x env then M.find x env else (Printf.eprintf "%s NotFound [%s] in FindAssert\n" comment x; assert false)
+let get_def_sites x = if M.mem x !def_sites then M.find x !def_sites else []
+let get_use_sites x = if M.mem x !use_sites then M.find x !use_sites else []
+let get_def_as_block blk_id = find_assert "get_def_as_block" blk_id !def_as_block
+let get_use_as_block blk_id = find_assert "get_use_as_block" blk_id !use_as_block
+
+let diff_list ls1 ls2 = 
+	List.fold_left (
+		fun env x ->
+			if List.mem x ls2 then env else x :: env
+	) [] ls1
+
+let get_def_use stmt = 
+	match stmt.sInst with
+		(* 0変数を使用 *)
+		| Nop xt
+		| Set (xt, _) 
+		| SetL (xt, _)
+		| Restore (xt, _) -> ([fst xt], [])
+		(* 1変数を使用 *)
+		| Mov (xt, x)
+		| Neg (xt, x)
+		| Add (xt, x, C _)
+		| Sub (xt, x, C _)
+		| Mul (xt, x, C _)
+		| Div (xt, x, C _)
+		| SLL (xt, x, C _)
+		| Ld (xt, x, C _)
+		| FMov (xt, x)
+		| FNeg (xt, x)
+		| LdF (xt, x, C _)
+		| IfEq (xt, x, C _, _, _)
+		| IfLE (xt, x, C _, _, _)
+		| IfGE (xt, x, C _, _, _)
+		| Save (xt, x, _) -> ([fst xt], [x])
+		(* 2変数を使用 *)
+		| Add (xt, x, V y)
+		| Sub (xt, x, V y)
+		| Mul (xt, x, V y)
+		| Div (xt, x, V y)
+		| SLL (xt, x, V y)
+		| Ld (xt, x, V y)
+		| St (xt, x, y, C _)
+		| FAdd (xt, x, y)
+		| FSub (xt, x, y)
+		| FMul (xt, x, y)
+		| FDiv (xt, x, y)
+		| LdF (xt, x, V y)
+		| StF (xt, x, y, C _) 
+		| IfEq (xt, x, V y, _, _)
+		| IfLE (xt, x, V y, _, _)
+		| IfGE (xt, x, V y, _, _)
+		| IfFEq (xt, x, y, _, _)
+		| IfFLE (xt, x, y, _, _) -> ([fst xt], [x; y])
+		(* 3変数を使用 *)
+		| St (xt, x, y, V z)
+		| StF (xt, x, y, V z) -> ([fst xt], [x; y; z])
+		(* 変数をいっぱい使用 *)
+		| CallCls (xt, name, args, fargs) -> assert false (* クロージャが作られるときはregAlloc.mlでレジスタ割り当てが行われる *)
+		| CallDir (xt, Id.L name, args, fargs) -> ([fst xt], args @ fargs)
+		
+(* 各変数が定義・使用される場所を登録。ついでに各ブロック内で定義・使用される変数群も登録 *)
+let set_def_use_sites fundef =
+	def_sites := M.empty;
+	use_sites := M.empty;
+	def_as_block := M.empty;
+	use_as_block := M.empty;
+	M.iter (
+		fun _ blk ->
+			let gen = ref S.empty in
+			let kill = ref S.empty in
+			let rec iter stmt_id =
+				let stmt = find_assert "SET_DEF_USE_SITES::iter : " stmt_id blk.bStmts in
+				let def, use = get_def_use stmt in
+				(* 基本ブロック内のdef(kill), use(gen)の調整。タイガーブックp363参照 *)
+				kill := S.union (S.of_list def) !kill;
+				gen := S.union (S.of_list use) (S.diff !gen (S.of_list def));
+				List.iter (
+					fun d ->
+						let sites = try M.find d !def_sites with Not_found -> [] in
+						def_sites := M.add d ((blk.bId, stmt.sId) :: sites) !def_sites
+				) def;
+				List.iter (
+					fun u ->
+						let sites = try M.find u !use_sites with Not_found -> [] in
+						use_sites := M.add u ((blk.bId, stmt.sId) :: sites) !use_sites
+				) use;
+				if stmt.sPred <> "" then iter stmt.sPred in (if not (M.is_empty blk.bStmts) then iter blk.bTail);
+			def_as_block := M.add blk.bId !kill !def_as_block;
+			use_as_block := M.add blk.bId !gen !use_as_block; 
+	) fundef.fBlocks
+	
+
 
 (************************************)
 (***** Asm <-> Block 変換系関数群 *****)
@@ -221,12 +327,6 @@ let gen_block_id  () = block_cnt := !block_cnt + 1; Printf.sprintf "block.%d" !b
 let add_stmt inst blk =
 	(* 命令のID作成 *)
 	let id = gen_stmt_id () in
-
-	(match inst with
-		| Mov (xt, y) | FMov (xt, y) | VMov (xt, y, _) -> move_list := M.add id (fst xt, y) !move_list
-		(* CallDirもMov命令 *)
-(*		| CallDir (xt, Id.L name, args, fargs) -> move_list := M.add id (fst xt, Asm.get_ret_reg name) !move_list*)
-		| _ -> ());
 	
 	let stmt = {
 		sId = id;
@@ -267,7 +367,7 @@ let make_block blk_id pred succ = {
 let add_block blk f = 
 	List.iter
 		(fun blk_id ->
-			let pred = M.find blk_id f.fBlocks in
+			let pred = find_assert "ADD_BLOCK : " blk_id f.fBlocks in
 			pred.bSuccs <- blk.bId :: pred.bSuccs) blk.bPreds;
 	blk.bParent <- f.fName;
 	f.fBlocks <- M.add blk.bId blk f.fBlocks
@@ -367,34 +467,14 @@ and g' (f : fundef) (blk : block) xt = function
 		let res_blk2 = g f blk2 xt e2 in
 		let next_blk = make_block next_blk_id [res_blk1.bId; res_blk2.bId] [] in
 		next_blk
-	| Asm.CallCls (x, ys, zs) -> assert false
-	| Asm.CallDir (Id.L x, ys, zs) ->
-		let name = (fun (Id.L x) -> x) f.fName in
-		(try
-(*			(let data = M.find x !tmp_fundata in
-			let iargs = data.Asm.args in
-			let fargs = data.Asm.fargs in
-			List.iter2 (fun a b -> add_stmt (VMov ((a, Type.Int), b, x)) blk) iargs ys;
-			List.iter2 (fun a b -> add_stmt (VMov ((a, Type.Float), b, x)) blk) fargs zs;*)
-			add_stmt (CallDir (xt, Id.L x, ys, zs)) blk(*;
-			add_stmt (VMov (xt, Asm.get_ret_reg x, x)) blk; blk)*)
-		with Not_found ->
-			assert false
-			(* tmp_fundataにないってことはcreate_arrayなどのライブラリ関数。これらの引数は彩色済み *)
-(*			(try
-				(let arg_regs = Asm.get_arg_regs x in
-				List.iter2 (fun a b -> add_stmt (VMov ((a, if a.[1] = 'f' then Type.Float else Type.Int), b, x)) blk) arg_regs (ys @ zs);
-				add_stmt (CallDir (xt, Id.L x, ys, zs)) blk;
-				add_stmt (VMov (xt, Asm.get_ret_reg x, x)) blk; blk)
-			with
-				Not_found -> assert false
-			)*)
-		); blk
+	| Asm.CallCls _ -> assert false
+	| Asm.CallDir (Id.L x, ys, zs) -> add_stmt (CallDir (xt, Id.L x, ys, zs)) blk; blk
 	| Asm.Save(x, y) -> add_stmt (Save (xt, x, y)) blk; blk
 	| Asm.Restore x -> add_stmt (Restore (xt, x)) blk; blk
 	| Asm.Comment _ -> blk
 
 let make_fundef {Asm.name = Id.L x; Asm.args = ys; Asm.fargs = zs; Asm.body = e; Asm.ret = t} = 
+	Printf.eprintf "<%s>\n" x;
 	let blk = make_block (gen_block_id ()) [] [] in
 	let f = {
 		fName = Id.L x;
@@ -405,20 +485,21 @@ let make_fundef {Asm.name = Id.L x; Asm.args = ys; Asm.fargs = zs; Asm.body = e;
 		fHead = blk.bId;
 		fDef_regs = []
 	} in
-	let ret_reg = try Asm.get_ret_reg x with Not_found -> "%dummy" in
+	let ret_reg =
+		try (M.find x !fundata).ret_reg with Not_found -> "%dummy" in
 	g f blk (ret_reg, t) e;
 	f
 
 let h fundef =
 	let name = (fun (Id.L x) -> x) fundef.Asm.name in
-	tmp_fundata := M.add name fundef !tmp_fundata;
-
 	let fundef = make_fundef fundef in
 	fundef
 	
 let f (Asm.Prog(data, fundefs, e) as prog) = 
-	move_list := M.empty;
+	Printf.eprintf "START make Blocks\n";
+(*	Asm.print_prog 0 prog; flush stdout;*)
 	let ans = Prog (data, List.map h fundefs, h {name = Id.L "min_caml_start"; args = []; fargs = []; body = e; ret = Type.Unit}) in
-	print_endline "HELLO";
+(*	print_prog 0 ans; flush stdout;*)
+	Printf.eprintf "END make Blocks\n";
 	ans
 	
