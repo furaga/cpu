@@ -99,12 +99,12 @@ and g'_call id dest cont regenv exp constr ys zs = (* 関数呼び出しのレ�
 				(e, env)
 			else if S.mem (M.find x regenv) (Asm.get_use_regs id) then
 				begin
-					Printf.printf "Save %s = %s\n" (M.find x regenv) x;
+(*					Printf.printf "Save %s = %s\n" (M.find x regenv) x;*)
 					(seq (Save (M.find x regenv, x), e), env)
 				end
 			else if id = !cur_fun then	(* 自己再帰なら問答無用で退避 *)
 				begin
-					Printf.printf "Save %s = %s\n" (M.find x regenv) x;
+(*					Printf.printf "Save %s = %s\n" (M.find x regenv) x;*)
 					(seq (Save (M.find x regenv, x), e), env)
 				end
 			else (* 登録されてはいるが退避しなくてもいいレジスタ *)
@@ -172,10 +172,10 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数�
 	fundata := M.add x data !fundata;
 
 	(* レジスタ割り当てを済ませたのでその結果をhの返り値とする *)
-	print_string "\targs: "; List.iter (fun x -> print_string (x ^ ", ")) (List.filter (fun x -> List.mem x allregs) data.arg_regs); print_newline ();
+(*	print_string "\targs: "; List.iter (fun x -> print_string (x ^ ", ")) (List.filter (fun x -> List.mem x allregs) data.arg_regs); print_newline ();
 	print_string "\tfargs: "; List.iter (fun x -> print_string (x ^ ", ")) (List.filter (fun x -> List.mem x allfregs) data.arg_regs); print_newline ();
 	print_string "\tret: "; print_endline data.ret_reg;
-	print_string "\tuse_regs: "; S.iter (fun x -> print_string (x ^ ", ")) data.use_regs; print_newline (); flush stdout;
+	print_string "\tuse_regs: "; S.iter (fun x -> print_string (x ^ ", ")) data.use_regs; print_newline (); flush stdout;*)
 	{	name = Id.L x;
 		args = List.filter (fun x -> List.mem x allregs) data.arg_regs;
 		fargs = List.filter (fun x -> List.mem x allfregs) data.arg_regs;

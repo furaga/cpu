@@ -220,11 +220,17 @@ let set_all_moves fundef =
 			) blk.bStmts
 	) fundef.fBlocks
 
-(* 各変数の彩色に対する希望 *)
+(* 各変数の彩色に対する願い *)
+(* その願いはまちがいなく叶ったじゃないか *)
 (* 関数呼び出しの引数はなるべく仮引数のレジスタと一致させたいし、他の仮引数とは一致させたくない *)
-(*  *)
 let set_wish_env_for_call fundef stmt livein liveout =
-	wish_env := M.empty;
+	let add_wish n wish =
+		let env = get_wishes n in
+		wish_env := M.add n (wish :: env) !wish_env in
+	let add_wish_list n wish_list =
+		let env = get_wishes n in
+		wish_env := M.add n (wish_list @ env) !wish_env in
+
 	match stmt.sInst with
 		(* 再帰以外の関数呼び出しのとき *)
 		| CallDir (xt, Id.L name, args, fargs) when Id.L name <> fundef.fName ->
@@ -232,15 +238,15 @@ let set_wish_env_for_call fundef stmt livein liveout =
 			let use_regs = S.union (Asm.get_use_regs name) (S.of_list arg_regs) in
 			(* 関数呼び出しをまたがっている変数にはuse_regs以外のレジスタを割り当てたい *)
 			let avoids = S.fold (fun x env -> (Avoid x) :: env) use_regs [] in
-			S.iter (fun x -> wish_env := M.add x avoids !wish_env) (S.inter livein liveout);
+			S.iter (fun x -> add_wish_list x avoids) (S.inter livein liveout);
 			(* 関数呼び出しの引数はなるべく仮引数のレジスタと一致させたいし、他の仮引数とは一致させたくない *)
 			List.iter2 (
-				fun t_arg r_arg ->
+				fun r_arg t_arg ->
 					let target = Target t_arg in
 					let avoids = S.fold (fun x env -> (Avoid x) :: env) (S.remove t_arg use_regs) [] in
 					let env = get_wishes r_arg in
-					wish_env := M.add r_arg ((target :: avoids) @ env) !wish_env
-			) arg_regs (args @ fargs)
+					add_wish_list r_arg (target :: avoids)
+			) (args @ fargs) arg_regs
 		(* 再帰呼び出しのとき *)
 		| CallDir (xt, Id.L name, args, fargs) ->
 			List.iter2 (
@@ -248,6 +254,13 @@ let set_wish_env_for_call fundef stmt livein liveout =
 					wish_env := M.add x ((Target y) :: get_wishes x) !wish_env;
 					wish_env := M.add y ((Target x) :: get_wishes y) !wish_env
 			) (args @ fargs) (fundef.fArgs @ fundef.fFargs)
+		| _ when stmt.sSucc = "" ->
+			let def, use = Block.get_def_use stmt in
+			if def <> [] && use <> [] then (
+				let d, u = List.hd def, List.hd use in
+				add_wish d (Target u);
+				add_wish u (Target d)
+			)
 		| _ -> ()
 
 (* uv間に枝を追加する *)
@@ -567,6 +580,8 @@ let initialize is_first fundef =
 	(* 複数の引数に同じレジスタが割り当てられないように、引数間での完全グラフを作っておく *)
 	List.iter (fun x -> List.iter (fun y -> add_edge x y) fundef.fArgs) fundef.fArgs;
 	List.iter (fun x -> List.iter (fun y -> add_edge x y) fundef.fFargs) fundef.fFargs;
+	(* 彩色に関する要望 *)
+	wish_env := M.empty;
 	(* rewriteのときには実行されないもの *)
 	if is_first then (
 		(* 全関数に対する彩色結果 *)
@@ -636,6 +651,7 @@ let make_worklist fundef =
 (** 単純化 **)
 let simplify fundef =
 	(* ここで選ばれるのが後になるほど彩色されるのが早くなる *)
+	(* 引数はできるだけ早めに塗られておきたい *)
 	let s = S.diff !simplify_worklist (S.of_list (fundef.fArgs @ fundef.fFargs)) in
 	let s = if S.is_empty s then !simplify_worklist else s in
 	let n = S.min_elt s in
@@ -695,6 +711,17 @@ let select_spill fundef =
 (** selct_stackに入っているノードを順に彩色していく **)
 let assign_colors fundef =
 	(** デバッグ出力1 **)
+(*	M.print
+		(Printf.sprintf "<%s> wish_env (%d): " (Id.get_name fundef.fName) (M.length !wish_env)) 
+		!wish_env 
+		(List.fold_left (
+			fun env -> 
+				function 
+					| Target x -> (env ^ ", Target " ^ x) 
+					| Avoid x -> (env ^ ", Avoid " ^ x)
+		) "");
+*)
+	
 	(*(if Block.debug then Block.eprint_list "SELECT_STACK :" !select_stack);*)
 	assert (S.is_empty (S.inter !precolored (S.of_list !select_stack)));		(* レジスタはスタックには絶対積まれていないはず *)
 	assert (S.is_empty (S.inter !precolored !coalesced_nodes)); 	(* レジスタはスタックには絶対積まれていないはず *)
@@ -724,17 +751,17 @@ let assign_colors fundef =
 		Printf.eprintf "\n"
 	));
 
-	S.iter (fun n -> color := M.add n (get_color (get_alias n)) !color) !coalesced_nodes;
+	S.iter (fun n -> color := M.add n (get_color (get_alias n)) !color) !coalesced_nodes(*;
 	(** デバッグ出力2 **)
 	(if Block.debug then
 		(if fundef.fName = Id.L "f.342" && !spill_cnt >= 3 then 
-(*			Block.print_fundef 3 fundef;
-*)			M.eprint 
+			Block.print_fundef 3 fundef;
+			M.eprint 
 				("<" ^ (Id.get_name fundef.fName) ^ "> COLOR2 : " ^ (if not (S.is_empty !spilled_nodes) then "SPILL!" else "non spill")) 
 				(M.fold (fun x y env -> if x <> y then M.add x y env else env) !color M.empty) 
 				(fun x -> x))
 	)
-	
+*)	
 (** スピルされた変数の各定義・使用位置にそれぞれSave, Restore命令を挿入 **)
 let rewrite_program fundef =
 	new_temps := S.empty;
@@ -766,7 +793,7 @@ let rewrite_program fundef =
 	(** デバッグ出力 **)
 	(if Block.debug then
 		Printf.eprintf "<%s> REWRITE (%d回目)\n" (Id.get_name fundef.fName) !spill_cnt;
-		Block.print_fundef 2 fundef
+(*		Block.print_fundef 2 fundef*)
 	)
 
 (** 関数毎に彩色。ついでに実行時間を計測する **)
@@ -817,7 +844,12 @@ let rec main is_first fundef =
    			let data = {data with Asm.arg_regs = args} in
    			Asm.fundata := M.add name data !Asm.fundata;
 		with Not_found -> assert (name = "min_caml_start"));
-		colorenv := M.add (Id.get_name fundef.fName) !color !colorenv
+		colorenv := M.add (Id.get_name fundef.fName) !color !colorenv;
+(*		Block.print_fundef 2 fundef;
+		M.print 
+			("color : ")
+			(M.fold (fun x y env -> if x <> y then M.add x y env else env) !color M.empty) 
+			(fun x -> x)*)
 	);
 	Printf.eprintf "\n"
 	

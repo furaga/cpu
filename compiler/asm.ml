@@ -73,7 +73,7 @@ let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
 
 let freg_num = 16
 
-let fregs = Array.init (freg_num) (fun i -> Printf.sprintf "%%f%d" i)
+let fregs = Array.init (freg_num - 1) (fun i -> Printf.sprintf "%%f%d" i)
 let allregs = Array.to_list regs
 let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)

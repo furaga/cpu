@@ -1,3381 +1,898 @@
-compile  test/ack.ml
+compile  test/wish_test.ml
 
 
 globalEnv.env(globalEnv.ml) = 
-	read_float_exp.330 read_float_f.329 read_float_i.328 read_float_s.331 read_int_ans.321 read_int_s.322 
+	read_float_exp.324 read_float_f.323 read_float_i.322 read_float_s.325 read_int_ans.315 read_int_s.316 
 
 CLOSURE NOT EXISTS
 Coloring
-    <div_binary_search.339>
+stmt.32
+stmt.31
+stmt.30
+stmt.29
+stmt.28
+stmt.33
+stmt.34
+stmt.35
+stmt.38
+stmt.36
+stmt.37
+<div_binary_search.333> wish_env (5): 
+a.334 => , Target a.334, Target a.334
+b.335 => , Target b.335, Target b.335
+left.336 => , Target left.336, Target left.336
+mid.471 => , Target right.337
+right.337 => , Target mid.471
+    <div_binary_search.333>
 
     [block.1]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= 
     Succ Blocks= block.3 block.2 
-    %dummy:Unit = Save right.343 right.343 : stmt.770
-    %dummy:Unit = Save b.341 b.341 : stmt.703
-    %dummy:Unit = Save a.340 a.340 : stmt.656
-    right.343.1588:Int = Restore right.343 : stmt.778
-    Ti124.478:Int = Add left.342 right.343.1588 : stmt.30
-    mid.475.1544:Int = SLL Ti124.478 -1 : stmt.31
-    %dummy:Unit = Save mid.475.1544 mid.475 : stmt.735
-    b.341.1542:Int = Restore b.341 : stmt.734
-    mid.475.1563:Int = Restore mid.475 : stmt.754
-    x.476:Int = Mul mid.475.1563 b.341.1542 : stmt.32
-    right.343.1589:Int = Restore right.343 : stmt.779
-    Ti126.477:Int = Sub right.343.1589 left.342 : stmt.33
-    %g3:Int = IfLE Ti126.477 1 block.2 block.3 : stmt.34
+    Ti118.474:Int = Add left.336 right.337 : stmt.28
+    mid.471:Int = SLL Ti118.474 -1 : stmt.29
+    x.472:Int = Mul mid.471 b.335 : stmt.30
+    Ti120.473:Int = Sub right.337 left.336 : stmt.31
+    %g3:Int = IfLE Ti120.473 1 block.2 block.3 : stmt.32
 
     [block.10]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.8 block.13 
+    {Parent : div_binary_search.333}
+    Pred Blocks= block.8 block.9 
     Succ Blocks= block.7 
 
-    [block.100]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.98 block.99 
-    Succ Blocks= block.97 
-
-    [block.101]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.87 
-    Succ Blocks= block.103 
-    %g3:Int = Mov mid.475.1175 : stmt.144
-
-    [block.102]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.87 
-    Succ Blocks= block.105 block.104 
-    a.340.1510:Int = Restore a.340 : stmt.702
-    %g3:Int = IfLE a.340.1510 x.476.1075.1181 block.104 block.105 : stmt.145
-
-    [block.103]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.101 block.106 
-    Succ Blocks= block.88 
-
-    [block.104]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.102 
-    Succ Blocks= block.108 block.107 
-    a.340.1509:Int = Restore a.340 : stmt.701
-    %g3:Int = IfEq x.476.1075.1181 a.340.1509 block.107 block.108 : stmt.146
-
-    [block.105]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.102 
-    Succ Blocks= block.106 
-    a.340.1508:Int = Restore a.340 : stmt.700
-    b.341.1541:Int = Restore b.341 : stmt.733
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1508 b.341.1541 mid.475.1074.1180 mid.475.1074 ) : stmt.149
-
-    [block.106]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.109 block.105 
-    Succ Blocks= block.103 
-
-    [block.107]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.104 
-    Succ Blocks= block.109 
-    %g3:Int = Mov mid.475.1074.1180 : stmt.147
-
-    [block.108]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.104 
-    Succ Blocks= block.109 
-    a.340.1507:Int = Restore a.340 : stmt.699
-    b.341.1540:Int = Restore b.341 : stmt.732
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1507 b.341.1540 mid.475.1175 mid.475.1074.1180 ) : stmt.148
-
-    [block.109]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.107 block.108 
-    Succ Blocks= block.106 
-
-    [block.11]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.9 
-    Succ Blocks= block.13 
-    %g3:Int = Mov left.342 : stmt.44
-
-    [block.110]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.78 
-    Succ Blocks= block.112 
-    %g3:Int = Mov mid.475.1074 : stmt.155
-
-    [block.111]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.78 
-    Succ Blocks= block.114 block.113 
-    a.340.1506:Int = Restore a.340 : stmt.698
-    %g3:Int = IfLE a.340.1506 x.476.1161 block.113 block.114 : stmt.156
-
-    [block.112]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.110 block.115 
-    Succ Blocks= block.79 
-
-    [block.113]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.111 
-    Succ Blocks= block.117 block.116 
-    a.340.1505:Int = Restore a.340 : stmt.697
-    %g3:Int = IfEq x.476.1161 a.340.1505 block.116 block.117 : stmt.157
-
-    [block.114]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.111 
-    Succ Blocks= block.129 block.128 
-    right.343.1586:Int = Restore right.343 : stmt.776
-    Ti124.478.1072.1163:Int = Add mid.475.1160 right.343.1586 : stmt.170
-    mid.475.1074.1165:Int = SLL Ti124.478.1072.1163 -1 : stmt.171
-    b.341.1539:Int = Restore b.341 : stmt.731
-    x.476.1075.1166:Int = Mul mid.475.1074.1165 b.341.1539 : stmt.172
-    right.343.1587:Int = Restore right.343 : stmt.777
-    Ti126.477.1076.1167:Int = Sub right.343.1587 mid.475.1160 : stmt.173
-    %g3:Int = IfLE Ti126.477.1076.1167 1 block.128 block.129 : stmt.174
-
-    [block.115]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.118 block.130 
-    Succ Blocks= block.112 
-
-    [block.116]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.113 
-    Succ Blocks= block.118 
-    %g3:Int = Mov mid.475.1160 : stmt.158
-
-    [block.117]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.113 
-    Succ Blocks= block.120 block.119 
-    Ti124.478.1077.1168:Int = Add mid.475.1074 mid.475.1160 : stmt.159
-    mid.475.1079.1170:Int = SLL Ti124.478.1077.1168 -1 : stmt.160
-    b.341.1538:Int = Restore b.341 : stmt.730
-    x.476.1080.1171:Int = Mul mid.475.1079.1170 b.341.1538 : stmt.161
-    Ti126.477.1081.1172:Int = Sub mid.475.1160 mid.475.1074 : stmt.162
-    %g3:Int = IfLE Ti126.477.1081.1172 1 block.119 block.120 : stmt.163
-
-    [block.118]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.116 block.121 
-    Succ Blocks= block.115 
-
-    [block.119]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.117 
-    Succ Blocks= block.121 
-    %g3:Int = Mov mid.475.1074 : stmt.164
-
-    [block.12]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.9 
-    Succ Blocks= block.15 block.14 
-    a.340.1504:Int = Restore a.340 : stmt.696
-    %g3:Int = IfLE a.340.1504 x.476.1080 block.14 block.15 : stmt.45
-
-    [block.120]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.117 
-    Succ Blocks= block.123 block.122 
-    a.340.1503:Int = Restore a.340 : stmt.695
-    %g3:Int = IfLE a.340.1503 x.476.1080.1171 block.122 block.123 : stmt.165
-
-    [block.121]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.119 block.124 
-    Succ Blocks= block.118 
-
-    [block.122]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.120 
-    Succ Blocks= block.126 block.125 
-    a.340.1502:Int = Restore a.340 : stmt.694
-    %g3:Int = IfEq x.476.1080.1171 a.340.1502 block.125 block.126 : stmt.166
-
-    [block.123]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.120 
-    Succ Blocks= block.124 
-    a.340.1501:Int = Restore a.340 : stmt.693
-    b.341.1537:Int = Restore b.341 : stmt.729
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1501 b.341.1537 mid.475.1079.1170 mid.475.1160 ) : stmt.169
-
-    [block.124]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.127 block.123 
-    Succ Blocks= block.121 
-
-    [block.125]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.122 
-    Succ Blocks= block.127 
-    %g3:Int = Mov mid.475.1079.1170 : stmt.167
-
-    [block.126]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.122 
-    Succ Blocks= block.127 
-    a.340.1500:Int = Restore a.340 : stmt.692
-    b.341.1536:Int = Restore b.341 : stmt.728
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1500 b.341.1536 mid.475.1074 mid.475.1079.1170 ) : stmt.168
-
-    [block.127]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.125 block.126 
-    Succ Blocks= block.124 
-
-    [block.128]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.114 
-    Succ Blocks= block.130 
-    %g3:Int = Mov mid.475.1160 : stmt.175
-
-    [block.129]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.114 
-    Succ Blocks= block.132 block.131 
-    a.340.1499:Int = Restore a.340 : stmt.691
-    %g3:Int = IfLE a.340.1499 x.476.1075.1166 block.131 block.132 : stmt.176
-
-    [block.13]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.11 block.16 
-    Succ Blocks= block.10 
-
-    [block.130]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.128 block.133 
-    Succ Blocks= block.115 
-
-    [block.131]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.129 
-    Succ Blocks= block.135 block.134 
-    a.340.1498:Int = Restore a.340 : stmt.690
-    %g3:Int = IfEq x.476.1075.1166 a.340.1498 block.134 block.135 : stmt.177
-
-    [block.132]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.129 
-    Succ Blocks= block.133 
-    a.340.1497:Int = Restore a.340 : stmt.689
-    b.341.1535:Int = Restore b.341 : stmt.727
-    right.343.1585:Int = Restore right.343 : stmt.775
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1497 b.341.1535 mid.475.1074.1165 right.343.1585 ) : stmt.180
-
-    [block.133]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.136 block.132 
-    Succ Blocks= block.130 
-
-    [block.134]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.131 
-    Succ Blocks= block.136 
-    %g3:Int = Mov mid.475.1074.1165 : stmt.178
-
-    [block.135]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.131 
-    Succ Blocks= block.136 
-    a.340.1496:Int = Restore a.340 : stmt.688
-    b.341.1534:Int = Restore b.341 : stmt.726
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1496 b.341.1534 mid.475.1160 mid.475.1074.1165 ) : stmt.179
-
-    [block.136]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.134 block.135 
-    Succ Blocks= block.133 
-
-    [block.14]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.12 
-    Succ Blocks= block.18 block.17 
-    a.340.1495:Int = Restore a.340 : stmt.687
-    %g3:Int = IfEq x.476.1080 a.340.1495 block.17 block.18 : stmt.46
-
-    [block.15]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.12 
-    Succ Blocks= block.48 block.47 
-    mid.475.1561:Int = Restore mid.475 : stmt.752
-    mid.475.1079.1578:Int = Restore mid.475.1079 : stmt.768
-    Ti124.478.1188:Int = Add mid.475.1079.1578 mid.475.1561 : stmt.79
-    mid.475.1190:Int = SLL Ti124.478.1188 -1 : stmt.80
-    b.341.1533:Int = Restore b.341 : stmt.725
-    x.476.1191:Int = Mul mid.475.1190 b.341.1533 : stmt.81
-    mid.475.1562:Int = Restore mid.475 : stmt.753
-    mid.475.1079.1579:Int = Restore mid.475.1079 : stmt.769
-    Ti126.477.1192:Int = Sub mid.475.1562 mid.475.1079.1579 : stmt.82
-    %g3:Int = IfLE Ti126.477.1192 1 block.47 block.48 : stmt.83
-
-    [block.16]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.19 block.49 
-    Succ Blocks= block.13 
-
-    [block.17]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.14 
-    Succ Blocks= block.19 
-    mid.475.1079.1577:Int = Restore mid.475.1079 : stmt.767
-    %g3:Int = Mov mid.475.1079.1577 : stmt.47
-
-    [block.18]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.14 
-    Succ Blocks= block.21 block.20 
-    mid.475.1079.1575:Int = Restore mid.475.1079 : stmt.765
-    Ti124.478.1203:Int = Add left.342 mid.475.1079.1575 : stmt.48
-    mid.475.1205:Int = SLL Ti124.478.1203 -1 : stmt.49
-    b.341.1532:Int = Restore b.341 : stmt.724
-    x.476.1206:Int = Mul mid.475.1205 b.341.1532 : stmt.50
-    mid.475.1079.1576:Int = Restore mid.475.1079 : stmt.766
-    Ti126.477.1207:Int = Sub mid.475.1079.1576 left.342 : stmt.51
-    %g3:Int = IfLE Ti126.477.1207 1 block.20 block.21 : stmt.52
-
-    [block.19]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.17 block.22 
-    Succ Blocks= block.16 
-
     [block.2]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.1 
     Succ Blocks= block.4 
-    %g3:Int = Mov left.342 : stmt.35
-
-    [block.20]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.18 
-    Succ Blocks= block.22 
-    %g3:Int = Mov left.342 : stmt.53
-
-    [block.21]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.18 
-    Succ Blocks= block.24 block.23 
-    a.340.1494:Int = Restore a.340 : stmt.686
-    %g3:Int = IfLE a.340.1494 x.476.1206 block.23 block.24 : stmt.54
-
-    [block.22]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.20 block.25 
-    Succ Blocks= block.19 
-
-    [block.23]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.21 
-    Succ Blocks= block.27 block.26 
-    a.340.1493:Int = Restore a.340 : stmt.685
-    %g3:Int = IfEq x.476.1206 a.340.1493 block.26 block.27 : stmt.55
-
-    [block.24]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.21 
-    Succ Blocks= block.39 block.38 
-    mid.475.1079.1573:Int = Restore mid.475.1079 : stmt.763
-    Ti124.478.1072.1208:Int = Add mid.475.1205 mid.475.1079.1573 : stmt.68
-    mid.475.1074.1210:Int = SLL Ti124.478.1072.1208 -1 : stmt.69
-    b.341.1531:Int = Restore b.341 : stmt.723
-    x.476.1075.1211:Int = Mul mid.475.1074.1210 b.341.1531 : stmt.70
-    mid.475.1079.1574:Int = Restore mid.475.1079 : stmt.764
-    Ti126.477.1076.1212:Int = Sub mid.475.1079.1574 mid.475.1205 : stmt.71
-    %g3:Int = IfLE Ti126.477.1076.1212 1 block.38 block.39 : stmt.72
-
-    [block.25]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.28 block.40 
-    Succ Blocks= block.22 
-
-    [block.26]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.23 
-    Succ Blocks= block.28 
-    %g3:Int = Mov mid.475.1205 : stmt.56
-
-    [block.27]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.23 
-    Succ Blocks= block.30 block.29 
-    Ti124.478.1077.1213:Int = Add left.342 mid.475.1205 : stmt.57
-    mid.475.1079.1215:Int = SLL Ti124.478.1077.1213 -1 : stmt.58
-    b.341.1530:Int = Restore b.341 : stmt.722
-    x.476.1080.1216:Int = Mul mid.475.1079.1215 b.341.1530 : stmt.59
-    Ti126.477.1081.1217:Int = Sub mid.475.1205 left.342 : stmt.60
-    %g3:Int = IfLE Ti126.477.1081.1217 1 block.29 block.30 : stmt.61
-
-    [block.28]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.26 block.31 
-    Succ Blocks= block.25 
-
-    [block.29]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.27 
-    Succ Blocks= block.31 
-    %g3:Int = Mov left.342 : stmt.62
+    %g3:Int = Mov left.336 : stmt.33
 
     [block.3]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.1 
     Succ Blocks= block.6 block.5 
-    a.340.1492:Int = Restore a.340 : stmt.684
-    %g3:Int = IfLE a.340.1492 x.476 block.5 block.6 : stmt.36
-
-    [block.30]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.27 
-    Succ Blocks= block.33 block.32 
-    a.340.1491:Int = Restore a.340 : stmt.683
-    %g3:Int = IfLE a.340.1491 x.476.1080.1216 block.32 block.33 : stmt.63
-
-    [block.31]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.29 block.34 
-    Succ Blocks= block.28 
-
-    [block.32]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.30 
-    Succ Blocks= block.36 block.35 
-    a.340.1490:Int = Restore a.340 : stmt.682
-    %g3:Int = IfEq x.476.1080.1216 a.340.1490 block.35 block.36 : stmt.64
-
-    [block.33]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.30 
-    Succ Blocks= block.34 
-    a.340.1489:Int = Restore a.340 : stmt.681
-    b.341.1529:Int = Restore b.341 : stmt.721
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1489 b.341.1529 mid.475.1079.1215 mid.475.1205 ) : stmt.67
-
-    [block.34]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.37 block.33 
-    Succ Blocks= block.31 
-
-    [block.35]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.32 
-    Succ Blocks= block.37 
-    %g3:Int = Mov mid.475.1079.1215 : stmt.65
-
-    [block.36]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.32 
-    Succ Blocks= block.37 
-    a.340.1488:Int = Restore a.340 : stmt.680
-    b.341.1528:Int = Restore b.341 : stmt.720
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1488 b.341.1528 left.342 mid.475.1079.1215 ) : stmt.66
-
-    [block.37]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.35 block.36 
-    Succ Blocks= block.34 
-
-    [block.38]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.24 
-    Succ Blocks= block.40 
-    %g3:Int = Mov mid.475.1205 : stmt.73
-
-    [block.39]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.24 
-    Succ Blocks= block.42 block.41 
-    a.340.1487:Int = Restore a.340 : stmt.679
-    %g3:Int = IfLE a.340.1487 x.476.1075.1211 block.41 block.42 : stmt.74
+    %g3:Int = IfLE a.334 x.472 block.5 block.6 : stmt.34
 
     [block.4]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.2 block.7 
     Succ Blocks= 
 
-    [block.40]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.38 block.43 
-    Succ Blocks= block.25 
-
-    [block.41]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.39 
-    Succ Blocks= block.45 block.44 
-    a.340.1486:Int = Restore a.340 : stmt.678
-    %g3:Int = IfEq x.476.1075.1211 a.340.1486 block.44 block.45 : stmt.75
-
-    [block.42]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.39 
-    Succ Blocks= block.43 
-    a.340.1485:Int = Restore a.340 : stmt.677
-    b.341.1527:Int = Restore b.341 : stmt.719
-    mid.475.1079.1572:Int = Restore mid.475.1079 : stmt.762
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1485 b.341.1527 mid.475.1074.1210 mid.475.1079.1572 ) : stmt.78
-
-    [block.43]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.46 block.42 
-    Succ Blocks= block.40 
-
-    [block.44]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.41 
-    Succ Blocks= block.46 
-    %g3:Int = Mov mid.475.1074.1210 : stmt.76
-
-    [block.45]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.41 
-    Succ Blocks= block.46 
-    a.340.1484:Int = Restore a.340 : stmt.676
-    b.341.1526:Int = Restore b.341 : stmt.718
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1484 b.341.1526 mid.475.1205 mid.475.1074.1210 ) : stmt.77
-
-    [block.46]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.44 block.45 
-    Succ Blocks= block.43 
-
-    [block.47]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.15 
-    Succ Blocks= block.49 
-    mid.475.1079.1571:Int = Restore mid.475.1079 : stmt.761
-    %g3:Int = Mov mid.475.1079.1571 : stmt.84
-
-    [block.48]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.15 
-    Succ Blocks= block.51 block.50 
-    a.340.1483:Int = Restore a.340 : stmt.675
-    %g3:Int = IfLE a.340.1483 x.476.1191 block.50 block.51 : stmt.85
-
-    [block.49]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.47 block.52 
-    Succ Blocks= block.16 
-
     [block.5]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.3 
     Succ Blocks= block.9 block.8 
-    a.340.1482:Int = Restore a.340 : stmt.674
-    %g3:Int = IfEq x.476 a.340.1482 block.8 block.9 : stmt.37
-
-    [block.50]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.48 
-    Succ Blocks= block.54 block.53 
-    a.340.1481:Int = Restore a.340 : stmt.673
-    %g3:Int = IfEq x.476.1191 a.340.1481 block.53 block.54 : stmt.86
-
-    [block.51]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.48 
-    Succ Blocks= block.66 block.65 
-    mid.475.1559:Int = Restore mid.475 : stmt.750
-    Ti124.478.1072.1193:Int = Add mid.475.1190 mid.475.1559 : stmt.99
-    mid.475.1074.1195:Int = SLL Ti124.478.1072.1193 -1 : stmt.100
-    b.341.1525:Int = Restore b.341 : stmt.717
-    x.476.1075.1196:Int = Mul mid.475.1074.1195 b.341.1525 : stmt.101
-    mid.475.1560:Int = Restore mid.475 : stmt.751
-    Ti126.477.1076.1197:Int = Sub mid.475.1560 mid.475.1190 : stmt.102
-    %g3:Int = IfLE Ti126.477.1076.1197 1 block.65 block.66 : stmt.103
-
-    [block.52]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.55 block.67 
-    Succ Blocks= block.49 
-
-    [block.53]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.50 
-    Succ Blocks= block.55 
-    %g3:Int = Mov mid.475.1190 : stmt.87
-
-    [block.54]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.50 
-    Succ Blocks= block.57 block.56 
-    mid.475.1079.1569:Int = Restore mid.475.1079 : stmt.759
-    Ti124.478.1077.1198:Int = Add mid.475.1079.1569 mid.475.1190 : stmt.88
-    mid.475.1079.1200:Int = SLL Ti124.478.1077.1198 -1 : stmt.89
-    b.341.1524:Int = Restore b.341 : stmt.716
-    x.476.1080.1201:Int = Mul mid.475.1079.1200 b.341.1524 : stmt.90
-    mid.475.1079.1570:Int = Restore mid.475.1079 : stmt.760
-    Ti126.477.1081.1202:Int = Sub mid.475.1190 mid.475.1079.1570 : stmt.91
-    %g3:Int = IfLE Ti126.477.1081.1202 1 block.56 block.57 : stmt.92
-
-    [block.55]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.53 block.58 
-    Succ Blocks= block.52 
-
-    [block.56]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.54 
-    Succ Blocks= block.58 
-    mid.475.1079.1568:Int = Restore mid.475.1079 : stmt.758
-    %g3:Int = Mov mid.475.1079.1568 : stmt.93
-
-    [block.57]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.54 
-    Succ Blocks= block.60 block.59 
-    a.340.1480:Int = Restore a.340 : stmt.672
-    %g3:Int = IfLE a.340.1480 x.476.1080.1201 block.59 block.60 : stmt.94
-
-    [block.58]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.56 block.61 
-    Succ Blocks= block.55 
-
-    [block.59]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.57 
-    Succ Blocks= block.63 block.62 
-    a.340.1479:Int = Restore a.340 : stmt.671
-    %g3:Int = IfEq x.476.1080.1201 a.340.1479 block.62 block.63 : stmt.95
+    %g3:Int = IfEq x.472 a.334 block.8 block.9 : stmt.35
 
     [block.6]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.3 
-    Succ Blocks= block.75 block.74 
-    mid.475.1557:Int = Restore mid.475 : stmt.748
-    right.343.1583:Int = Restore right.343 : stmt.773
-    Ti124.478.1072:Int = Add mid.475.1557 right.343.1583 : stmt.110
-    mid.475.1074:Int = SLL Ti124.478.1072 -1 : stmt.111
-    b.341.1523:Int = Restore b.341 : stmt.715
-    x.476.1075:Int = Mul mid.475.1074 b.341.1523 : stmt.112
-    mid.475.1558:Int = Restore mid.475 : stmt.749
-    right.343.1584:Int = Restore right.343 : stmt.774
-    Ti126.477.1076:Int = Sub right.343.1584 mid.475.1558 : stmt.113
-    %g3:Int = IfLE Ti126.477.1076 1 block.74 block.75 : stmt.114
-
-    [block.60]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.57 
-    Succ Blocks= block.61 
-    a.340.1478:Int = Restore a.340 : stmt.670
-    b.341.1522:Int = Restore b.341 : stmt.714
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1478 b.341.1522 mid.475.1079.1200 mid.475.1190 ) : stmt.98
-
-    [block.61]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.64 block.60 
-    Succ Blocks= block.58 
-
-    [block.62]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.59 
-    Succ Blocks= block.64 
-    %g3:Int = Mov mid.475.1079.1200 : stmt.96
-
-    [block.63]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.59 
-    Succ Blocks= block.64 
-    a.340.1477:Int = Restore a.340 : stmt.669
-    b.341.1521:Int = Restore b.341 : stmt.713
-    mid.475.1079.1567:Int = Restore mid.475.1079 : stmt.757
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1477 b.341.1521 mid.475.1079.1567 mid.475.1079.1200 ) : stmt.97
-
-    [block.64]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.62 block.63 
-    Succ Blocks= block.61 
-
-    [block.65]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.51 
-    Succ Blocks= block.67 
-    %g3:Int = Mov mid.475.1190 : stmt.104
-
-    [block.66]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.51 
-    Succ Blocks= block.69 block.68 
-    a.340.1476:Int = Restore a.340 : stmt.668
-    %g3:Int = IfLE a.340.1476 x.476.1075.1196 block.68 block.69 : stmt.105
-
-    [block.67]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.65 block.70 
-    Succ Blocks= block.52 
-
-    [block.68]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.66 
-    Succ Blocks= block.72 block.71 
-    a.340.1475:Int = Restore a.340 : stmt.667
-    %g3:Int = IfEq x.476.1075.1196 a.340.1475 block.71 block.72 : stmt.106
-
-    [block.69]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.66 
-    Succ Blocks= block.70 
-    a.340.1474:Int = Restore a.340 : stmt.666
-    b.341.1520:Int = Restore b.341 : stmt.712
-    mid.475.1556:Int = Restore mid.475 : stmt.747
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1474 b.341.1520 mid.475.1074.1195 mid.475.1556 ) : stmt.109
+    Succ Blocks= block.7 
+    %g3:Int = CallDir(<div_binary_search.333>, a.334 b.335 mid.471 right.337 ) : stmt.38
 
     [block.7]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.10 block.76 
+    {Parent : div_binary_search.333}
+    Pred Blocks= block.10 block.6 
     Succ Blocks= block.4 
 
-    [block.70]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.73 block.69 
-    Succ Blocks= block.67 
-
-    [block.71]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.68 
-    Succ Blocks= block.73 
-    %g3:Int = Mov mid.475.1074.1195 : stmt.107
-
-    [block.72]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.68 
-    Succ Blocks= block.73 
-    a.340.1473:Int = Restore a.340 : stmt.665
-    b.341.1519:Int = Restore b.341 : stmt.711
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1473 b.341.1519 mid.475.1190 mid.475.1074.1195 ) : stmt.108
-
-    [block.73]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.71 block.72 
-    Succ Blocks= block.70 
-
-    [block.74]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.6 
-    Succ Blocks= block.76 
-    mid.475.1555:Int = Restore mid.475 : stmt.746
-    %g3:Int = Mov mid.475.1555 : stmt.115
-
-    [block.75]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.6 
-    Succ Blocks= block.78 block.77 
-    a.340.1472:Int = Restore a.340 : stmt.664
-    %g3:Int = IfLE a.340.1472 x.476.1075 block.77 block.78 : stmt.116
-
-    [block.76]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.74 block.79 
-    Succ Blocks= block.7 
-
-    [block.77]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.75 
-    Succ Blocks= block.81 block.80 
-    a.340.1471:Int = Restore a.340 : stmt.663
-    %g3:Int = IfEq x.476.1075 a.340.1471 block.80 block.81 : stmt.117
-
-    [block.78]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.75 
-    Succ Blocks= block.111 block.110 
-    right.343.1581:Int = Restore right.343 : stmt.771
-    Ti124.478.1158:Int = Add mid.475.1074 right.343.1581 : stmt.150
-    mid.475.1160:Int = SLL Ti124.478.1158 -1 : stmt.151
-    b.341.1518:Int = Restore b.341 : stmt.710
-    x.476.1161:Int = Mul mid.475.1160 b.341.1518 : stmt.152
-    right.343.1582:Int = Restore right.343 : stmt.772
-    Ti126.477.1162:Int = Sub right.343.1582 mid.475.1074 : stmt.153
-    %g3:Int = IfLE Ti126.477.1162 1 block.110 block.111 : stmt.154
-
-    [block.79]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.82 block.112 
-    Succ Blocks= block.76 
-
     [block.8]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.5 
     Succ Blocks= block.10 
-    mid.475.1554:Int = Restore mid.475 : stmt.745
-    %g3:Int = Mov mid.475.1554 : stmt.38
-
-    [block.80]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.77 
-    Succ Blocks= block.82 
-    %g3:Int = Mov mid.475.1074 : stmt.118
-
-    [block.81]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.77 
-    Succ Blocks= block.84 block.83 
-    mid.475.1552:Int = Restore mid.475 : stmt.743
-    Ti124.478.1173:Int = Add mid.475.1552 mid.475.1074 : stmt.119
-    mid.475.1175:Int = SLL Ti124.478.1173 -1 : stmt.120
-    b.341.1517:Int = Restore b.341 : stmt.709
-    x.476.1176:Int = Mul mid.475.1175 b.341.1517 : stmt.121
-    mid.475.1553:Int = Restore mid.475 : stmt.744
-    Ti126.477.1177:Int = Sub mid.475.1074 mid.475.1553 : stmt.122
-    %g3:Int = IfLE Ti126.477.1177 1 block.83 block.84 : stmt.123
-
-    [block.82]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.80 block.85 
-    Succ Blocks= block.79 
-
-    [block.83]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.81 
-    Succ Blocks= block.85 
-    mid.475.1551:Int = Restore mid.475 : stmt.742
-    %g3:Int = Mov mid.475.1551 : stmt.124
-
-    [block.84]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.81 
-    Succ Blocks= block.87 block.86 
-    a.340.1470:Int = Restore a.340 : stmt.662
-    %g3:Int = IfLE a.340.1470 x.476.1176 block.86 block.87 : stmt.125
-
-    [block.85]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.83 block.88 
-    Succ Blocks= block.82 
-
-    [block.86]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.84 
-    Succ Blocks= block.90 block.89 
-    a.340.1469:Int = Restore a.340 : stmt.661
-    %g3:Int = IfEq x.476.1176 a.340.1469 block.89 block.90 : stmt.126
-
-    [block.87]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.84 
-    Succ Blocks= block.102 block.101 
-    Ti124.478.1072.1178:Int = Add mid.475.1175 mid.475.1074 : stmt.139
-    mid.475.1074.1180:Int = SLL Ti124.478.1072.1178 -1 : stmt.140
-    b.341.1516:Int = Restore b.341 : stmt.708
-    x.476.1075.1181:Int = Mul mid.475.1074.1180 b.341.1516 : stmt.141
-    Ti126.477.1076.1182:Int = Sub mid.475.1074 mid.475.1175 : stmt.142
-    %g3:Int = IfLE Ti126.477.1076.1182 1 block.101 block.102 : stmt.143
-
-    [block.88]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.91 block.103 
-    Succ Blocks= block.85 
-
-    [block.89]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.86 
-    Succ Blocks= block.91 
-    %g3:Int = Mov mid.475.1175 : stmt.127
+    %g3:Int = Mov mid.471 : stmt.36
 
     [block.9]
-    {Parent : div_binary_search.339}
+    {Parent : div_binary_search.333}
     Pred Blocks= block.5 
-    Succ Blocks= block.12 block.11 
-    mid.475.1549:Int = Restore mid.475 : stmt.740
-    Ti124.478.1077:Int = Add left.342 mid.475.1549 : stmt.39
-    mid.475.1079.1565:Int = SLL Ti124.478.1077 -1 : stmt.40
-    %dummy:Unit = Save mid.475.1079.1565 mid.475.1079 : stmt.755
-    b.341.1515:Int = Restore b.341 : stmt.707
-    mid.475.1079.1566:Int = Restore mid.475.1079 : stmt.756
-    x.476.1080:Int = Mul mid.475.1079.1566 b.341.1515 : stmt.41
-    mid.475.1550:Int = Restore mid.475 : stmt.741
-    Ti126.477.1081:Int = Sub mid.475.1550 left.342 : stmt.42
-    %g3:Int = IfLE Ti126.477.1081 1 block.11 block.12 : stmt.43
+    Succ Blocks= block.10 
+    %g3:Int = CallDir(<div_binary_search.333>, a.334 b.335 left.336 mid.471 ) : stmt.37
 
-    [block.90]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.86 
-    Succ Blocks= block.93 block.92 
-    mid.475.1547:Int = Restore mid.475 : stmt.738
-    Ti124.478.1077.1183:Int = Add mid.475.1547 mid.475.1175 : stmt.128
-    mid.475.1079.1185:Int = SLL Ti124.478.1077.1183 -1 : stmt.129
-    b.341.1514:Int = Restore b.341 : stmt.706
-    x.476.1080.1186:Int = Mul mid.475.1079.1185 b.341.1514 : stmt.130
-    mid.475.1548:Int = Restore mid.475 : stmt.739
-    Ti126.477.1081.1187:Int = Sub mid.475.1175 mid.475.1548 : stmt.131
-    %g3:Int = IfLE Ti126.477.1081.1187 1 block.92 block.93 : stmt.132
+color : 
+Ti118.474 => %g10
+Ti120.473 => %g16
+a.334 => %g14
+b.335 => %g13
+left.336 => %g11
+mid.471 => %g10
+right.337 => %g12
+x.472 => %g15
+<div_binary_search.333>
+stmt.39
+stmt.47
+stmt.46
+stmt.45
+stmt.44
+stmt.43
+stmt.42
+stmt.41
+stmt.40
+stmt.182
+stmt.181
+stmt.180
+stmt.179
+stmt.48
+stmt.52
+stmt.51
+stmt.50
+stmt.49
+stmt.60
+stmt.59
+stmt.58
+stmt.57
+stmt.56
+stmt.55
+stmt.54
+stmt.53
+stmt.61
+stmt.70
+stmt.69
+stmt.68
+stmt.67
+stmt.78
+stmt.77
+stmt.76
+stmt.75
+stmt.74
+stmt.73
+stmt.72
+stmt.71
+stmt.62
+stmt.66
+stmt.65
+stmt.64
+stmt.63
+stmt.79
+stmt.88
+stmt.87
+stmt.86
+stmt.85
+stmt.96
+stmt.95
+stmt.94
+stmt.93
+stmt.92
+stmt.91
+stmt.90
+stmt.89
+stmt.80
+stmt.84
+stmt.83
+stmt.82
+stmt.81
+stmt.97
+stmt.106
+stmt.105
+stmt.104
+stmt.103
+stmt.114
+stmt.113
+stmt.112
+stmt.111
+stmt.110
+stmt.109
+stmt.108
+stmt.107
+stmt.98
+stmt.102
+stmt.101
+stmt.100
+stmt.99
+stmt.115
+stmt.124
+stmt.123
+stmt.122
+stmt.121
+stmt.131
+stmt.130
+stmt.129
+stmt.128
+stmt.127
+stmt.126
+stmt.125
+stmt.116
+stmt.120
+stmt.119
+stmt.118
+stmt.117
+stmt.132
+stmt.141
+stmt.140
+stmt.139
+stmt.138
+stmt.148
+stmt.147
+stmt.146
+stmt.145
+stmt.144
+stmt.143
+stmt.142
+stmt.133
+stmt.137
+stmt.136
+stmt.135
+stmt.134
+stmt.149
+stmt.158
+stmt.157
+stmt.156
+stmt.155
+stmt.165
+stmt.164
+stmt.163
+stmt.162
+stmt.161
+stmt.160
+stmt.159
+stmt.150
+stmt.154
+stmt.153
+stmt.152
+stmt.151
+stmt.166
+stmt.175
+stmt.174
+stmt.173
+stmt.172
+stmt.178
+stmt.177
+stmt.176
+stmt.167
+stmt.171
+stmt.170
+stmt.169
+stmt.168
+<print_int.338> wish_env (0): 
+    <print_int.338>
 
-    [block.91]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.89 block.94 
-    Succ Blocks= block.88 
-
-    [block.92]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.90 
-    Succ Blocks= block.94 
-    mid.475.1546:Int = Restore mid.475 : stmt.737
-    %g3:Int = Mov mid.475.1546 : stmt.133
-
-    [block.93]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.90 
-    Succ Blocks= block.96 block.95 
-    a.340.1468:Int = Restore a.340 : stmt.660
-    %g3:Int = IfLE a.340.1468 x.476.1080.1186 block.95 block.96 : stmt.134
-
-    [block.94]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.92 block.97 
-    Succ Blocks= block.91 
-
-    [block.95]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.93 
-    Succ Blocks= block.99 block.98 
-    a.340.1467:Int = Restore a.340 : stmt.659
-    %g3:Int = IfEq x.476.1080.1186 a.340.1467 block.98 block.99 : stmt.135
-
-    [block.96]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.93 
-    Succ Blocks= block.97 
-    a.340.1466:Int = Restore a.340 : stmt.658
-    b.341.1513:Int = Restore b.341 : stmt.705
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1466 b.341.1513 mid.475.1079.1185 mid.475.1175 ) : stmt.138
-
-    [block.97]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.100 block.96 
-    Succ Blocks= block.94 
-
-    [block.98]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.95 
-    Succ Blocks= block.100 
-    %g3:Int = Mov mid.475.1079.1185 : stmt.136
-
-    [block.99]
-    {Parent : div_binary_search.339}
-    Pred Blocks= block.95 
-    Succ Blocks= block.100 
-    a.340.1465:Int = Restore a.340 : stmt.657
-    b.341.1512:Int = Restore b.341 : stmt.704
-    mid.475.1545:Int = Restore mid.475 : stmt.736
-    %g3:Int = CallDir(<div_binary_search.339>, a.340.1465 b.341.1512 mid.475.1545 mid.475.1079.1185 ) : stmt.137
-
-<div_binary_search.339>
-	args: %g5, %g4, %g7, %g3, 
-	fargs: 
-	ret: %g3
-	use_regs: %dummy, %f15, %g26, %g3, %g4, %g5, %g6, %g7, 
-    <print_int.344>
-
-    [block.137]
-    {Parent : print_int.344}
+    [block.11]
+    {Parent : print_int.338}
     Pred Blocks= 
-    Succ Blocks= block.139 block.138 
-    %dummy:Unit = IfGE x.345 0 block.138 block.139 : stmt.181
+    Succ Blocks= block.13 block.12 
+    %dummy:Unit = IfGE x.339 0 block.12 block.13 : stmt.39
 
-    [block.138]
-    {Parent : print_int.344}
-    Pred Blocks= block.137 
-    Succ Blocks= block.142 block.141 
-    x.476.1120:Int = Set 100000000 : stmt.182
-    tx.364:Int = IfLE x.345 x.476.1120 block.141 block.142 : stmt.183
+    [block.12]
+    {Parent : print_int.338}
+    Pred Blocks= block.11 
+    Succ Blocks= block.16 block.15 
+    Ti52.468:Int = Set 100000000 : stmt.40
+    Ti53.469:Int = Set 0 : stmt.41
+    Ti54.470:Int = Set 3 : stmt.42
+    tx.360:Int = CallDir(<div_binary_search.333>, x.339 Ti52.468 Ti53.469 Ti54.470 ) : stmt.43
+    Ti55.467:Int = Set 100000000 : stmt.44
+    dx.361:Int = Mul tx.360 Ti55.467 : stmt.45
+    x.362:Int = Sub x.339 dx.361 : stmt.46
+    flg.363:Bool = IfLE tx.360 0 block.15 block.16 : stmt.47
 
-    [block.139]
-    {Parent : print_int.344}
-    Pred Blocks= block.137 
-    Succ Blocks= block.140 
-    Ti122.363:Int = Set 45 : stmt.622
-    Tu16.361:Unit = CallDir(<min_caml_print_char>, Ti122.363 ) : stmt.623
-    Ti123.362:Int = Neg x.345 : stmt.624
-    %dummy:Unit = CallDir(<print_int.344>, Ti123.362 ) : stmt.625
+    [block.13]
+    {Parent : print_int.338}
+    Pred Blocks= block.11 
+    Succ Blocks= block.14 
+    Ti116.359:Int = Set 45 : stmt.179
+    Tu16.357:Unit = CallDir(<min_caml_print_char>, Ti116.359 ) : stmt.180
+    Ti117.358:Int = Neg x.339 : stmt.181
+    %dummy:Unit = CallDir(<print_int.338>, Ti117.358 ) : stmt.182
 
-    [block.140]
-    {Parent : print_int.344}
-    Pred Blocks= block.488 block.139 
+    [block.14]
+    {Parent : print_int.338}
+    Pred Blocks= block.56 block.13 
     Succ Blocks= 
 
-    [block.141]
-    {Parent : print_int.344}
-    Pred Blocks= block.138 
-    Succ Blocks= block.145 block.144 
-    tx.364:Int = IfEq x.476.1120 x.345 block.144 block.145 : stmt.184
-
-    [block.142]
-    {Parent : print_int.344}
-    Pred Blocks= block.138 
-    Succ Blocks= block.148 block.147 
-    x.476.1431:Int = Set 200000000 : stmt.187
-    tx.364:Int = IfLE x.345 x.476.1431 block.147 block.148 : stmt.188
-
-    [block.143]
-    {Parent : print_int.344}
-    Pred Blocks= block.146 block.149 
-    Succ Blocks= block.154 block.153 
-    Ti61.471:Int = Set 100000000 : stmt.193
-    dx.365:Int = Mul tx.364 Ti61.471 : stmt.194
-    x.366:Int = Sub x.345 dx.365 : stmt.195
-    flg.367.1632:Bool = IfLE tx.364 0 block.153 block.154 : stmt.196
-
-    [block.144]
-    {Parent : print_int.344}
-    Pred Blocks= block.141 
-    Succ Blocks= block.146 
-    tx.364:Int = Set 1 : stmt.185
-
-    [block.145]
-    {Parent : print_int.344}
-    Pred Blocks= block.141 
-    Succ Blocks= block.146 
-    tx.364:Int = Set 0 : stmt.186
-
-    [block.146]
-    {Parent : print_int.344}
-    Pred Blocks= block.144 block.145 
-    Succ Blocks= block.143 
-
-    [block.147]
-    {Parent : print_int.344}
-    Pred Blocks= block.142 
-    Succ Blocks= block.151 block.150 
-    tx.364:Int = IfEq x.476.1431 x.345 block.150 block.151 : stmt.189
-
-    [block.148]
-    {Parent : print_int.344}
-    Pred Blocks= block.142 
-    Succ Blocks= block.149 
-    tx.364:Int = Set 2 : stmt.192
-
-    [block.149]
-    {Parent : print_int.344}
-    Pred Blocks= block.152 block.148 
-    Succ Blocks= block.143 
-
-    [block.150]
-    {Parent : print_int.344}
-    Pred Blocks= block.147 
-    Succ Blocks= block.152 
-    tx.364:Int = Set 2 : stmt.190
-
-    [block.151]
-    {Parent : print_int.344}
-    Pred Blocks= block.147 
-    Succ Blocks= block.152 
-    tx.364:Int = Set 1 : stmt.191
-
-    [block.152]
-    {Parent : print_int.344}
-    Pred Blocks= block.150 block.151 
-    Succ Blocks= block.149 
-
-    [block.153]
-    {Parent : print_int.344}
-    Pred Blocks= block.143 
-    Succ Blocks= block.155 
-    flg.367.1632:Bool = Set 0 : stmt.197
-
-    [block.154]
-    {Parent : print_int.344}
-    Pred Blocks= block.143 
-    Succ Blocks= block.155 
-    Ti62.470:Int = Set 48 : stmt.198
-    Ti63.469:Int = Add Ti62.470 tx.364 : stmt.199
-    Tu17.468:Unit = CallDir(<min_caml_print_char>, Ti63.469 ) : stmt.200
-    flg.367.1632:Bool = Set 1 : stmt.201
-
-    [block.155]
-    {Parent : print_int.344}
-    Pred Blocks= block.153 block.154 
-    Succ Blocks= block.157 block.156 
-    %dummy:Unit = Save flg.367.1632 flg.367 : stmt.808
-    Ti64.465:Int = Set 10000000 : stmt.202
-    Ti65.466.1603:Int = Set 0 : stmt.203
-    %dummy:Unit = Save Ti65.466.1603 Ti65.466 : stmt.788
-    Ti66.467.1606:Int = Set 10 : stmt.204
-    %dummy:Unit = Save Ti66.467.1606 Ti66.467 : stmt.790
-    mid.475.1114.1671:Int = Set 5 : stmt.205
-    %dummy:Unit = Save mid.475.1114.1671 mid.475.1114 : stmt.846
-    x.476.1115:Int = Set 50000000 : stmt.206
-    tx.368:Int = IfLE x.366 x.476.1115 block.156 block.157 : stmt.207
-
-    [block.156]
-    {Parent : print_int.344}
-    Pred Blocks= block.155 
-    Succ Blocks= block.160 block.159 
-    tx.368:Int = IfEq x.476.1115 x.366 block.159 block.160 : stmt.208
-
-    [block.157]
-    {Parent : print_int.344}
-    Pred Blocks= block.155 
-    Succ Blocks= block.181 block.180 
-    mid.475.1400.1723:Int = Set 7 : stmt.229
-    %dummy:Unit = Save mid.475.1400.1723 mid.475.1400 : stmt.885
-    x.476.1401:Int = Set 70000000 : stmt.230
-    tx.368:Int = IfLE x.366 x.476.1401 block.180 block.181 : stmt.231
-
-    [block.158]
-    {Parent : print_int.344}
-    Pred Blocks= block.161 block.182 
-    Succ Blocks= block.199 block.198 
-    Ti67.464:Int = Set 10000000 : stmt.248
-    dx.369:Int = Mul tx.368 Ti67.464 : stmt.249
-    x.370:Int = Sub x.366 dx.369 : stmt.250
-    flg.371.1634:Bool = IfLE tx.368 0 block.198 block.199 : stmt.251
-
-    [block.159]
-    {Parent : print_int.344}
-    Pred Blocks= block.156 
-    Succ Blocks= block.161 
-    tx.368:Int = Set 5 : stmt.209
-
-    [block.160]
-    {Parent : print_int.344}
-    Pred Blocks= block.156 
-    Succ Blocks= block.163 block.162 
-    mid.475.1415.1727:Int = Set 2 : stmt.210
-    %dummy:Unit = Save mid.475.1415.1727 mid.475.1415 : stmt.888
-    x.476.1416:Int = Set 20000000 : stmt.211
-    tx.368:Int = IfLE x.366 x.476.1416 block.162 block.163 : stmt.212
-
-    [block.161]
-    {Parent : print_int.344}
-    Pred Blocks= block.159 block.164 
-    Succ Blocks= block.158 
-
-    [block.162]
-    {Parent : print_int.344}
-    Pred Blocks= block.160 
-    Succ Blocks= block.166 block.165 
-    tx.368:Int = IfEq x.476.1416 x.366 block.165 block.166 : stmt.213
-
-    [block.163]
-    {Parent : print_int.344}
-    Pred Blocks= block.160 
-    Succ Blocks= block.175 block.174 
-    mid.475.1074.1420:Int = Set 3 : stmt.222
-    x.476.1075.1421:Int = Set 30000000 : stmt.223
-    tx.368:Int = IfLE x.366 x.476.1075.1421 block.174 block.175 : stmt.224
-
-    [block.164]
-    {Parent : print_int.344}
-    Pred Blocks= block.167 block.176 
-    Succ Blocks= block.161 
-
-    [block.165]
-    {Parent : print_int.344}
-    Pred Blocks= block.162 
-    Succ Blocks= block.167 
-    tx.368:Int = Set 2 : stmt.214
-
-    [block.166]
-    {Parent : print_int.344}
-    Pred Blocks= block.162 
-    Succ Blocks= block.169 block.168 
-    mid.475.1079.1425:Int = Set 1 : stmt.215
-    x.476.1080.1426:Int = Set 10000000 : stmt.216
-    tx.368:Int = IfLE x.366 x.476.1080.1426 block.168 block.169 : stmt.217
-
-    [block.167]
-    {Parent : print_int.344}
-    Pred Blocks= block.165 block.170 
-    Succ Blocks= block.164 
-
-    [block.168]
-    {Parent : print_int.344}
-    Pred Blocks= block.166 
-    Succ Blocks= block.172 block.171 
-    tx.368:Int = IfEq x.476.1080.1426 x.366 block.171 block.172 : stmt.218
-
-    [block.169]
-    {Parent : print_int.344}
-    Pred Blocks= block.166 
-    Succ Blocks= block.170 
-    mid.475.1415.1729:Int = Restore mid.475.1415 : stmt.890
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1079.1425 mid.475.1415.1729 ) : stmt.221
-
-    [block.170]
-    {Parent : print_int.344}
-    Pred Blocks= block.173 block.169 
-    Succ Blocks= block.167 
-
-    [block.171]
-    {Parent : print_int.344}
-    Pred Blocks= block.168 
-    Succ Blocks= block.173 
-    tx.368:Int = Set 1 : stmt.219
-
-    [block.172]
-    {Parent : print_int.344}
-    Pred Blocks= block.168 
-    Succ Blocks= block.173 
-    Ti65.466.1604:Int = Restore Ti65.466 : stmt.789
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 Ti65.466.1604 mid.475.1079.1425 ) : stmt.220
-
-    [block.173]
-    {Parent : print_int.344}
-    Pred Blocks= block.171 block.172 
-    Succ Blocks= block.170 
-
-    [block.174]
-    {Parent : print_int.344}
-    Pred Blocks= block.163 
-    Succ Blocks= block.178 block.177 
-    tx.368:Int = IfEq x.476.1075.1421 x.366 block.177 block.178 : stmt.225
-
-    [block.175]
-    {Parent : print_int.344}
-    Pred Blocks= block.163 
-    Succ Blocks= block.176 
-    mid.475.1114.1673:Int = Restore mid.475.1114 : stmt.848
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1074.1420 mid.475.1114.1673 ) : stmt.228
-
-    [block.176]
-    {Parent : print_int.344}
-    Pred Blocks= block.179 block.175 
-    Succ Blocks= block.164 
-
-    [block.177]
-    {Parent : print_int.344}
-    Pred Blocks= block.174 
-    Succ Blocks= block.179 
-    tx.368:Int = Set 3 : stmt.226
-
-    [block.178]
-    {Parent : print_int.344}
-    Pred Blocks= block.174 
-    Succ Blocks= block.179 
-    mid.475.1415.1728:Int = Restore mid.475.1415 : stmt.889
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1415.1728 mid.475.1074.1420 ) : stmt.227
-
-    [block.179]
-    {Parent : print_int.344}
-    Pred Blocks= block.177 block.178 
-    Succ Blocks= block.176 
-
-    [block.180]
-    {Parent : print_int.344}
-    Pred Blocks= block.157 
-    Succ Blocks= block.184 block.183 
-    tx.368:Int = IfEq x.476.1401 x.366 block.183 block.184 : stmt.232
-
-    [block.181]
-    {Parent : print_int.344}
-    Pred Blocks= block.157 
-    Succ Blocks= block.193 block.192 
-    mid.475.1074.1405:Int = Set 8 : stmt.241
-    x.476.1075.1406:Int = Set 80000000 : stmt.242
-    tx.368:Int = IfLE x.366 x.476.1075.1406 block.192 block.193 : stmt.243
-
-    [block.182]
-    {Parent : print_int.344}
-    Pred Blocks= block.185 block.194 
-    Succ Blocks= block.158 
-
-    [block.183]
-    {Parent : print_int.344}
-    Pred Blocks= block.180 
-    Succ Blocks= block.185 
-    tx.368:Int = Set 7 : stmt.233
-
-    [block.184]
-    {Parent : print_int.344}
-    Pred Blocks= block.180 
-    Succ Blocks= block.187 block.186 
-    mid.475.1079.1410:Int = Set 6 : stmt.234
-    x.476.1080.1411:Int = Set 60000000 : stmt.235
-    tx.368:Int = IfLE x.366 x.476.1080.1411 block.186 block.187 : stmt.236
-
-    [block.185]
-    {Parent : print_int.344}
-    Pred Blocks= block.183 block.188 
-    Succ Blocks= block.182 
-
-    [block.186]
-    {Parent : print_int.344}
-    Pred Blocks= block.184 
-    Succ Blocks= block.190 block.189 
-    tx.368:Int = IfEq x.476.1080.1411 x.366 block.189 block.190 : stmt.237
-
-    [block.187]
-    {Parent : print_int.344}
-    Pred Blocks= block.184 
-    Succ Blocks= block.188 
-    mid.475.1400.1725:Int = Restore mid.475.1400 : stmt.887
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1079.1410 mid.475.1400.1725 ) : stmt.240
-
-    [block.188]
-    {Parent : print_int.344}
-    Pred Blocks= block.191 block.187 
-    Succ Blocks= block.185 
-
-    [block.189]
-    {Parent : print_int.344}
-    Pred Blocks= block.186 
-    Succ Blocks= block.191 
-    tx.368:Int = Set 6 : stmt.238
-
-    [block.190]
-    {Parent : print_int.344}
-    Pred Blocks= block.186 
-    Succ Blocks= block.191 
-    mid.475.1114.1672:Int = Restore mid.475.1114 : stmt.847
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1114.1672 mid.475.1079.1410 ) : stmt.239
-
-    [block.191]
-    {Parent : print_int.344}
-    Pred Blocks= block.189 block.190 
-    Succ Blocks= block.188 
-
-    [block.192]
-    {Parent : print_int.344}
-    Pred Blocks= block.181 
-    Succ Blocks= block.196 block.195 
-    tx.368:Int = IfEq x.476.1075.1406 x.366 block.195 block.196 : stmt.244
-
-    [block.193]
-    {Parent : print_int.344}
-    Pred Blocks= block.181 
-    Succ Blocks= block.194 
-    Ti66.467.1607:Int = Restore Ti66.467 : stmt.791
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1074.1405 Ti66.467.1607 ) : stmt.247
-
-    [block.194]
-    {Parent : print_int.344}
-    Pred Blocks= block.197 block.193 
-    Succ Blocks= block.182 
-
-    [block.195]
-    {Parent : print_int.344}
-    Pred Blocks= block.192 
-    Succ Blocks= block.197 
-    tx.368:Int = Set 8 : stmt.245
-
-    [block.196]
-    {Parent : print_int.344}
-    Pred Blocks= block.192 
-    Succ Blocks= block.197 
-    mid.475.1400.1724:Int = Restore mid.475.1400 : stmt.886
-    tx.368:Int = CallDir(<div_binary_search.339>, x.366 Ti64.465 mid.475.1400.1724 mid.475.1074.1405 ) : stmt.246
-
-    [block.197]
-    {Parent : print_int.344}
-    Pred Blocks= block.195 block.196 
-    Succ Blocks= block.194 
-
-    [block.198]
-    {Parent : print_int.344}
-    Pred Blocks= block.158 
-    Succ Blocks= block.202 block.201 
-    flg.367.1633:Int = Restore flg.367 : stmt.809
-    flg.371.1634:Bool = IfEq flg.367.1633 0 block.201 block.202 : stmt.252
-
-    [block.199]
-    {Parent : print_int.344}
-    Pred Blocks= block.158 
-    Succ Blocks= block.200 
-    Ti70.460:Int = Set 48 : stmt.258
-    Ti71.459:Int = Add Ti70.460 tx.368 : stmt.259
-    Tu19.458:Unit = CallDir(<min_caml_print_char>, Ti71.459 ) : stmt.260
-    flg.371.1634:Bool = Set 1 : stmt.261
-
-    [block.200]
-    {Parent : print_int.344}
-    Pred Blocks= block.203 block.199 
-    Succ Blocks= block.205 block.204 
-    %dummy:Unit = Save flg.371.1634 flg.371 : stmt.811
-    Ti72.455:Int = Set 1000000 : stmt.262
-    Ti73.456.1609:Int = Set 0 : stmt.263
-    %dummy:Unit = Save Ti73.456.1609 Ti73.456 : stmt.792
-    Ti74.457.1612:Int = Set 10 : stmt.264
-    %dummy:Unit = Save Ti74.457.1612 Ti74.457 : stmt.794
-    mid.475.1109.1667:Int = Set 5 : stmt.265
-    %dummy:Unit = Save mid.475.1109.1667 mid.475.1109 : stmt.843
-    x.476.1110:Int = Set 5000000 : stmt.266
-    tx.372:Int = IfLE x.370 x.476.1110 block.204 block.205 : stmt.267
-
-    [block.201]
-    {Parent : print_int.344}
-    Pred Blocks= block.198 
-    Succ Blocks= block.203 
-    flg.371.1634:Bool = Set 0 : stmt.253
-
-    [block.202]
-    {Parent : print_int.344}
-    Pred Blocks= block.198 
-    Succ Blocks= block.203 
-    Ti68.463:Int = Set 48 : stmt.254
-    Ti69.462:Int = Add Ti68.463 tx.368 : stmt.255
-    Tu18.461:Unit = CallDir(<min_caml_print_char>, Ti69.462 ) : stmt.256
-    flg.371.1634:Bool = Set 1 : stmt.257
-
-    [block.203]
-    {Parent : print_int.344}
-    Pred Blocks= block.201 block.202 
-    Succ Blocks= block.200 
-    %dummy:Unit = Save flg.371.1634 flg.371 : stmt.810
-
-    [block.204]
-    {Parent : print_int.344}
-    Pred Blocks= block.200 
-    Succ Blocks= block.208 block.207 
-    tx.372:Int = IfEq x.476.1110 x.370 block.207 block.208 : stmt.268
-
-    [block.205]
-    {Parent : print_int.344}
-    Pred Blocks= block.200 
-    Succ Blocks= block.229 block.228 
-    mid.475.1370.1715:Int = Set 7 : stmt.289
-    %dummy:Unit = Save mid.475.1370.1715 mid.475.1370 : stmt.879
-    x.476.1371:Int = Set 7000000 : stmt.290
-    tx.372:Int = IfLE x.370 x.476.1371 block.228 block.229 : stmt.291
-
-    [block.206]
-    {Parent : print_int.344}
-    Pred Blocks= block.209 block.230 
-    Succ Blocks= block.247 block.246 
-    Ti75.454:Int = Set 1000000 : stmt.308
-    dx.373:Int = Mul tx.372 Ti75.454 : stmt.309
-    x.374:Int = Sub x.370 dx.373 : stmt.310
-    flg.375.1636:Bool = IfLE tx.372 0 block.246 block.247 : stmt.311
-
-    [block.207]
-    {Parent : print_int.344}
-    Pred Blocks= block.204 
-    Succ Blocks= block.209 
-    tx.372:Int = Set 5 : stmt.269
-
-    [block.208]
-    {Parent : print_int.344}
-    Pred Blocks= block.204 
-    Succ Blocks= block.211 block.210 
-    mid.475.1385.1719:Int = Set 2 : stmt.270
-    %dummy:Unit = Save mid.475.1385.1719 mid.475.1385 : stmt.882
-    x.476.1386:Int = Set 2000000 : stmt.271
-    tx.372:Int = IfLE x.370 x.476.1386 block.210 block.211 : stmt.272
-
-    [block.209]
-    {Parent : print_int.344}
-    Pred Blocks= block.207 block.212 
-    Succ Blocks= block.206 
-
-    [block.210]
-    {Parent : print_int.344}
-    Pred Blocks= block.208 
-    Succ Blocks= block.214 block.213 
-    tx.372:Int = IfEq x.476.1386 x.370 block.213 block.214 : stmt.273
-
-    [block.211]
-    {Parent : print_int.344}
-    Pred Blocks= block.208 
-    Succ Blocks= block.223 block.222 
-    mid.475.1074.1390:Int = Set 3 : stmt.282
-    x.476.1075.1391:Int = Set 3000000 : stmt.283
-    tx.372:Int = IfLE x.370 x.476.1075.1391 block.222 block.223 : stmt.284
-
-    [block.212]
-    {Parent : print_int.344}
-    Pred Blocks= block.215 block.224 
-    Succ Blocks= block.209 
-
-    [block.213]
-    {Parent : print_int.344}
-    Pred Blocks= block.210 
-    Succ Blocks= block.215 
-    tx.372:Int = Set 2 : stmt.274
-
-    [block.214]
-    {Parent : print_int.344}
-    Pred Blocks= block.210 
-    Succ Blocks= block.217 block.216 
-    mid.475.1079.1395:Int = Set 1 : stmt.275
-    x.476.1080.1396:Int = Set 1000000 : stmt.276
-    tx.372:Int = IfLE x.370 x.476.1080.1396 block.216 block.217 : stmt.277
-
-    [block.215]
-    {Parent : print_int.344}
-    Pred Blocks= block.213 block.218 
-    Succ Blocks= block.212 
-
-    [block.216]
-    {Parent : print_int.344}
-    Pred Blocks= block.214 
-    Succ Blocks= block.220 block.219 
-    tx.372:Int = IfEq x.476.1080.1396 x.370 block.219 block.220 : stmt.278
-
-    [block.217]
-    {Parent : print_int.344}
-    Pred Blocks= block.214 
-    Succ Blocks= block.218 
-    mid.475.1385.1721:Int = Restore mid.475.1385 : stmt.884
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1079.1395 mid.475.1385.1721 ) : stmt.281
-
-    [block.218]
-    {Parent : print_int.344}
-    Pred Blocks= block.221 block.217 
-    Succ Blocks= block.215 
-
-    [block.219]
-    {Parent : print_int.344}
-    Pred Blocks= block.216 
-    Succ Blocks= block.221 
-    tx.372:Int = Set 1 : stmt.279
-
-    [block.220]
-    {Parent : print_int.344}
-    Pred Blocks= block.216 
-    Succ Blocks= block.221 
-    Ti73.456.1610:Int = Restore Ti73.456 : stmt.793
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 Ti73.456.1610 mid.475.1079.1395 ) : stmt.280
-
-    [block.221]
-    {Parent : print_int.344}
-    Pred Blocks= block.219 block.220 
-    Succ Blocks= block.218 
-
-    [block.222]
-    {Parent : print_int.344}
-    Pred Blocks= block.211 
-    Succ Blocks= block.226 block.225 
-    tx.372:Int = IfEq x.476.1075.1391 x.370 block.225 block.226 : stmt.285
-
-    [block.223]
-    {Parent : print_int.344}
-    Pred Blocks= block.211 
-    Succ Blocks= block.224 
-    mid.475.1109.1669:Int = Restore mid.475.1109 : stmt.845
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1074.1390 mid.475.1109.1669 ) : stmt.288
-
-    [block.224]
-    {Parent : print_int.344}
-    Pred Blocks= block.227 block.223 
-    Succ Blocks= block.212 
-
-    [block.225]
-    {Parent : print_int.344}
-    Pred Blocks= block.222 
-    Succ Blocks= block.227 
-    tx.372:Int = Set 3 : stmt.286
-
-    [block.226]
-    {Parent : print_int.344}
-    Pred Blocks= block.222 
-    Succ Blocks= block.227 
-    mid.475.1385.1720:Int = Restore mid.475.1385 : stmt.883
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1385.1720 mid.475.1074.1390 ) : stmt.287
-
-    [block.227]
-    {Parent : print_int.344}
-    Pred Blocks= block.225 block.226 
-    Succ Blocks= block.224 
-
-    [block.228]
-    {Parent : print_int.344}
-    Pred Blocks= block.205 
-    Succ Blocks= block.232 block.231 
-    tx.372:Int = IfEq x.476.1371 x.370 block.231 block.232 : stmt.292
-
-    [block.229]
-    {Parent : print_int.344}
-    Pred Blocks= block.205 
-    Succ Blocks= block.241 block.240 
-    mid.475.1074.1375:Int = Set 8 : stmt.301
-    x.476.1075.1376:Int = Set 8000000 : stmt.302
-    tx.372:Int = IfLE x.370 x.476.1075.1376 block.240 block.241 : stmt.303
-
-    [block.230]
-    {Parent : print_int.344}
-    Pred Blocks= block.233 block.242 
-    Succ Blocks= block.206 
-
-    [block.231]
-    {Parent : print_int.344}
-    Pred Blocks= block.228 
-    Succ Blocks= block.233 
-    tx.372:Int = Set 7 : stmt.293
-
-    [block.232]
-    {Parent : print_int.344}
-    Pred Blocks= block.228 
-    Succ Blocks= block.235 block.234 
-    mid.475.1079.1380:Int = Set 6 : stmt.294
-    x.476.1080.1381:Int = Set 6000000 : stmt.295
-    tx.372:Int = IfLE x.370 x.476.1080.1381 block.234 block.235 : stmt.296
-
-    [block.233]
-    {Parent : print_int.344}
-    Pred Blocks= block.231 block.236 
-    Succ Blocks= block.230 
-
-    [block.234]
-    {Parent : print_int.344}
-    Pred Blocks= block.232 
-    Succ Blocks= block.238 block.237 
-    tx.372:Int = IfEq x.476.1080.1381 x.370 block.237 block.238 : stmt.297
-
-    [block.235]
-    {Parent : print_int.344}
-    Pred Blocks= block.232 
-    Succ Blocks= block.236 
-    mid.475.1370.1717:Int = Restore mid.475.1370 : stmt.881
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1079.1380 mid.475.1370.1717 ) : stmt.300
-
-    [block.236]
-    {Parent : print_int.344}
-    Pred Blocks= block.239 block.235 
-    Succ Blocks= block.233 
-
-    [block.237]
-    {Parent : print_int.344}
-    Pred Blocks= block.234 
-    Succ Blocks= block.239 
-    tx.372:Int = Set 6 : stmt.298
-
-    [block.238]
-    {Parent : print_int.344}
-    Pred Blocks= block.234 
-    Succ Blocks= block.239 
-    mid.475.1109.1668:Int = Restore mid.475.1109 : stmt.844
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1109.1668 mid.475.1079.1380 ) : stmt.299
-
-    [block.239]
-    {Parent : print_int.344}
-    Pred Blocks= block.237 block.238 
-    Succ Blocks= block.236 
-
-    [block.240]
-    {Parent : print_int.344}
-    Pred Blocks= block.229 
-    Succ Blocks= block.244 block.243 
-    tx.372:Int = IfEq x.476.1075.1376 x.370 block.243 block.244 : stmt.304
-
-    [block.241]
-    {Parent : print_int.344}
-    Pred Blocks= block.229 
-    Succ Blocks= block.242 
-    Ti74.457.1613:Int = Restore Ti74.457 : stmt.795
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1074.1375 Ti74.457.1613 ) : stmt.307
-
-    [block.242]
-    {Parent : print_int.344}
-    Pred Blocks= block.245 block.241 
-    Succ Blocks= block.230 
-
-    [block.243]
-    {Parent : print_int.344}
-    Pred Blocks= block.240 
-    Succ Blocks= block.245 
-    tx.372:Int = Set 8 : stmt.305
-
-    [block.244]
-    {Parent : print_int.344}
-    Pred Blocks= block.240 
-    Succ Blocks= block.245 
-    mid.475.1370.1716:Int = Restore mid.475.1370 : stmt.880
-    tx.372:Int = CallDir(<div_binary_search.339>, x.370 Ti72.455 mid.475.1370.1716 mid.475.1074.1375 ) : stmt.306
-
-    [block.245]
-    {Parent : print_int.344}
-    Pred Blocks= block.243 block.244 
-    Succ Blocks= block.242 
-
-    [block.246]
-    {Parent : print_int.344}
-    Pred Blocks= block.206 
-    Succ Blocks= block.250 block.249 
-    flg.371.1635:Int = Restore flg.371 : stmt.812
-    flg.375.1636:Bool = IfEq flg.371.1635 0 block.249 block.250 : stmt.312
-
-    [block.247]
-    {Parent : print_int.344}
-    Pred Blocks= block.206 
-    Succ Blocks= block.248 
-    Ti78.450:Int = Set 48 : stmt.318
-    Ti79.449:Int = Add Ti78.450 tx.372 : stmt.319
-    Tu21.448:Unit = CallDir(<min_caml_print_char>, Ti79.449 ) : stmt.320
-    flg.375.1636:Bool = Set 1 : stmt.321
-
-    [block.248]
-    {Parent : print_int.344}
-    Pred Blocks= block.251 block.247 
-    Succ Blocks= block.253 block.252 
-    %dummy:Unit = Save flg.375.1636 flg.375 : stmt.814
-    Ti80.445:Int = Set 100000 : stmt.322
-    Ti81.446.1615:Int = Set 0 : stmt.323
-    %dummy:Unit = Save Ti81.446.1615 Ti81.446 : stmt.796
-    Ti82.447.1618:Int = Set 10 : stmt.324
-    %dummy:Unit = Save Ti82.447.1618 Ti82.447 : stmt.798
-    mid.475.1104.1663:Int = Set 5 : stmt.325
-    %dummy:Unit = Save mid.475.1104.1663 mid.475.1104 : stmt.840
-    x.476.1105:Int = Set 500000 : stmt.326
-    tx.376:Int = IfLE x.374 x.476.1105 block.252 block.253 : stmt.327
-
-    [block.249]
-    {Parent : print_int.344}
-    Pred Blocks= block.246 
-    Succ Blocks= block.251 
-    flg.375.1636:Bool = Set 0 : stmt.313
-
-    [block.250]
-    {Parent : print_int.344}
-    Pred Blocks= block.246 
-    Succ Blocks= block.251 
-    Ti76.453:Int = Set 48 : stmt.314
-    Ti77.452:Int = Add Ti76.453 tx.372 : stmt.315
-    Tu20.451:Unit = CallDir(<min_caml_print_char>, Ti77.452 ) : stmt.316
-    flg.375.1636:Bool = Set 1 : stmt.317
-
-    [block.251]
-    {Parent : print_int.344}
-    Pred Blocks= block.249 block.250 
-    Succ Blocks= block.248 
-    %dummy:Unit = Save flg.375.1636 flg.375 : stmt.813
-
-    [block.252]
-    {Parent : print_int.344}
-    Pred Blocks= block.248 
-    Succ Blocks= block.256 block.255 
-    tx.376:Int = IfEq x.476.1105 x.374 block.255 block.256 : stmt.328
-
-    [block.253]
-    {Parent : print_int.344}
-    Pred Blocks= block.248 
-    Succ Blocks= block.277 block.276 
-    mid.475.1340.1707:Int = Set 7 : stmt.349
-    %dummy:Unit = Save mid.475.1340.1707 mid.475.1340 : stmt.873
-    x.476.1341:Int = Set 700000 : stmt.350
-    tx.376:Int = IfLE x.374 x.476.1341 block.276 block.277 : stmt.351
-
-    [block.254]
-    {Parent : print_int.344}
-    Pred Blocks= block.257 block.278 
-    Succ Blocks= block.295 block.294 
-    Ti83.444:Int = Set 100000 : stmt.368
-    dx.377:Int = Mul tx.376 Ti83.444 : stmt.369
-    x.378:Int = Sub x.374 dx.377 : stmt.370
-    flg.379.1638:Bool = IfLE tx.376 0 block.294 block.295 : stmt.371
-
-    [block.255]
-    {Parent : print_int.344}
-    Pred Blocks= block.252 
-    Succ Blocks= block.257 
-    tx.376:Int = Set 5 : stmt.329
-
-    [block.256]
-    {Parent : print_int.344}
-    Pred Blocks= block.252 
-    Succ Blocks= block.259 block.258 
-    mid.475.1355.1711:Int = Set 2 : stmt.330
-    %dummy:Unit = Save mid.475.1355.1711 mid.475.1355 : stmt.876
-    x.476.1356:Int = Set 200000 : stmt.331
-    tx.376:Int = IfLE x.374 x.476.1356 block.258 block.259 : stmt.332
-
-    [block.257]
-    {Parent : print_int.344}
-    Pred Blocks= block.255 block.260 
-    Succ Blocks= block.254 
-
-    [block.258]
-    {Parent : print_int.344}
-    Pred Blocks= block.256 
-    Succ Blocks= block.262 block.261 
-    tx.376:Int = IfEq x.476.1356 x.374 block.261 block.262 : stmt.333
-
-    [block.259]
-    {Parent : print_int.344}
-    Pred Blocks= block.256 
-    Succ Blocks= block.271 block.270 
-    mid.475.1074.1360:Int = Set 3 : stmt.342
-    x.476.1075.1361:Int = Set 300000 : stmt.343
-    tx.376:Int = IfLE x.374 x.476.1075.1361 block.270 block.271 : stmt.344
-
-    [block.260]
-    {Parent : print_int.344}
-    Pred Blocks= block.263 block.272 
-    Succ Blocks= block.257 
-
-    [block.261]
-    {Parent : print_int.344}
-    Pred Blocks= block.258 
-    Succ Blocks= block.263 
-    tx.376:Int = Set 2 : stmt.334
-
-    [block.262]
-    {Parent : print_int.344}
-    Pred Blocks= block.258 
-    Succ Blocks= block.265 block.264 
-    mid.475.1079.1365:Int = Set 1 : stmt.335
-    x.476.1080.1366:Int = Set 100000 : stmt.336
-    tx.376:Int = IfLE x.374 x.476.1080.1366 block.264 block.265 : stmt.337
-
-    [block.263]
-    {Parent : print_int.344}
-    Pred Blocks= block.261 block.266 
-    Succ Blocks= block.260 
-
-    [block.264]
-    {Parent : print_int.344}
-    Pred Blocks= block.262 
-    Succ Blocks= block.268 block.267 
-    tx.376:Int = IfEq x.476.1080.1366 x.374 block.267 block.268 : stmt.338
-
-    [block.265]
-    {Parent : print_int.344}
-    Pred Blocks= block.262 
-    Succ Blocks= block.266 
-    mid.475.1355.1713:Int = Restore mid.475.1355 : stmt.878
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1079.1365 mid.475.1355.1713 ) : stmt.341
-
-    [block.266]
-    {Parent : print_int.344}
-    Pred Blocks= block.269 block.265 
-    Succ Blocks= block.263 
-
-    [block.267]
-    {Parent : print_int.344}
-    Pred Blocks= block.264 
-    Succ Blocks= block.269 
-    tx.376:Int = Set 1 : stmt.339
-
-    [block.268]
-    {Parent : print_int.344}
-    Pred Blocks= block.264 
-    Succ Blocks= block.269 
-    Ti81.446.1616:Int = Restore Ti81.446 : stmt.797
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 Ti81.446.1616 mid.475.1079.1365 ) : stmt.340
-
-    [block.269]
-    {Parent : print_int.344}
-    Pred Blocks= block.267 block.268 
-    Succ Blocks= block.266 
-
-    [block.270]
-    {Parent : print_int.344}
-    Pred Blocks= block.259 
-    Succ Blocks= block.274 block.273 
-    tx.376:Int = IfEq x.476.1075.1361 x.374 block.273 block.274 : stmt.345
-
-    [block.271]
-    {Parent : print_int.344}
-    Pred Blocks= block.259 
-    Succ Blocks= block.272 
-    mid.475.1104.1665:Int = Restore mid.475.1104 : stmt.842
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1074.1360 mid.475.1104.1665 ) : stmt.348
-
-    [block.272]
-    {Parent : print_int.344}
-    Pred Blocks= block.275 block.271 
-    Succ Blocks= block.260 
-
-    [block.273]
-    {Parent : print_int.344}
-    Pred Blocks= block.270 
-    Succ Blocks= block.275 
-    tx.376:Int = Set 3 : stmt.346
-
-    [block.274]
-    {Parent : print_int.344}
-    Pred Blocks= block.270 
-    Succ Blocks= block.275 
-    mid.475.1355.1712:Int = Restore mid.475.1355 : stmt.877
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1355.1712 mid.475.1074.1360 ) : stmt.347
-
-    [block.275]
-    {Parent : print_int.344}
-    Pred Blocks= block.273 block.274 
-    Succ Blocks= block.272 
-
-    [block.276]
-    {Parent : print_int.344}
-    Pred Blocks= block.253 
-    Succ Blocks= block.280 block.279 
-    tx.376:Int = IfEq x.476.1341 x.374 block.279 block.280 : stmt.352
-
-    [block.277]
-    {Parent : print_int.344}
-    Pred Blocks= block.253 
-    Succ Blocks= block.289 block.288 
-    mid.475.1074.1345:Int = Set 8 : stmt.361
-    x.476.1075.1346:Int = Set 800000 : stmt.362
-    tx.376:Int = IfLE x.374 x.476.1075.1346 block.288 block.289 : stmt.363
-
-    [block.278]
-    {Parent : print_int.344}
-    Pred Blocks= block.281 block.290 
-    Succ Blocks= block.254 
-
-    [block.279]
-    {Parent : print_int.344}
-    Pred Blocks= block.276 
-    Succ Blocks= block.281 
-    tx.376:Int = Set 7 : stmt.353
-
-    [block.280]
-    {Parent : print_int.344}
-    Pred Blocks= block.276 
-    Succ Blocks= block.283 block.282 
-    mid.475.1079.1350:Int = Set 6 : stmt.354
-    x.476.1080.1351:Int = Set 600000 : stmt.355
-    tx.376:Int = IfLE x.374 x.476.1080.1351 block.282 block.283 : stmt.356
-
-    [block.281]
-    {Parent : print_int.344}
-    Pred Blocks= block.279 block.284 
-    Succ Blocks= block.278 
-
-    [block.282]
-    {Parent : print_int.344}
-    Pred Blocks= block.280 
-    Succ Blocks= block.286 block.285 
-    tx.376:Int = IfEq x.476.1080.1351 x.374 block.285 block.286 : stmt.357
-
-    [block.283]
-    {Parent : print_int.344}
-    Pred Blocks= block.280 
-    Succ Blocks= block.284 
-    mid.475.1340.1709:Int = Restore mid.475.1340 : stmt.875
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1079.1350 mid.475.1340.1709 ) : stmt.360
-
-    [block.284]
-    {Parent : print_int.344}
-    Pred Blocks= block.287 block.283 
-    Succ Blocks= block.281 
-
-    [block.285]
-    {Parent : print_int.344}
-    Pred Blocks= block.282 
-    Succ Blocks= block.287 
-    tx.376:Int = Set 6 : stmt.358
-
-    [block.286]
-    {Parent : print_int.344}
-    Pred Blocks= block.282 
-    Succ Blocks= block.287 
-    mid.475.1104.1664:Int = Restore mid.475.1104 : stmt.841
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1104.1664 mid.475.1079.1350 ) : stmt.359
-
-    [block.287]
-    {Parent : print_int.344}
-    Pred Blocks= block.285 block.286 
-    Succ Blocks= block.284 
-
-    [block.288]
-    {Parent : print_int.344}
-    Pred Blocks= block.277 
-    Succ Blocks= block.292 block.291 
-    tx.376:Int = IfEq x.476.1075.1346 x.374 block.291 block.292 : stmt.364
-
-    [block.289]
-    {Parent : print_int.344}
-    Pred Blocks= block.277 
-    Succ Blocks= block.290 
-    Ti82.447.1619:Int = Restore Ti82.447 : stmt.799
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1074.1345 Ti82.447.1619 ) : stmt.367
-
-    [block.290]
-    {Parent : print_int.344}
-    Pred Blocks= block.293 block.289 
-    Succ Blocks= block.278 
-
-    [block.291]
-    {Parent : print_int.344}
-    Pred Blocks= block.288 
-    Succ Blocks= block.293 
-    tx.376:Int = Set 8 : stmt.365
-
-    [block.292]
-    {Parent : print_int.344}
-    Pred Blocks= block.288 
-    Succ Blocks= block.293 
-    mid.475.1340.1708:Int = Restore mid.475.1340 : stmt.874
-    tx.376:Int = CallDir(<div_binary_search.339>, x.374 Ti80.445 mid.475.1340.1708 mid.475.1074.1345 ) : stmt.366
-
-    [block.293]
-    {Parent : print_int.344}
-    Pred Blocks= block.291 block.292 
-    Succ Blocks= block.290 
-
-    [block.294]
-    {Parent : print_int.344}
-    Pred Blocks= block.254 
-    Succ Blocks= block.298 block.297 
-    flg.375.1637:Int = Restore flg.375 : stmt.815
-    flg.379.1638:Bool = IfEq flg.375.1637 0 block.297 block.298 : stmt.372
-
-    [block.295]
-    {Parent : print_int.344}
-    Pred Blocks= block.254 
-    Succ Blocks= block.296 
-    Ti86.440:Int = Set 48 : stmt.378
-    Ti87.439:Int = Add Ti86.440 tx.376 : stmt.379
-    Tu23.438:Unit = CallDir(<min_caml_print_char>, Ti87.439 ) : stmt.380
-    flg.379.1638:Bool = Set 1 : stmt.381
-
-    [block.296]
-    {Parent : print_int.344}
-    Pred Blocks= block.299 block.295 
-    Succ Blocks= block.301 block.300 
-    %dummy:Unit = Save flg.379.1638 flg.379 : stmt.817
-    Ti88.435:Int = Set 10000 : stmt.382
-    Ti89.436.1621:Int = Set 0 : stmt.383
-    %dummy:Unit = Save Ti89.436.1621 Ti89.436 : stmt.800
-    Ti90.437.1624:Int = Set 10 : stmt.384
-    %dummy:Unit = Save Ti90.437.1624 Ti90.437 : stmt.802
-    mid.475.1099.1659:Int = Set 5 : stmt.385
-    %dummy:Unit = Save mid.475.1099.1659 mid.475.1099 : stmt.837
-    x.476.1100:Int = Set 50000 : stmt.386
-    tx.380:Int = IfLE x.378 x.476.1100 block.300 block.301 : stmt.387
-
-    [block.297]
-    {Parent : print_int.344}
-    Pred Blocks= block.294 
-    Succ Blocks= block.299 
-    flg.379.1638:Bool = Set 0 : stmt.373
-
-    [block.298]
-    {Parent : print_int.344}
-    Pred Blocks= block.294 
-    Succ Blocks= block.299 
-    Ti84.443:Int = Set 48 : stmt.374
-    Ti85.442:Int = Add Ti84.443 tx.376 : stmt.375
-    Tu22.441:Unit = CallDir(<min_caml_print_char>, Ti85.442 ) : stmt.376
-    flg.379.1638:Bool = Set 1 : stmt.377
-
-    [block.299]
-    {Parent : print_int.344}
-    Pred Blocks= block.297 block.298 
-    Succ Blocks= block.296 
-    %dummy:Unit = Save flg.379.1638 flg.379 : stmt.816
-
-    [block.300]
-    {Parent : print_int.344}
-    Pred Blocks= block.296 
-    Succ Blocks= block.304 block.303 
-    tx.380:Int = IfEq x.476.1100 x.378 block.303 block.304 : stmt.388
-
-    [block.301]
-    {Parent : print_int.344}
-    Pred Blocks= block.296 
-    Succ Blocks= block.325 block.324 
-    mid.475.1310.1699:Int = Set 7 : stmt.409
-    %dummy:Unit = Save mid.475.1310.1699 mid.475.1310 : stmt.867
-    x.476.1311:Int = Set 70000 : stmt.410
-    tx.380:Int = IfLE x.378 x.476.1311 block.324 block.325 : stmt.411
-
-    [block.302]
-    {Parent : print_int.344}
-    Pred Blocks= block.305 block.326 
-    Succ Blocks= block.343 block.342 
-    Ti91.434:Int = Set 10000 : stmt.428
-    dx.381:Int = Mul tx.380 Ti91.434 : stmt.429
-    x.382:Int = Sub x.378 dx.381 : stmt.430
-    flg.383.1640:Bool = IfLE tx.380 0 block.342 block.343 : stmt.431
-
-    [block.303]
-    {Parent : print_int.344}
-    Pred Blocks= block.300 
-    Succ Blocks= block.305 
-    tx.380:Int = Set 5 : stmt.389
-
-    [block.304]
-    {Parent : print_int.344}
-    Pred Blocks= block.300 
-    Succ Blocks= block.307 block.306 
-    mid.475.1325.1703:Int = Set 2 : stmt.390
-    %dummy:Unit = Save mid.475.1325.1703 mid.475.1325 : stmt.870
-    x.476.1326:Int = Set 20000 : stmt.391
-    tx.380:Int = IfLE x.378 x.476.1326 block.306 block.307 : stmt.392
-
-    [block.305]
-    {Parent : print_int.344}
-    Pred Blocks= block.303 block.308 
-    Succ Blocks= block.302 
-
-    [block.306]
-    {Parent : print_int.344}
-    Pred Blocks= block.304 
-    Succ Blocks= block.310 block.309 
-    tx.380:Int = IfEq x.476.1326 x.378 block.309 block.310 : stmt.393
-
-    [block.307]
-    {Parent : print_int.344}
-    Pred Blocks= block.304 
-    Succ Blocks= block.319 block.318 
-    mid.475.1074.1330:Int = Set 3 : stmt.402
-    x.476.1075.1331:Int = Set 30000 : stmt.403
-    tx.380:Int = IfLE x.378 x.476.1075.1331 block.318 block.319 : stmt.404
-
-    [block.308]
-    {Parent : print_int.344}
-    Pred Blocks= block.311 block.320 
-    Succ Blocks= block.305 
-
-    [block.309]
-    {Parent : print_int.344}
-    Pred Blocks= block.306 
-    Succ Blocks= block.311 
-    tx.380:Int = Set 2 : stmt.394
-
-    [block.310]
-    {Parent : print_int.344}
-    Pred Blocks= block.306 
-    Succ Blocks= block.313 block.312 
-    mid.475.1079.1335:Int = Set 1 : stmt.395
-    x.476.1080.1336:Int = Set 10000 : stmt.396
-    tx.380:Int = IfLE x.378 x.476.1080.1336 block.312 block.313 : stmt.397
-
-    [block.311]
-    {Parent : print_int.344}
-    Pred Blocks= block.309 block.314 
-    Succ Blocks= block.308 
-
-    [block.312]
-    {Parent : print_int.344}
-    Pred Blocks= block.310 
-    Succ Blocks= block.316 block.315 
-    tx.380:Int = IfEq x.476.1080.1336 x.378 block.315 block.316 : stmt.398
-
-    [block.313]
-    {Parent : print_int.344}
-    Pred Blocks= block.310 
-    Succ Blocks= block.314 
-    mid.475.1325.1705:Int = Restore mid.475.1325 : stmt.872
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1079.1335 mid.475.1325.1705 ) : stmt.401
-
-    [block.314]
-    {Parent : print_int.344}
-    Pred Blocks= block.317 block.313 
-    Succ Blocks= block.311 
-
-    [block.315]
-    {Parent : print_int.344}
-    Pred Blocks= block.312 
-    Succ Blocks= block.317 
-    tx.380:Int = Set 1 : stmt.399
-
-    [block.316]
-    {Parent : print_int.344}
-    Pred Blocks= block.312 
-    Succ Blocks= block.317 
-    Ti89.436.1622:Int = Restore Ti89.436 : stmt.801
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 Ti89.436.1622 mid.475.1079.1335 ) : stmt.400
-
-    [block.317]
-    {Parent : print_int.344}
-    Pred Blocks= block.315 block.316 
-    Succ Blocks= block.314 
-
-    [block.318]
-    {Parent : print_int.344}
-    Pred Blocks= block.307 
-    Succ Blocks= block.322 block.321 
-    tx.380:Int = IfEq x.476.1075.1331 x.378 block.321 block.322 : stmt.405
-
-    [block.319]
-    {Parent : print_int.344}
-    Pred Blocks= block.307 
-    Succ Blocks= block.320 
-    mid.475.1099.1661:Int = Restore mid.475.1099 : stmt.839
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1074.1330 mid.475.1099.1661 ) : stmt.408
-
-    [block.320]
-    {Parent : print_int.344}
-    Pred Blocks= block.323 block.319 
-    Succ Blocks= block.308 
-
-    [block.321]
-    {Parent : print_int.344}
-    Pred Blocks= block.318 
-    Succ Blocks= block.323 
-    tx.380:Int = Set 3 : stmt.406
-
-    [block.322]
-    {Parent : print_int.344}
-    Pred Blocks= block.318 
-    Succ Blocks= block.323 
-    mid.475.1325.1704:Int = Restore mid.475.1325 : stmt.871
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1325.1704 mid.475.1074.1330 ) : stmt.407
-
-    [block.323]
-    {Parent : print_int.344}
-    Pred Blocks= block.321 block.322 
-    Succ Blocks= block.320 
-
-    [block.324]
-    {Parent : print_int.344}
-    Pred Blocks= block.301 
-    Succ Blocks= block.328 block.327 
-    tx.380:Int = IfEq x.476.1311 x.378 block.327 block.328 : stmt.412
-
-    [block.325]
-    {Parent : print_int.344}
-    Pred Blocks= block.301 
-    Succ Blocks= block.337 block.336 
-    mid.475.1074.1315:Int = Set 8 : stmt.421
-    x.476.1075.1316:Int = Set 80000 : stmt.422
-    tx.380:Int = IfLE x.378 x.476.1075.1316 block.336 block.337 : stmt.423
-
-    [block.326]
-    {Parent : print_int.344}
-    Pred Blocks= block.329 block.338 
-    Succ Blocks= block.302 
-
-    [block.327]
-    {Parent : print_int.344}
-    Pred Blocks= block.324 
-    Succ Blocks= block.329 
-    tx.380:Int = Set 7 : stmt.413
-
-    [block.328]
-    {Parent : print_int.344}
-    Pred Blocks= block.324 
-    Succ Blocks= block.331 block.330 
-    mid.475.1079.1320:Int = Set 6 : stmt.414
-    x.476.1080.1321:Int = Set 60000 : stmt.415
-    tx.380:Int = IfLE x.378 x.476.1080.1321 block.330 block.331 : stmt.416
-
-    [block.329]
-    {Parent : print_int.344}
-    Pred Blocks= block.327 block.332 
-    Succ Blocks= block.326 
-
-    [block.330]
-    {Parent : print_int.344}
-    Pred Blocks= block.328 
-    Succ Blocks= block.334 block.333 
-    tx.380:Int = IfEq x.476.1080.1321 x.378 block.333 block.334 : stmt.417
-
-    [block.331]
-    {Parent : print_int.344}
-    Pred Blocks= block.328 
-    Succ Blocks= block.332 
-    mid.475.1310.1701:Int = Restore mid.475.1310 : stmt.869
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1079.1320 mid.475.1310.1701 ) : stmt.420
-
-    [block.332]
-    {Parent : print_int.344}
-    Pred Blocks= block.335 block.331 
-    Succ Blocks= block.329 
-
-    [block.333]
-    {Parent : print_int.344}
-    Pred Blocks= block.330 
-    Succ Blocks= block.335 
-    tx.380:Int = Set 6 : stmt.418
-
-    [block.334]
-    {Parent : print_int.344}
-    Pred Blocks= block.330 
-    Succ Blocks= block.335 
-    mid.475.1099.1660:Int = Restore mid.475.1099 : stmt.838
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1099.1660 mid.475.1079.1320 ) : stmt.419
-
-    [block.335]
-    {Parent : print_int.344}
-    Pred Blocks= block.333 block.334 
-    Succ Blocks= block.332 
-
-    [block.336]
-    {Parent : print_int.344}
-    Pred Blocks= block.325 
-    Succ Blocks= block.340 block.339 
-    tx.380:Int = IfEq x.476.1075.1316 x.378 block.339 block.340 : stmt.424
-
-    [block.337]
-    {Parent : print_int.344}
-    Pred Blocks= block.325 
-    Succ Blocks= block.338 
-    Ti90.437.1625:Int = Restore Ti90.437 : stmt.803
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1074.1315 Ti90.437.1625 ) : stmt.427
-
-    [block.338]
-    {Parent : print_int.344}
-    Pred Blocks= block.341 block.337 
-    Succ Blocks= block.326 
-
-    [block.339]
-    {Parent : print_int.344}
-    Pred Blocks= block.336 
-    Succ Blocks= block.341 
-    tx.380:Int = Set 8 : stmt.425
-
-    [block.340]
-    {Parent : print_int.344}
-    Pred Blocks= block.336 
-    Succ Blocks= block.341 
-    mid.475.1310.1700:Int = Restore mid.475.1310 : stmt.868
-    tx.380:Int = CallDir(<div_binary_search.339>, x.378 Ti88.435 mid.475.1310.1700 mid.475.1074.1315 ) : stmt.426
-
-    [block.341]
-    {Parent : print_int.344}
-    Pred Blocks= block.339 block.340 
-    Succ Blocks= block.338 
-
-    [block.342]
-    {Parent : print_int.344}
-    Pred Blocks= block.302 
-    Succ Blocks= block.346 block.345 
-    flg.379.1639:Int = Restore flg.379 : stmt.818
-    flg.383.1640:Bool = IfEq flg.379.1639 0 block.345 block.346 : stmt.432
-
-    [block.343]
-    {Parent : print_int.344}
-    Pred Blocks= block.302 
-    Succ Blocks= block.344 
-    Ti94.430:Int = Set 48 : stmt.438
-    Ti95.429:Int = Add Ti94.430 tx.380 : stmt.439
-    Tu25.428:Unit = CallDir(<min_caml_print_char>, Ti95.429 ) : stmt.440
-    flg.383.1640:Bool = Set 1 : stmt.441
-
-    [block.344]
-    {Parent : print_int.344}
-    Pred Blocks= block.347 block.343 
-    Succ Blocks= block.349 block.348 
-    %dummy:Unit = Save flg.383.1640 flg.383 : stmt.820
-    Ti96.425:Int = Set 1000 : stmt.442
-    Ti97.426.1627:Int = Set 0 : stmt.443
-    %dummy:Unit = Save Ti97.426.1627 Ti97.426 : stmt.804
-    Ti98.427.1630:Int = Set 10 : stmt.444
-    %dummy:Unit = Save Ti98.427.1630 Ti98.427 : stmt.806
-    mid.475.1094.1655:Int = Set 5 : stmt.445
-    %dummy:Unit = Save mid.475.1094.1655 mid.475.1094 : stmt.834
-    x.476.1095:Int = Set 5000 : stmt.446
-    tx.384:Int = IfLE x.382 x.476.1095 block.348 block.349 : stmt.447
-
-    [block.345]
-    {Parent : print_int.344}
-    Pred Blocks= block.342 
-    Succ Blocks= block.347 
-    flg.383.1640:Bool = Set 0 : stmt.433
-
-    [block.346]
-    {Parent : print_int.344}
-    Pred Blocks= block.342 
-    Succ Blocks= block.347 
-    Ti92.433:Int = Set 48 : stmt.434
-    Ti93.432:Int = Add Ti92.433 tx.380 : stmt.435
-    Tu24.431:Unit = CallDir(<min_caml_print_char>, Ti93.432 ) : stmt.436
-    flg.383.1640:Bool = Set 1 : stmt.437
-
-    [block.347]
-    {Parent : print_int.344}
-    Pred Blocks= block.345 block.346 
-    Succ Blocks= block.344 
-    %dummy:Unit = Save flg.383.1640 flg.383 : stmt.819
-
-    [block.348]
-    {Parent : print_int.344}
-    Pred Blocks= block.344 
-    Succ Blocks= block.352 block.351 
-    tx.384:Int = IfEq x.476.1095 x.382 block.351 block.352 : stmt.448
-
-    [block.349]
-    {Parent : print_int.344}
-    Pred Blocks= block.344 
-    Succ Blocks= block.373 block.372 
-    mid.475.1280.1691:Int = Set 7 : stmt.469
-    %dummy:Unit = Save mid.475.1280.1691 mid.475.1280 : stmt.861
-    x.476.1281:Int = Set 7000 : stmt.470
-    tx.384:Int = IfLE x.382 x.476.1281 block.372 block.373 : stmt.471
-
-    [block.350]
-    {Parent : print_int.344}
-    Pred Blocks= block.353 block.374 
-    Succ Blocks= block.391 block.390 
-    dx.385:Int = Mul tx.384 1000 : stmt.488
-    x.386:Int = Sub x.382 dx.385 : stmt.489
-    flg.387.1642:Bool = IfLE tx.384 0 block.390 block.391 : stmt.490
-
-    [block.351]
-    {Parent : print_int.344}
-    Pred Blocks= block.348 
-    Succ Blocks= block.353 
-    tx.384:Int = Set 5 : stmt.449
-
-    [block.352]
-    {Parent : print_int.344}
-    Pred Blocks= block.348 
-    Succ Blocks= block.355 block.354 
-    mid.475.1295.1695:Int = Set 2 : stmt.450
-    %dummy:Unit = Save mid.475.1295.1695 mid.475.1295 : stmt.864
-    x.476.1296:Int = Set 2000 : stmt.451
-    tx.384:Int = IfLE x.382 x.476.1296 block.354 block.355 : stmt.452
-
-    [block.353]
-    {Parent : print_int.344}
-    Pred Blocks= block.351 block.356 
-    Succ Blocks= block.350 
-
-    [block.354]
-    {Parent : print_int.344}
-    Pred Blocks= block.352 
-    Succ Blocks= block.358 block.357 
-    tx.384:Int = IfEq x.476.1296 x.382 block.357 block.358 : stmt.453
-
-    [block.355]
-    {Parent : print_int.344}
-    Pred Blocks= block.352 
-    Succ Blocks= block.367 block.366 
-    mid.475.1074.1300:Int = Set 3 : stmt.462
-    x.476.1075.1301:Int = Set 3000 : stmt.463
-    tx.384:Int = IfLE x.382 x.476.1075.1301 block.366 block.367 : stmt.464
-
-    [block.356]
-    {Parent : print_int.344}
-    Pred Blocks= block.359 block.368 
-    Succ Blocks= block.353 
-
-    [block.357]
-    {Parent : print_int.344}
-    Pred Blocks= block.354 
-    Succ Blocks= block.359 
-    tx.384:Int = Set 2 : stmt.454
-
-    [block.358]
-    {Parent : print_int.344}
-    Pred Blocks= block.354 
-    Succ Blocks= block.361 block.360 
-    mid.475.1079.1305:Int = Set 1 : stmt.455
-    x.476.1080.1306:Int = Set 1000 : stmt.456
-    tx.384:Int = IfLE x.382 x.476.1080.1306 block.360 block.361 : stmt.457
-
-    [block.359]
-    {Parent : print_int.344}
-    Pred Blocks= block.357 block.362 
-    Succ Blocks= block.356 
-
-    [block.360]
-    {Parent : print_int.344}
-    Pred Blocks= block.358 
-    Succ Blocks= block.364 block.363 
-    tx.384:Int = IfEq x.476.1080.1306 x.382 block.363 block.364 : stmt.458
-
-    [block.361]
-    {Parent : print_int.344}
-    Pred Blocks= block.358 
-    Succ Blocks= block.362 
-    mid.475.1295.1697:Int = Restore mid.475.1295 : stmt.866
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1079.1305 mid.475.1295.1697 ) : stmt.461
-
-    [block.362]
-    {Parent : print_int.344}
-    Pred Blocks= block.365 block.361 
-    Succ Blocks= block.359 
-
-    [block.363]
-    {Parent : print_int.344}
-    Pred Blocks= block.360 
-    Succ Blocks= block.365 
-    tx.384:Int = Set 1 : stmt.459
-
-    [block.364]
-    {Parent : print_int.344}
-    Pred Blocks= block.360 
-    Succ Blocks= block.365 
-    Ti97.426.1628:Int = Restore Ti97.426 : stmt.805
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 Ti97.426.1628 mid.475.1079.1305 ) : stmt.460
-
-    [block.365]
-    {Parent : print_int.344}
-    Pred Blocks= block.363 block.364 
-    Succ Blocks= block.362 
-
-    [block.366]
-    {Parent : print_int.344}
-    Pred Blocks= block.355 
-    Succ Blocks= block.370 block.369 
-    tx.384:Int = IfEq x.476.1075.1301 x.382 block.369 block.370 : stmt.465
-
-    [block.367]
-    {Parent : print_int.344}
-    Pred Blocks= block.355 
-    Succ Blocks= block.368 
-    mid.475.1094.1657:Int = Restore mid.475.1094 : stmt.836
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1074.1300 mid.475.1094.1657 ) : stmt.468
-
-    [block.368]
-    {Parent : print_int.344}
-    Pred Blocks= block.371 block.367 
-    Succ Blocks= block.356 
-
-    [block.369]
-    {Parent : print_int.344}
-    Pred Blocks= block.366 
-    Succ Blocks= block.371 
-    tx.384:Int = Set 3 : stmt.466
-
-    [block.370]
-    {Parent : print_int.344}
-    Pred Blocks= block.366 
-    Succ Blocks= block.371 
-    mid.475.1295.1696:Int = Restore mid.475.1295 : stmt.865
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1295.1696 mid.475.1074.1300 ) : stmt.467
-
-    [block.371]
-    {Parent : print_int.344}
-    Pred Blocks= block.369 block.370 
-    Succ Blocks= block.368 
-
-    [block.372]
-    {Parent : print_int.344}
-    Pred Blocks= block.349 
-    Succ Blocks= block.376 block.375 
-    tx.384:Int = IfEq x.476.1281 x.382 block.375 block.376 : stmt.472
-
-    [block.373]
-    {Parent : print_int.344}
-    Pred Blocks= block.349 
-    Succ Blocks= block.385 block.384 
-    mid.475.1074.1285:Int = Set 8 : stmt.481
-    x.476.1075.1286:Int = Set 8000 : stmt.482
-    tx.384:Int = IfLE x.382 x.476.1075.1286 block.384 block.385 : stmt.483
-
-    [block.374]
-    {Parent : print_int.344}
-    Pred Blocks= block.377 block.386 
-    Succ Blocks= block.350 
-
-    [block.375]
-    {Parent : print_int.344}
-    Pred Blocks= block.372 
-    Succ Blocks= block.377 
-    tx.384:Int = Set 7 : stmt.473
-
-    [block.376]
-    {Parent : print_int.344}
-    Pred Blocks= block.372 
-    Succ Blocks= block.379 block.378 
-    mid.475.1079.1290:Int = Set 6 : stmt.474
-    x.476.1080.1291:Int = Set 6000 : stmt.475
-    tx.384:Int = IfLE x.382 x.476.1080.1291 block.378 block.379 : stmt.476
-
-    [block.377]
-    {Parent : print_int.344}
-    Pred Blocks= block.375 block.380 
-    Succ Blocks= block.374 
-
-    [block.378]
-    {Parent : print_int.344}
-    Pred Blocks= block.376 
-    Succ Blocks= block.382 block.381 
-    tx.384:Int = IfEq x.476.1080.1291 x.382 block.381 block.382 : stmt.477
-
-    [block.379]
-    {Parent : print_int.344}
-    Pred Blocks= block.376 
-    Succ Blocks= block.380 
-    mid.475.1280.1693:Int = Restore mid.475.1280 : stmt.863
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1079.1290 mid.475.1280.1693 ) : stmt.480
-
-    [block.380]
-    {Parent : print_int.344}
-    Pred Blocks= block.383 block.379 
-    Succ Blocks= block.377 
-
-    [block.381]
-    {Parent : print_int.344}
-    Pred Blocks= block.378 
-    Succ Blocks= block.383 
-    tx.384:Int = Set 6 : stmt.478
-
-    [block.382]
-    {Parent : print_int.344}
-    Pred Blocks= block.378 
-    Succ Blocks= block.383 
-    mid.475.1094.1656:Int = Restore mid.475.1094 : stmt.835
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1094.1656 mid.475.1079.1290 ) : stmt.479
-
-    [block.383]
-    {Parent : print_int.344}
-    Pred Blocks= block.381 block.382 
-    Succ Blocks= block.380 
-
-    [block.384]
-    {Parent : print_int.344}
-    Pred Blocks= block.373 
-    Succ Blocks= block.388 block.387 
-    tx.384:Int = IfEq x.476.1075.1286 x.382 block.387 block.388 : stmt.484
-
-    [block.385]
-    {Parent : print_int.344}
-    Pred Blocks= block.373 
-    Succ Blocks= block.386 
-    Ti98.427.1631:Int = Restore Ti98.427 : stmt.807
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1074.1285 Ti98.427.1631 ) : stmt.487
-
-    [block.386]
-    {Parent : print_int.344}
-    Pred Blocks= block.389 block.385 
-    Succ Blocks= block.374 
-
-    [block.387]
-    {Parent : print_int.344}
-    Pred Blocks= block.384 
-    Succ Blocks= block.389 
-    tx.384:Int = Set 8 : stmt.485
-
-    [block.388]
-    {Parent : print_int.344}
-    Pred Blocks= block.384 
-    Succ Blocks= block.389 
-    mid.475.1280.1692:Int = Restore mid.475.1280 : stmt.862
-    tx.384:Int = CallDir(<div_binary_search.339>, x.382 Ti96.425 mid.475.1280.1692 mid.475.1074.1285 ) : stmt.486
-
-    [block.389]
-    {Parent : print_int.344}
-    Pred Blocks= block.387 block.388 
-    Succ Blocks= block.386 
-
-    [block.390]
-    {Parent : print_int.344}
-    Pred Blocks= block.350 
-    Succ Blocks= block.394 block.393 
-    flg.383.1641:Int = Restore flg.383 : stmt.821
-    flg.387.1642:Bool = IfEq flg.383.1641 0 block.393 block.394 : stmt.491
-
-    [block.391]
-    {Parent : print_int.344}
-    Pred Blocks= block.350 
-    Succ Blocks= block.392 
-    Ti102.420:Int = Set 48 : stmt.497
-    Ti103.419:Int = Add Ti102.420 tx.384 : stmt.498
-    Tu27.418:Unit = CallDir(<min_caml_print_char>, Ti103.419 ) : stmt.499
-    flg.387.1642:Bool = Set 1 : stmt.500
-
-    [block.392]
-    {Parent : print_int.344}
-    Pred Blocks= block.395 block.391 
-    Succ Blocks= block.397 block.396 
-    %dummy:Unit = Save flg.387.1642 flg.387 : stmt.823
-    Ti104.415:Int = Set 100 : stmt.501
-    Ti105.416.1591:Int = Set 0 : stmt.502
-    %dummy:Unit = Save Ti105.416.1591 Ti105.416 : stmt.780
-    Ti106.417.1594:Int = Set 10 : stmt.503
-    %dummy:Unit = Save Ti106.417.1594 Ti106.417 : stmt.782
-    mid.475.1089.1651:Int = Set 5 : stmt.504
-    %dummy:Unit = Save mid.475.1089.1651 mid.475.1089 : stmt.831
-    x.476.1090:Int = Set 500 : stmt.505
-    tx.388:Int = IfLE x.386 x.476.1090 block.396 block.397 : stmt.506
-
-    [block.393]
-    {Parent : print_int.344}
-    Pred Blocks= block.390 
-    Succ Blocks= block.395 
-    flg.387.1642:Bool = Set 0 : stmt.492
-
-    [block.394]
-    {Parent : print_int.344}
-    Pred Blocks= block.390 
-    Succ Blocks= block.395 
-    Ti100.423:Int = Set 48 : stmt.493
-    Ti101.422:Int = Add Ti100.423 tx.384 : stmt.494
-    Tu26.421:Unit = CallDir(<min_caml_print_char>, Ti101.422 ) : stmt.495
-    flg.387.1642:Bool = Set 1 : stmt.496
-
-    [block.395]
-    {Parent : print_int.344}
-    Pred Blocks= block.393 block.394 
-    Succ Blocks= block.392 
-    %dummy:Unit = Save flg.387.1642 flg.387 : stmt.822
-
-    [block.396]
-    {Parent : print_int.344}
-    Pred Blocks= block.392 
-    Succ Blocks= block.400 block.399 
-    tx.388:Int = IfEq x.476.1090 x.386 block.399 block.400 : stmt.507
-
-    [block.397]
-    {Parent : print_int.344}
-    Pred Blocks= block.392 
-    Succ Blocks= block.421 block.420 
-    mid.475.1250.1683:Int = Set 7 : stmt.528
-    %dummy:Unit = Save mid.475.1250.1683 mid.475.1250 : stmt.855
-    x.476.1251:Int = Set 700 : stmt.529
-    tx.388:Int = IfLE x.386 x.476.1251 block.420 block.421 : stmt.530
-
-    [block.398]
-    {Parent : print_int.344}
-    Pred Blocks= block.401 block.422 
-    Succ Blocks= block.439 block.438 
-    dx.389:Int = Mul tx.388 100 : stmt.547
-    x.390:Int = Sub x.386 dx.389 : stmt.548
-    flg.391.1644:Bool = IfLE tx.388 0 block.438 block.439 : stmt.549
-
-    [block.399]
-    {Parent : print_int.344}
-    Pred Blocks= block.396 
-    Succ Blocks= block.401 
-    tx.388:Int = Set 5 : stmt.508
-
-    [block.400]
-    {Parent : print_int.344}
-    Pred Blocks= block.396 
-    Succ Blocks= block.403 block.402 
-    mid.475.1265.1687:Int = Set 2 : stmt.509
-    %dummy:Unit = Save mid.475.1265.1687 mid.475.1265 : stmt.858
-    x.476.1266:Int = Set 200 : stmt.510
-    tx.388:Int = IfLE x.386 x.476.1266 block.402 block.403 : stmt.511
-
-    [block.401]
-    {Parent : print_int.344}
-    Pred Blocks= block.399 block.404 
-    Succ Blocks= block.398 
-
-    [block.402]
-    {Parent : print_int.344}
-    Pred Blocks= block.400 
-    Succ Blocks= block.406 block.405 
-    tx.388:Int = IfEq x.476.1266 x.386 block.405 block.406 : stmt.512
-
-    [block.403]
-    {Parent : print_int.344}
-    Pred Blocks= block.400 
-    Succ Blocks= block.415 block.414 
-    mid.475.1074.1270:Int = Set 3 : stmt.521
-    x.476.1075.1271:Int = Set 300 : stmt.522
-    tx.388:Int = IfLE x.386 x.476.1075.1271 block.414 block.415 : stmt.523
-
-    [block.404]
-    {Parent : print_int.344}
-    Pred Blocks= block.407 block.416 
-    Succ Blocks= block.401 
-
-    [block.405]
-    {Parent : print_int.344}
-    Pred Blocks= block.402 
-    Succ Blocks= block.407 
-    tx.388:Int = Set 2 : stmt.513
-
-    [block.406]
-    {Parent : print_int.344}
-    Pred Blocks= block.402 
-    Succ Blocks= block.409 block.408 
-    mid.475.1079.1275:Int = Set 1 : stmt.514
-    x.476.1080.1276:Int = Set 100 : stmt.515
-    tx.388:Int = IfLE x.386 x.476.1080.1276 block.408 block.409 : stmt.516
-
-    [block.407]
-    {Parent : print_int.344}
-    Pred Blocks= block.405 block.410 
-    Succ Blocks= block.404 
-
-    [block.408]
-    {Parent : print_int.344}
-    Pred Blocks= block.406 
-    Succ Blocks= block.412 block.411 
-    tx.388:Int = IfEq x.476.1080.1276 x.386 block.411 block.412 : stmt.517
-
-    [block.409]
-    {Parent : print_int.344}
-    Pred Blocks= block.406 
-    Succ Blocks= block.410 
-    mid.475.1265.1689:Int = Restore mid.475.1265 : stmt.860
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1079.1275 mid.475.1265.1689 ) : stmt.520
-
-    [block.410]
-    {Parent : print_int.344}
-    Pred Blocks= block.413 block.409 
-    Succ Blocks= block.407 
-
-    [block.411]
-    {Parent : print_int.344}
-    Pred Blocks= block.408 
-    Succ Blocks= block.413 
-    tx.388:Int = Set 1 : stmt.518
-
-    [block.412]
-    {Parent : print_int.344}
-    Pred Blocks= block.408 
-    Succ Blocks= block.413 
-    Ti105.416.1592:Int = Restore Ti105.416 : stmt.781
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 Ti105.416.1592 mid.475.1079.1275 ) : stmt.519
-
-    [block.413]
-    {Parent : print_int.344}
-    Pred Blocks= block.411 block.412 
-    Succ Blocks= block.410 
-
-    [block.414]
-    {Parent : print_int.344}
-    Pred Blocks= block.403 
-    Succ Blocks= block.418 block.417 
-    tx.388:Int = IfEq x.476.1075.1271 x.386 block.417 block.418 : stmt.524
-
-    [block.415]
-    {Parent : print_int.344}
-    Pred Blocks= block.403 
-    Succ Blocks= block.416 
-    mid.475.1089.1653:Int = Restore mid.475.1089 : stmt.833
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1074.1270 mid.475.1089.1653 ) : stmt.527
-
-    [block.416]
-    {Parent : print_int.344}
-    Pred Blocks= block.419 block.415 
-    Succ Blocks= block.404 
-
-    [block.417]
-    {Parent : print_int.344}
-    Pred Blocks= block.414 
-    Succ Blocks= block.419 
-    tx.388:Int = Set 3 : stmt.525
-
-    [block.418]
-    {Parent : print_int.344}
-    Pred Blocks= block.414 
-    Succ Blocks= block.419 
-    mid.475.1265.1688:Int = Restore mid.475.1265 : stmt.859
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1265.1688 mid.475.1074.1270 ) : stmt.526
-
-    [block.419]
-    {Parent : print_int.344}
-    Pred Blocks= block.417 block.418 
-    Succ Blocks= block.416 
-
-    [block.420]
-    {Parent : print_int.344}
-    Pred Blocks= block.397 
-    Succ Blocks= block.424 block.423 
-    tx.388:Int = IfEq x.476.1251 x.386 block.423 block.424 : stmt.531
-
-    [block.421]
-    {Parent : print_int.344}
-    Pred Blocks= block.397 
-    Succ Blocks= block.433 block.432 
-    mid.475.1074.1255:Int = Set 8 : stmt.540
-    x.476.1075.1256:Int = Set 800 : stmt.541
-    tx.388:Int = IfLE x.386 x.476.1075.1256 block.432 block.433 : stmt.542
-
-    [block.422]
-    {Parent : print_int.344}
-    Pred Blocks= block.425 block.434 
-    Succ Blocks= block.398 
-
-    [block.423]
-    {Parent : print_int.344}
-    Pred Blocks= block.420 
-    Succ Blocks= block.425 
-    tx.388:Int = Set 7 : stmt.532
-
-    [block.424]
-    {Parent : print_int.344}
-    Pred Blocks= block.420 
-    Succ Blocks= block.427 block.426 
-    mid.475.1079.1260:Int = Set 6 : stmt.533
-    x.476.1080.1261:Int = Set 600 : stmt.534
-    tx.388:Int = IfLE x.386 x.476.1080.1261 block.426 block.427 : stmt.535
-
-    [block.425]
-    {Parent : print_int.344}
-    Pred Blocks= block.423 block.428 
-    Succ Blocks= block.422 
-
-    [block.426]
-    {Parent : print_int.344}
-    Pred Blocks= block.424 
-    Succ Blocks= block.430 block.429 
-    tx.388:Int = IfEq x.476.1080.1261 x.386 block.429 block.430 : stmt.536
-
-    [block.427]
-    {Parent : print_int.344}
-    Pred Blocks= block.424 
-    Succ Blocks= block.428 
-    mid.475.1250.1685:Int = Restore mid.475.1250 : stmt.857
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1079.1260 mid.475.1250.1685 ) : stmt.539
-
-    [block.428]
-    {Parent : print_int.344}
-    Pred Blocks= block.431 block.427 
-    Succ Blocks= block.425 
-
-    [block.429]
-    {Parent : print_int.344}
-    Pred Blocks= block.426 
-    Succ Blocks= block.431 
-    tx.388:Int = Set 6 : stmt.537
-
-    [block.430]
-    {Parent : print_int.344}
-    Pred Blocks= block.426 
-    Succ Blocks= block.431 
-    mid.475.1089.1652:Int = Restore mid.475.1089 : stmt.832
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1089.1652 mid.475.1079.1260 ) : stmt.538
-
-    [block.431]
-    {Parent : print_int.344}
-    Pred Blocks= block.429 block.430 
-    Succ Blocks= block.428 
-
-    [block.432]
-    {Parent : print_int.344}
-    Pred Blocks= block.421 
-    Succ Blocks= block.436 block.435 
-    tx.388:Int = IfEq x.476.1075.1256 x.386 block.435 block.436 : stmt.543
-
-    [block.433]
-    {Parent : print_int.344}
-    Pred Blocks= block.421 
-    Succ Blocks= block.434 
-    Ti106.417.1595:Int = Restore Ti106.417 : stmt.783
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1074.1255 Ti106.417.1595 ) : stmt.546
-
-    [block.434]
-    {Parent : print_int.344}
-    Pred Blocks= block.437 block.433 
-    Succ Blocks= block.422 
-
-    [block.435]
-    {Parent : print_int.344}
-    Pred Blocks= block.432 
-    Succ Blocks= block.437 
-    tx.388:Int = Set 8 : stmt.544
-
-    [block.436]
-    {Parent : print_int.344}
-    Pred Blocks= block.432 
-    Succ Blocks= block.437 
-    mid.475.1250.1684:Int = Restore mid.475.1250 : stmt.856
-    tx.388:Int = CallDir(<div_binary_search.339>, x.386 Ti104.415 mid.475.1250.1684 mid.475.1074.1255 ) : stmt.545
-
-    [block.437]
-    {Parent : print_int.344}
-    Pred Blocks= block.435 block.436 
-    Succ Blocks= block.434 
-
-    [block.438]
-    {Parent : print_int.344}
-    Pred Blocks= block.398 
-    Succ Blocks= block.442 block.441 
-    flg.387.1643:Int = Restore flg.387 : stmt.824
-    flg.391.1644:Bool = IfEq flg.387.1643 0 block.441 block.442 : stmt.550
-
-    [block.439]
-    {Parent : print_int.344}
-    Pred Blocks= block.398 
-    Succ Blocks= block.440 
-    Ti110.410:Int = Set 48 : stmt.556
-    Ti111.409:Int = Add Ti110.410 tx.388 : stmt.557
-    Tu29.408:Unit = CallDir(<min_caml_print_char>, Ti111.409 ) : stmt.558
-    flg.391.1644:Bool = Set 1 : stmt.559
-
-    [block.440]
-    {Parent : print_int.344}
-    Pred Blocks= block.443 block.439 
-    Succ Blocks= block.445 block.444 
-    %dummy:Unit = Save flg.391.1644 flg.391 : stmt.826
-    Ti112.405:Int = Set 10 : stmt.560
-    Ti113.406.1597:Int = Set 0 : stmt.561
-    %dummy:Unit = Save Ti113.406.1597 Ti113.406 : stmt.784
-    Ti114.407.1600:Int = Set 10 : stmt.562
-    %dummy:Unit = Save Ti114.407.1600 Ti114.407 : stmt.786
-    mid.475.1084.1647:Int = Set 5 : stmt.563
-    %dummy:Unit = Save mid.475.1084.1647 mid.475.1084 : stmt.828
-    x.476.1085:Int = Set 50 : stmt.564
-    tx.392:Int = IfLE x.390 x.476.1085 block.444 block.445 : stmt.565
-
-    [block.441]
-    {Parent : print_int.344}
-    Pred Blocks= block.438 
-    Succ Blocks= block.443 
-    flg.391.1644:Bool = Set 0 : stmt.551
-
-    [block.442]
-    {Parent : print_int.344}
-    Pred Blocks= block.438 
-    Succ Blocks= block.443 
-    Ti108.413:Int = Set 48 : stmt.552
-    Ti109.412:Int = Add Ti108.413 tx.388 : stmt.553
-    Tu28.411:Unit = CallDir(<min_caml_print_char>, Ti109.412 ) : stmt.554
-    flg.391.1644:Bool = Set 1 : stmt.555
-
-    [block.443]
-    {Parent : print_int.344}
-    Pred Blocks= block.441 block.442 
-    Succ Blocks= block.440 
-    %dummy:Unit = Save flg.391.1644 flg.391 : stmt.825
-
-    [block.444]
-    {Parent : print_int.344}
-    Pred Blocks= block.440 
-    Succ Blocks= block.448 block.447 
-    tx.392:Int = IfEq x.476.1085 x.390 block.447 block.448 : stmt.566
-
-    [block.445]
-    {Parent : print_int.344}
-    Pred Blocks= block.440 
-    Succ Blocks= block.469 block.468 
-    mid.475.1220.1675:Int = Set 7 : stmt.587
-    %dummy:Unit = Save mid.475.1220.1675 mid.475.1220 : stmt.849
-    x.476.1221:Int = Set 70 : stmt.588
-    tx.392:Int = IfLE x.390 x.476.1221 block.468 block.469 : stmt.589
-
-    [block.446]
-    {Parent : print_int.344}
-    Pred Blocks= block.449 block.470 
-    Succ Blocks= block.487 block.486 
-    dx.393:Int = Mul tx.392 10 : stmt.606
-    x.394:Int = Sub x.390 dx.393 : stmt.607
-    flg.395:Bool = IfLE tx.392 0 block.486 block.487 : stmt.608
-
-    [block.447]
-    {Parent : print_int.344}
-    Pred Blocks= block.444 
-    Succ Blocks= block.449 
-    tx.392:Int = Set 5 : stmt.567
-
-    [block.448]
-    {Parent : print_int.344}
-    Pred Blocks= block.444 
-    Succ Blocks= block.451 block.450 
-    mid.475.1235.1679:Int = Set 2 : stmt.568
-    %dummy:Unit = Save mid.475.1235.1679 mid.475.1235 : stmt.852
-    x.476.1236:Int = Set 20 : stmt.569
-    tx.392:Int = IfLE x.390 x.476.1236 block.450 block.451 : stmt.570
-
-    [block.449]
-    {Parent : print_int.344}
-    Pred Blocks= block.447 block.452 
-    Succ Blocks= block.446 
-
-    [block.450]
-    {Parent : print_int.344}
-    Pred Blocks= block.448 
-    Succ Blocks= block.454 block.453 
-    tx.392:Int = IfEq x.476.1236 x.390 block.453 block.454 : stmt.571
-
-    [block.451]
-    {Parent : print_int.344}
-    Pred Blocks= block.448 
-    Succ Blocks= block.463 block.462 
-    mid.475.1074.1240:Int = Set 3 : stmt.580
-    x.476.1075.1241:Int = Set 30 : stmt.581
-    tx.392:Int = IfLE x.390 x.476.1075.1241 block.462 block.463 : stmt.582
-
-    [block.452]
-    {Parent : print_int.344}
-    Pred Blocks= block.455 block.464 
-    Succ Blocks= block.449 
-
-    [block.453]
-    {Parent : print_int.344}
-    Pred Blocks= block.450 
-    Succ Blocks= block.455 
-    tx.392:Int = Set 2 : stmt.572
-
-    [block.454]
-    {Parent : print_int.344}
-    Pred Blocks= block.450 
-    Succ Blocks= block.457 block.456 
-    mid.475.1079.1245:Int = Set 1 : stmt.573
-    x.476.1080.1246:Int = Set 10 : stmt.574
-    tx.392:Int = IfLE x.390 x.476.1080.1246 block.456 block.457 : stmt.575
-
-    [block.455]
-    {Parent : print_int.344}
-    Pred Blocks= block.453 block.458 
-    Succ Blocks= block.452 
-
-    [block.456]
-    {Parent : print_int.344}
-    Pred Blocks= block.454 
-    Succ Blocks= block.460 block.459 
-    tx.392:Int = IfEq x.476.1080.1246 x.390 block.459 block.460 : stmt.576
-
-    [block.457]
-    {Parent : print_int.344}
-    Pred Blocks= block.454 
-    Succ Blocks= block.458 
-    mid.475.1235.1681:Int = Restore mid.475.1235 : stmt.854
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1079.1245 mid.475.1235.1681 ) : stmt.579
-
-    [block.458]
-    {Parent : print_int.344}
-    Pred Blocks= block.461 block.457 
-    Succ Blocks= block.455 
-
-    [block.459]
-    {Parent : print_int.344}
-    Pred Blocks= block.456 
-    Succ Blocks= block.461 
-    tx.392:Int = Set 1 : stmt.577
-
-    [block.460]
-    {Parent : print_int.344}
-    Pred Blocks= block.456 
-    Succ Blocks= block.461 
-    Ti113.406.1598:Int = Restore Ti113.406 : stmt.785
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 Ti113.406.1598 mid.475.1079.1245 ) : stmt.578
-
-    [block.461]
-    {Parent : print_int.344}
-    Pred Blocks= block.459 block.460 
-    Succ Blocks= block.458 
-
-    [block.462]
-    {Parent : print_int.344}
-    Pred Blocks= block.451 
-    Succ Blocks= block.466 block.465 
-    tx.392:Int = IfEq x.476.1075.1241 x.390 block.465 block.466 : stmt.583
-
-    [block.463]
-    {Parent : print_int.344}
-    Pred Blocks= block.451 
-    Succ Blocks= block.464 
-    mid.475.1084.1649:Int = Restore mid.475.1084 : stmt.830
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1074.1240 mid.475.1084.1649 ) : stmt.586
-
-    [block.464]
-    {Parent : print_int.344}
-    Pred Blocks= block.467 block.463 
-    Succ Blocks= block.452 
-
-    [block.465]
-    {Parent : print_int.344}
-    Pred Blocks= block.462 
-    Succ Blocks= block.467 
-    tx.392:Int = Set 3 : stmt.584
-
-    [block.466]
-    {Parent : print_int.344}
-    Pred Blocks= block.462 
-    Succ Blocks= block.467 
-    mid.475.1235.1680:Int = Restore mid.475.1235 : stmt.853
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1235.1680 mid.475.1074.1240 ) : stmt.585
-
-    [block.467]
-    {Parent : print_int.344}
-    Pred Blocks= block.465 block.466 
-    Succ Blocks= block.464 
-
-    [block.468]
-    {Parent : print_int.344}
-    Pred Blocks= block.445 
-    Succ Blocks= block.472 block.471 
-    tx.392:Int = IfEq x.476.1221 x.390 block.471 block.472 : stmt.590
-
-    [block.469]
-    {Parent : print_int.344}
-    Pred Blocks= block.445 
-    Succ Blocks= block.481 block.480 
-    mid.475.1074.1225:Int = Set 8 : stmt.599
-    x.476.1075.1226:Int = Set 80 : stmt.600
-    tx.392:Int = IfLE x.390 x.476.1075.1226 block.480 block.481 : stmt.601
-
-    [block.470]
-    {Parent : print_int.344}
-    Pred Blocks= block.473 block.482 
-    Succ Blocks= block.446 
-
-    [block.471]
-    {Parent : print_int.344}
-    Pred Blocks= block.468 
-    Succ Blocks= block.473 
-    tx.392:Int = Set 7 : stmt.591
-
-    [block.472]
-    {Parent : print_int.344}
-    Pred Blocks= block.468 
-    Succ Blocks= block.475 block.474 
-    mid.475.1079.1230:Int = Set 6 : stmt.592
-    x.476.1080.1231:Int = Set 60 : stmt.593
-    tx.392:Int = IfLE x.390 x.476.1080.1231 block.474 block.475 : stmt.594
-
-    [block.473]
-    {Parent : print_int.344}
-    Pred Blocks= block.471 block.476 
-    Succ Blocks= block.470 
-
-    [block.474]
-    {Parent : print_int.344}
-    Pred Blocks= block.472 
-    Succ Blocks= block.478 block.477 
-    tx.392:Int = IfEq x.476.1080.1231 x.390 block.477 block.478 : stmt.595
-
-    [block.475]
-    {Parent : print_int.344}
-    Pred Blocks= block.472 
-    Succ Blocks= block.476 
-    mid.475.1220.1677:Int = Restore mid.475.1220 : stmt.851
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1079.1230 mid.475.1220.1677 ) : stmt.598
-
-    [block.476]
-    {Parent : print_int.344}
-    Pred Blocks= block.479 block.475 
-    Succ Blocks= block.473 
-
-    [block.477]
-    {Parent : print_int.344}
-    Pred Blocks= block.474 
-    Succ Blocks= block.479 
-    tx.392:Int = Set 6 : stmt.596
-
-    [block.478]
-    {Parent : print_int.344}
-    Pred Blocks= block.474 
-    Succ Blocks= block.479 
-    mid.475.1084.1648:Int = Restore mid.475.1084 : stmt.829
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1084.1648 mid.475.1079.1230 ) : stmt.597
-
-    [block.479]
-    {Parent : print_int.344}
-    Pred Blocks= block.477 block.478 
-    Succ Blocks= block.476 
-
-    [block.480]
-    {Parent : print_int.344}
-    Pred Blocks= block.469 
-    Succ Blocks= block.484 block.483 
-    tx.392:Int = IfEq x.476.1075.1226 x.390 block.483 block.484 : stmt.602
-
-    [block.481]
-    {Parent : print_int.344}
-    Pred Blocks= block.469 
-    Succ Blocks= block.482 
-    Ti114.407.1601:Int = Restore Ti114.407 : stmt.787
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1074.1225 Ti114.407.1601 ) : stmt.605
-
-    [block.482]
-    {Parent : print_int.344}
-    Pred Blocks= block.485 block.481 
-    Succ Blocks= block.470 
-
-    [block.483]
-    {Parent : print_int.344}
-    Pred Blocks= block.480 
-    Succ Blocks= block.485 
-    tx.392:Int = Set 8 : stmt.603
-
-    [block.484]
-    {Parent : print_int.344}
-    Pred Blocks= block.480 
-    Succ Blocks= block.485 
-    mid.475.1220.1676:Int = Restore mid.475.1220 : stmt.850
-    tx.392:Int = CallDir(<div_binary_search.339>, x.390 Ti112.405 mid.475.1220.1676 mid.475.1074.1225 ) : stmt.604
-
-    [block.485]
-    {Parent : print_int.344}
-    Pred Blocks= block.483 block.484 
-    Succ Blocks= block.482 
-
-    [block.486]
-    {Parent : print_int.344}
-    Pred Blocks= block.446 
-    Succ Blocks= block.490 block.489 
-    flg.391.1645:Int = Restore flg.391 : stmt.827
-    flg.395:Bool = IfEq flg.391.1645 0 block.489 block.490 : stmt.609
-
-    [block.487]
-    {Parent : print_int.344}
-    Pred Blocks= block.446 
-    Succ Blocks= block.488 
-    Ti118.400:Int = Set 48 : stmt.615
-    Ti119.399:Int = Add Ti118.400 tx.392 : stmt.616
-    Tu31.398:Unit = CallDir(<min_caml_print_char>, Ti119.399 ) : stmt.617
-    flg.395:Bool = Set 1 : stmt.618
-
-    [block.488]
-    {Parent : print_int.344}
-    Pred Blocks= block.491 block.487 
-    Succ Blocks= block.140 
-    Ti120.397:Int = Set 48 : stmt.619
-    Ti121.396:Int = Add Ti120.397 x.394 : stmt.620
-    %dummy:Unit = CallDir(<min_caml_print_char>, Ti121.396 ) : stmt.621
-
-    [block.489]
-    {Parent : print_int.344}
-    Pred Blocks= block.486 
-    Succ Blocks= block.491 
-    flg.395:Bool = Set 0 : stmt.610
-
-    [block.490]
-    {Parent : print_int.344}
-    Pred Blocks= block.486 
-    Succ Blocks= block.491 
-    Ti116.403:Int = Set 48 : stmt.611
-    Ti117.402:Int = Add Ti116.403 tx.392 : stmt.612
-    Tu30.401:Unit = CallDir(<min_caml_print_char>, Ti117.402 ) : stmt.613
-    flg.395:Bool = Set 1 : stmt.614
-
-    [block.491]
-    {Parent : print_int.344}
-    Pred Blocks= block.489 block.490 
-    Succ Blocks= block.488 
-
-<print_int.344>
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.366
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.370
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.374
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.378
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.382
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.386
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g5 = x.390
-Save %g3 = x.345
-	args: %g3, 
-	fargs: 
-	ret: %dummy
-	use_regs: %dummy, %f15, %g26, %g3, %g4, %g5, %g6, %g7, 
-<ack.346>
-Save %g4 = Ti54.352.1141
-Save %g5 = Ti54.352
-Save %g5 = Ti54.352
-Save %g5 = Ti54.352
-Save %g4 = Ti54.352.1123
-Save %g4 = Ti54.352.1123
-	args: %g4, %g6, 
-	fargs: 
-	ret: %g3
-	use_regs: %f15, %g26, %g3, %g4, %g5, %g6, %g7, 
-Save %g4 = Ti54.352.1150
-output files : test/ack.s
+    [block.15]
+    {Parent : print_int.338}
+    Pred Blocks= block.12 
+    Succ Blocks= block.17 
+    flg.363:Bool = Set 0 : stmt.48
+
+    [block.16]
+    {Parent : print_int.338}
+    Pred Blocks= block.12 
+    Succ Blocks= block.17 
+    Ti56.466:Int = Set 48 : stmt.49
+    Ti57.465:Int = Add Ti56.466 tx.360 : stmt.50
+    Tu17.464:Unit = CallDir(<min_caml_print_char>, Ti57.465 ) : stmt.51
+    flg.363:Bool = Set 1 : stmt.52
+
+    [block.17]
+    {Parent : print_int.338}
+    Pred Blocks= block.15 block.16 
+    Succ Blocks= block.19 block.18 
+    Ti58.461:Int = Set 10000000 : stmt.53
+    Ti59.462:Int = Set 0 : stmt.54
+    Ti60.463:Int = Set 10 : stmt.55
+    tx.364:Int = CallDir(<div_binary_search.333>, x.362 Ti58.461 Ti59.462 Ti60.463 ) : stmt.56
+    Ti61.460:Int = Set 10000000 : stmt.57
+    dx.365:Int = Mul tx.364 Ti61.460 : stmt.58
+    x.366:Int = Sub x.362 dx.365 : stmt.59
+    flg.367:Bool = IfLE tx.364 0 block.18 block.19 : stmt.60
+
+    [block.18]
+    {Parent : print_int.338}
+    Pred Blocks= block.17 
+    Succ Blocks= block.22 block.21 
+    flg.367:Bool = IfEq flg.363 0 block.21 block.22 : stmt.61
+
+    [block.19]
+    {Parent : print_int.338}
+    Pred Blocks= block.17 
+    Succ Blocks= block.20 
+    Ti64.456:Int = Set 48 : stmt.67
+    Ti65.455:Int = Add Ti64.456 tx.364 : stmt.68
+    Tu19.454:Unit = CallDir(<min_caml_print_char>, Ti65.455 ) : stmt.69
+    flg.367:Bool = Set 1 : stmt.70
+
+    [block.20]
+    {Parent : print_int.338}
+    Pred Blocks= block.23 block.19 
+    Succ Blocks= block.25 block.24 
+    Ti66.451:Int = Set 1000000 : stmt.71
+    Ti67.452:Int = Set 0 : stmt.72
+    Ti68.453:Int = Set 10 : stmt.73
+    tx.368:Int = CallDir(<div_binary_search.333>, x.366 Ti66.451 Ti67.452 Ti68.453 ) : stmt.74
+    Ti69.450:Int = Set 1000000 : stmt.75
+    dx.369:Int = Mul tx.368 Ti69.450 : stmt.76
+    x.370:Int = Sub x.366 dx.369 : stmt.77
+    flg.371:Bool = IfLE tx.368 0 block.24 block.25 : stmt.78
+
+    [block.21]
+    {Parent : print_int.338}
+    Pred Blocks= block.18 
+    Succ Blocks= block.23 
+    flg.367:Bool = Set 0 : stmt.62
+
+    [block.22]
+    {Parent : print_int.338}
+    Pred Blocks= block.18 
+    Succ Blocks= block.23 
+    Ti62.459:Int = Set 48 : stmt.63
+    Ti63.458:Int = Add Ti62.459 tx.364 : stmt.64
+    Tu18.457:Unit = CallDir(<min_caml_print_char>, Ti63.458 ) : stmt.65
+    flg.367:Bool = Set 1 : stmt.66
+
+    [block.23]
+    {Parent : print_int.338}
+    Pred Blocks= block.21 block.22 
+    Succ Blocks= block.20 
+
+    [block.24]
+    {Parent : print_int.338}
+    Pred Blocks= block.20 
+    Succ Blocks= block.28 block.27 
+    flg.371:Bool = IfEq flg.367 0 block.27 block.28 : stmt.79
+
+    [block.25]
+    {Parent : print_int.338}
+    Pred Blocks= block.20 
+    Succ Blocks= block.26 
+    Ti72.446:Int = Set 48 : stmt.85
+    Ti73.445:Int = Add Ti72.446 tx.368 : stmt.86
+    Tu21.444:Unit = CallDir(<min_caml_print_char>, Ti73.445 ) : stmt.87
+    flg.371:Bool = Set 1 : stmt.88
+
+    [block.26]
+    {Parent : print_int.338}
+    Pred Blocks= block.29 block.25 
+    Succ Blocks= block.31 block.30 
+    Ti74.441:Int = Set 100000 : stmt.89
+    Ti75.442:Int = Set 0 : stmt.90
+    Ti76.443:Int = Set 10 : stmt.91
+    tx.372:Int = CallDir(<div_binary_search.333>, x.370 Ti74.441 Ti75.442 Ti76.443 ) : stmt.92
+    Ti77.440:Int = Set 100000 : stmt.93
+    dx.373:Int = Mul tx.372 Ti77.440 : stmt.94
+    x.374:Int = Sub x.370 dx.373 : stmt.95
+    flg.375:Bool = IfLE tx.372 0 block.30 block.31 : stmt.96
+
+    [block.27]
+    {Parent : print_int.338}
+    Pred Blocks= block.24 
+    Succ Blocks= block.29 
+    flg.371:Bool = Set 0 : stmt.80
+
+    [block.28]
+    {Parent : print_int.338}
+    Pred Blocks= block.24 
+    Succ Blocks= block.29 
+    Ti70.449:Int = Set 48 : stmt.81
+    Ti71.448:Int = Add Ti70.449 tx.368 : stmt.82
+    Tu20.447:Unit = CallDir(<min_caml_print_char>, Ti71.448 ) : stmt.83
+    flg.371:Bool = Set 1 : stmt.84
+
+    [block.29]
+    {Parent : print_int.338}
+    Pred Blocks= block.27 block.28 
+    Succ Blocks= block.26 
+
+    [block.30]
+    {Parent : print_int.338}
+    Pred Blocks= block.26 
+    Succ Blocks= block.34 block.33 
+    flg.375:Bool = IfEq flg.371 0 block.33 block.34 : stmt.97
+
+    [block.31]
+    {Parent : print_int.338}
+    Pred Blocks= block.26 
+    Succ Blocks= block.32 
+    Ti80.436:Int = Set 48 : stmt.103
+    Ti81.435:Int = Add Ti80.436 tx.372 : stmt.104
+    Tu23.434:Unit = CallDir(<min_caml_print_char>, Ti81.435 ) : stmt.105
+    flg.375:Bool = Set 1 : stmt.106
+
+    [block.32]
+    {Parent : print_int.338}
+    Pred Blocks= block.35 block.31 
+    Succ Blocks= block.37 block.36 
+    Ti82.431:Int = Set 10000 : stmt.107
+    Ti83.432:Int = Set 0 : stmt.108
+    Ti84.433:Int = Set 10 : stmt.109
+    tx.376:Int = CallDir(<div_binary_search.333>, x.374 Ti82.431 Ti83.432 Ti84.433 ) : stmt.110
+    Ti85.430:Int = Set 10000 : stmt.111
+    dx.377:Int = Mul tx.376 Ti85.430 : stmt.112
+    x.378:Int = Sub x.374 dx.377 : stmt.113
+    flg.379:Bool = IfLE tx.376 0 block.36 block.37 : stmt.114
+
+    [block.33]
+    {Parent : print_int.338}
+    Pred Blocks= block.30 
+    Succ Blocks= block.35 
+    flg.375:Bool = Set 0 : stmt.98
+
+    [block.34]
+    {Parent : print_int.338}
+    Pred Blocks= block.30 
+    Succ Blocks= block.35 
+    Ti78.439:Int = Set 48 : stmt.99
+    Ti79.438:Int = Add Ti78.439 tx.372 : stmt.100
+    Tu22.437:Unit = CallDir(<min_caml_print_char>, Ti79.438 ) : stmt.101
+    flg.375:Bool = Set 1 : stmt.102
+
+    [block.35]
+    {Parent : print_int.338}
+    Pred Blocks= block.33 block.34 
+    Succ Blocks= block.32 
+
+    [block.36]
+    {Parent : print_int.338}
+    Pred Blocks= block.32 
+    Succ Blocks= block.40 block.39 
+    flg.379:Bool = IfEq flg.375 0 block.39 block.40 : stmt.115
+
+    [block.37]
+    {Parent : print_int.338}
+    Pred Blocks= block.32 
+    Succ Blocks= block.38 
+    Ti88.426:Int = Set 48 : stmt.121
+    Ti89.425:Int = Add Ti88.426 tx.376 : stmt.122
+    Tu25.424:Unit = CallDir(<min_caml_print_char>, Ti89.425 ) : stmt.123
+    flg.379:Bool = Set 1 : stmt.124
+
+    [block.38]
+    {Parent : print_int.338}
+    Pred Blocks= block.41 block.37 
+    Succ Blocks= block.43 block.42 
+    Ti90.421:Int = Set 1000 : stmt.125
+    Ti91.422:Int = Set 0 : stmt.126
+    Ti92.423:Int = Set 10 : stmt.127
+    tx.380:Int = CallDir(<div_binary_search.333>, x.378 Ti90.421 Ti91.422 Ti92.423 ) : stmt.128
+    dx.381:Int = Mul tx.380 1000 : stmt.129
+    x.382:Int = Sub x.378 dx.381 : stmt.130
+    flg.383:Bool = IfLE tx.380 0 block.42 block.43 : stmt.131
+
+    [block.39]
+    {Parent : print_int.338}
+    Pred Blocks= block.36 
+    Succ Blocks= block.41 
+    flg.379:Bool = Set 0 : stmt.116
+
+    [block.40]
+    {Parent : print_int.338}
+    Pred Blocks= block.36 
+    Succ Blocks= block.41 
+    Ti86.429:Int = Set 48 : stmt.117
+    Ti87.428:Int = Add Ti86.429 tx.376 : stmt.118
+    Tu24.427:Unit = CallDir(<min_caml_print_char>, Ti87.428 ) : stmt.119
+    flg.379:Bool = Set 1 : stmt.120
+
+    [block.41]
+    {Parent : print_int.338}
+    Pred Blocks= block.39 block.40 
+    Succ Blocks= block.38 
+
+    [block.42]
+    {Parent : print_int.338}
+    Pred Blocks= block.38 
+    Succ Blocks= block.46 block.45 
+    flg.383:Bool = IfEq flg.379 0 block.45 block.46 : stmt.132
+
+    [block.43]
+    {Parent : print_int.338}
+    Pred Blocks= block.38 
+    Succ Blocks= block.44 
+    Ti96.416:Int = Set 48 : stmt.138
+    Ti97.415:Int = Add Ti96.416 tx.380 : stmt.139
+    Tu27.414:Unit = CallDir(<min_caml_print_char>, Ti97.415 ) : stmt.140
+    flg.383:Bool = Set 1 : stmt.141
+
+    [block.44]
+    {Parent : print_int.338}
+    Pred Blocks= block.47 block.43 
+    Succ Blocks= block.49 block.48 
+    Ti98.411:Int = Set 100 : stmt.142
+    Ti99.412:Int = Set 0 : stmt.143
+    Ti100.413:Int = Set 10 : stmt.144
+    tx.384:Int = CallDir(<div_binary_search.333>, x.382 Ti98.411 Ti99.412 Ti100.413 ) : stmt.145
+    dx.385:Int = Mul tx.384 100 : stmt.146
+    x.386:Int = Sub x.382 dx.385 : stmt.147
+    flg.387:Bool = IfLE tx.384 0 block.48 block.49 : stmt.148
+
+    [block.45]
+    {Parent : print_int.338}
+    Pred Blocks= block.42 
+    Succ Blocks= block.47 
+    flg.383:Bool = Set 0 : stmt.133
+
+    [block.46]
+    {Parent : print_int.338}
+    Pred Blocks= block.42 
+    Succ Blocks= block.47 
+    Ti94.419:Int = Set 48 : stmt.134
+    Ti95.418:Int = Add Ti94.419 tx.380 : stmt.135
+    Tu26.417:Unit = CallDir(<min_caml_print_char>, Ti95.418 ) : stmt.136
+    flg.383:Bool = Set 1 : stmt.137
+
+    [block.47]
+    {Parent : print_int.338}
+    Pred Blocks= block.45 block.46 
+    Succ Blocks= block.44 
+
+    [block.48]
+    {Parent : print_int.338}
+    Pred Blocks= block.44 
+    Succ Blocks= block.52 block.51 
+    flg.387:Bool = IfEq flg.383 0 block.51 block.52 : stmt.149
+
+    [block.49]
+    {Parent : print_int.338}
+    Pred Blocks= block.44 
+    Succ Blocks= block.50 
+    Ti104.406:Int = Set 48 : stmt.155
+    Ti105.405:Int = Add Ti104.406 tx.384 : stmt.156
+    Tu29.404:Unit = CallDir(<min_caml_print_char>, Ti105.405 ) : stmt.157
+    flg.387:Bool = Set 1 : stmt.158
+
+    [block.50]
+    {Parent : print_int.338}
+    Pred Blocks= block.53 block.49 
+    Succ Blocks= block.55 block.54 
+    Ti106.401:Int = Set 10 : stmt.159
+    Ti107.402:Int = Set 0 : stmt.160
+    Ti108.403:Int = Set 10 : stmt.161
+    tx.388:Int = CallDir(<div_binary_search.333>, x.386 Ti106.401 Ti107.402 Ti108.403 ) : stmt.162
+    dx.389:Int = Mul tx.388 10 : stmt.163
+    x.390:Int = Sub x.386 dx.389 : stmt.164
+    flg.391:Bool = IfLE tx.388 0 block.54 block.55 : stmt.165
+
+    [block.51]
+    {Parent : print_int.338}
+    Pred Blocks= block.48 
+    Succ Blocks= block.53 
+    flg.387:Bool = Set 0 : stmt.150
+
+    [block.52]
+    {Parent : print_int.338}
+    Pred Blocks= block.48 
+    Succ Blocks= block.53 
+    Ti102.409:Int = Set 48 : stmt.151
+    Ti103.408:Int = Add Ti102.409 tx.384 : stmt.152
+    Tu28.407:Unit = CallDir(<min_caml_print_char>, Ti103.408 ) : stmt.153
+    flg.387:Bool = Set 1 : stmt.154
+
+    [block.53]
+    {Parent : print_int.338}
+    Pred Blocks= block.51 block.52 
+    Succ Blocks= block.50 
+
+    [block.54]
+    {Parent : print_int.338}
+    Pred Blocks= block.50 
+    Succ Blocks= block.58 block.57 
+    flg.391:Bool = IfEq flg.387 0 block.57 block.58 : stmt.166
+
+    [block.55]
+    {Parent : print_int.338}
+    Pred Blocks= block.50 
+    Succ Blocks= block.56 
+    Ti112.396:Int = Set 48 : stmt.172
+    Ti113.395:Int = Add Ti112.396 tx.388 : stmt.173
+    Tu31.394:Unit = CallDir(<min_caml_print_char>, Ti113.395 ) : stmt.174
+    flg.391:Bool = Set 1 : stmt.175
+
+    [block.56]
+    {Parent : print_int.338}
+    Pred Blocks= block.59 block.55 
+    Succ Blocks= block.14 
+    Ti114.393:Int = Set 48 : stmt.176
+    Ti115.392:Int = Add Ti114.393 x.390 : stmt.177
+    %dummy:Unit = CallDir(<min_caml_print_char>, Ti115.392 ) : stmt.178
+
+    [block.57]
+    {Parent : print_int.338}
+    Pred Blocks= block.54 
+    Succ Blocks= block.59 
+    flg.391:Bool = Set 0 : stmt.167
+
+    [block.58]
+    {Parent : print_int.338}
+    Pred Blocks= block.54 
+    Succ Blocks= block.59 
+    Ti110.399:Int = Set 48 : stmt.168
+    Ti111.398:Int = Add Ti110.399 tx.388 : stmt.169
+    Tu30.397:Unit = CallDir(<min_caml_print_char>, Ti111.398 ) : stmt.170
+    flg.391:Bool = Set 1 : stmt.171
+
+    [block.59]
+    {Parent : print_int.338}
+    Pred Blocks= block.57 block.58 
+    Succ Blocks= block.56 
+
+color : 
+Ti100.413 => %g14
+Ti102.409 => %g12
+Ti103.408 => %g11
+Ti104.406 => %g12
+Ti105.405 => %g11
+Ti106.401 => %g14
+Ti107.402 => %g12
+Ti108.403 => %g11
+Ti110.399 => %g12
+Ti111.398 => %g11
+Ti112.396 => %g12
+Ti113.395 => %g11
+Ti114.393 => %g11
+Ti115.392 => %g10
+Ti116.359 => %g11
+Ti117.358 => %g10
+Ti52.468 => %g13
+Ti53.469 => %g12
+Ti54.470 => %g11
+Ti55.467 => %g12
+Ti56.466 => %g12
+Ti57.465 => %g11
+Ti58.461 => %g14
+Ti59.462 => %g12
+Ti60.463 => %g11
+Ti61.460 => %g12
+Ti62.459 => %g12
+Ti63.458 => %g11
+Ti64.456 => %g12
+Ti65.455 => %g11
+Ti66.451 => %g14
+Ti67.452 => %g13
+Ti68.453 => %g11
+Ti69.450 => %g13
+Ti70.449 => %g12
+Ti71.448 => %g11
+Ti72.446 => %g12
+Ti73.445 => %g11
+Ti74.441 => %g14
+Ti75.442 => %g12
+Ti76.443 => %g11
+Ti77.440 => %g12
+Ti78.439 => %g12
+Ti79.438 => %g11
+Ti80.436 => %g12
+Ti81.435 => %g11
+Ti82.431 => %g14
+Ti83.432 => %g13
+Ti84.433 => %g11
+Ti85.430 => %g13
+Ti86.429 => %g12
+Ti87.428 => %g11
+Ti88.426 => %g12
+Ti89.425 => %g11
+Ti90.421 => %g14
+Ti91.422 => %g12
+Ti92.423 => %g11
+Ti94.419 => %g12
+Ti95.418 => %g11
+Ti96.416 => %g12
+Ti97.415 => %g11
+Ti98.411 => %g13
+Ti99.412 => %g11
+dx.361 => %g12
+dx.365 => %g12
+dx.369 => %g13
+dx.373 => %g12
+dx.377 => %g13
+dx.381 => %g12
+dx.385 => %g13
+dx.389 => %g12
+flg.363 => %g13
+flg.367 => %g12
+flg.371 => %g13
+flg.375 => %g12
+flg.379 => %g13
+flg.383 => %g12
+flg.387 => %g13
+flg.391 => %g12
+tx.360 => %g11
+tx.364 => %g11
+tx.368 => %g11
+tx.372 => %g11
+tx.376 => %g11
+tx.380 => %g11
+tx.384 => %g11
+tx.388 => %g11
+x.339 => %g10
+x.362 => %g10
+x.366 => %g10
+x.370 => %g10
+x.374 => %g10
+x.378 => %g10
+x.382 => %g10
+x.386 => %g10
+x.390 => %g10
+<print_int.338>
+Save %g10 = x.339
+Save %g10 = x.362
+Save %g13 = flg.363
+Save %g10 = x.366
+Save %g12 = flg.367
+Save %g10 = x.370
+Save %g13 = flg.371
+Save %g10 = x.374
+Save %g12 = flg.375
+Save %g10 = x.378
+Save %g13 = flg.379
+Save %g10 = x.382
+Save %g12 = flg.383
+Save %g10 = x.386
+Save %g13 = flg.387
+stmt.183
+<n.340> wish_env (0): 
+    <n.340>
+
+    [block.60]
+    {Parent : n.340}
+    Pred Blocks= 
+    Succ Blocks= 
+    %g3:Int = Mov x.341 : stmt.183
+
+color : 
+x.341 => %g3
+<n.340>
+stmt.184
+<f.342> wish_env (0): 
+    <f.342>
+
+    [block.61]
+    {Parent : f.342}
+    Pred Blocks= 
+    Succ Blocks= 
+    %g3:Int = Add x.343 y.344 : stmt.184
+
+color : 
+x.343 => %g11
+y.344 => %g10
+<f.342>
+stmt.191
+stmt.190
+stmt.189
+stmt.188
+stmt.187
+stmt.186
+stmt.185
+<g.345> wish_env (1): 
+a.346 => , Target %g3, Avoid %g27, Avoid %g26, Avoid %f15
+    <g.345>
+
+    [block.62]
+    {Parent : g.345}
+    Pred Blocks= 
+    Succ Blocks= 
+    c.351:Int = CallDir(<n.340>, a.346 ) : stmt.185
+    d.352:Int = CallDir(<n.340>, b.347 ) : stmt.186
+    Ti49.355:Int = Set 1 : stmt.187
+    Ti50.356:Int = Set 2 : stmt.188
+    f.353:Int = CallDir(<f.342>, Ti49.355 Ti50.356 ) : stmt.189
+    Ti51.354:Int = Add c.351 d.352 : stmt.190
+    %g3:Int = Add Ti51.354 f.353 : stmt.191
+
+color : 
+Ti49.355 => %g13
+Ti50.356 => %g10
+Ti51.354 => %g11
+a.346 => %g3
+b.347 => %g10
+c.351 => %g12
+d.352 => %g11
+f.353 => %g10
+<g.345>
+Save %g11 = d.352
+stmt.27
+stmt.26
+stmt.25
+stmt.24
+stmt.23
+stmt.22
+stmt.21
+stmt.20
+stmt.19
+stmt.18
+stmt.17
+stmt.16
+stmt.15
+stmt.14
+stmt.13
+stmt.12
+stmt.11
+stmt.10
+stmt.9
+stmt.8
+stmt.7
+stmt.6
+stmt.5
+stmt.4
+stmt.3
+stmt.2
+stmt.1
+stmt.0
+<min_caml_start> wish_env (0): 
+    <min_caml_start>
+
+    [block.0]
+    {Parent : min_caml_start}
+    Pred Blocks= 
+    Succ Blocks= 
+    Ti34.598:Int = Set 1 : stmt.0
+    Ti35.599:Int = Set 0 : stmt.1
+    read_int_ans.315:Array(Int) = CallDir(<min_caml_create_array>, Ti34.598 Ti35.599 ) : stmt.2
+    Tu682:Unit = St read_int_ans.315 %g31 20 : stmt.3
+    Ti36.596:Int = Set 1 : stmt.4
+    Ti37.597:Int = Set 0 : stmt.5
+    read_int_s.316:Array(Int) = CallDir(<min_caml_create_array>, Ti36.596 Ti37.597 ) : stmt.6
+    Tu681:Unit = St read_int_s.316 %g31 16 : stmt.7
+    Ti38.558:Int = Set 1 : stmt.8
+    Ti39.559:Int = Set 0 : stmt.9
+    read_float_i.322:Array(Int) = CallDir(<min_caml_create_array>, Ti38.558 Ti39.559 ) : stmt.10
+    Tu680:Unit = St read_float_i.322 %g31 12 : stmt.11
+    Ti40.556:Int = Set 1 : stmt.12
+    Ti41.557:Int = Set 0 : stmt.13
+    read_float_f.323:Array(Int) = CallDir(<min_caml_create_array>, Ti40.556 Ti41.557 ) : stmt.14
+    Tu679:Unit = St read_float_f.323 %g31 8 : stmt.15
+    Ti42.554:Int = Set 1 : stmt.16
+    Ti43.555:Int = Set 1 : stmt.17
+    read_float_exp.324:Array(Int) = CallDir(<min_caml_create_array>, Ti42.554 Ti43.555 ) : stmt.18
+    Tu678:Unit = St read_float_exp.324 %g31 4 : stmt.19
+    Ti44.552:Int = Set 1 : stmt.20
+    Ti45.553:Int = Set 0 : stmt.21
+    read_float_s.325:Array(Int) = CallDir(<min_caml_create_array>, Ti44.552 Ti45.553 ) : stmt.22
+    Tu677:Unit = St read_float_s.325 %g31 0 : stmt.23
+    Ti46.349:Int = Set 3 : stmt.24
+    Ti47.350:Int = Set 4 : stmt.25
+    Ti48.348:Int = CallDir(<g.345>, Ti46.349 Ti47.350 ) : stmt.26
+    %dummy:Unit = CallDir(<print_int.338>, Ti48.348 ) : stmt.27
+
+color : 
+Ti34.598 => %g11
+Ti35.599 => %g10
+Ti36.596 => %g11
+Ti37.597 => %g10
+Ti38.558 => %g11
+Ti39.559 => %g10
+Ti40.556 => %g11
+Ti41.557 => %g10
+Ti42.554 => %g11
+Ti43.555 => %g10
+Ti44.552 => %g11
+Ti45.553 => %g10
+Ti46.349 => %g11
+Ti47.350 => %g10
+Ti48.348 => %g10
+read_float_exp.324 => %g10
+read_float_f.323 => %g10
+read_float_i.322 => %g10
+read_float_s.325 => %g10
+read_int_ans.315 => %g10
+read_int_s.316 => %g10
+output files : test/wish_test.s
 input files : lib/lib_asm.s tmp.s 
 .init_heap_size	192 => 192
 .init_heap_size	0 => 0
