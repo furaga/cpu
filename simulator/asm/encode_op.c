@@ -39,12 +39,12 @@ uint32_t encode_op(char *opcode, char *op_data)
 		    return mov(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "mvhi") == 0){
-		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3)
-		    return mvhi(0,rt,imm);
+		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
+		    return mvhi(rs,0,imm);
 	}
 	if(strcmp(opcode, "mvlo") == 0){
-		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3)
-		    return mvlo(0,rt,imm);
+		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
+		    return mvlo(rs,0,imm);
 	}
 	if(strcmp(opcode, "add") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)

@@ -28,4 +28,5 @@ int is_const(int);
 int is_xreg(int);
 int is_xmm(int);
 extern int count_flag;
+extern int mathlib_flag;
 #endif

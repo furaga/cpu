@@ -5,7 +5,7 @@ Makefile.in内の変数
 TEST_TARGET			: sim,fsim,xsimのターゲット
 RT_TARGET			: rt,frt,xrtのターゲット
 SIM_FLAGS			: sim(make sim) のオプション
-XSIM_FLAGS [-cnt]	: xsim のオプション
+XSIM_FLAGS [-cnt, -lm(betaのみ)]	: xsim のオプション
 EOG					: xrt完了時のbashの命令(eog $$ppm &)なら画像出力
 
 xsim/Makefile内の変数

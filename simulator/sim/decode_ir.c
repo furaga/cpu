@@ -84,7 +84,7 @@ void decode_ir(uint32_t ir, FILE *fp) {
 	} else
 	if (strcmp(type, "fgi") == 0) {
 		// mvhi, mvlo
-		fprintf(fp, fgi, name, get_rti(ir), _GRT, _IMM);
+		fprintf(fp, fgi, name, get_rsi(ir), _GRS, _IMM);
 	}else 
 	if (strcmp(type, "fgg") == 0) {
 		// mov, not

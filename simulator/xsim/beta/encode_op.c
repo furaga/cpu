@@ -44,16 +44,16 @@ int encode_op(char *opcode, char *op_data)
 		}
 	}
 	if(strcmp(opcode, "mvhi") == 0){
-		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3) {
-			OP(andl),IM(0xffff), GC(rt),NL;
-			OP(orl),IM((imm&0xffff)<<16),GC(rt),NL;
+		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3) {
+			OP(andl),IM(0xffff), GC(rs),NL;
+			OP(orl),IM((imm&0xffff)<<16),GC(rs),NL;
 		    return 0;
 		}
 	}
 	if(strcmp(opcode, "mvlo") == 0){
-		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3) {
-			OP(andl),IM(0xffff0000),GC(rt),NL;
-			OP(orl),IM(imm&0xffff),GC(rt),NL;
+		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3) {
+			OP(andl),IM(0xffff0000),GC(rs),NL;
+			OP(orl),IM(imm&0xffff),GC(rs),NL;
 		    return 0;
 		}
 	}
@@ -482,27 +482,55 @@ int encode_op(char *opcode, char *op_data)
 	}
 	if(strcmp(opcode, "fdiv") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4) {
-	 		if ((rd == rs) && (is_xmm(rs))) {
-				OP(divss),F(rt),FC(rs),NL;
-				//OP(rcpss),F(rt),FC(rt),NL;
-				//OP(mulss),F(rs),FC(rt),NL;
-			} else {
-				OP(movss),F(rs),SC(%xmm15),NL;
-				OP(divss),F(rt),SC(%xmm15),NL;
+			if (mathlib_flag) {
+				if (is_xmm(rt)) {
+					OP(movd),F(rt),SC(%eax),NL;
+				} else {
+					OP(movl),F(rt),SC(%eax),NL;
+				}
+				OP(call),S(FInv),NL;
+				OP(movd),S(%eax),SC(%xmm15),NL;
+				OP(mulss),F(rs),SC(%xmm15),NL;
 				OP(movss),S(%xmm15),FC(rd),NL;
+
+			} else {
+				if ((rd == rs) && (is_xmm(rs))) {
+					OP(divss),F(rt),FC(rs),NL;
+				} else {
+					OP(movss),F(rs),SC(%xmm15),NL;
+					OP(divss),F(rt),SC(%xmm15),NL;
+					OP(movss),S(%xmm15),FC(rd),NL;
+				}
 			}
+
+
 		    return 0;
 		}
 	}
 	if(strcmp(opcode, "fsqrt") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
+			if (mathlib_flag) {
 
-	 		if (is_xreg(rd)) {
-				OP(sqrtss),F(rs),FC(rd),NL;
+				if (is_xmm(rs)) {
+					OP(movd),F(rs),SC(%eax),NL;
+				} else {
+					OP(movl),F(rs),SC(%eax),NL;
+				}
+				OP(call),S(FSqrt),NL;
+				if (is_xmm(rd)) {
+					OP(movd),S(%eax),FC(rd),NL;
+				} else {
+					OP(movl),S(%eax),FC(rd),NL;
+				}
+
 			} else {
-				OP(movss),F(rs),SC(%xmm15),NL;
-				OP(sqrtss),S(%xmm15),SC(%xmm15),NL;
-				OP(movss),S(%xmm15),FC(rd),NL;
+				if (is_xmm(rd)) {
+					OP(sqrtss),F(rs),FC(rd),NL;
+				} else {
+					OP(movss),F(rs),SC(%xmm15),NL;
+					OP(sqrtss),S(%xmm15),SC(%xmm15),NL;
+					OP(movss),S(%xmm15),FC(rd),NL;
+				}
 			}
 		    return 0;
 		}
@@ -653,39 +681,6 @@ int encode_op(char *opcode, char *op_data)
 		    return 0;
 		}
 	}
-
-	/*
-	if(strcmp(opcode, "sqrt") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return 0;
-	}
-	if(strcmp(opcode, "sin") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
-		    return 0;
-		}
-	}
-	if(strcmp(opcode, "cos") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
-		    return 0;
-		}
-	}
-	if(strcmp(opcode, "atan") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3) {
-		    return 0;
-		}
-	}
-	if(strcmp(opcode, "int_of_float") == 0){
-		if(sscanf(op_data, fgf, tmp, &rd, &rs) == 3) {
-		    return 0;
-		}
-	}
-	if(strcmp(opcode, "float_of_int") == 0){
-		if(sscanf(op_data, ffg, tmp, &rd, &rs) == 3) {
-		    return 0;
-		}
-	}
-	*/
-
 	return -1;
 }
 

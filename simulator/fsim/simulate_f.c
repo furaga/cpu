@@ -223,14 +223,13 @@ int simulate(char *sfile) {
 										 (_FRS | (0x1 << 31)) ; // plus
 						break;
 					case FSQRT_F:
-						a.i = _FRS;
-						ans.f = sqrtf(a.f);
-						_FRD = ans.i;
+						_FRD = _fsqrt(_FRS);
 						break;
 					case FDIV_F:
 						a.i = _FRS;
 						b.i = _FRT;
-						ans.f = a.f / b.f;
+						b.i = _finv(b.i);
+						ans.f = a.f * b.f;
 						_FRD = ans.i;
 						break;
 					default: break;

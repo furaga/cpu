@@ -3,7 +3,7 @@ include ../MakefileX.in
 RM_TARGET = ./bin/*.x ./obj/*.o ./x86asm/*.asm ./lst/*.lst xrt
 AS = as
 
-LIB_OBJ = inc/lib.o
+LIB_OBJ = inc/lib.o inc/math.o
 ASM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%.s)
 
 asmcho: asmcho.o assemble.o encode_op.o 

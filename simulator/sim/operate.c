@@ -89,12 +89,12 @@ int operate(uint32_t ir) {
 				break;
 
 			case MVHI: 
-				IF0_BREAK_T
-				_GRT = ((uint32_t) _IMM << 16) | (_GRT & 0xffff);
+				IF0_BREAK_S
+				_GRS = ((uint32_t) _IMM << 16) | (_GRS & 0xffff);
 				break;
 			case MVLO: 
-				IF0_BREAK_T
-				_GRT = (_GRT & (0xffff<<16)) | (_IMM & 0xffff);
+				IF0_BREAK_S
+				_GRS = (_GRS & (0xffff<<16)) | (_IMM & 0xffff);
 				break;
 			case DIVI:
 				IF0_BREAK_T
