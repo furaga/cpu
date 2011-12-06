@@ -2,7 +2,7 @@
 
 
 .PHONY: all asm clean sim fsim xsim frt rt xrt
-MAKE_OPTION = -s
+#MAKE_OPTION = -s
 all:
 	cd asm; make $(MAKE_OPTION)
 	cd sim; make $(MAKE_OPTION)

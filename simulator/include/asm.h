@@ -4,6 +4,7 @@
 #include "common.h"
 #define ASM_LOG "asmlog"
 #define LABEL_MAX (128 * 1024)
+extern int output_type;
 
 #define PROTO_R(name) \
 	uint32_t name(uint8_t, uint8_t, uint8_t, uint8_t, uint8_t);

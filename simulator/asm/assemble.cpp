@@ -53,11 +53,6 @@ int	assemble(char *sfile) {
 		return -1;
 	}
 
-	len = strlen(sfile) - 2;
-	dfile = (char*) malloc(len+1);
-	strncpy(dfile, sfile, len);
-	*(dfile+len) = 0;
-
 	printf("assemble %s ==>\t", sfile);
 
 	if (fgets(buf, LINE_MAX, fp) != NULL) {
@@ -126,50 +121,68 @@ int	assemble(char *sfile) {
 		return -1;
 	}else{
 
-		// replace label_num with label_line
-		for(i = heap_size/32+1; i < DATA_NUM; i++){
-			switch ((output_data[i] & 0xfc000000) >> 26) {
-				case JLT:
-				case JNE:
-				case JEQ:
-				case FJLT:
-				case FJEQ:
-					label_line = label_map[label_name[output_data[i] & 0xffff]];
-					label_line -= i + 1;
-					output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
-					break;
-				case CALL:
-				case JMP:
-					label_line = label_map[label_name[output_data[i] & 0x3ffffff]];
-					output_data[i] = (output_data[i] & 0xfc000000) | label_line;
-					break;
-				case SETL:
-					label_line = label_map[label_name[output_data[i] & 0xffff]];
-					output_data[i] = addi(0, (output_data[i]&0x1f0000)>>16 ,label_line);
-					break;
-				default:
-					break;
+			// replace label_num with label_line
+			for(i = heap_size/32+1; i < DATA_NUM; i++){
+				switch ((output_data[i] & 0xfc000000) >> 26) {
+					case JLT:
+					case JNE:
+					case JEQ:
+					case FJLT:
+					case FJEQ:
+						label_line = label_map[label_name[output_data[i] & 0xffff]];
+						label_line -= i + 1;
+						output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
+						break;
+					case CALL:
+					case JMP:
+						label_line = label_map[label_name[output_data[i] & 0x3ffffff]];
+						output_data[i] = (output_data[i] & 0xfc000000) | label_line;
+						break;
+					case SETL:
+						label_line = label_map[label_name[output_data[i] & 0xffff]];
+						output_data[i] = addi(0, (output_data[i]&0x1f0000)>>16 ,label_line);
+						break;
+					default:
+						break;
+				}
 			}
-		}
+
+		len = strlen(sfile) - 2;
+		dfile = (char*) malloc(len+1);
+		strncpy(dfile, sfile, len);
+
+		dfile[len] = 0;
 
 		fd = open(dfile, O_WRONLY | O_TRUNC | O_CREAT, S_IRUSR | S_IWUSR);
-		num = output_line_cnt*4;
-		while ((ret = write(fd, output_data, num)) > 0) {
-			num -= ret;
-		}
-		close(fd);
 
-/*
-		fp = fdopen(fd, "w");
-		for (i = 0; i < output_line_cnt; i++) {
-			//fprintf(fp, "x\"%08X\",\n", output_data[i]);
-			//fprintf(fp, "\"");
-			//hex2bin(output_data[i],fp);
-			//fprintf(fp, "\",\n");
+		if (output_type == 0) {
+			num = output_line_cnt*4;
+			while ((ret = write(fd, output_data, num)) > 0) {
+				num -= ret;
+			}
+			close(fd);
+		} else {
+
+			fp = fdopen(fd, "w");
+			if (output_type == 1) {
+
+				for (i = 0; i < output_line_cnt; i++) {
+					fprintf(fp, "\"");
+					hex2bin(output_data[i],fp);
+					fprintf(fp, "\",\n");
+				}
+
+			} else if (output_type == 2) {
+
+				for (i = 0; i < output_line_cnt; i++) {
+					fprintf(fp, "x\"%08X\",\n", output_data[i]);
+				}
+			}
+
+			fflush(fp);
+			close(fd); fclose(fp);
 		}
-		fflush(fp);
-		close(fd); fclose(fp);
-*/
+
 		ofstream ofs(ASM_LOG);
 		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
 			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
