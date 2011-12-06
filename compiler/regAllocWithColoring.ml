@@ -166,7 +166,7 @@ let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数�
 	fundata := M.add x data !fundata;
 	let env = S.union (S.of_list data.arg_regs) (S.add data.ret_reg (get_use_regs x e')) in
 	let env = S.filter is_reg env in
-	let env = S.union (S.of_list [reg_sw; reg_fsw; reg_cl]) env in
+	let env = S.union (S.of_list [reg_sw; reg_fsw]) env in
 	
 	let data = { data with use_regs = env} in
 	fundata := M.add x data !fundata;

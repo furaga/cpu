@@ -49,8 +49,8 @@ let fundata = ref (M.add_list
    ("min_caml_floor", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"; "%f4"]});
    ("min_caml_ceil", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"; "%f1"; "%f2"; "%f3"; "%f4"]});
    ("min_caml_float_of_int", { arg_regs = ["%g3"]; ret_reg = "%f0"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
-   ("min_caml_int_of_float", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
-   ("min_caml_truncate", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"]});
+   ("min_caml_int_of_float", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"; "%f3"; "%f4"]});
+   ("min_caml_truncate", { arg_regs = ["%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"; "%f0"; "%f1"; "%f2"; "%f3"; "%f4"]});
    ("min_caml_create_array", { arg_regs = ["%g3"; "%g4"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%g5"]});
    ("min_caml_create_float_array", { arg_regs = ["%g3"; "%f0"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"; "%g4"; "%f0"]});
    ("min_caml_print_char", { arg_regs = ["%g3"]; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
@@ -73,13 +73,12 @@ let regs = (* Array.init 16 (fun i -> Printf.sprintf "%%r%d" i) *)
 
 let freg_num = 16
 
-let fregs = Array.init (freg_num - 1) (fun i -> Printf.sprintf "%%f%d" i)
+let fregs = Array.init (freg_num) (fun i -> Printf.sprintf "%%f%d" i)
 let allregs = Array.to_list regs
 let allfregs = Array.to_list fregs
 let reg_cl = regs.(Array.length regs - 1) (* closure address (caml2html: sparcasm_regcl) *)
-(*let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)*)
-let reg_sw = "%g26" (* temporary for swap *)
-let reg_fsw = "%f15"(*fregs.(Array.length fregs - 1) (* temporary for swap *)*)
+let reg_sw = regs.(Array.length regs - 2) (* temporary for swap *)
+let reg_fsw = fregs.(Array.length fregs - 1) (* temporary for swap *)
 
 let reg_0 = "%g0"	(* ¾ï¤Ë£° *)
 let reg_p1 = "%g28"	(* ¾ï¤Ë£± *)
@@ -89,7 +88,7 @@ let reg_sp = "%g1" (* stack pointer *)
 let reg_hp = "%g2" (* heap pointer (caml2html: sparcasm_reghp) *)
 let reg_bottom = "%g31" (* return address *)
 
-let reg_fgs = Array.to_list (Array.init (31 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
+let reg_fgs = Array.to_list (Array.init (32 - freg_num) (fun i -> Printf.sprintf "%%f%d" (freg_num + i)))
 
 let get_arg_regs x = try (M.find x !fundata).arg_regs with Not_found -> Printf.eprintf "Not_found %s\n" x; assert false
 let get_ret_reg x = try (M.find x !fundata).ret_reg with Not_found -> Printf.eprintf "Not_found %s\n" x; assert false

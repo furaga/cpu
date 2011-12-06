@@ -28,7 +28,8 @@ cse.mli cse.ml constFold.mli constFold.ml constArg.mli constArg.ml \
 globalEnv.ml closure.mli closure.ml \
 asm.mli asm.ml virtual.mli virtual.ml sglobal.mli sglobal.ml\
 simm.mli simm.ml block.ml liveness.ml coloring.ml\
-toAsm.ml regAlloc.mli regAlloc.ml regAllocWithColoring.ml emit.mli emit.ml \
+toAsm.ml regAlloc.mli regAlloc.ml regAllocWithColoring.ml \
+output.ml emit.mli emit.ml \
 main.mli main.ml
 
 # ↓テストプログラムが増えたら、これも増やす

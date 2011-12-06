@@ -53,6 +53,14 @@ let spill_cnt = ref 0
 (* 関数の引数などをこのレジスタに割り当てたい！という要望があったらここに書いておく。運が良ければ反映される *)
 type wish = Target of Id.t | Avoid of Id.t
 let wish_env = ref M.empty
+(* 関数の返り値となる変数群 *)
+let ret_nodes = ref S.empty
+(* 関数の実引数となる変数群 *)
+let arg_nodes = ref S.empty
+(* 関数呼び出しを跨いで生存する変数群 *)
+let striding_nodes = ref S.empty
+(* 再帰関数か *)
+let is_loop = ref false
 
 (********************)
 (** デバッグ用関数群 **)
@@ -220,17 +228,22 @@ let set_all_moves fundef =
 			) blk.bStmts
 	) fundef.fBlocks
 
-(* 各変数の彩色に対する願い *)
-(* その願いはまちがいなく叶ったじゃないか *)
-(* 関数呼び出しの引数はなるべく仮引数のレジスタと一致させたいし、他の仮引数とは一致させたくない *)
-let set_wish_env_for_call fundef stmt livein liveout =
-	let add_wish n wish =
-		let env = get_wishes n in
-		wish_env := M.add n (wish :: env) !wish_env in
-	let add_wish_list n wish_list =
-		let env = get_wishes n in
-		wish_env := M.add n (wish_list @ env) !wish_env in
+(* 彩色に対する願いを追加１ *)
+let add_wish n wish =
+	let env = get_wishes n in
+	wish_env := M.add n (wish :: env) !wish_env
 
+(* 彩色に対する願いを追加２ *)
+let add_wish_list n wish_list =
+	let env = get_wishes n in
+	wish_env := M.add n (wish_list @ env) !wish_env
+
+(* 各変数の彩色に対する願い *)
+let set_wish_env fundef = ()
+
+(* 各変数の彩色に対する願い(命令別) *)
+(* 関数呼び出しの引数はなるべく仮引数のレジスタと一致させたいし、他の仮引数とは一致させたくない *)
+let set_wish_env_in_stmt fundef stmt livein liveout =
 	match stmt.sInst with
 		(* 再帰以外の関数呼び出しのとき *)
 		| CallDir (xt, Id.L name, args, fargs) when Id.L name <> fundef.fName ->
@@ -244,24 +257,75 @@ let set_wish_env_for_call fundef stmt livein liveout =
 				fun r_arg t_arg ->
 					let target = Target t_arg in
 					let avoids = S.fold (fun x env -> (Avoid x) :: env) (S.remove t_arg use_regs) [] in
-					let env = get_wishes r_arg in
 					add_wish_list r_arg (target :: avoids)
-			) (args @ fargs) arg_regs
+			) (args @ fargs) arg_regs;
+			(* xtは返り値と一致させたい *)
+			add_wish (fst xt) (Target (Asm.get_ret_reg name));
 		(* 再帰呼び出しのとき *)
 		| CallDir (xt, Id.L name, args, fargs) ->
 			List.iter2 (
 				fun x y ->
-					wish_env := M.add x ((Target y) :: get_wishes x) !wish_env;
-					wish_env := M.add y ((Target x) :: get_wishes y) !wish_env
-			) (args @ fargs) (fundef.fArgs @ fundef.fFargs)
+					(* 実引数・仮引数は一致させたい *)
+					add_wish x (Target y);
+					add_wish y (Target x);
+					(* 実引数と対応しない仮引数は一致させたくない *)
+					List.iter (
+						fun a ->
+							if a <> y then (
+								add_wish x (Avoid a);
+								add_wish a (Avoid x)
+							)
+					) (if List.mem x args then fundef.fArgs else fundef.fFargs)
+			) (args @ fargs) (fundef.fArgs @ fundef.fFargs);
+			(* xtは返り値と一致させたい *)
+			add_wish (fst xt) (Target (Asm.get_ret_reg name))
+		| Neg ((d, _), u) | FNeg ((d, _), u) ->
+			add_wish d (Target u); add_wish u (Target d)
 		| _ when stmt.sSucc = "" ->
 			let def, use = Block.get_def_use stmt in
-			if def <> [] && use <> [] then (
-				let d, u = List.hd def, List.hd use in
-				add_wish d (Target u);
-				add_wish u (Target d)
-			)
+			List.iter (
+				fun d ->
+					List.iter (
+						fun u -> add_wish d (Target u); add_wish u (Target d)
+					) use
+			) def
 		| _ -> ()
+
+(* ついでにret_nodes, arg_nodes, striding_nodesにも追加しておく *)
+let set_call_nodes_in_stmt fundef stmt livein liveout =
+	match stmt.sInst with
+		(* 再帰以外の関数呼び出しのとき *)
+		| CallDir ((x, _), Id.L name, args, fargs) ->
+			ret_nodes := S.add x !ret_nodes;
+			arg_nodes := S.union (S.of_list (args @ fargs)) !arg_nodes;
+			striding_nodes := S.union (S.inter livein liveout) !striding_nodes;
+			if Id.L name = fundef.fName then is_loop := true
+		| _ -> ()
+
+(* 干渉グラフから消去してselect_stackに積む変数を選択 *)
+(* 1.2～4以外の変数 *)
+(* 2.CallDirの返り値 *)
+(* 3.CallDirの引数 *)
+(* 5.仮引数 *)
+(* の順番で選んでいく *)
+let choose_simplify_node fundef =
+	let s2 = S.inter !ret_nodes !simplify_worklist in
+	let s3 = S.inter !arg_nodes !simplify_worklist in
+	let s4 = S.inter (S.of_list (fundef.fArgs @ fundef.fFargs)) !simplify_worklist in
+	let s = S.diff !simplify_worklist (S.union s2 (S.union s3 s4)) in
+	let (_, ans) = 
+		List.fold_left (
+			fun (s, ans) ds ->
+				if ans <> [] then (s, ans)
+				else (
+					if S.is_empty s then (S.union s ds, [])
+					else (s, [S.min_elt s])				
+				)
+		) (s, []) [s2; s3; s4; S.empty] in
+	assert (List.length ans = 1);
+	let ans = List.hd ans in
+	assert (S.mem ans !simplify_worklist);
+	ans
 
 (* uv間に枝を追加する *)
 let add_edge u v =
@@ -413,7 +477,16 @@ let choose_color fundef n ok_colors =
 		) env (get_wishes n) in
 	let (ans, point) =
 		M.fold (
-			fun c px (m, pm) -> if px > pm then (c, px) else (m, pm)
+			fun x px (m, pm) ->
+				if px > pm then (x, px) 
+				else if px = pm then (
+					(* ポイントが同じなら番号の若いレジスタを選ぶ *)
+					let nx = int_of_string (String.sub x 2 (String.length x - 2)) in
+					let nm = int_of_string (String.sub m 2 (String.length m - 2)) in
+					if nx < nm then (x, px)
+					else (m, pm)
+				)
+				else (m, pm)
 		) env ("", min_int) in
 	assert (ans <> "");
 	assert (S.mem ans ok_colors);
@@ -485,7 +558,6 @@ let insert_save2 fundef blk stmt x new_temp =
 	(* 命令のID作成 *)
 	let id = Block.gen_stmt_id () in
 	(* 新しいテンポラリを作成 *)
-(*	let new_temp = Id.genid x in*)
 	new_temps := S.add new_temp !new_temps;
 	(* 新しいSave文を作成 *)
 	let new_stmt = {
@@ -582,6 +654,15 @@ let initialize is_first fundef =
 	List.iter (fun x -> List.iter (fun y -> add_edge x y) fundef.fFargs) fundef.fFargs;
 	(* 彩色に関する要望 *)
 	wish_env := M.empty;
+	set_wish_env fundef;
+	(* 関数の返り値となる変数群 *)
+	ret_nodes := S.empty;
+	(* 関数の実引数となる変数群 *)
+	arg_nodes := S.empty;
+	(* 関数呼び出しを跨いで生存する変数群 *)
+	striding_nodes := S.empty;
+	(* 再帰関数か *)
+	is_loop := false;
 	(* rewriteのときには実行されないもの *)
 	if is_first then (
 		(* 全関数に対する彩色結果 *)
@@ -625,7 +706,11 @@ let build fundef =
 				S.iter (fun d -> S.iter (fun l -> add_edge l d) !live) def;
 				live := S.union use (S.diff !live def);
 				let livein = !live in
-				(if stmt_id <> "" then set_wish_env_for_call fundef (get_some stmt) livein liveout);
+				(* 彩色への要求と単純化の順序決めに使う変数群の設定 *)
+				(if stmt_id <> "" then (
+					set_wish_env_in_stmt fundef (get_some stmt) livein liveout;
+					set_call_nodes_in_stmt fundef (get_some stmt) livein liveout
+				));
 				if stmt_id <> "" then iter (get_some stmt).sPred in	
 			if not (M.is_empty blk.bStmts) then iter blk.bTail		
 	) fundef.fBlocks;
@@ -652,9 +737,7 @@ let make_worklist fundef =
 let simplify fundef =
 	(* ここで選ばれるのが後になるほど彩色されるのが早くなる *)
 	(* 引数はできるだけ早めに塗られておきたい *)
-	let s = S.diff !simplify_worklist (S.of_list (fundef.fArgs @ fundef.fFargs)) in
-	let s = if S.is_empty s then !simplify_worklist else s in
-	let n = S.min_elt s in
+	let n = choose_simplify_node fundef in
 	simplify_worklist := S.remove n !simplify_worklist;
 	push n;
 	S.iter (fun m -> decrement_degree m) (adjacent n)
