@@ -712,17 +712,17 @@ void print_gr(int register_index, int comma_flag, int quad_flag) {
 				printf("%%r13%s", datalen1); break;
 		case 5:
 				printf("%%r14%s", datalen1); break;
-		case 19:
+		case 13:
 				printf("%%r15%s", datalen1); break;
 		case 6:
 				printf("%%%sbx", datalen2); break;
 		case 10:
 				printf("%%%scx", datalen2); break;
-		case 12:
+		case 7:
 				printf("%%%ssi", datalen2); break;
-		case 17:
+		case 8:
 				printf("%%%sdi", datalen2); break;
-		case 11:
+		case 9:
 				printf("%%%sbp", datalen2); break;
 		default :
 				///aacnt[register_index]++;
@@ -743,13 +743,13 @@ void print_fr(int register_index, int comma_flag) {
 			printf("%%xmm2"); break;
 		case 12 :
 			printf("%%xmm3"); break;
-		case 10 :
+		case 8 :
 			printf("%%xmm4"); break;
 		case 11 :
 			printf("%%xmm5"); break;
 		case 3 :
 			printf("%%xmm6"); break;
-		case 13 :
+		case 19 :
 			printf("%%xmm7"); break;
 		case 14 :
 			printf("%%xmm8"); break;
@@ -777,7 +777,7 @@ int is_const(int i) {
 int is_xreg(int i) {
 	int j;
 	const int num = 13;
-	const int a[num] = {26,1,31,3,18,4,5,19,6,10,12,17,11};
+	const int a[num] = {26,1,31,3,18,4,5,13,6,10,7,8,9};
 	if (is_const(i)) {
 		return 1;
 	}
@@ -792,7 +792,7 @@ int is_xreg(int i) {
 int is_xmm(int i) {
 	int j;
 	const int num = 15;
-	const int a[num] = {1,0,2,12,10,11,3,13,14,4,9,5,16,7,6};
+	const int a[num] = {1,0,2,12,8,11,3,19,14,4,9,5,16,7,6};
 	for (j = 0; j < num; j++) {
 		if (i == a[j]) {
 			return 1;

@@ -131,7 +131,7 @@ int	assemble(char *sfile) {
 	puts(".section .bss");
 	puts(".lcomm TOP, 0");
 	printf(".lcomm RAM, %u\n", (unsigned)1<<25);
-	puts(".lcomm BOTTOM, 0");
+	puts(".lcomm BOTTOM, 64");
 
 
 
