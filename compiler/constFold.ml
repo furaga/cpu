@@ -157,6 +157,7 @@ let rec g env = function (* 定数畳み込みルーチン本体 (caml2html: constfold_g) *)
 			xts
 			(findt y env)
 	| LetTuple(xts, y, e) -> LetTuple(xts, y, g env e)
+
 	(*
 	| App ("sqrt", [x]) when memf x env -> Float (sqrt (findf x env))
 	| App ("sin", [x]) when memf x env -> Float (sin (findf x env))

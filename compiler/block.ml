@@ -72,56 +72,7 @@ and fundef = {
 (* プログラム全体 *)
 type prog = Prog of (Id.l * float) list * fundef list * fundef
 
-(* 置換 *)
-let replace stmt x y =
-	let rep a = if a = x then y else a in
-	let rep2 (a, t) = (rep a, t) in
-	match stmt.sInst with
-		| Nop xt -> Nop (rep2 xt)
-		| Set (xt, x) -> Set (rep2 xt, x)
-		| SetL (xt, Id.L x) -> SetL (rep2 xt, Id.L x)
-		| Mov (xt, x) -> Mov (rep2 xt, rep x)
-		| Neg (xt, x) -> Neg (rep2 xt, rep x)
-		| Add (xt, x, V y) -> Add (rep2 xt, rep x, V (rep y))
-		| Sub (xt, x, V y) -> Sub (rep2 xt, rep x, V (rep y))
-		| Mul (xt, x, V y) -> Mul (rep2 xt, rep x, V (rep y))
-		| Div (xt, x, V y) -> Div (rep2 xt, rep x, V (rep y))
-		| SLL (xt, x, V y) -> SLL (rep2 xt, rep x, V (rep y))
-		| Add (xt, x, C y) -> Add (rep2 xt, rep x, C y)
-		| Sub (xt, x, C y) -> Sub (rep2 xt, rep x, C y)
-		| Mul (xt, x, C y) -> Mul (rep2 xt, rep x, C y)
-		| Div (xt, x, C y) -> Div (rep2 xt, rep x, C y)
-		| SLL (xt, x, C y) -> SLL (rep2 xt, rep x, C y)
-		| Ld (xt, x, V y) -> Ld (rep2 xt, rep x, V (rep y))
-		| St (xt, x, y, V z) -> St (rep2 xt, rep x, rep y, V (rep z))
-		| Ld (xt, x, C y) -> Ld (rep2 xt, rep x, C y)
-		| St (xt, x, y, C z) -> St (rep2 xt, rep x, rep y, C z)
-		| FMov (xt, x) -> FMov (rep2 xt, rep x)
-		| FNeg (xt, x) -> FNeg (rep2 xt, rep x)
-		| FAdd (xt, x, y) -> FAdd (rep2 xt, rep x, rep y)
-		| FSub (xt, x, y) -> FSub (rep2 xt, rep x, rep y)
-		| FMul (xt, x, y) -> FMul (rep2 xt, rep x, rep y)
-		| FDiv (xt, x, y) -> FDiv (rep2 xt, rep x, rep y)
-		| LdF (xt, x, V y) -> LdF (rep2 xt, rep x, V (rep y))
-		| StF (xt, x, y, V z) -> StF (rep2 xt, rep x, rep y, V (rep z))
-		| LdF (xt, x, C y) -> LdF (rep2 xt, rep x, C y)
-		| StF (xt, x, y, C z) -> StF (rep2 xt, rep x, rep y, C z)
-		| IfEq (xt, x, V y, b1, b2) -> IfEq (rep2 xt, rep x, V (rep y), b1, b2)
-		| IfLE (xt, x, V y, b1, b2) -> IfLE (rep2 xt, rep x, V (rep y), b1, b2)
-		| IfGE (xt, x, V y, b1, b2) -> IfGE (rep2 xt, rep x, V (rep y), b1, b2)
-		| IfEq (xt, x, C y, b1, b2) -> IfEq (rep2 xt, rep x, C y, b1, b2)
-		| IfLE (xt, x, C y, b1, b2) -> IfLE (rep2 xt, rep x, C y, b1, b2)
-		| IfGE (xt, x, C y, b1, b2) -> IfGE (rep2 xt, rep x, C y, b1, b2)
-		| IfFEq (xt, x, y, b1, b2) -> IfFEq (rep2 xt, rep x, rep y, b1, b2)
-		| IfFLE (xt, x, y, b1, b2) -> IfFLE (rep2 xt, rep x, rep y, b1, b2)
-		| CallCls (xt, name, args, fargs) -> assert false (* クロージャが作られるときはregAlloc.mlでレジスタ割り当てが行われる *)
-		| CallDir (xt, Id.L name, args, fargs) ->
-			CallDir (rep2 xt, Id.L name, List.map rep args, List.map rep fargs)
-		| Save (xt, x, y) ->
-			Save (rep2 xt, rep x, y)
-		| Restore (xt, x) ->
-			Restore (rep2 xt, x)
-			
+
 (**********************)
 (** デバッグ支援関数群 **)
 (**********************)
@@ -177,17 +128,19 @@ and print_block indent f {bId = id; bParent = Id.L parent; bStmts = stmts; bHead
 	Global.indent indent; Printf.printf "[%s]\n" id;
 	Global.indent indent; Printf.printf "{Parent : %s}\n" parent;
 (*	Global.indent indent; Printf.printf "(Head, Tail) = (%s, %s)\n" head tail;
-*)	Global.indent indent; Printf.printf "Pred Blocks= "; List.iter (Printf.printf "%s ") preds; print_newline (); 
+	Global.indent indent; Printf.printf "Pred Blocks= "; List.iter (Printf.printf "%s ") preds; print_newline (); 
 	Global.indent indent; Printf.printf "Succ Blocks= "; List.iter (Printf.printf "%s ") succs; print_newline (); 
-(*	Global.indent indent; Printf.printf "Live in = "; S.iter (fun v -> Printf.printf "%s " v) livein; print_newline (); 
-	Global.indent indent; Printf.printf "Live out = "; S.iter (fun v -> Printf.printf "%s " v) liveout; print_newline ();*)
-
+	Global.indent indent; Printf.printf "Live in = "; S.iter (fun v -> Printf.printf "%s " v) livein; print_newline ();
+	Global.indent indent; Printf.printf "Live out = "; S.iter (fun v -> Printf.printf "%s " v) liveout; print_newline ();
+*)
 	(* print stmts *)
 	let rec print_stmts stmt =
 (*		Global.indent indent;*)
 		print indent f stmt.sInst;
 		Printf.printf " : %s\n" stmt.sId;
-(*		Global.indent (1 + indent); Printf.printf "sLive in = "; S.iter (fun v -> Printf.printf "%s " v) stmt.sLivein; print_newline (); 
+(*		Global.indent indent; Printf.printf "sPred = %s\n" stmt.sPred; 
+		Global.indent indent; Printf.printf "sSucc = %s\n" stmt.sSucc; 
+		Global.indent (1 + indent); Printf.printf "sLive in = "; S.iter (fun v -> Printf.printf "%s " v) stmt.sLivein; print_newline (); 
 		Global.indent (1 + indent); Printf.printf "sLive out = "; S.iter (fun v -> Printf.printf "%s " v) stmt.sLiveout; print_newline ();*)
 		
 		if stmt.sSucc <> "" then print_stmts (M.find stmt.sSucc stmts) else () in
@@ -198,9 +151,9 @@ and print_block indent f {bId = id; bParent = Id.L parent; bStmts = stmts; bHead
 	
 let print_fundef indent ({fName = Id.L name; fArgs = args; fFargs = fargs; fRet = ret; fBlocks = blocks; fHead = head; fDef_regs = def_regs} as f) = 
 	Global.indent indent; Printf.printf "<%s>\n" name;
-(*	Global.indent indent; Printf.printf "Args = "; List.iter (Printf.printf "%s ") args; print_newline (); 
+	Global.indent indent; Printf.printf "Args = "; List.iter (Printf.printf "%s ") args; print_newline (); 
 	Global.indent indent; Printf.printf "Fargs = "; List.iter (Printf.printf "%s ") fargs; print_newline (); 
-	Global.indent indent; Printf.printf "Return type = %s\n" (Type.string_of_type ret);
+(*	Global.indent indent; Printf.printf "Return type = %s\n" (Type.string_of_type ret);
 	Global.indent indent; Printf.printf "def_regs = "; List.iter (Printf.printf "%s ") def_regs; print_newline (); *)
 	print_newline ();
 	M.iter (fun _ blk -> print_block indent f blk) blocks
@@ -322,6 +275,71 @@ let stmt_cnt = ref (-1)
 let block_cnt = ref (-1)
 let gen_stmt_id  () = stmt_cnt := !stmt_cnt + 1; Printf.sprintf "stmt.%d" !stmt_cnt
 let gen_block_id  () = block_cnt := !block_cnt + 1; Printf.sprintf "block.%d" !block_cnt
+
+(* 置換 *)
+let replace stmt x y =
+	let rep a = if a = x then y else a in
+	let rep2 (a, t) = (rep a, t) in
+	match stmt.sInst with
+		| Nop xt -> Nop (rep2 xt)
+		| Set (xt, x) -> Set (rep2 xt, x)
+		| SetL (xt, Id.L x) -> SetL (rep2 xt, Id.L x)
+		| Mov (xt, x) -> Mov (rep2 xt, rep x)
+		| Neg (xt, x) -> Neg (rep2 xt, rep x)
+		| Add (xt, x, V y) -> Add (rep2 xt, rep x, V (rep y))
+		| Sub (xt, x, V y) -> Sub (rep2 xt, rep x, V (rep y))
+		| Mul (xt, x, V y) -> Mul (rep2 xt, rep x, V (rep y))
+		| Div (xt, x, V y) -> Div (rep2 xt, rep x, V (rep y))
+		| SLL (xt, x, V y) -> SLL (rep2 xt, rep x, V (rep y))
+		| Add (xt, x, C y) -> Add (rep2 xt, rep x, C y)
+		| Sub (xt, x, C y) -> Sub (rep2 xt, rep x, C y)
+		| Mul (xt, x, C y) -> Mul (rep2 xt, rep x, C y)
+		| Div (xt, x, C y) -> Div (rep2 xt, rep x, C y)
+		| SLL (xt, x, C y) -> SLL (rep2 xt, rep x, C y)
+		| Ld (xt, x, V y) -> Ld (rep2 xt, rep x, V (rep y))
+		| St (xt, x, y, V z) -> St (rep2 xt, rep x, rep y, V (rep z))
+		| Ld (xt, x, C y) -> Ld (rep2 xt, rep x, C y)
+		| St (xt, x, y, C z) -> St (rep2 xt, rep x, rep y, C z)
+		| FMov (xt, x) -> FMov (rep2 xt, rep x)
+		| FNeg (xt, x) -> FNeg (rep2 xt, rep x)
+		| FAdd (xt, x, y) -> FAdd (rep2 xt, rep x, rep y)
+		| FSub (xt, x, y) -> FSub (rep2 xt, rep x, rep y)
+		| FMul (xt, x, y) -> FMul (rep2 xt, rep x, rep y)
+		| FDiv (xt, x, y) -> FDiv (rep2 xt, rep x, rep y)
+		| LdF (xt, x, V y) -> LdF (rep2 xt, rep x, V (rep y))
+		| StF (xt, x, y, V z) -> StF (rep2 xt, rep x, rep y, V (rep z))
+		| LdF (xt, x, C y) -> LdF (rep2 xt, rep x, C y)
+		| StF (xt, x, y, C z) -> StF (rep2 xt, rep x, rep y, C z)
+		| IfEq (xt, x, V y, b1, b2) -> IfEq (rep2 xt, rep x, V (rep y), b1, b2)
+		| IfLE (xt, x, V y, b1, b2) -> IfLE (rep2 xt, rep x, V (rep y), b1, b2)
+		| IfGE (xt, x, V y, b1, b2) -> IfGE (rep2 xt, rep x, V (rep y), b1, b2)
+		| IfEq (xt, x, C y, b1, b2) -> IfEq (rep2 xt, rep x, C y, b1, b2)
+		| IfLE (xt, x, C y, b1, b2) -> IfLE (rep2 xt, rep x, C y, b1, b2)
+		| IfGE (xt, x, C y, b1, b2) -> IfGE (rep2 xt, rep x, C y, b1, b2)
+		| IfFEq (xt, x, y, b1, b2) -> IfFEq (rep2 xt, rep x, rep y, b1, b2)
+		| IfFLE (xt, x, y, b1, b2) -> IfFLE (rep2 xt, rep x, rep y, b1, b2)
+		| CallCls (xt, name, args, fargs) -> assert false (* クロージャが作られるときはregAlloc.mlでレジスタ割り当てが行われる *)
+		| CallDir (xt, Id.L name, args, fargs) ->
+			CallDir (rep2 xt, Id.L name, List.map rep args, List.map rep fargs)
+		| Save (xt, x, y) ->
+			Save (rep2 xt, rep x, y)
+		| Restore (xt, x) ->
+			Restore (rep2 xt, x)
+
+(* 文をブロックから除去 *)
+let remove_stmt blk stmt =
+	assert (M.mem stmt.sId blk.bStmts);
+	(if stmt.sPred = "" then (* stmtがブロックの先頭 *)
+		blk.bHead <- stmt.sSucc
+	else
+		let pred = find_assert "Block.remove_stmt1 : " stmt.sPred blk.bStmts in
+		pred.sSucc <- stmt.sSucc);
+	(if stmt.sSucc = "" then (* stmtがブロックの末尾 *)
+		blk.bTail <- stmt.sPred
+	else
+		let succ = find_assert "Block.remove_stmt2 : " stmt.sSucc blk.bStmts in
+		succ.sPred <- stmt.sPred);
+	blk.bStmts <- M.remove stmt.sId blk.bStmts
 
 (* 基本ブロックblkの末尾ににinstという命令文を追加 *)
 let add_stmt inst blk =

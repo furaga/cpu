@@ -13,7 +13,7 @@ let set_global_offset x =
 	global_cnt := 4 + !global_cnt;
 	!global_cnt - 4
 	
-let get_global_offset x = try M.find x !global_offset with Not_found -> assert false
+let get_global_offset x = try M.find x !global_offset with Not_found -> Printf.eprintf "Not found in Virtual.get_global_offset : %s\n" x; assert false
 
 let is_global x = int_of_char 'a' <= int_of_char x.[0] && int_of_char x.[0] <= int_of_char 'z' && M.mem x !GlobalEnv.env
 
@@ -231,6 +231,10 @@ let h { Closure.name = (Id.L x, t); Closure.args = yts; Closure.formal_fv = zts;
 
 (* プログラム全体の仮想マシンコード生成 (caml2html: virtual_f) *)
 let f flg (Closure.Prog(fundefs, e)) =
+	List.map (
+		fun fundef -> Printf.printf "<%s> nesting_tuple = %s\n" (Id.get_name (fst fundef.Closure.name)) (string_of_bool (TupleExpand.exist_nesting_tuple fundef.Closure.body))
+	) fundefs;
+
 	data := [];
 	(* fundataの初期化時点で登録されいない外部関数 *)	
 	M.iter (fun x t ->
@@ -244,12 +248,5 @@ let f flg (Closure.Prog(fundefs, e)) =
 	let e = g (*M.empty*)!GlobalEnv.env e in
 	let fundefs = List.map h fundefs in
 	let program = Prog(!data, fundefs, e) in
-	if false then
-		begin
-			print_endline "Print Asm_t(Virtual.ml):";
-			Asm.print_prog 1 program;
-			print_newline();
-			flush stdout;
-		end;
 	program
 

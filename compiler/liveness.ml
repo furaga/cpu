@@ -98,7 +98,7 @@ let analysis fundef =
 					) S.empty blk.bSuccs;
 				flg := !flg || bLivein' <> blk.bLivein || bLiveout' <> blk.bLiveout
 		) ord
-	done;
-	(if Block.debug then chk_liveness fundef)
+	done(*;
+	(if Block.debug then chk_liveness fundef)*)
 (*	Time.stop (Printf.sprintf "\tLOOP(%d回) : " !cnt)*)
 

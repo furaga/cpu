@@ -1,8 +1,0 @@
-
-
-globalEnv.env(globalEnv.ml) = 
-	a.156 b.157 c.158 dummy.143 
-
-CLOSURE NOT EXISTS
-Coloring
-<init.144>

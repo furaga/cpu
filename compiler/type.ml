@@ -18,7 +18,7 @@ let rec string_of_type = function
 	| Tuple elems ->
 		let len = List.length elems in
 		let cnt = ref 0 in
-		List.fold_left (fun a x -> a ^ (string_of_type x) ^ (cnt := !cnt + 1; if !cnt < len then " * " else "")) "" elems
+		(List.fold_left (fun a x -> a ^ (string_of_type x) ^ (cnt := !cnt + 1; if !cnt < len then " * " else "")) "(" elems) ^ ")"
 	| Array x ->
 		"Array(" ^ (string_of_type x) ^ ")"
 	| Var x ->

@@ -252,8 +252,7 @@ let rec print n = function
 
 and print_fundef n f =
 	indent n;
-	Type.print (snd f.name);
-	Printf.printf " %s (" ((fun (Id.L x) -> x) (fst f.name));
+	Printf.printf "let %s (" ((fun (Id.L x) -> x) (fst f.name));
 	List.iter (fun x -> Printf.printf "(%s : %s) " (fst x) (Type.string_of_type (snd x))) f.args;
 	Printf.printf ")\n";
 	indent (n + 1);

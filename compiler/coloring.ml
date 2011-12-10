@@ -444,7 +444,7 @@ let choose_spill_node fundef =
 				let cost = List.length (Block.get_use_sites x @ Block.get_def_sites x) in
 				let deg = get_degree x in
 				assert (deg > 0);
-				let hx = (float_of_int cost) /. (float_of_int deg)(* /. (float_of_int deg)*) in
+				let hx = (float_of_int cost) /. (float_of_int deg) in
 				if hx < hm then (x, hx) (* 更新 *)
 				else (m, hm)
 		) !spill_worklist ("", max_float) in

@@ -5,6 +5,12 @@ external getlo : float -> int32 = "getlo"
 
 let global_vars = ref M.empty
 let global_flg = ref true
+(* 現在見ている関数の名前 *)
+let current_fun = ref ""
+(* 各関数がスタックに変数を積みうるか。絶対に積まないなら、その変数を呼ぶときスタックを上下させる必要はない *)
+let save_env = ref M.empty
+let add_save_env () = save_env := M.add !current_fun true !save_env
+let find_save_env x = if M.mem x !save_env then M.find x !save_env else true
 
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
@@ -123,11 +129,13 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(_), Save(x, y) when List.mem x allregs && not (S.mem y !stackset) ->
 		save y;
 		let offset = offset y in
-		Output.add_stmt (Output.St (x, reg_sp, offset))
+		Output.add_stmt (Output.St (x, reg_sp, offset));
+		add_save_env ()
   | NonTail(_), Save(x, y) when List.mem x allfregs && not (S.mem y !stackset) ->
 		savef y;
 		let offset = offset y in
-		Output.add_stmt (Output.StF (x, reg_sp, offset))
+		Output.add_stmt (Output.StF (x, reg_sp, offset));
+		add_save_env ()
   | NonTail(_), Save(x, y) -> (* %f16とか値が固定されているレジスタは意地でも退避しない *)
   	if S.mem y !stackset || M.mem y !global_vars || Asm.is_reg x then () else 
   	begin
@@ -137,8 +145,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  	assert false (* すでにyがセーブされている場合 *)
   	end
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
-  | NonTail(x), Restore(y) when List.mem x allregs -> Output.add_stmt (Output.Ld (x, reg_sp, (offset y)))
-  | NonTail(x), Restore(y) when List.mem x allfregs -> Output.add_stmt (Output.LdF (x, reg_sp, (offset y)))
+  | NonTail(x), Restore(y) when List.mem x allregs -> Output.add_stmt (Output.Ld (x, reg_sp, (offset y))); add_save_env ()
+  | NonTail(x), Restore(y) when List.mem x allfregs -> Output.add_stmt (Output.LdF (x, reg_sp, (offset y))); add_save_env ()
   | NonTail(x), Restore(y) ->(* %f16とか値が固定されているレジスタは復帰しない（そもそも退避されてない） *)
   	  assert (Asm.is_reg x); ()
       
@@ -272,7 +280,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss - 4));
 					Output.add_stmt (Output.Output "%g3");
 					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss));
-					Output.add_stmt Output.Return
+					Output.add_stmt Output.Return;
+					add_save_env ()
 				end
 		  	| "min_caml_print_char"
 		  	| "min_caml_write" ->
@@ -289,7 +298,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| _ ->
 		  		begin
 				  g'_args oc x [] ys zs;
-				  Output.add_stmt (Output.Jmp x)
+				  Output.add_stmt (Output.Jmp x);
+				  add_save_env ()
 				end)
   | NonTail(a), CallCls(x, ys, zs) -> (* レジスタで飛ぶジャンプ *)
 		g'_args oc x [(x, reg_cl)] ys zs;
@@ -298,11 +308,12 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		Output.add_stmt (Output.Subi (reg_sp, reg_sp, ss));
 		Output.add_stmt (Output.CallR reg_sw);
 		Output.add_stmt (Output.Addi (reg_sp, reg_sp, ss));
-		if List.mem a allregs && a <> regs.(0) then
+		(if List.mem a allregs && a <> regs.(0) then
 			Output.add_stmt (Output.Mov (a, regs.(0)))
 		else if List.mem a allfregs && a <> fregs.(0) then
 			Output.add_stmt (Output.FMov (a, fregs.(0)))
-		else ()
+		else ());
+		add_save_env ()
 
   | NonTail(a), CallDir(Id.L(x), ys, zs) -> (* ラベルで飛ぶジャンプ *)
 	  	(match x with
@@ -320,7 +331,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.St ("%g3", reg_sp, ss));
 					Output.add_stmt (Output.Addi ("%g3", reg_0, 10));
 					Output.add_stmt (Output.Output "%g3");
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss))
+					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss));
+					add_save_env ()
 				end
 		  	| "min_caml_print_float" ->(* TODO *) 
 		  		begin
@@ -330,7 +342,8 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.St ("%g3", reg_sp, ss));
 					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss - 4));
 					Output.add_stmt (Output.Output "%g3");
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss))
+					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss));
+					add_save_env ()
 				end
 		  	| "min_caml_print_char"
 		  	| "min_caml_write" ->
@@ -343,16 +356,21 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				  Output.add_stmt (Output.Input a)
 				end
 		  	| _ ->
-		  		begin
-				  g'_args oc x [] ys zs;
-				  let ss = stacksize () in
-				  Output.add_stmt (Output.Subi (reg_sp, reg_sp, ss));
-				  Output.add_stmt (Output.Call x);
-				  Output.add_stmt (Output.Addi (reg_sp, reg_sp, ss));
-				  if List.mem a allregs && a <> regs.(0) then
-			   	  	Output.add_stmt (Output.Mov (a, regs.(0)))
-				  else if List.mem a allfregs && a <> fregs.(0) then
-				    Output.add_stmt (Output.FMov (a, fregs.(0)))
+				begin
+				g'_args oc x [] ys zs;
+				let ss = stacksize () in
+				(if find_save_env x then
+					Output.add_stmt (Output.Subi (reg_sp, reg_sp, ss))
+				);
+				Output.add_stmt (Output.Call x);
+				(if find_save_env x then (
+					Output.add_stmt (Output.Addi (reg_sp, reg_sp, ss)); 
+					add_save_env ())
+				);
+				if List.mem a allregs && a <> regs.(0) then
+					Output.add_stmt (Output.Mov (a, regs.(0)))
+				else if List.mem a allfregs && a <> fregs.(0) then
+					Output.add_stmt (Output.FMov (a, fregs.(0)))
 				end)
   | _ -> Printf.eprintf "unmatched\n"; assert false
 
@@ -416,17 +434,19 @@ let print_list ls =
 	"[" ^ (print_list ls) ^ "]"
 
 let h oc { name = Id.L(x); args = args; fargs = fargs; body = e; ret = ret } =
-  Output.add_stmt (Output.Comment (Printf.sprintf "\n!=============================="));
-  Output.add_stmt (Output.Comment (Printf.sprintf "! args = %s" (print_list args)));
-  Output.add_stmt (Output.Comment (Printf.sprintf "! fargs = %s" (print_list fargs)));
-  Output.add_stmt (Output.Comment (Printf.sprintf "! use_regs = %s" (print_list (S.fold (fun x env -> x :: env) (Asm.get_use_regs x) []))));
-  Output.add_stmt (Output.Comment (Printf.sprintf "! ret type = %s" (Type.string_of_type ret)));
-  Output.add_stmt (Output.Comment (Printf.sprintf "!================================"));
-  Output.add_stmt (Output.Label x);
-(*  Printf.printf "%s\n" x; flush stdout;*)
-  stackset := S.empty;
-  stackmap := [];
-  g oc (Tail, e)
+	current_fun := x;
+	save_env := M.add x false !save_env;
+	Output.add_stmt (Output.Comment (Printf.sprintf "\n!=============================="));
+	Output.add_stmt (Output.Comment (Printf.sprintf "! args = %s" (print_list args)));
+	Output.add_stmt (Output.Comment (Printf.sprintf "! fargs = %s" (print_list fargs)));
+	Output.add_stmt (Output.Comment (Printf.sprintf "! use_regs = %s" (print_list (S.fold (fun x env -> x :: env) (Asm.get_use_regs x) []))));
+	Output.add_stmt (Output.Comment (Printf.sprintf "! ret type = %s" (Type.string_of_type ret)));
+	Output.add_stmt (Output.Comment (Printf.sprintf "!================================"));
+	Output.add_stmt (Output.Label x);
+	(*  Printf.printf "%s\n" x; flush stdout;*)
+	stackset := S.empty;
+	stackmap := [];
+	g oc (Tail, e)
 
 let f oc (Prog(data, fundefs, e)) =
   Format.eprintf "generating assembly...@.";

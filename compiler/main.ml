@@ -33,13 +33,15 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 		Simm.f
 			(Sglobal.f
 				(Virtual.f !print_flg
-					(Closure.f !print_flg
-						(GlobalEnv.f (* グローバル変数を取得 *)
-							(iter !limit
-								(Alpha.f !print_flg
-									(KNormal.f !print_flg
-										(Typing.f
-											(Parser.exp Lexer.token l))))))))) in
+					(ElimClosure.f
+						(TupleExpand.f
+							(Closure.f !print_flg
+								(GlobalEnv.f (* グローバル変数を取得 *)
+									(iter !limit
+										(Alpha.f !print_flg
+											(KNormal.f !print_flg
+												(Typing.f
+													(Parser.exp Lexer.token l))))))))))) in
 
 (*ignore (Coloring.f (Block.f simm));*)
 											
@@ -51,7 +53,11 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 		(print_endline "Coloring";
 (*		let toasm = ToAsm.f (Coloring.f (Block.f simm)) in
 		Printf.printf "asm -> block -> asm %s\n" (string_of_bool (simm = toasm));*)
-		Emit.f outchan 	(RegAllocWithColoring.f (Block.f simm)))
+		Emit.f outchan 	
+			(RegAllocWithColoring.f 
+				((*ElimBlock.f*)
+					((*ElimArgs.f*)
+						(Block.f simm)))))
 	
 let string s = lexbuf stdout (Lexing.from_string s) (* 文字列をコンパイルして標準出力に表示する (caml2html: main_string) *)
 

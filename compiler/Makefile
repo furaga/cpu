@@ -25,9 +25,10 @@ alpha.mli alpha.ml beta.mli beta.ml betaTuple.mli betaTuple.ml assoc.mli assoc.m
 inline.mli inline.ml \
 movelet.mli movelet.ml elim.mli elim.ml constArray.mli constArray.ml \
 cse.mli cse.ml constFold.mli constFold.ml constArg.mli constArg.ml \
-globalEnv.ml closure.mli closure.ml \
+globalEnv.ml closure.mli closure.ml tupleExpand.ml elimClosure.ml \
 asm.mli asm.ml virtual.mli virtual.ml sglobal.mli sglobal.ml\
-simm.mli simm.ml block.ml liveness.ml coloring.ml\
+simm.mli simm.ml \
+block.ml constFoldBlock.ml liveness.ml elimArgs.ml elimBlock.ml coloring.ml\
 toAsm.ml regAlloc.mli regAlloc.ml regAllocWithColoring.ml \
 output.ml emit.mli emit.ml \
 main.mli main.ml
