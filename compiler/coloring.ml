@@ -141,8 +141,8 @@ let get_var_type stmt =
 (* ただし、%f16とか割り当てに使われないレジスタを含むMov命令は無効とする *)
 let is_move_instruction stmt = 
 	match stmt.sInst with
-		| Mov ((x, _), y) when not (List.mem x invalid_regs) && not (List.mem y invalid_regs) -> true
-		| FMov ((x, _), y) when not (List.mem x invalid_fregs) && not (List.mem y invalid_fregs) -> true
+		| Mov ((x, _), y)(* when not (List.mem x invalid_regs) && not (List.mem y invalid_regs)*) -> true
+		| FMov ((x, _), y) (*when not (List.mem x invalid_fregs) && not (List.mem y invalid_fregs)*) -> true
 		| _ -> false
 
 (* env[x] <- env[x] U y *)
@@ -220,9 +220,9 @@ let set_all_moves fundef =
 			M.iter (
 				fun _ stmt -> 
 					match stmt.sInst with
-						| Mov (dst, src) when not (List.mem (fst dst) invalid_regs) && not (List.mem src invalid_regs) ->
+						| Mov (dst, src) (*when not (List.mem (fst dst) invalid_regs) && not (List.mem src invalid_regs)*) ->
 							all_moves := M.add stmt.sId (blk.bId, stmt.sId, dst, src) !all_moves
-						| FMov (dst, src) when not (List.mem (fst dst) invalid_fregs) && not (List.mem src invalid_fregs) ->
+						| FMov (dst, src) (*when not (List.mem (fst dst) invalid_fregs) && not (List.mem src invalid_fregs)*) ->
 							all_moves := M.add stmt.sId (blk.bId, stmt.sId, dst, src) !all_moves
 						| _ -> ()
 			) blk.bStmts
@@ -751,7 +751,7 @@ let coalesce fundef =
 	let (u, v) = if S.mem y !precolored then (y, x) else (x, y) in
 	worklist_moves := S.remove m !worklist_moves;
 	if u = v then (
-		(* v <- u みたいな命令のとき。明らかに合併できる *)
+		(* u <- u みたいな命令のとき。明らかに合併できる *)
 		coalesced_moves := S.add m !coalesced_moves;
 		add_worklist u
 	)
@@ -762,6 +762,7 @@ let coalesce fundef =
 		add_worklist v
 	)
 	else if
+		List.mem u (invalid_regs @ invalid_fregs) || (* この時点のvはレジスタではないので、uが割り当てに使われないレジスタだったら問答無用で合併できるはず。多分 *)
 		let is_reg = S.mem u !precolored in 
 		(is_reg && S.fold (fun t env -> env && ok t u) (adjacent v) true) ||
 		(not is_reg && conservative (S.union (adjacent u) (adjacent v)))
@@ -836,15 +837,15 @@ let assign_colors fundef =
 
 	S.iter (fun n -> color := M.add n (get_color (get_alias n)) !color) !coalesced_nodes(*;
 	(** デバッグ出力2 **)
-	(if Block.debug then
-		(if fundef.fName = Id.L "f.342" && !spill_cnt >= 3 then 
-			Block.print_fundef 3 fundef;
-			M.eprint 
-				("<" ^ (Id.get_name fundef.fName) ^ "> COLOR2 : " ^ (if not (S.is_empty !spilled_nodes) then "SPILL!" else "non spill")) 
-				(M.fold (fun x y env -> if x <> y then M.add x y env else env) !color M.empty) 
-				(fun x -> x))
-	)
-*)	
+	(if M.mem "Td270.6147" !varenv then (
+		Block.print_fundef 3 fundef;
+		M.print
+			("<" ^ (Id.get_name fundef.fName) ^ "> COLOR : " ^ (if not (S.is_empty !spilled_nodes) then "SPILL!" else "non spill")) 
+			(M.fold (fun x y env -> if x <> y then M.add x y env else env) !color M.empty) 
+			(fun x -> x);
+		S.print "COALESCED_NODES : " !coalesced_nodes
+	))*)
+
 (** スピルされた変数の各定義・使用位置にそれぞれSave, Restore命令を挿入 **)
 let rewrite_program fundef =
 	new_temps := S.empty;
