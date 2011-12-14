@@ -7,7 +7,7 @@ include ../Makefile.in
 CFLAGS += -I ../include/ $(DEBUG_MACRO)
 CXXFLAGS += -I ../include/
 vpath %.h ../include/
-SIM_TARGET = $(TEST_TARGET:%=../../compiler/test/%)
+SIM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%)
 
 FPU_DIR = ../fpu
 FPU =  $(FPU_DIR)/finv.o $(FPU_DIR)/fsqrt.o
@@ -24,13 +24,13 @@ sim:
 	./simcho $(SIM_TARGET) $(SIM_FLAGS)
 rt:
 	@for name in $(RT_TARGET) ; do \
-		sld='../pict/sld/'$$name'.sld'; \
-		ppm='../pict/ppm/'$$name'.ppm'; \
-		original='../pict/ppm0/'$$name'.ppm'; \
-		diff='../diff/'$$name'.dif'; \
+		sld=$(PICT_DIR)'/sld/'$$name'.sld'; \
+		ppm=$(PICT_DIR)'/ppm/'$$name'.ppm'; \
+		original=$(PICT_DIR)'/ppm0/'$$name'.ppm'; \
+		diff=$(DIFF_DIR)/$$name'.dif'; \
 		./simcho $(MIN_RT) $(SIM_FLAGS) < $$sld > $$ppm; \
 		diff $$original $$ppm | cat > $$diff; \
 		cat $$diff; \
-		(eog $$ppm &); \
+		$(EOG) \
 	done 
 

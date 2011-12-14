@@ -4,7 +4,7 @@
 #include "common.h"
 #define ASM_LOG "asmlog"
 #define LABEL_MAX (128 * 1024)
-#define	LINE_MAX	256	// asmの一行の長さの最大値
+#define	LINE_MAX	512	// asmの一行の長さの最大値
 #define DATA_NUM (1024 * 1024)
 extern int output_type;
 

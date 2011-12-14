@@ -33,9 +33,6 @@ int	convert(char *sfile) {
 	puts(".code64");
 	puts(".section .text");
 	puts(".global _start");
-	//puts("%define DEBUG");
-	//puts("%include \"debug64.inc\"");
-	//puts("%include \"stdio64.inc\"");
 
 
 	if (fgets(buf, LINE_MAX, fp) != NULL) {
@@ -77,8 +74,8 @@ int	convert(char *sfile) {
 				}
 				fflush(stdout);
  	 	 		if (convert_op(opcode, buf) < 0) {
-					fprintf(stderr,"While Reassembling %s,\n", sfile);
-					fprintf(stderr,"Unknown operation L.%d\n", input_line_cnt);
+					fprintf(stderr,"While Converting %s,\n", sfile);
+					fprintf(stderr,"Unknown operation Line %d\n", input_line_cnt);
 					fprintf(stderr,"%s", buf);
 					kill(0,SIGINT);
 				}
