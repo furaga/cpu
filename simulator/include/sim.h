@@ -38,17 +38,21 @@ int32_t get_imm(uint32_t);
 //////////////////////////////////////////////
 
 int __print_state(int,int,char**);
-void decode_ir(uint32_t,FILE*);
+void print_ir(uint32_t,FILE*);
 #define print_state() __print_state(0,0,NULL)
-#define print_init(argk,argv) __print_state(1,argc,argv)
+#define print_init(argc,argv) __print_state(1,argc,argv)
 
 #define IF0_BREAK_S	if (get_rsi(ir) == 0) { break; }
 #define IF0_BREAK_T	if (get_rti(ir) == 0) { break; }
 #define IF0_BREAK_D	if (get_rdi(ir) == 0) { break; }
 extern const char *InstMap[INST_NUM];
 extern const char *InstTyMap[INST_NUM];
-extern const char *FunctMap[18][INST_NUM];
-extern const char *FunctTyMap[18][INST_NUM];
+extern const char *SFunctMap[INST_NUM];
+extern const char *SFunctTyMap[INST_NUM];
+extern const char *FFunctMap[INST_NUM];
+extern const char *FFunctTyMap[INST_NUM];
+extern const char *IOFunctMap[INST_NUM];
+extern const char *IOFunctTyMap[INST_NUM];
 int statistics(FILE*, int);
 int operate(uint32_t);
 int op_stat(char);

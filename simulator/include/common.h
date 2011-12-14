@@ -5,7 +5,7 @@
 #define INST_NUM 64	// 6bit 63
 #define REG_NUM 32
 #define ROM_NUM (4 * 1024 * 1024)
-#define RAM_NUM (4 * 1024 * 1024)
+#define RAM_NUM (1 * 1024 * 1024)
 
 ///////////////////////////////////////
 // SPECIAL funct //////////////////////
@@ -22,6 +22,7 @@
 #define SUB_F 042
 #define AND_F 044
 #define OR_F 045
+#define PADD_F 050
 #define CALLR_F 060
 #define HALT_F 077
 //////////////////////////////////////

@@ -12,19 +12,18 @@
 #include <fcntl.h>
 #include "asm.h"
 
-#define	LINE_MAX	2048	// asmの一行の長さの最大値
-#define DATA_NUM (1024 * 1024)
 
 using namespace std;
 void hex2bin(uint32_t,FILE*);
-uint32_t encode_op(char *, char *);
-int	encoder(int, char*);
+int encode_op(char *, char *);
+int mnemonic(char *, char [][LINE_MAX]);
 
 char	label_name[LABEL_MAX][256];	
 uint32_t label_cnt;
  
 int	assemble(char *sfile) {
-	char	buf[LINE_MAX];	
+	char	extbuf[16][LINE_MAX];	
+	char	*buf = extbuf[0];
 	uint32_t	output_data[DATA_NUM] = {0};	// 出力データの保存領域
 	uint32_t	i, input_line_cnt, output_line_cnt;	// 入出力側の行数をカウント
 	uint32_t	ir,err_cnt,label_line,heap_size,cnt;
@@ -34,7 +33,7 @@ int	assemble(char *sfile) {
 	char *tmp = NULL;
 	char *dfile;
 	FILE	*fp;	// source file pointer
-	int fd,ret,num,len;
+	int j,fd,ret,num,len;
 
 
 	input_line_cnt = 0;
@@ -90,24 +89,26 @@ int	assemble(char *sfile) {
  	 	 		if((tmp = strtok(opcode, ":"))) {
 					label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
 				} else {    // エラー処理
- 	 	 		      printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
- 	 	 		      err_cnt++;
- 	 	 		}
-			}else if(opcode[0] == '.'){
-			}else if(opcode[0] == '!'){
- 	 	 		// -- コメントなので何もしない
- 	 	 	}else{
- 	 	 		// 命令行
- 	 	 		ir = encode_op(opcode, buf);
-				//fprintf(stderr, "\t%d\n", ir >> 26);
-				//fflush(stderr);
- 	 	 		if(ir < 0){             // エラー処理
  	 	 		    printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
  	 	 		    err_cnt++;
- 	 	 		}else{
- 	 	 		    output_data[output_line_cnt] = ir;
- 	 	 		    output_line_cnt++;
  	 	 		}
+			}else if(opcode[0] == '.'){
+			}else if(opcode[0] == '!'){ // -- コメントなので何もしない
+ 	 	 	}else{
+ 	 	 		// 命令行
+				num = mnemonic(opcode, extbuf);
+				for (j = 0; j < num; j++) {
+					sscanf(extbuf[j], "%s", opcode);
+					ir = encode_op(opcode, extbuf[j]);
+					if(ir < 0){             // エラー処理
+						printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
+						err_cnt++;
+					}else{
+						output_data[output_line_cnt] = ir;
+						output_line_cnt++;
+					}
+				}
+
 			}
 		}
 		input_line_cnt++;

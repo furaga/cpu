@@ -11,12 +11,10 @@
 struct sigaction sa;
 int simulate(char*);
 void segv_handler(int);
-void IMapInit(void);
 
 int main(int argc, char **argv, char **envp) {
 	int i, ret;
 
-	IMapInit();
 	if ((ret = print_init(argc,argv)) < 0) {
 		puts("check print_state.c");
 		return ret;
@@ -39,7 +37,7 @@ int main(int argc, char **argv, char **envp) {
 void segv_handler(int n) {
 	uint32_t ir = rom[pc];
 	fprintf(stderr, "せぐふぉー@\n%llu.[%d] ir:%8X ", cnt,pc,ir);
-	decode_ir(ir, stderr);
+	print_ir(ir, stderr);
 	fprintf(stderr, "\n");
 	kill(0,SIGINT);
 }

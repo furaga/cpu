@@ -8,21 +8,21 @@ CXXFLAGS = -Wall -O3 -funroll-loops
 LDFLAGS = -Wall -O3 -lm
 
 COMPILER_DIR = $(HOME_DIR)/../compiler
-#OMPILER_DIR = $(HOME_DIR)/asm
+
 PICT_DIR = $(HOME_DIR)/pict
-DIFF_DIR = $(HOME_DIR)/diff
+DIFF_DIR = $(HOME_DIR)/pict/diff
 MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 ###################################
 # Set Vars below
 ###################################
 #TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
-TEST_TARGET = multest
+TEST_TARGET = fib
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
+#DEBUG_MACRO = -D STATS_M -D PRINT_M
 SIM_FLAGS =
 #ASM_FLAGS = -h
 #XSIM_FLAGS = -cnt
-#XSIM_FLAGS = -lm
 #EOG =   (eog $$ppm &);
 ###################################
 ###################################

@@ -4,6 +4,8 @@
 #include "common.h"
 #define ASM_LOG "asmlog"
 #define LABEL_MAX (128 * 1024)
+#define	LINE_MAX	256	// asmの一行の長さの最大値
+#define DATA_NUM (1024 * 1024)
 extern int output_type;
 
 #define PROTO_R(name) \
@@ -73,11 +75,6 @@ PROTO_R(_atan);
 PROTO_R(_sqrt);
 PROTO_R(_int_of_float);
 PROTO_R(_float_of_int);
-//PROTO_R(mov);
-//PROTO_R(_not);
-//PROTO_R(input);
-//PROTO_R(output);
-//PROTO_R(nop);
 PROTO_F(mov);
 PROTO_F(_not);
 PROTO_F(input);
@@ -89,6 +86,7 @@ PROTO_F(b);
 PROTO_F(add);
 PROTO_F(sub);
 PROTO_F(mul);
+PROTO_F(padd);
 PROTO_F(_div);
 PROTO_F(_and);
 PROTO_F(_or);

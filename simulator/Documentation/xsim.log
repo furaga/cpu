@@ -7,6 +7,10 @@ xsim 高速化ログ
    622   5351 320438 min-rt
 contest real	0m1.654s
 
+##2011/12/06 12:20 gas beta
+命令発行数 1709886678
+contest real 0m1.190s
+
 ##2011/11/15 22:23 gas beta。-lm
  27552  71436 535215 x86asm/min-rt.asm
    261   1668 245151 xrt
