@@ -105,7 +105,8 @@ int	convert(char *sfile) {
 	puts("	xorq	%r14, %r14");
 	puts("	xorq	%r15, %r15");
 	puts("	movl	$BOTTOM, %r9d");
-	puts("	movl	$TOP, (GR2)");
+	//puts("	movl	$TOP, (GR2)");
+	puts("	movl	$TOP, %r12d");
 	puts("	movl	$BOTTOM, %r10d");
 	puts("	call	min_caml_start\n");
 

@@ -6,7 +6,7 @@ int statistics(FILE* fp,int init) {
 	static unsigned count[INST_NUM][INST_NUM];
 	static unsigned reg_cnt[2][REG_NUM];
 	const char *format = "%8s: %f %10d\n";
-	uint32_t ir = rom[pc];
+	uint32_t ir = rom[pc/4];
 	uint8_t opcode, funct;
 	int i,j;
 	opcode = get_opcode(ir);
@@ -119,10 +119,10 @@ int statistics(FILE* fp,int init) {
 					break;
 				case HALT_F:
 		for (i = 0; i < REG_NUM; i++) {
-			fprintf(fp,"gr%2d: %10d\n", i,reg_cnt[0][i]);
+			fprintf(fp,"gr%02d: %10d\n", i,reg_cnt[0][i]);
 		}
 		for (i = 0; i < REG_NUM; i++) {
-			fprintf(fp,"fr%2d: %10d\n", i,reg_cnt[1][i]);
+			fprintf(fp,"fr%02d: %10d\n", i,reg_cnt[1][i]);
 		}
 					break;
 				default: break;		
