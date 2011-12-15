@@ -51,10 +51,10 @@ int simulate(char *sfile) {
 	cnt = pc = 0;
 	reg[1] = reg[31] = 4*(RAM_NUM-1);
 
-	heap_size = rom[pc]; 
-	pc++;
-	for (i = 0; heap_size > 0; i++,pc++) {
-		ram[reg[2]/4] = rom[pc];
+	heap_size = rom[0];
+	pc+=4;
+	for (i = 0; heap_size > 0; i++,pc+=4) {
+		ram[reg[2]/4] = rom[pc/4];
 		reg[2] += 4;
 		heap_size -= 32;
 	}
@@ -67,7 +67,7 @@ int simulate(char *sfile) {
 #endif
 	do{
 		
-		ir = rom[pc];
+		ir = rom[pc/4];
 #ifdef STATS_M
 		statistics(stderr,0);
 #endif
@@ -77,7 +77,7 @@ int simulate(char *sfile) {
 		opcode = get_opcode(ir);
 		funct = get_funct(ir);
 		cnt++;
-		pc++;
+		pc+=4;
 		if (!(cnt % 100000000)) {
 			fprintf(stderr, ".");
 			fflush(stderr);
@@ -167,6 +167,11 @@ int simulate(char *sfile) {
 			case MVLO: 
 				IF0_BREAK_S
 				_GRS = (_GRS & (0xffff<<16)) | (_IMM & 0xffff);
+				break;
+			case PADD:
+				//IF0_BREAK_T
+				//_GRT = (pc - 4) + _IMM;
+				_GRT = (pc  + 4);
 				break;
 			case DIVI:
 				IF0_BREAK_T
@@ -281,7 +286,7 @@ int simulate(char *sfile) {
 						break;
 					case PADD_F:
 						IF0_BREAK_D
-						_GRD = pc+1 + _GRT;
+						_GRD = pc + 4 + _GRT;
 						break;
 					case OR_F:
 						IF0_BREAK_D

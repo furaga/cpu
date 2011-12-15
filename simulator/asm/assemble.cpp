@@ -71,7 +71,7 @@ int	assemble(char *sfile) {
 				// l.X: ------------------------ label
 				tmp = strtok(buf,":");
 				label_map.insert(map<string,uint32_t>::value_type(tmp, (output_line_cnt-1)*4));
-				heap_label.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
+				heap_label.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt*4));
 			} else {
 				// .xxxx 0xXXXXXXXX ------------------------- data
 				sscanf(buf, "%s 0x%x", tmp, &num);
@@ -87,7 +87,7 @@ int	assemble(char *sfile) {
  	 	 	if(strchr(buf,':')) {
  	 	 		// ラベル行の場合
  	 	 		if((tmp = strtok(opcode, ":"))) {
-					label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt));
+					label_map.insert(map<string,uint32_t>::value_type(tmp, output_line_cnt*4));
 				} else {    // エラー処理
  	 	 		    printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
  	 	 		    err_cnt++;
@@ -131,7 +131,7 @@ int	assemble(char *sfile) {
 					case FJLT:
 					case FJEQ:
 						label_line = label_map[label_name[output_data[i] & 0xffff]];
-						label_line -= i + 1;
+						label_line -= 4*(i + 1);
 						output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
 						break;
 					case CALL:
@@ -141,7 +141,7 @@ int	assemble(char *sfile) {
 						break;
 					case SETL:
 						label_line = label_map[label_name[output_data[i] & 0xffff]];
-						output_data[i] = addi(0, (output_data[i]&0x1f0000)>>16 ,label_line);
+						output_data[i] = addi(0, (output_data[i]>>16)&0x1f ,label_line);
 						break;
 					default:
 						break;
@@ -186,19 +186,19 @@ int	assemble(char *sfile) {
 
 		ofstream ofs(ASM_LOG);
 		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
-			<< "ADDRESS_RADIX = DEC;\nDATA_RADIX = HEX;\n"
+			<< "ADDRESS_RADIX = HEX;\nDATA_RADIX = HEX;\n"
 			<< "CONTENT\tBEGIN\n\n";
 		
 		map<string,uint32_t>::iterator itr;
 		for(i = 0; i < output_line_cnt; i++) {
 			for(itr = heap_label.begin(); itr != heap_label.end(); itr++) {
-				if (itr->second == (uint32_t)i) {
+				if (itr->second == (uint32_t)i*4) {
 					ofs << itr->first << ":\n";
 				}
 			}
 
 			for(itr = label_map.begin(); itr != label_map.end(); itr++) {
-				if ((itr->second == (uint32_t)i) &&
+				if ((itr->second == (uint32_t)i*4) &&
 					(heap_label.count(itr->first) <= 0)) {
 					ofs << itr->first << ":\n";
 				}
@@ -206,7 +206,7 @@ int	assemble(char *sfile) {
 
 			ofs.width(4);
 			ofs.fill(' ');
-			ofs << dec << i <<": ";
+			ofs << hex << i*4 <<": ";
 			ofs.width(8);
 			ofs.fill('0');
 			ofs << hex << output_data[i] << endl;

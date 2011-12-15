@@ -12,7 +12,7 @@ int mnemonic(char *opcode, char buf[][LINE_MAX]) {
 		if(sscanf(buf[0], fl, tmp, lname) == 2)  {
 			sprintf(buf[0], "\tst\t%%g30, %%g1, 0\n");
 			sprintf(buf[1], "\tsubi\t%%g1, %%g1, 4\n");
-			sprintf(buf[2], "\tpadd\t%%g30, %%g0\n");
+			sprintf(buf[2], "\tpadd\t%%g30, 8\n");
 			sprintf(buf[3], "\tjmp\t%s\n", lname);
 		}
 		return 4;
@@ -21,7 +21,7 @@ int mnemonic(char *opcode, char buf[][LINE_MAX]) {
 		if(sscanf(buf[0], fg, tmp, &rs) == 2)  {
 			sprintf(buf[0], "\tst\t%%g30, %%g1, 0\n");
 			sprintf(buf[1], "\tsubi\t%%g1, %%g1, 4\n");
-			sprintf(buf[2], "\tpadd\t%%g30, %%g0\n");
+			sprintf(buf[2], "\tpadd\t%%g30, 8\n");
 			sprintf(buf[3], "\tb\t%%g%d\n", rs);
 		}
 		return 4;

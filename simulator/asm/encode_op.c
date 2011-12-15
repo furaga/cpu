@@ -234,10 +234,17 @@ int encode_op(char *opcode, char *op_data)
 		}
 	}
 	if(strcmp(opcode, "padd") == 0){
-		if(sscanf(op_data, fgg, tmp, &rd, &rt) == 3) {
-		    return padd(0,rt,rd,0);
+		if(sscanf(op_data, fgi, tmp, &rt, &imm) == 3) {
+		    return padd(0,rt,imm);
 		}
 	}
+	/*
+	if(strcmp(opcode, "padd") == 0){
+		if(sscanf(op_data, fgg, tmp, &rd, &rt) == 3) {
+		    return padd(0,rt,d,0);
+		}
+	}
+	*/
 	/*
 	if(strcmp(opcode, "sqrt") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
@@ -290,6 +297,8 @@ DEFINE_I(fst,FST);
 DEFINE_I(fjeq,FJEQ);
 DEFINE_I(fjlt,FJLT);
 DEFINE_I(setl,SETL);
+DEFINE_I(padd,PADD);
+//DEFINE_F(padd,SPECIAL,PADD_F);
 
 DEFINE_F(mov,SPECIAL,MOV_F);
 DEFINE_F(_not,SPECIAL,NOT_F);
@@ -300,7 +309,6 @@ DEFINE_F(sll,SPECIAL,SLL_F);
 DEFINE_F(srl,SPECIAL,SRL_F);
 DEFINE_F(b,SPECIAL,B_F);
 DEFINE_F(add,SPECIAL,ADD_F);
-DEFINE_F(padd,SPECIAL,PADD_F);
 DEFINE_F(sub,SPECIAL,SUB_F);
 DEFINE_F(mul,SPECIAL,MUL_F);
 DEFINE_F(_div,SPECIAL,DIV_F);

@@ -35,8 +35,8 @@ int main(int argc, char **argv, char **envp) {
 }
 
 void segv_handler(int n) {
-	uint32_t ir = rom[pc];
-	fprintf(stderr, "せぐふぉー@\n%llu.[%d] ir:%8X ", cnt,pc,ir);
+	uint32_t ir = rom[pc/4 - 1];
+	fprintf(stderr, "せぐふぉー@\n%llu.[%x] ir:%8X ", cnt,pc,ir);
 	print_ir(ir, stderr);
 	fprintf(stderr, "\n");
 	kill(0,SIGINT);
