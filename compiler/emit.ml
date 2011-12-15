@@ -480,7 +480,7 @@ let f oc (Prog(data, fundefs, e)) =
 
   (* %g31はスタックの底を指す *)
   Output.add_stmt (Output.Mov (reg_bottom, reg_sp));
-  Output.add_stmt (Output.Subi (reg_sp, reg_sp, (!Virtual.global_cnt + 4)));
+  Output.add_stmt (Output.Subi (reg_sp, reg_sp, (!GlobalEnv.offset + 8)));
 
   (* reg_p1, reg_m1の初期化 *)
   Output.add_stmt (Output.Addi (reg_p1, reg_0, 1));

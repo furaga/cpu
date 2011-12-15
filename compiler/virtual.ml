@@ -100,7 +100,32 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       | Type.Bool | Type.Int -> Ans(IfGE(y, C x, g env e1, g env e2))
       | _ -> failwith "equality supported only for bool and int")
   | Closure.IfLE(Closure.C x, Closure.C y, e1, e2) -> (print_endline "ifeq (C x, C y)はありえません"; assert false)
-
+  (** グローバル領域に直にデータを書き込む場合、ヒープポインタを一時的に変更する **)
+  | Closure.Let((x, t1), e1, e2) when M.mem x !GlobalEnv.direct_env ->
+      let e1' = g env e1 in
+      let e2' = g (M.add x t1 env) e2 in
+		concat (
+			concat (
+				concat (
+					concat (
+						(* 	let %g2 = st %g2 %g31 !GlobalEnv.offset + 4 in *)
+						(Ans (St (reg_hp, reg_bottom, C (4 + !GlobalEnv.offset))))
+					)
+			      	(Id.gentmp Type.Unit, Type.Unit)
+					(*	let %g2 = %g31 - !GlobalEnv.offsets[x] in *)
+					(Ans (Sub (reg_bottom, C (M.find x !GlobalEnv.offsets))))
+				)
+				(reg_hp, Type.Int)
+				(* 	let x = e1' in *)
+				e1'
+			)
+			(x, Type.Int)
+			(* 	let %g2 = %g31 - !GlobalEnv.offset + 4  in *)
+			(Ans (Ld (reg_bottom, C (4 + !GlobalEnv.offset))))
+		)
+		(reg_hp, Type.Int)
+		(* e2' *)
+		e2'
   | Closure.Let((x, t1), e1, e2) when t1 <> Type.Unit && is_global x ->
 (*  	  Printf.printf "CLOSURE_LET: %s\n" x;*)
       let e1' = g env e1 in
@@ -108,8 +133,8 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       let st =
       	match t1 with
       		| Type.Unit -> assert false
-      		| Type.Float -> Ans (StDF (x, reg_bottom, C (set_global_offset x)))
-      		| _ -> Ans (St (x, reg_bottom, C (set_global_offset x))) in
+      		| Type.Float -> Ans (StDF (x, reg_bottom, C (M.find x !GlobalEnv.offsets)))
+      		| _ -> Ans (St (x, reg_bottom, C (M.find x !GlobalEnv.offsets))) in
       concat
       	(concat e1' (x, t1) st)
       	(Id.gentmp Type.Unit, Type.Unit)
@@ -118,6 +143,9 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       let e1' = g env e1 in
       let e2' = g (M.add x t1 env) e2 in
       concat e1' (x, t1) e2'
+  (** 直にデータが入っているとき **)
+  | Closure.Var(x)  when M.mem x !GlobalEnv.direct_env ->
+  	  Ans (Sub (reg_bottom, C (M.find x !GlobalEnv.offsets)))
   | Closure.Var(x) ->
       (match M.find x env with
       | Type.Unit -> Ans(Nop)
@@ -138,12 +166,36 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
 			  Let((z, Type.Int), SetL(l),
 			  seq(St(z, x, C(0)),
 				  store_fv))))
+  (**TODO 引数にグローバル変数で直にデータが入っているものがあるとき **)
   | Closure.AppCls(x, ys) ->
       let (int, float) = separate (List.map (fun y -> (y, M.find y env)) ys) in
       Ans(CallCls(x, int, float))
+  (**TODO 引数にグローバル変数で直にデータが入っているものがあるとき **)
   | Closure.AppDir(Id.L(x), ys) ->
       let (int, float) = separate (List.map (fun y -> (y, M.find y env)) ys) in
-      Ans(CallDir(Id.L(x), int, float))
+      let new_int = List.map (fun x -> if M.mem x !GlobalEnv.direct_env then Id.gentmp Type.Int else x) int in
+      let new_float = List.map (fun x -> if M.mem x !GlobalEnv.direct_env then Id.gentmp Type.Float else x) float in
+      let ans = 
+		  List.fold_left (
+		  	fun env (old, nw) ->
+		  		if old = nw then env
+		  		else
+		  			Let (
+		  				(nw, Type.Int),
+		  				Sub (reg_bottom, C (M.find old !GlobalEnv.offsets)),
+		  				env
+		  			)
+		  ) (Ans(CallDir(Id.L(x), new_int, new_float))) (List.combine int new_int) in
+	  List.fold_left (
+	  	fun env (old, nw) ->
+	  		if old = nw then env
+	  		else
+	  			Let (
+	  				(nw, Type.Float),
+	  				Sub (reg_bottom, C (M.find old !GlobalEnv.offsets)),
+	  				env
+	  			)
+	  ) ans (List.combine float new_float)
   | Closure.Tuple(xs) -> (* 組の生成 (caml2html: virtual_tuple) *)
       let y = Id.genid "t" in
       let (offset, store) =
@@ -155,7 +207,20 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
       Let((y, Type.Tuple(List.map (fun x -> M.find x env) xs)), Mov(reg_hp),
 		  Let((reg_hp, Type.Int), Add(reg_hp, C(align offset)),
 			  store))
-
+  (** yがグローバル変数で直にデータが入っているもの **)
+	| Closure.LetTuple(xts, y, e2) when M.mem y !GlobalEnv.direct_env ->
+		let s = Closure.fv e2 in
+		let (offset, load) =
+		expand
+			xts
+			(0, g (M.add_list xts env) e2)
+			(fun x offset load ->
+				if not (S.mem x s) then load else
+				fletd(x, LdDF(reg_bottom, C(-offset + M.find y !GlobalEnv.offsets)), load))
+			(fun x t offset load ->
+				if not (S.mem x s) then load else
+				Let((x, t), Ld(reg_bottom, C(-offset + M.find y !GlobalEnv.offsets)), load)) in
+		load
   | Closure.LetTuple(xts, y, e2) ->
       let s = Closure.fv e2 in
       let (offset, load) =
@@ -171,6 +236,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
 	    ((*Printf.printf "LetTupleI offset = %d (GLOBAL: %s)\n" (-offset) (string_of_bool (is_global x));*)
 	    Let((x, t), Ld(y, C(-offset)), load))) in
       load
+  (**simmでやる**)
   | Closure.Get(x, y) -> (* 配列の読み出し (caml2html: virtual_get) *)
       let offset = Id.genid "o" in
       let zero = Id.genid "o" in
@@ -183,6 +249,7 @@ let rec g env = function (* 式の仮想マシンコード生成 (caml2html: virtual_g) *)
 	  Let((offset, Type.Int), SLL(y, C(2)),
 	      Ans(Ld(x, V(offset)))) (* TODO *)
       | _ -> assert false)
+  (**simmでやる**)
   | Closure.Put(x, y, z) ->
       let offset = Id.genid "o" in
       (match M.find x env with
@@ -207,10 +274,10 @@ let h { Closure.name = (Id.L x, t); Closure.args = yts; Closure.formal_fv = zts;
 							(fun z offset load -> fletd(z, LdDF(reg_cl, C(-offset)), load))
 							(fun z t offset load -> Let((z, t), Ld(reg_cl, C(-offset)), load)) in
 	let (offset, load) = expand
-							(List.fold_left (fun ls x -> if is_global x then (x, M.find x !GlobalEnv.env) :: ls else ls) [] (fv load))
+							(List.fold_left (fun ls x -> if is_global x && not (M.mem x !GlobalEnv.direct_env) then (x, M.find x !GlobalEnv.env) :: ls else ls) [] (fv load))
 							(0, load)
-							(fun z offset load -> fletd(z, LdDF(reg_bottom, C(get_global_offset z)), load))
-							(fun z t offset load -> Let((z, t), Ld(reg_bottom, C(get_global_offset z)), load)) in
+							(fun z offset load -> fletd(z, LdDF(reg_bottom, C(M.find z !GlobalEnv.offsets)), load))
+							(fun z t offset load -> Let((z, t), Ld(reg_bottom, C(M.find z !GlobalEnv.offsets)), load)) in
 	(* xの引数ytsに適当にレジスタを割り振っていく *)
 	let (_, _, _, rs, frs) = List.fold_left
 							(fun (iregs, fregs, xs, rs, frs) (x, t) -> match t with
