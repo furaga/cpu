@@ -30,18 +30,19 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 	Id.counter := 0;
 	Typing.extenv := M.empty;
 	let simm = 
-		Simm.f
-			(Sglobal.f
-				(Virtual.f !print_flg
-					(ElimClosure.f
-						(TupleExpand.f
-							(Closure.f !print_flg
-								(GlobalEnv.f (* グローバル変数を取得 *)
-									(iter !limit
-										(Alpha.f !print_flg
-											(KNormal.f !print_flg
-												(Typing.f
-													(Parser.exp Lexer.token l))))))))))) in
+		ConstFoldVirtual.f
+			(Simm.f
+				(Sglobal.f
+					(Virtual.f !print_flg
+						(ElimClosure.f
+							(TupleExpand.f
+								(Closure.f !print_flg
+									(GlobalEnv.f (* グローバル変数を取得 *)
+										(iter !limit
+											(Alpha.f !print_flg
+												(KNormal.f !print_flg
+													(Typing.f
+														(Parser.exp Lexer.token l)))))))))))) in
 
 (*ignore (Coloring.f (Block.f simm));*)
 											
