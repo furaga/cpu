@@ -74,7 +74,7 @@ int __print_state(int init_flag, int argc, char **argv) {
 
 			
 			fprintf(fp, "%6llu.[%4d] ", cnt,pc);
-			decode_ir(rom[pc],fp);
+			print_ir(rom[pc],fp);
 
 			if (flag[REG]) {
 				for (i = 0; i < 32; i++) {

@@ -11,6 +11,7 @@ int statistics(FILE* fp,int init) {
 	int i,j;
 	opcode = get_opcode(ir);
 	funct = get_funct(ir);
+
 	if (init) {
 		for (i = 0; i < INST_NUM; i++) {
 			reg_cnt[0][i] = 0;
@@ -258,14 +259,26 @@ int statistics(FILE* fp,int init) {
 		for (i = 0; i < INST_NUM; i++) {
 			switch (i) {
 				case SPECIAL: 
+					for (j = 0; j < INST_NUM; j++) {
+						if (count[i][j] > 0) {
+							fprintf(fp, format, SFunctMap[j], count[i][j]*1.0/cnt, count[i][j]);
+						}
+					}
+					break;
 				case IO: 
+					for (j = 0; j < INST_NUM; j++) {
+						if (count[i][j] > 0) {
+							fprintf(fp, format, IOFunctMap[j], count[i][j]*1.0/cnt, count[i][j]);
+						}
+					}
+					break;
 				case FPI:
 					for (j = 0; j < INST_NUM; j++) {
 						if (count[i][j] > 0) {
-							fprintf(fp, format, FunctMap[i][j], count[i][j]*1.0/cnt, count[i][j]);
+							fprintf(fp, format, FFunctMap[j], count[i][j]*1.0/cnt, count[i][j]);
 						}
 					}
-				break;
+					break;
 			default:
 				if (count[i][0] > 0) {
 					fprintf(fp, format, InstMap[i], count[i][0]*1.0/cnt, count[i][0]);

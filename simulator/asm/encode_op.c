@@ -5,13 +5,14 @@
 extern char label_name[LABEL_MAX][256];
 extern uint32_t label_cnt;
 
-uint32_t encode_op(char *opcode, char *op_data)
+int encode_op(char *opcode, char *op_data)
 {
 	int rd,rs,rt,imm,funct,shaft,target;
 	char tmp[256];
 	/*
 	 * format
 	 * g: general register
+	 * f: floating-point number register
 	 * i: immediate
 	 * l: label
 	 */
@@ -29,11 +30,10 @@ uint32_t encode_op(char *opcode, char *op_data)
 	const char *fffl = "%s %%f%d, %%f%d, %s";
 	const char *ffff = "%s %%f%d, %%f%d, %%f%d";
 	const char *ffgi = "%s %%f%d, %%g%d, %d";
-
 	char lname[256];
+
 	shaft = funct = target = 0;
-	//fprintf(stderr, "opcode:%s", opcode);
-	//fflush(stderr);
+
 	if(strcmp(opcode, "mov") == 0){
 		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
 		    return mov(rs,0,rd,0);
@@ -233,12 +233,16 @@ uint32_t encode_op(char *opcode, char *op_data)
 		    return setl(0,rd,label_cnt++);
 		}
 	}
+	if(strcmp(opcode, "padd") == 0){
+		if(sscanf(op_data, fgg, tmp, &rd, &rt) == 3) {
+		    return padd(0,rt,rd,0);
+		}
+	}
 	/*
 	if(strcmp(opcode, "sqrt") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
 		    return _sin(rs,0,rd,0,0);
 	}
-	*/
 	if(strcmp(opcode, "sin") == 0){
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
 		    return _sin(rs,0,rd,0,0);
@@ -259,6 +263,7 @@ uint32_t encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, ffg, tmp, &rd, &rs) == 3)
 		    return _float_of_int(rs,0,rd,0,0);
 	}
+	*/
 
 	return -1;
 }
@@ -295,6 +300,7 @@ DEFINE_F(sll,SPECIAL,SLL_F);
 DEFINE_F(srl,SPECIAL,SRL_F);
 DEFINE_F(b,SPECIAL,B_F);
 DEFINE_F(add,SPECIAL,ADD_F);
+DEFINE_F(padd,SPECIAL,PADD_F);
 DEFINE_F(sub,SPECIAL,SUB_F);
 DEFINE_F(mul,SPECIAL,MUL_F);
 DEFINE_F(_div,SPECIAL,DIV_F);
