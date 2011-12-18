@@ -33,6 +33,7 @@ int32_t get_imm(uint32_t ir) {
 // rom の命令実行列(バイナリ)に従いシミュレートする
 int simulate(char *sfile) {
 	uint32_t ir, heap_size;
+	uint32_t lr, tmplr;
 	int fd,ret,i;
 	uint8_t opcode, funct;
 	union {
@@ -48,8 +49,9 @@ int simulate(char *sfile) {
 	ret = read(fd, rom, ROM_NUM*4);
 	close(fd);
 
-	cnt = pc = 0;
+	lr = tmplr = cnt = pc = 0;
 	reg[1] = reg[31] = 4*(RAM_NUM-1);
+	reg[2] = 0;
 
 	heap_size = rom[0];
 	pc+=4;
@@ -84,12 +86,18 @@ int simulate(char *sfile) {
 		}
    
 		switch(opcode){
-			case LD:
+			case LDI:
 				IF0_BREAK_S
 				_GRT = ram[(_GRS - _IMM)/4];
 				break;
-			case ST:
+			case STI:
 				ram[(_GRS - _IMM)/4] = _GRT;
+				break;
+			case LDLR:
+				lr = ram[(_GRS - _IMM)/4];
+				break;
+			case STLR:
+				ram[(_GRS - _IMM)/4] = lr;
 				break;
 			case FLD:
 				_FRT = ram[(_GRS - _IMM)/4];
@@ -124,11 +132,11 @@ int simulate(char *sfile) {
 				IF0_BREAK_T
 				_GRT = _GRS - _IMM;
 				break;
-			case RETURN:
-				pc = reg[30];
-				reg[1] += 4;
-				reg[30] = ram[reg[1]/4];
-				break;
+			//case RETURN:
+				//pc = lr;
+				//reg[1] += 4;
+				//lr = ram[reg[1]/4];
+				//break;
 			case FJEQ:
 				a.i = _FRS;
 				b.i = _FRT;
@@ -141,12 +149,12 @@ int simulate(char *sfile) {
 				} else {
 				}
 				break;
-			case CALL:
-				ram[reg[1]/4] = reg[30];
-				reg[1] -= 4;
-				reg[30] = pc;
-				pc = get_target(ir);
-				break;
+			//case CALL:
+				//ram[reg[1]/4] = reg[30];
+				//reg[1] -= 4;
+				//reg[30] = pc;
+				//pc = get_target(ir);
+				//break;
 			case SRLI:
 				IF0_BREAK_T
 				_GRT = _GRS >> _IMM;
@@ -168,11 +176,11 @@ int simulate(char *sfile) {
 				IF0_BREAK_S
 				_GRS = (_GRS & (0xffff<<16)) | (_IMM & 0xffff);
 				break;
-			case PADD:
+			//case PADD:
 				//IF0_BREAK_T
 				//_GRT = (pc - 4) + _IMM;
-				_GRT = (pc  + 4);
-				break;
+				//lr = (pc  + 4);
+				//break;
 			case DIVI:
 				IF0_BREAK_T
 				_GRT = _GRS / _IMM;
@@ -258,14 +266,33 @@ int simulate(char *sfile) {
 						IF0_BREAK_D
 						_GRD = _GRS + _GRT;
 						break;
-					case CALLR_F:
-						ram[reg[1]/4] = reg[30];
-						reg[1] -= 4;
-						reg[30] = pc;
-						pc = _GRS;
+					case NOR_F: 
+						IF0_BREAK_D
+						_GRD = ~(_GRS | _GRT);
 						break;
+					//case CALLR_F:
+						//ram[reg[1]/4] = reg[30];
+						//reg[1] -= 4;
+						//reg[30] = pc;
+						//pc = _GRS;
+						//break;
 					case B_F:
 						pc = _GRS;
+						break;
+					case MOVLR_F:
+						tmplr = lr;
+						break;
+					case BTMPLR_F:
+						pc = tmplr;
+						break;
+					case LD_F:
+						_GRD = ram[(_GRS - _GRT)/4];
+						break;
+					case ST_F:
+						ram[(_GRS - _GRT)/4] = _GRD;
+						break;
+					case LINK_F:
+						lr = pc + 4;
 						break;
 					case SUB_F:
 						IF0_BREAK_D
@@ -276,18 +303,18 @@ int simulate(char *sfile) {
 						_GRD = _GRS * _GRT;
 						break;
 
-					case DIV_F:
-						IF0_BREAK_D
-						_GRD = _GRS / _GRT;
-						break;
+					//case DIV_F:
+						//IF0_BREAK_D
+						//_GRD = _GRS / _GRT;
+						//break;
 					case AND_F:
 						IF0_BREAK_D
 						_GRD = _GRS & _GRT;
 						break;
-					case PADD_F:
-						IF0_BREAK_D
-						_GRD = pc + 4 + _GRT;
-						break;
+					//case PADD_F:
+						//IF0_BREAK_D
+						//_GRD = pc + 4 + _GRT;
+						//break;
 					case OR_F:
 						IF0_BREAK_D
 						_GRD = _GRS | _GRT;

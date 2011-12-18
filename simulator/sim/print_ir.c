@@ -110,8 +110,8 @@ void print_ir(uint32_t ir, FILE *fp) {
 	if (strcmp(type, "fggi") == 0) {
 		
 		// addi,subi,muli,divi,slli,st,ld
-		if ((strcmp(name, "ld") == 0) ||
-			(strcmp(name, "st") == 0)) {
+		if ((strcmp(name, "ldi") == 0) ||
+			(strcmp(name, "sti") == 0)) {
 			fprintf(fp, fggi, name, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
 		} else {
 			fprintf(fp, fggi, name, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
@@ -140,5 +140,4 @@ void print_ir(uint32_t ir, FILE *fp) {
 		fprintf(fp, "Undefined ir\n");
 	}
 	fflush(fp);
-
 }

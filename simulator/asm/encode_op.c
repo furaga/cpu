@@ -50,6 +50,10 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
 		    return add(rs,rt,rd,0);
 	}
+	if(strcmp(opcode, "nor") == 0){
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
+		    return nor(rs,rt,rd,0);
+	}
 	if(strcmp(opcode, "sub") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
 		    return sub(rs,rt,rd,0);
@@ -162,12 +166,28 @@ int encode_op(char *opcode, char *op_data)
 		    return _return(0);
 	}
 	if(strcmp(opcode, "ld") == 0){
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
+		    return ld(rs,rt,rd,0);
+	}
+	if(strcmp(opcode, "ldi") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return ld(rs,rt,imm);
+		    return ldi(rs,rt,imm);
+	}
+	if(strcmp(opcode, "ldlr") == 0){
+		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
+		    return ldlr(rs,0,imm);
 	}
 	if(strcmp(opcode, "st") == 0){
+		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
+		    return st(rs,rt,rd,0);
+	}
+	if(strcmp(opcode, "sti") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return st(rs,rt,imm);
+		    return sti(rs,rt,imm);
+	}
+	if(strcmp(opcode, "stlr") == 0){
+		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
+		    return stlr(rs,0,imm);
 	}
 	if(strcmp(opcode, "fadd") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
@@ -238,6 +258,15 @@ int encode_op(char *opcode, char *op_data)
 		    return padd(0,rt,imm);
 		}
 	}
+	if(strcmp(opcode, "link") == 0){
+		return link(0,0,0,0);
+	}
+	if(strcmp(opcode, "movlr") == 0){
+		return movlr(0,0,0,0);
+	}
+	if(strcmp(opcode, "btmplr") == 0){
+		return btmplr(0,0,0,0);
+	}
 	/*
 	if(strcmp(opcode, "padd") == 0){
 		if(sscanf(op_data, fgg, tmp, &rd, &rt) == 3) {
@@ -290,8 +319,10 @@ DEFINE_I(jlt,JLT);
 DEFINE_I(jle,JLE);
 DEFINE_J(call,CALL);
 DEFINE_J(_return,RETURN);
-DEFINE_I(ld,LD);
-DEFINE_I(st,ST);
+DEFINE_I(ldi,LDI);
+DEFINE_I(sti,STI);
+DEFINE_I(ldlr,LDLR);
+DEFINE_I(stlr,STLR);
 DEFINE_I(fld,FLD);
 DEFINE_I(fst,FST);
 DEFINE_I(fjeq,FJEQ);
@@ -308,14 +339,20 @@ DEFINE_F(nop,SPECIAL,NOP_F);
 DEFINE_F(sll,SPECIAL,SLL_F);
 DEFINE_F(srl,SPECIAL,SRL_F);
 DEFINE_F(b,SPECIAL,B_F);
+DEFINE_F(btmplr,SPECIAL,BTMPLR_F);
+DEFINE_F(nor,SPECIAL,NOR_F);
 DEFINE_F(add,SPECIAL,ADD_F);
 DEFINE_F(sub,SPECIAL,SUB_F);
+DEFINE_F(ld,SPECIAL,LD_F);
+DEFINE_F(st,SPECIAL,ST_F);
+DEFINE_F(movlr,SPECIAL,MOVLR_F);
 DEFINE_F(mul,SPECIAL,MUL_F);
 DEFINE_F(_div,SPECIAL,DIV_F);
 DEFINE_F(_and,SPECIAL,AND_F);
 DEFINE_F(_or,SPECIAL,OR_F);
 DEFINE_F(halt,SPECIAL,HALT_F);
 DEFINE_F(callr,SPECIAL,CALLR_F);
+DEFINE_F(link,SPECIAL,LINK_F);
 
 DEFINE_F(fadd,FPI,FADD_F);
 DEFINE_F(fsub,FPI,FSUB_F);

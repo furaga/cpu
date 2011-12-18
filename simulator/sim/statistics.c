@@ -145,13 +145,19 @@ int statistics(FILE* fp,int init) {
 			count[077][0]++;
 			count[opcode][0]++;
 			switch(opcode){
-				case LD:
+				case LDI:
 					reg_cnt[0][get_rsi(ir)]++;
 					reg_cnt[0][get_rti(ir)]++;
 					break;
-				case ST:
+				case STI:
 					reg_cnt[0][get_rsi(ir)]++;
 					reg_cnt[0][get_rti(ir)]++;
+					break;
+				case LDLR:
+					reg_cnt[0][get_rsi(ir)]++;
+					break;
+				case STLR:
+					reg_cnt[0][get_rsi(ir)]++;
 					break;
 				case FLD:
 					reg_cnt[1][get_rsi(ir)]++;
