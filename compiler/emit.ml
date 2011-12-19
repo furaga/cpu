@@ -90,16 +90,18 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), SLL(y, C(z)) -> Output.add_stmt (Output.SRLi (x, y, -z))
   | NonTail(x), Ld(y, V z) ->
    	begin
-	  	Output.add_stmt (Output.Add (reg_sw, y, z));
-	  	Output.add_stmt (Output.Ld (x, reg_sw, 0));
+(*	  	Output.add_stmt (Output.Add (reg_sw, y, z));
+	  	Output.add_stmt (Output.Ldi (x, reg_sw, 0));*)
+	  	Output.add_stmt (Output.Ld (x, y, z))
   	end
-  | NonTail(x), Ld(y, C z) -> Output.add_stmt (Output.Ld (x, y, z))
+  | NonTail(x), Ld(y, C z) -> Output.add_stmt (Output.Ldi (x, y, z))
   | NonTail(_), St(x, y, V z) ->
    	begin
-	  	Output.add_stmt (Output.Add (reg_sw, y, z));
-	  	Output.add_stmt (Output.St (x, reg_sw, 0));
+(*	  	Output.add_stmt (Output.Add (reg_sw, y, z));
+	  	Output.add_stmt (Output.Sti (x, reg_sw, 0));*)
+	  	Output.add_stmt (Output.St (x, y, z))
   	end
-  | NonTail(_), St(x, y, C z) -> Output.add_stmt (Output.St (x, y, z))
+  | NonTail(_), St(x, y, C z) -> Output.add_stmt (Output.Sti (x, y, z))
   | NonTail(x), FMovD(y) when x = y -> ()
   | NonTail(x), FMovD(y) -> Output.add_stmt (Output.FMov (x, y))
   | NonTail(x), FNegD(y) -> Output.add_stmt (Output.FNeg (x, y))
@@ -129,7 +131,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(_), Save(x, y) when List.mem x allregs && not (S.mem y !stackset) ->
 		save y;
 		let offset = offset y in
-		Output.add_stmt (Output.St (x, reg_sp, offset));
+		Output.add_stmt (Output.Sti (x, reg_sp, offset));
 		add_save_env ()
   | NonTail(_), Save(x, y) when List.mem x allfregs && not (S.mem y !stackset) ->
 		savef y;
@@ -145,7 +147,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  	assert false (* すでにyがセーブされている場合 *)
   	end
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
-  | NonTail(x), Restore(y) when List.mem x allregs -> Output.add_stmt (Output.Ld (x, reg_sp, (offset y))); add_save_env ()
+  | NonTail(x), Restore(y) when List.mem x allregs -> Output.add_stmt (Output.Ldi (x, reg_sp, (offset y))); add_save_env ()
   | NonTail(x), Restore(y) when List.mem x allfregs -> Output.add_stmt (Output.LdF (x, reg_sp, (offset y))); add_save_env ()
   | NonTail(x), Restore(y) ->(* %f16とか値が固定されているレジスタは復帰しない（そもそも退避されてない） *)
   	  assert (Asm.is_reg x); ()
@@ -250,7 +252,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 (*b : レジスタでジャンプ先を指定*)
   | Tail, CallCls(x, ys, zs) -> (* 末尾呼び出し (caml2html: emit_tailcall) *)
 		g'_args oc x [(x, reg_cl)] ys zs;
-		Output.add_stmt (Output.Ld (reg_sw, reg_cl, 0));
+		Output.add_stmt (Output.Ldi (reg_sw, reg_cl, 0));
 		Output.add_stmt (Output.B reg_sw)		(*指定されたレジスタが指す位置へ飛ぶ *)
   | Tail, CallDir(Id.L(x), ys, zs) -> (* 末尾呼び出し *)
 		(match x with
@@ -276,10 +278,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					g'_args oc x [] ys zs;
 					let ss = stacksize () in
 					Output.add_stmt (Output.StF ("%f0", reg_sp, ss - 4));
-					Output.add_stmt (Output.St ("%g3", reg_sp, ss));
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss - 4));
+					Output.add_stmt (Output.Sti ("%g3", reg_sp, ss));
+					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss - 4));
 					Output.add_stmt (Output.Output "%g3");
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss));
+					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss));
 					Output.add_stmt Output.Return;
 					add_save_env ()
 				end
@@ -304,7 +306,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(a), CallCls(x, ys, zs) -> (* レジスタで飛ぶジャンプ *)
 		g'_args oc x [(x, reg_cl)] ys zs;
 		let ss = stacksize () in
-		Output.add_stmt (Output.Ld (reg_sw, reg_cl, 0));
+		Output.add_stmt (Output.Ldi (reg_sw, reg_cl, 0));
 		Output.add_stmt (Output.Subi (reg_sp, reg_sp, ss));
 		Output.add_stmt (Output.CallR reg_sw);
 		Output.add_stmt (Output.Addi (reg_sp, reg_sp, ss));
@@ -328,10 +330,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| "min_caml_print_newline" ->
 		  		begin
 					let ss = stacksize () in
-					Output.add_stmt (Output.St ("%g3", reg_sp, ss));
+					Output.add_stmt (Output.Sti ("%g3", reg_sp, ss));
 					Output.add_stmt (Output.Addi ("%g3", reg_0, 10));
 					Output.add_stmt (Output.Output "%g3");
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss));
+					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss));
 					add_save_env ()
 				end
 		  	| "min_caml_print_float" ->(* TODO *) 
@@ -339,10 +341,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					g'_args oc x [] ys zs;
 					let ss = stacksize () in
 					Output.add_stmt (Output.StF ("%f0", reg_sp, ss - 4));
-					Output.add_stmt (Output.St ("%g3", reg_sp, ss));
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss - 4));
+					Output.add_stmt (Output.Sti ("%g3", reg_sp, ss));
+					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss - 4));
 					Output.add_stmt (Output.Output "%g3");
-					Output.add_stmt (Output.Ld ("%g3", reg_sp, ss));
+					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss));
 					add_save_env ()
 				end
 		  	| "min_caml_print_char"
