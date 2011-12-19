@@ -9,6 +9,7 @@ int mnemonic(char *opcode, char buf[][LINE_MAX]) {
 	const char *fg = "%s %%g%d";
 	const char *fgg = "%s %%g%d, %%g%d";
 	const char *fggi = "%s %%g%d, %%g%d, %d";
+	const char *ffgi = "%s %%f%d, %%g%d, %d";
 	const char *fggg = "%s %%g%d, %%g%d, %%g%d";
 	if (strcmp(opcode, "call") == 0) {
 		if(sscanf(buf[0], fl, tmp, lname) == 2)  {
@@ -51,15 +52,16 @@ int mnemonic(char *opcode, char buf[][LINE_MAX]) {
 		}
 		return 1;
 	} else
-	if (strcmp(opcode, "ld") == 0) {
-		if(sscanf(buf[0], fggi, tmp, &rd, &rs, &imm) == 4) {
-			sprintf(buf[0], "\tldi\t%%g%d, %%g%d, %d\n", rd, rs, imm);
+
+	if (strcmp(opcode, "fld") == 0) {
+		if(sscanf(buf[0], ffgi, tmp, &rt, &rs, &imm) == 4) {
+			sprintf(buf[0], "\tfldi\t%%f%d, %%g%d, %d\n", rt, rs, imm);
 		}
 		return 1;
 	} else
-	if (strcmp(opcode, "st") == 0) {
-		if(sscanf(buf[0], fggi, tmp, &rd, &rs, &imm) == 4) {
-			sprintf(buf[0], "\tsti\t%%g%d, %%g%d, %d\n", rd, rs, imm);
+	if (strcmp(opcode, "fst") == 0) {
+		if(sscanf(buf[0], ffgi, tmp, &rt, &rs, &imm) == 4) {
+			sprintf(buf[0], "\tfsti\t%%f%d, %%g%d, %d\n", rt, rs, imm);
 		}
 		return 1;
 	} else

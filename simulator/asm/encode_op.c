@@ -9,13 +9,6 @@ int encode_op(char *opcode, char *op_data)
 {
 	int rd,rs,rt,imm,funct,shaft,target;
 	char tmp[256];
-	/*
-	 * format
-	 * g: general register
-	 * f: floating-point number register
-	 * i: immediate
-	 * l: label
-	 */
 	const char *fg = "%s %%g%d";
 	const char *fl = "%s %s";
 	const char *fgi = "%s %%g%d, %d";
@@ -30,6 +23,7 @@ int encode_op(char *opcode, char *op_data)
 	const char *fffl = "%s %%f%d, %%f%d, %s";
 	const char *ffff = "%s %%f%d, %%f%d, %%f%d";
 	const char *ffgi = "%s %%f%d, %%g%d, %d";
+	const char *ffgg = "%s %%f%d, %%g%d, %%g%d";
 	char lname[256];
 
 	shaft = funct = target = 0;
@@ -177,6 +171,10 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
 		    return ldlr(rs,0,imm);
 	}
+	if(strcmp(opcode, "fld") == 0){
+		if(sscanf(op_data, ffgg, tmp, &rd, &rs,&rt) == 4)
+		    return fld(rs,rt,rd,0);
+	}
 	if(strcmp(opcode, "st") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
 		    return st(rs,rt,rd,0);
@@ -188,6 +186,10 @@ int encode_op(char *opcode, char *op_data)
 	if(strcmp(opcode, "stlr") == 0){
 		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
 		    return stlr(rs,0,imm);
+	}
+	if(strcmp(opcode, "fst") == 0){
+		if(sscanf(op_data, ffgg, tmp, &rd, &rs,&rt) == 4)
+		    return fst(rs,rt,rd,0);
 	}
 	if(strcmp(opcode, "fadd") == 0){
 		if(sscanf(op_data, ffff, tmp, &rd, &rs, &rt) == 4)
@@ -221,13 +223,13 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
 		    return fneg(rs,0,rd,0);
 	}
-	if(strcmp(opcode, "fld") == 0){
+	if(strcmp(opcode, "fldi") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4)
-		    return fld(rs,rt,imm);
+		    return fldi(rs,rt,imm);
 	}
-	if(strcmp(opcode, "fst") == 0){
+	if(strcmp(opcode, "fsti") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4)
-		    return fst(rs,rt,imm);
+		    return fsti(rs,rt,imm);
 	}
 	if(strcmp(opcode, "fjeq") == 0){
 		if(sscanf(op_data, fffl, tmp, &rs, &rt, lname) == 4) {
@@ -323,8 +325,8 @@ DEFINE_I(ldi,LDI);
 DEFINE_I(sti,STI);
 DEFINE_I(ldlr,LDLR);
 DEFINE_I(stlr,STLR);
-DEFINE_I(fld,FLD);
-DEFINE_I(fst,FST);
+DEFINE_I(fldi,FLDI);
+DEFINE_I(fsti,FSTI);
 DEFINE_I(fjeq,FJEQ);
 DEFINE_I(fjlt,FJLT);
 DEFINE_I(setl,SETL);
@@ -345,6 +347,8 @@ DEFINE_F(add,SPECIAL,ADD_F);
 DEFINE_F(sub,SPECIAL,SUB_F);
 DEFINE_F(ld,SPECIAL,LD_F);
 DEFINE_F(st,SPECIAL,ST_F);
+DEFINE_F(fld,SPECIAL,FLD_F);
+DEFINE_F(fst,SPECIAL,FST_F);
 DEFINE_F(movlr,SPECIAL,MOVLR_F);
 DEFINE_F(mul,SPECIAL,MUL_F);
 DEFINE_F(_div,SPECIAL,DIV_F);
@@ -364,10 +368,10 @@ DEFINE_F(fmov,FPI,FMOV_F);
 DEFINE_F(fneg,FPI,FNEG_F);
 
 ///////////////////////////////
-DEFINE_R(_sin,SIN);
-DEFINE_R(_cos,COS);
-DEFINE_R(_atan,ATAN);
-DEFINE_R(_sqrt,SQRT);
-DEFINE_R(_int_of_float,I_OF_F);
-DEFINE_R(_float_of_int,F_OF_I);
+//DEFINE_R(_sin,SIN);
+//DEFINE_R(_cos,COS);
+//DEFINE_R(_atan,ATAN);
+//DEFINE_R(_sqrt,SQRT);
+//DEFINE_R(_int_of_float,I_OF_F);
+//DEFINE_R(_float_of_int,F_OF_I);
 //////////////////////////////

@@ -99,7 +99,7 @@ int simulate(char *sfile) {
 			case STLR:
 				ram[(_GRS - _IMM)/4] = lr;
 				break;
-			case FLD:
+			case FLDI:
 				_FRT = ram[(_GRS - _IMM)/4];
 				break;
 			case JNE:
@@ -125,7 +125,7 @@ int simulate(char *sfile) {
 				} else {
 				}
 				break;
-			case FST:
+			case FSTI:
 				ram[(_GRS - _IMM)/4] = _FRT;
 				break;
 			case SUBI:
@@ -285,11 +285,17 @@ int simulate(char *sfile) {
 					case BTMPLR_F:
 						pc = tmplr;
 						break;
+					case FLD_F:
+						_FRD = ram[(_GRS + _GRT)/4];
+						break;
+					case FST_F:
+						ram[(_GRS + _GRT)/4] = _FRD;
+						break;
 					case LD_F:
-						_GRD = ram[(_GRS - _GRT)/4];
+						_GRD = ram[(_GRS + _GRT)/4];
 						break;
 					case ST_F:
-						ram[(_GRS - _GRT)/4] = _GRD;
+						ram[(_GRS + _GRT)/4] = _GRD;
 						break;
 					case LINK_F:
 						lr = pc + 4;

@@ -402,7 +402,8 @@ int convert_op(char *opcode, char *op_data)
 			OP(ret),NL;
 		    return 0;
 	}
-	if(strcmp(opcode, "ld") == 0){
+
+	if(strcmp(opcode, "ldi") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
 			if (is_xreg(rs) && is_xreg(rt)) {
@@ -421,7 +422,27 @@ int convert_op(char *opcode, char *op_data)
 		    return 0;
 		}
 	}
+	if(strcmp(opcode, "ld") == 0){
+		if(sscanf(op_data, fggg, tmp, &rd, &rs, &rt) == 4) {
+			OP(movl),G(rs),SC(%edx),NL;
+			OP(movl),G(rt),SC(%eax),NL;
+			OP(movl),printf("0(%%eax, %%edx, 1)"),SC(%eax),NL;
+			OP(movl),S(%eax),GC(rd),NL;
+		    return 0;
+		}
+	}
 	if(strcmp(opcode, "st") == 0){
+		if(sscanf(op_data, fggg, tmp, &rd, &rs, &rt) == 4) {
+			OP(push),S(%rbx),NL;
+			OP(movl),G(rt),SC(%edx),NL;
+			OP(movl),G(rs),SC(%eax),NL;
+			OP(movl),G(rd),SC(%ebx),NL;
+			OP(movl),S(%ebx),printf(", 0(%%eax, %%edx, 1)"),NL;
+			OP(pop), S(%rbx),NL;
+		    return 0;
+		}
+	}
+	if(strcmp(opcode, "sti") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
 			if (is_xreg(rs) && is_xreg(rt)) {
@@ -774,14 +795,14 @@ int is_const(int i) {
 	return (i == 0 || i == 28 || i == 29);
 }
 
+#define XREG_NUM 13
 int is_xreg(int i) {
 	int j;
-	const int num = 13;
-	const int a[num] = {3,1,26,7,31,6,9,4,5,10, 2,11,8};
+	const int a[XREG_NUM] = {3,1,26,7,31,6,9,4,5,10, 2,11,8};
 	if (is_const(i)) {
 		return 1;
 	}
-	for (j = 0; j < num; j++) {
+	for (j = 0; j < XREG_NUM; j++) {
 		if (i == a[j]) {
 			return 1;
 		}
@@ -789,11 +810,11 @@ int is_xreg(int i) {
 	return 0;
 }
 
+#define XMM_NUM 15
 int is_xmm(int i) {
 	int j;
-	const int num = 15;
-	const int a[num] = {0,1,3,6,2,7,5,4,8, 12,18,22,31,9,16};
-	for (j = 0; j < num; j++) {
+	const int a[XMM_NUM] = {0,1,3,6,2,7,5,4,8, 12,18,22,31,9,16};
+	for (j = 0; j < XMM_NUM; j++) {
 		if (i == a[j]) {
 			return 1;
 		}

@@ -159,7 +159,7 @@ int statistics(FILE* fp,int init) {
 				case STLR:
 					reg_cnt[0][get_rsi(ir)]++;
 					break;
-				case FLD:
+				case FLD_F:
 					reg_cnt[1][get_rsi(ir)]++;
 					reg_cnt[0][get_rti(ir)]++;
 					break;
@@ -181,7 +181,7 @@ int statistics(FILE* fp,int init) {
 					reg_cnt[1][get_rsi(ir)]++;
 					reg_cnt[1][get_rti(ir)]++;
 					break;
-				case FST:
+				case FST_F:
 					reg_cnt[0][get_rsi(ir)]++;
 					reg_cnt[1][get_rti(ir)]++;
 					break;

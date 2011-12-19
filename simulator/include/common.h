@@ -28,6 +28,8 @@
 #define OR_F 045
 #define PADD_F 050
 #define CALLR_F 060
+#define FLD_F 061
+#define FST_F 071
 #define LINK_F 073
 #define HALT_F 077
 //////////////////////////////////////
@@ -75,8 +77,8 @@
 #define FJLT 072
 #define MVLO 007
 #define MVHI 017
-#define FLD 061
-#define FST 071
+#define FLDI 061
+#define FSTI 071
 //////////////////////////////////////
 // Pseudo-Inst ///////////////////////
 //////////////////////////////////////

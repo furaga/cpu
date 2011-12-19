@@ -123,6 +123,7 @@ int	convert(char *sfile) {
 			printf("FR%d: .long 0\n", i);
 		}
 	}
+	puts("TMP: .long 0");
 	puts("CNT: .quad 0");
 	printf("FNEG: .quad 0x%d\n", 1<<31);
 	puts(".section .bss");
