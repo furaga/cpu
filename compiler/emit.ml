@@ -88,19 +88,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), SLL(y, V(z)) -> Output.add_stmt (Output.SLL (x, y, z))
   | NonTail(x), SLL(y, C(z)) when z >= 0 -> Output.add_stmt (Output.SLLi (x, y, z))
   | NonTail(x), SLL(y, C(z)) -> Output.add_stmt (Output.SRLi (x, y, -z))
-  | NonTail(x), Ld(y, V z) ->
-   	begin
-(*	  	Output.add_stmt (Output.Add (reg_sw, y, z));
-	  	Output.add_stmt (Output.Ldi (x, reg_sw, 0));*)
-	  	Output.add_stmt (Output.Ld (x, y, z))
-  	end
+  | NonTail(x), Ld(y, V z) -> Output.add_stmt (Output.Ld (x, y, z))
   | NonTail(x), Ld(y, C z) -> Output.add_stmt (Output.Ldi (x, y, z))
-  | NonTail(_), St(x, y, V z) ->
-   	begin
-(*	  	Output.add_stmt (Output.Add (reg_sw, y, z));
-	  	Output.add_stmt (Output.Sti (x, reg_sw, 0));*)
-	  	Output.add_stmt (Output.St (x, y, z))
-  	end
+  | NonTail(_), St(x, y, V z) -> Output.add_stmt (Output.St (x, y, z))
   | NonTail(_), St(x, y, C z) -> Output.add_stmt (Output.Sti (x, y, z))
   | NonTail(x), FMovD(y) when x = y -> ()
   | NonTail(x), FMovD(y) -> Output.add_stmt (Output.FMov (x, y))
@@ -111,20 +101,10 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), FMulD(y, z) -> Output.add_stmt (Output.FMul (x, y, z))
   | NonTail(x), FDivD(y, z) -> Output.add_stmt (Output.FDiv (x, y, z))
   
-  | NonTail(x), LdDF(y, V(z)) ->
-  	begin
-  		(* ポインタの値とかあやしい *)
-	  	Output.add_stmt (Output.Add (reg_sw, y, z));
-	  	Output.add_stmt (Output.LdF (x, reg_sw, 0));
-  	end
-  | NonTail(x), LdDF(y, C(z)) -> Output.add_stmt (Output.LdF (x, y, z))
-  | NonTail(_), StDF(x, y, V(z)) ->
-  	begin
-  		(* ポインタの値とかあやしい *)
-	  	Output.add_stmt (Output.Add (reg_sw, y, z));
-	  	Output.add_stmt (Output.StF (x, reg_sw, 0));
-  	end
-  | NonTail(_), StDF(x, y, C(z)) -> Output.add_stmt (Output.StF (x, y, z))
+  | NonTail(x), LdDF(y, V(z)) -> Output.add_stmt (Output.LdF (x, y, z))
+  | NonTail(x), LdDF(y, C(z)) -> Output.add_stmt (Output.LdFi (x, y, z))
+  | NonTail(_), StDF(x, y, V(z)) -> Output.add_stmt (Output.StF (x, y, z))
+  | NonTail(_), StDF(x, y, C(z)) -> Output.add_stmt (Output.StFi (x, y, z))
   
   | NonTail(_), Comment(s) -> Output.add_stmt (Output.Comment (Printf.sprintf "\t! %s\n" s))
   (* 退避の仮想命令の実装 (caml2html: emit_save) *)
@@ -136,19 +116,18 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(_), Save(x, y) when List.mem x allfregs && not (S.mem y !stackset) ->
 		savef y;
 		let offset = offset y in
-		Output.add_stmt (Output.StF (x, reg_sp, offset));
+		Output.add_stmt (Output.StFi (x, reg_sp, offset));
 		add_save_env ()
   | NonTail(_), Save(x, y) -> (* %f16とか値が固定されているレジスタは意地でも退避しない *)
-  	if S.mem y !stackset || M.mem y !global_vars || Asm.is_reg x then () else 
-  	begin
+  	if S.mem y !stackset || M.mem y !global_vars || Asm.is_reg x then () else (
 	  	Printf.printf "has saved (%s,%s)\n" x y;
 	  	S.iter (Printf.printf "%s ") !stackset;
 	  	print_newline ();
 	  	assert false (* すでにyがセーブされている場合 *)
-  	end
+	)
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
   | NonTail(x), Restore(y) when List.mem x allregs -> Output.add_stmt (Output.Ldi (x, reg_sp, (offset y))); add_save_env ()
-  | NonTail(x), Restore(y) when List.mem x allfregs -> Output.add_stmt (Output.LdF (x, reg_sp, (offset y))); add_save_env ()
+  | NonTail(x), Restore(y) when List.mem x allfregs -> Output.add_stmt (Output.LdFi (x, reg_sp, (offset y))); add_save_env ()
   | NonTail(x), Restore(y) ->(* %f16とか値が固定されているレジスタは復帰しない（そもそも退避されてない） *)
   	  assert (Asm.is_reg x); ()
       
@@ -277,7 +256,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		begin
 					g'_args oc x [] ys zs;
 					let ss = stacksize () in
-					Output.add_stmt (Output.StF ("%f0", reg_sp, ss - 4));
+					Output.add_stmt (Output.StFi ("%f0", reg_sp, ss - 4));
 					Output.add_stmt (Output.Sti ("%g3", reg_sp, ss));
 					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss - 4));
 					Output.add_stmt (Output.Output "%g3");
@@ -340,7 +319,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		begin
 					g'_args oc x [] ys zs;
 					let ss = stacksize () in
-					Output.add_stmt (Output.StF ("%f0", reg_sp, ss - 4));
+					Output.add_stmt (Output.StFi ("%f0", reg_sp, ss - 4));
 					Output.add_stmt (Output.Sti ("%g3", reg_sp, ss));
 					Output.add_stmt (Output.Ldi ("%g3", reg_sp, ss - 4));
 					Output.add_stmt (Output.Output "%g3");
