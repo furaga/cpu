@@ -19,6 +19,7 @@ const char *ffg = "%s %%f%d, %%g%d";
 const char *fffl = "%s %%f%d, %%f%d, %s";
 const char *ffff = "%s %%f%d, %%f%d, %%f%d";
 const char *ffgi = "%s %%f%d, %%g%d, %d";
+const char *ffgg = "%s %%f%d, %%g%d, %%g%d";
 
 ///static int aacnt[32];
 
@@ -422,6 +423,7 @@ int convert_op(char *opcode, char *op_data)
 		    return 0;
 		}
 	}
+
 	if(strcmp(opcode, "ld") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs, &rt) == 4) {
 			OP(movl),G(rs),SC(%edx),NL;
@@ -442,6 +444,7 @@ int convert_op(char *opcode, char *op_data)
 		    return 0;
 		}
 	}
+
 	if(strcmp(opcode, "sti") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4) {
 
@@ -595,7 +598,32 @@ int convert_op(char *opcode, char *op_data)
 		    return 0;
 		}
 	}
+
 	if(strcmp(opcode, "fld") == 0){
+		if(sscanf(op_data, ffgg, tmp, &rd, &rs, &rt) == 4) {
+			OP(movl),G(rs),SC(%edx),NL;
+			OP(movl),G(rt),SC(%eax),NL;
+			OP(movl),printf("0(%%eax, %%edx, 1)"),SC(%eax),NL;
+			if (is_xmm(rd)) {
+				OP(movd),S(%eax),FC(rd),NL;
+			} else {
+				OP(movl),S(%eax),FC(rd),NL;
+			}
+		    return 0;
+		}
+	}
+	if(strcmp(opcode, "fst") == 0){
+		if(sscanf(op_data, ffgg, tmp, &rd, &rs, &rt) == 4) {
+			OP(push),S(%rbx),NL;
+			OP(movl),G(rt),SC(%edx),NL;
+			OP(movl),G(rs),SC(%eax),NL;
+			OP(movl),F(rd),SC(%ebx),NL;
+			OP(movl),S(%ebx),printf(", 0(%%eax, %%edx, 1)"),NL;
+			OP(pop), S(%rbx),NL;
+		    return 0;
+		}
+	}
+	if(strcmp(opcode, "fldi") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4) {
 			if (is_xmm(rt)) {
 				if (is_xreg(rs)) {
@@ -614,7 +642,7 @@ int convert_op(char *opcode, char *op_data)
 		    return 0;
 		}
 	}
-	if(strcmp(opcode, "fst") == 0){
+	if(strcmp(opcode, "fsti") == 0){
 		if(sscanf(op_data, ffgi, tmp, &rt, &rs, &imm) == 4) {
 			if (is_xmm(rt)) {
 				if (is_xreg(rs)) {
