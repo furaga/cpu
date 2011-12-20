@@ -104,7 +104,7 @@ int simulate(char *sfile) {
 				break;
 			case JNE:
 				if (_GRS != _GRT)
-					pc += _IMM;
+					pc += _IMM - 4;
 				break;
 			case ADDI:
 				IF0_BREAK_T
@@ -121,7 +121,7 @@ int simulate(char *sfile) {
 				a.i = _FRS;
 				b.i = _FRT;
 				if (a.f < b.f) {
-					pc += _IMM;
+					pc += _IMM - 4;
 				} else {
 				}
 				break;
@@ -141,11 +141,11 @@ int simulate(char *sfile) {
 				a.i = _FRS;
 				b.i = _FRT;
 				if (a.f == b.f) 
-					pc += _IMM;
+					pc += _IMM - 4;
 				break;
 			case JLT:
 				if (_GRS < _GRT) {
-					pc += _IMM;
+					pc += _IMM - 4;
 				} else {
 				}
 				break;
@@ -161,7 +161,7 @@ int simulate(char *sfile) {
 				break;
 			case JEQ:
 				if (_GRS == _GRT)
-					pc += _IMM;
+					pc += _IMM - 4;
 				break;
 			case MULI:
 				IF0_BREAK_T

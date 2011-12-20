@@ -617,7 +617,11 @@ int convert_op(char *opcode, char *op_data)
 			OP(push),S(%rbx),NL;
 			OP(movl),G(rt),SC(%edx),NL;
 			OP(movl),G(rs),SC(%eax),NL;
-			OP(movl),F(rd),SC(%ebx),NL;
+			if (is_xmm(rd)) {
+				OP(movd),F(rd),SC(%ebx),NL;
+			} else {
+				OP(movl),F(rd),SC(%ebx),NL;
+			}
 			OP(movl),S(%ebx),printf(", 0(%%eax, %%edx, 1)"),NL;
 			OP(pop), S(%rbx),NL;
 		    return 0;

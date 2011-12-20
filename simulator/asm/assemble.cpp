@@ -131,7 +131,7 @@ int	assemble(char *sfile) {
 					case FJLT:
 					case FJEQ:
 						label_line = label_map[label_name[output_data[i] & 0xffff]];
-						label_line -= 4*(i + 1);
+						label_line -= 4*i;
 						output_data[i] = (output_data[i] & 0xffff0000) | (label_line&0xffff);
 						break;
 					case CALL:

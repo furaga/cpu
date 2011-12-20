@@ -53,6 +53,7 @@ int mnemonic(char *opcode, char buf[][LINE_MAX]) {
 		return 1;
 	} else
 
+/*
 	if (strcmp(opcode, "fld") == 0) {
 		if(sscanf(buf[0], ffgi, tmp, &rt, &rs, &imm) == 4) {
 			sprintf(buf[0], "\tfldi\t%%f%d, %%g%d, %d\n", rt, rs, imm);
@@ -65,6 +66,7 @@ int mnemonic(char *opcode, char buf[][LINE_MAX]) {
 		}
 		return 1;
 	} else
+	*/
 	{}
 	return 1;
 }

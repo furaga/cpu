@@ -1,0 +1,26 @@
+
+as		: コンパイラの出力したアセンブリでかかれたプログラム
+bin		: アセンブルしたもの。
+bin_vhdl: アセンブルしたもののvhdl表記(bin)
+hex_vhdl: アセンブルしたもののvhdl表記(hex)
+
+asmcho, simcho: アセンブラ、シミュレータ
+
+test.sをいじれば色々テストプログラムつくれる。
+アセンブリのシンタックスはas内の他のプログラムを参考に。
+asmlogにて
+ffffffff
+ってのあったらアセンブルのミス。
+アセンブル失敗したらはじくようにここ修正しようかな。
+
+出力ファイルは
+XXX.s ==> XXX
+となるので上書き等注意。
+
+実行例
+./asmcho test.s
+./simcho test
+
+./asmcho -b test.s (bin_vhdl用の出力)
+
+./asmcho -h test.s (bin_vhdl用の出力)

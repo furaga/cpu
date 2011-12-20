@@ -56,7 +56,7 @@ int __print_state(int init_flag, int argc, char **argv) {
 				}
 			}
 		}
-		if (fp == NULL) {
+		if ((flag[ON] == 1) && (fp == NULL)) {
 			fp = fopen(SIM_LOG, "w");
 		}
 	} else {
