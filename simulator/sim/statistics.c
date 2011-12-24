@@ -129,7 +129,7 @@ int statistics(FILE* fp,int init) {
 			}
 			break;
 		case IO:
-			count[076][0]++;
+			count[066][0]++;
 			count[opcode][funct]++;
 			switch(funct) {
 				case OUTPUT_F:

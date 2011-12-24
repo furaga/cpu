@@ -21,8 +21,8 @@
 #define NOR_F 033
 #define ADD_F 040
 #define SUB_F 042
-#define LD_F 043
-#define ST_F 053
+//#define LD_F 043
+//#define ST_F 053
 #define MOVLR_F 063
 #define AND_F 044
 #define OR_F 045
@@ -30,7 +30,6 @@
 #define CALLR_F 060
 #define FLD_F 061
 #define FST_F 071
-#define LINK_F 073
 #define HALT_F 077
 //////////////////////////////////////
 // I/O-Inst ///////////////////////
@@ -63,6 +62,8 @@
 #define SLLI 050
 #define CALL 060
 #define RETURN 070
+#define LD 023
+#define ST 033
 #define LDI 043
 #define STI 053
 #define LDLR 063
@@ -79,6 +80,7 @@
 #define MVHI 017
 #define FLDI 061
 #define FSTI 071
+#define LINK 075
 //////////////////////////////////////
 // Pseudo-Inst ///////////////////////
 //////////////////////////////////////

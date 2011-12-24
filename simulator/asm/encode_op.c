@@ -9,6 +9,7 @@ int encode_op(char *opcode, char *op_data)
 {
 	int rd,rs,rt,imm,funct,shaft,target;
 	char tmp[256];
+	const char *fi = "%s %d";
 	const char *fg = "%s %%g%d";
 	const char *fl = "%s %s";
 	const char *fgi = "%s %%g%d, %d";
@@ -261,7 +262,9 @@ int encode_op(char *opcode, char *op_data)
 		}
 	}
 	if(strcmp(opcode, "link") == 0){
-		return link(0,0,0,0);
+		if(sscanf(op_data, fi, tmp, &imm) == 2) {
+		    return link(0,0,imm);
+		}
 	}
 	if(strcmp(opcode, "movlr") == 0){
 		return movlr(0,0,0,0);
@@ -345,8 +348,8 @@ DEFINE_F(btmplr,SPECIAL,BTMPLR_F);
 DEFINE_F(nor,SPECIAL,NOR_F);
 DEFINE_F(add,SPECIAL,ADD_F);
 DEFINE_F(sub,SPECIAL,SUB_F);
-DEFINE_F(ld,SPECIAL,LD_F);
-DEFINE_F(st,SPECIAL,ST_F);
+DEFINE_F(ld,LD,0);
+DEFINE_F(st,ST,0);
 DEFINE_F(fld,SPECIAL,FLD_F);
 DEFINE_F(fst,SPECIAL,FST_F);
 DEFINE_F(movlr,SPECIAL,MOVLR_F);
@@ -356,7 +359,7 @@ DEFINE_F(_and,SPECIAL,AND_F);
 DEFINE_F(_or,SPECIAL,OR_F);
 DEFINE_F(halt,SPECIAL,HALT_F);
 DEFINE_F(callr,SPECIAL,CALLR_F);
-DEFINE_F(link,SPECIAL,LINK_F);
+DEFINE_I(link,LINK);
 
 DEFINE_F(fadd,FPI,FADD_F);
 DEFINE_F(fsub,FPI,FSUB_F);

@@ -102,7 +102,6 @@ PROTO_F(_and);
 PROTO_F(_or);
 PROTO_F(halt);
 PROTO_F(callr);
-PROTO_F(link);
 
 PROTO_F(fadd);
 PROTO_F(fsub);
@@ -113,4 +112,5 @@ PROTO_F(_fabs);
 PROTO_F(fmov);
 PROTO_F(fneg);
 
+PROTO_I(link);
 #endif

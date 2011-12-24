@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -86,6 +87,15 @@ int simulate(char *sfile) {
 		}
    
 		switch(opcode){
+			case LINK:
+				lr = (pc-4) + _IMM;
+				break;
+			case LD:
+				_GRD = ram[(_GRS + _GRT)/4];
+				break;
+			case ST:
+				ram[(_GRS + _GRT)/4] = _GRD;
+				break;
 			case LDI:
 				IF0_BREAK_S
 				_GRT = ram[(_GRS - _IMM)/4];
@@ -290,15 +300,6 @@ int simulate(char *sfile) {
 						break;
 					case FST_F:
 						ram[(_GRS + _GRT)/4] = _FRD;
-						break;
-					case LD_F:
-						_GRD = ram[(_GRS + _GRT)/4];
-						break;
-					case ST_F:
-						ram[(_GRS + _GRT)/4] = _GRD;
-						break;
-					case LINK_F:
-						lr = pc + 4;
 						break;
 					case SUB_F:
 						IF0_BREAK_D

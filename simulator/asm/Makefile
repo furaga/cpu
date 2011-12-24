@@ -9,6 +9,7 @@ CXXFLAGS += -I ../include/
 vpath %.h ../include/
 #ASM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%.s)
 ASM_TARGET = $(TEST_TARGET:%=source/as/%.s)
+#ASM_FLAGS += -b
 
 asmcho: asmcho.o assemble.o encode_op.o mnemonic.o
 asmcho.o: $(ASMH) assemble.o
