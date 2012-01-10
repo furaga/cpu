@@ -59,7 +59,7 @@ int simulate(char *sfile) {
 	for (i = 0; heap_size > 0; i++,pc+=4) {
 		ram[reg[2]/4] = rom[pc/4];
 		reg[2] += 4;
-		heap_size -= 32;
+		heap_size -= 4;
 	}
 
 	fprintf(stderr, "simulate %s\n", sfile);

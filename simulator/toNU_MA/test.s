@@ -1,4 +1,6 @@
-.init_heap_size 0
+.init_heap_size 32
+FLOAT_ONE:
+	.long 0x3f800000
 
 	jmp L1
 F:

@@ -56,7 +56,7 @@ int	assemble(char *sfile) {
 
 	if (fgets(buf, LINE_MAX, fp) != NULL) {
 		sscanf(buf, ".init_heap_size %d", &heap_size);
-		output_data[output_line_cnt++] = heap_size;
+		output_data[output_line_cnt++] = heap_size / 8;
 	} else {
 		printf("%d 行目の\n%sが解析できませんでした。\n", input_line_cnt + 1, buf);
 		err_cnt++;
