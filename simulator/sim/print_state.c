@@ -19,6 +19,7 @@ int __print_state(int init_flag, int argc, char **argv) {
 				if (strcmp(argv[i], "-g") == 0) {
 					// -g	// getchar each print_state
 					flag[ON] = flag[GC] = 1;
+					fp = stdout;
 				} else if (strcmp(argv[i], "-reg")==0) {
 					// -reg  // print all registers
 					flag[ON] = flag[REG] = 1; 
@@ -73,8 +74,8 @@ int __print_state(int init_flag, int argc, char **argv) {
 			}
 
 			
-			fprintf(fp, "%6llu.[%4d] ", cnt,pc);
-			print_ir(rom[pc],fp);
+			fprintf(fp, "%6llu.[%4x] ", cnt,pc);
+			print_ir(rom[pc/4],fp);
 
 			if (flag[REG]) {
 				for (i = 0; i < 32; i++) {

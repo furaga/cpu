@@ -14,13 +14,12 @@ MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 ###################################
 # Set Vars below
 ###################################
-TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
-#TEST_TARGET = fib
+#TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
+TEST_TARGET = fib
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
-#DEBUG_MACRO = -D STATS_M 
-#-D PRINT_M
-SIM_FLAGS =
+#DEBUG_MACRO = -D PRINT_M
+#SIM_FLAGS = -p
 #ASM_FLAGS = -b
 #XSIM_FLAGS = -cnt
 #EOG =   (eog $$ppm &);

@@ -10,12 +10,14 @@
 
 int output_type = 0;
 int assemble(char*);
+
 int main(int argc, char **argv, char **envp) {
 	int i;
 	if (argc < 2) {
 		puts("USAGE:./asmcho [filename] [options]:\n");
 		return 1;
 	}
+
 	for (i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-b") == 0) {
 			output_type = 1;
@@ -23,6 +25,7 @@ int main(int argc, char **argv, char **envp) {
 			output_type = 2;
 		}
 	}
+
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] != '-') {
 			assemble(argv[i]);

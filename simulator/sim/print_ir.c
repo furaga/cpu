@@ -5,15 +5,16 @@
 // print instruction register ////////////////////
 void print_ir(uint32_t ir, FILE *fp) {
 	static const char *f = "%s\n";
+	static const char *fi = "%s\t8\n";
 	static const char *fg = "%s\tg%d=%d\n";
-	static const char *fl = "%s\t%d\n";
+	static const char *fl = "%s\t%x\n";
 	static const char *fgi = "%s\tg%d=%d %d\n";
 	static const char *fgg = "%s\tg%d=%d g%d=%d\n";
 	static const char *fggg = "%s\tg%d=%d g%d=%d g%d=%d\n";
 	static const char *fggi = "%s\tg%d=%d g%d=%d %d\n";
-	static const char *fggl = "%s\tg%d=%d g%d=%d %d\n";
+	static const char *fggl = "%s\tg%d=%d g%d=%d %x\n";
 	static const char *fff = "%s\tf%d=%f f%d=%f\n";
-	static const char *fffl = "%s\tf%d=%f f%d=%f %d\n";
+	static const char *fffl = "%s\tf%d=%f f%d=%f %x\n";
 	static const char *ffff = "%s\tf%d=%f f%d=%f f%d=%f\n";
 	static const char *ffgi = "%s\tf%d=%f g%d=%f %d\n";
 	uint32_t opcode,funct;
@@ -30,17 +31,17 @@ void print_ir(uint32_t ir, FILE *fp) {
 			f_name = SFunctMap[funct];
 			break;
 		case 1 :
-			f_type = FFunctTyMap[funct];
-			f_name = FFunctMap[funct];
-			break;
-		case 17:
 			f_type = IOFunctTyMap[funct];
 			f_name = IOFunctMap[funct];
+			break;
+		case 17:
+			f_type = FFunctTyMap[funct];
+			f_name = FFunctMap[funct];
 			break;
 		default: break;
 	}
 
-	if (strcmp(type, "special") == 0) {
+	if (opcode == 0) {
 		if (strcmp(f_type, "fggg") == 0) {
 			// add,sub,mul,div,and,or, sll, srl
 			fprintf(fp, fggg, f_name, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
@@ -60,14 +61,14 @@ void print_ir(uint32_t ir, FILE *fp) {
 			fprintf(fp, "Undefined SPECIAL ir\n");
 		}
 	} else 
-	if (strcmp(type, "io") == 0) {
+	if (opcode == 1) {
 		if (strcmp(f_type, "fg") == 0) {
 			fprintf(fp, fg, f_name, get_rdi(ir), _GRD);
 		} else{
 			fprintf(fp, "Undefined I/O ir\n");
 		}
 	} else
-	if (strcmp(type, "fpi") == 0) {
+	if (opcode == 17) {
 		if (strcmp(f_type, "fff") == 0) {
 			// fmov fneg fsqrt
 			fprintf(fp, fff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
@@ -82,6 +83,9 @@ void print_ir(uint32_t ir, FILE *fp) {
 	if (strcmp(type, "f") == 0) {
 		// nop, halt, return 3
 		fprintf(fp, f, name);
+	} else 
+	if (strcmp(type, "fi") == 0) {
+		fprintf(fp, fi, name);
 	} else 
 	if (strcmp(type, "fg") == 0) {
 		// input, output, b, callR 4

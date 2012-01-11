@@ -15,12 +15,10 @@ void segv_handler(int);
 int main(int argc, char **argv, char **envp) {
 	int i, ret;
 
-/*
 	if ((ret = print_init(argc,argv)) < 0) {
 		puts("check print_state.c");
 		return ret;
 	}
-*/
 
 	sa.sa_handler = segv_handler;
 	if (sigaction(SIGSEGV, &sa, NULL) != 0) {

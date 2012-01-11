@@ -1,6 +1,6 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <stdint.h>
 #include <map>
 #include <string>
@@ -12,8 +12,8 @@
 #include <fcntl.h>
 #include "asm.h"
 
-
 using namespace std;
+
 void hex2bin(uint32_t,FILE*);
 int encode_op(char *, char *);
 int mnemonic(char *, char [][LINE_MAX]);
@@ -185,9 +185,13 @@ int	assemble(char *sfile) {
 		}
 
 		ofstream ofs(ASM_LOG);
-		ofs << "DEPTH = 256;\nWIDTH = 32bit;\n"
-			<< "ADDRESS_RADIX = HEX;\nDATA_RADIX = HEX;\n"
-			<< "CONTENT\tBEGIN\n\n";
+		ofs << "################################\n"
+			<< "!!! " << dfile << endl
+			<< "!!! BYTE ADDRESSING\n"
+			<< "!!! ADDRESS_RADIX = HEX\n"
+			<< "!!! DATA_RADIX = HEX\n"
+			<< "################################\n"
+			<< endl;
 		
 		map<string,uint32_t>::iterator itr;
 		for(i = 0; i < output_line_cnt; i++) {
@@ -206,11 +210,10 @@ int	assemble(char *sfile) {
 
 			ofs.width(4);
 			ofs.fill(' ');
-			ofs << hex << i*4 <<": ";
+			ofs << hex << i*4 << ": ";
 			ofs.width(8);
 			ofs.fill('0');
 			ofs << hex << output_data[i] << endl;
-
 		}
 		ofs.close();
 
