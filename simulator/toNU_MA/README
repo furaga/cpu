@@ -1,4 +1,33 @@
+gdb使わないから希望の機能あったら随時追加する。
+debug_sample.txtみたいなの用意したほうが楽かも。
+Makefileで変数を設定して実行例のようなコマンドで実行。
 
+[debug時のコマンド]
+Commands:
+	[Enter]のみ : next step
+	s : next step
+	[Ctrl-D] : exit
+	cnt X : X(int) cntをXまでスキップ
+	out dfile : 出力先をdfileに変更
+	help : コマンドを確認
+	lr : リンクレジスタ
+	ir : 命令の確認
+	gX : X番目の汎用レジスタ
+	fX : X番目のFRレジスタ
+	reg : 全汎用レジスタ
+	freg : 全FRレジスタ
+	stack X : X(int) スタックの底からX個までの数を列挙
+	heap X : X(int) ヒープの上からX個までの数を列挙
+
+実行例
+make sim
+
+make debug
+
+make debug < debug_sample.txt
+
+
+##################################################
 fib.log : ./simcho fib の命令実行列の一部。
 		  $ less fib.log
 ##################################################

@@ -9,6 +9,7 @@ extern uint32_t freg[REG_NUM];
 extern uint32_t rom[ROM_NUM];
 extern uint32_t ram[RAM_NUM];
 extern uint32_t pc;
+extern uint32_t lr, tmplr;
 extern long long unsigned cnt;
 #define PRT_ELE_GET(name) \
 	uint32_t name(uint32_t);
@@ -41,6 +42,9 @@ int __print_state(int,int,char**);
 void print_ir(uint32_t,FILE*);
 #define print_state() __print_state(0,0,NULL)
 #define print_init(argc,argv) __print_state(1,argc,argv)
+
+void debug(void);
+void debug_usage(void);
 
 #define IF0_BREAK_S	if (get_rsi(ir) == 0) { break; }
 #define IF0_BREAK_T	if (get_rti(ir) == 0) { break; }

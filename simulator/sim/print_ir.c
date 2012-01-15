@@ -20,6 +20,7 @@ void print_ir(uint32_t ir, FILE *fp) {
 	uint32_t opcode,funct;
 	const char *name,*type,*f_type,*f_name;
 	
+	fprintf(fp, "%6llu.[%4x] ", cnt, pc);
 
 	opcode = get_opcode(ir);
 	funct = get_funct(ir);

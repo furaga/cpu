@@ -15,6 +15,7 @@ uint32_t freg[REG_NUM];
 uint32_t rom[ROM_NUM];
 uint32_t ram[RAM_NUM];
 uint32_t pc;
+uint32_t lr, tmplr;
 long long unsigned cnt;
 
 // define fetch functions ////////////////////
@@ -34,7 +35,6 @@ int32_t get_imm(uint32_t ir) {
 // rom の命令実行列(バイナリ)に従いシミュレートする
 int simulate(char *sfile) {
 	uint32_t ir, heap_size;
-	uint32_t lr, tmplr;
 	int fd,ret,i;
 	uint8_t opcode, funct;
 	union {
@@ -62,21 +62,29 @@ int simulate(char *sfile) {
 		heap_size -= 4;
 	}
 
+#ifdef DEBUG_FLAG
+	fprintf(stderr, "debugging %s\n", sfile);
+	debug_usage();
+	fprintf(stderr, "\n[Debug start]\n");
+#else
 	fprintf(stderr, "simulate %s\n", sfile);
 	fflush(stderr);
+#endif
 
-#ifdef STATS_M
+#ifdef STATS_FLAG
 	statistics(NULL,1);
 #endif
 	do{
 		
 		ir = rom[pc/4];
-#ifdef STATS_M
+#ifdef STATS_FLAG
 		statistics(stderr,0);
 #endif
-#ifdef PRINT_M
-		print_state();
+
+#ifdef DEBUG_FLAG
+		debug();
 #endif
+
 		opcode = get_opcode(ir);
 		funct = get_funct(ir);
 		cnt++;

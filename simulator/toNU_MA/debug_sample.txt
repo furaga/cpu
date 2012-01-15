@@ -1,0 +1,17 @@
+out fib.log
+cnt 400
+s
+s
+s
+s
+reg
+s
+s
+lr
+ir
+stack 10
+heap 10
+s
+g1
+s
+

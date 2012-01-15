@@ -1,8 +1,9 @@
-DEPTH = 256;
-WIDTH = 32bit;
-ADDRESS_RADIX = HEX;
-DATA_RADIX = HEX;
-CONTENT	BEGIN
+################################
+!!! as/fib
+!!! BYTE ADDRESSING
+!!! ADDRESS_RADIX = HEX
+!!! DATA_RADIX = HEX
+################################
 
    0: 00000018
 FLOAT_ZERO:

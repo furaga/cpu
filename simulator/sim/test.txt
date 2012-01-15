@@ -1,0 +1,15 @@
+out log
+s
+s
+s
+s
+s
+s
+s
+s
+s
+reg
+lr
+s
+s
+

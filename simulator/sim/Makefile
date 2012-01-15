@@ -12,11 +12,12 @@ SIM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%)
 FPU_DIR = ../fpu
 FPU =  $(FPU_DIR)/finv.o $(FPU_DIR)/fsqrt.o
 
-simcho: simcho.o simulate.o print_ir.o print_state.o statistics.o imap.o  $(FPU)
-simcho.o: $(SIMH) simulate.o imap.o print_ir.o
+simcho: simcho.o simulate.o print_ir.o print_state.o statistics.o imap.o  $(FPU) debug.o
+simcho.o: $(SIMH) simulate.o imap.o print_ir.o debug.o
 simulate.o: $(SIMH) print_state.o statistics.o $(FPU) ../Makefile.in
+debug.o: $(SIMH) print_ir.o
 print_state.o: $(SIMH) print_ir.o
-print_ir.o: $(SIMH)
+print_ir.o: $(SIMH) imap.o
 statistics.o: $(SIMH) imap.o
 imap.o: $(SIMH)
 

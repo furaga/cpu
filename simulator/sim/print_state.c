@@ -74,7 +74,6 @@ int __print_state(int init_flag, int argc, char **argv) {
 			}
 
 			
-			fprintf(fp, "%6llu.[%4x] ", cnt,pc);
 			print_ir(rom[pc/4],fp);
 
 			if (flag[REG]) {
