@@ -10,6 +10,9 @@ TARGET = as/fib
 sim: $(TARGET)
 	./simcho $<
 
+lst: $(TARGET)
+	./sim_with_list $<
+
 $(TARGET): $(TARGET).s
 	./asmcho $<
 

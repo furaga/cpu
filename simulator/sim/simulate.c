@@ -37,6 +37,8 @@ int simulate(char *sfile) {
 	uint32_t ir, heap_size;
 	int fd,ret,i;
 	uint8_t opcode, funct;
+	FILE *lst_fp;
+	char lst_name[1024];
 	union {
 		uint32_t i;
 		float f;
@@ -62,6 +64,14 @@ int simulate(char *sfile) {
 		heap_size -= 4;
 	}
 
+#ifdef LST_FLAG
+	#undef DEBUG_FLAG
+	sprintf(lst_name, "%s.lst", sfile);
+	fprintf(stderr, "output %s\n", lst_name);
+	lst_fp = fopen(lst_name, "w");
+	fprintf(lst_fp, "#### %s\n\n", lst_name);
+#endif
+
 #ifdef DEBUG_FLAG
 	fprintf(stderr, "debugging %s\n", sfile);
 	debug_usage();
@@ -77,7 +87,10 @@ int simulate(char *sfile) {
 	do{
 		
 		ir = rom[pc/4];
-		print_ir(ir, stderr);
+#ifdef LST_FLAG
+		print_ir(ir, lst_fp);
+#endif
+
 #ifdef STATS_FLAG
 		statistics(stderr,0);
 #endif
@@ -370,6 +383,7 @@ int simulate(char *sfile) {
 	} while(!((funct == HALT_F) && (opcode == SPECIAL)));
 
 
+	fclose(lst_fp);
 	fprintf(stderr, "\nCPU Simulator Results\n");
 	fprintf(stderr, "cnt:%llu\n", cnt);
 	fflush(stderr);

@@ -19,6 +19,7 @@ TEST_TARGET = fib
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
 #DEBUG_MACRO = -D DEBUG_FLAG
+DEBUG_MACRO = -D LST_FLAG
 #DEBUG_MACRO = -D STATS_FLAG
 #ASM_FLAGS = -b
 #XSIM_FLAGS = -cnt
