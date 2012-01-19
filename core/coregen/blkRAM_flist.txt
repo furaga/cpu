@@ -1,0 +1,16 @@
+# Output products list for <blkRAM>
+_xmsgs/pn_parser.xmsgs
+blkRAM.asy
+blkRAM.gise
+blkRAM.ngc
+blkRAM.sym
+blkRAM.v
+blkRAM.veo
+blkRAM.vhd
+blkRAM.vho
+blkRAM.xco
+blkRAM.xise
+blkRAM_flist.txt
+blkRAM_xmdf.tcl
+blk_mem_gen_ds512.pdf
+blk_mem_gen_readme.txt
