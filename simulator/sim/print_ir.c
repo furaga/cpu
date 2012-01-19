@@ -64,7 +64,11 @@ void print_ir(uint32_t ir, FILE *fp) {
 	} else 
 	if (opcode == 1) {
 		if (strcmp(f_type, "fg") == 0) {
-			fprintf(fp, fg, f_name, get_rdi(ir), _GRD);
+			if (strcmp(name, "input") == 0) {
+				fprintf(fp, fg, f_name, get_rdi(ir), _GRD);
+			} else {
+				fprintf(fp, fg, f_name, get_rsi(ir), _GRS);
+			}
 		} else{
 			fprintf(fp, "Undefined I/O ir\n");
 		}
@@ -88,13 +92,9 @@ void print_ir(uint32_t ir, FILE *fp) {
 	if (strcmp(type, "fi") == 0) {
 		fprintf(fp, fi, name);
 	} else 
+
 	if (strcmp(type, "fg") == 0) {
-		// input, output, b, callR 4
-		if (strcmp(name, "input") == 0) {
-			fprintf(fp, fg, name, get_rdi(ir), _GRD);
-		} else {
-			fprintf(fp, fg, name, get_rsi(ir), _GRS);
-		}
+		fprintf(fp, fg, name, get_rsi(ir), _GRS);
 	} else 
 	if (strcmp(type, "fl") == 0) {
 		// jump, call 2

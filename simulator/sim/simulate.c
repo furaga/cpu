@@ -77,6 +77,7 @@ int simulate(char *sfile) {
 	do{
 		
 		ir = rom[pc/4];
+		print_ir(ir, stderr);
 #ifdef STATS_FLAG
 		statistics(stderr,0);
 #endif
@@ -350,8 +351,10 @@ int simulate(char *sfile) {
 			case IO:
 				switch(funct) {
 					case OUTPUT_F:
-						a.i = _GRS;
-						putchar(_GRS);
+						if (_GRS >> 8) {
+							fprintf(stderr,"errrrrrrrrrrr\n");
+						}
+						putchar(_GRS&0xff);
 						fflush(stdout);
 						break;
 					case INPUT_F:

@@ -43,11 +43,9 @@ void debug(void) {
 		return;
 	}
 
-	if (cnt > 0) {
-		ir = rom[(pc - 4)/4];
-		fprintf(fp, "Done => ");
-		print_ir(ir, fp);
-	}
+	ir = rom[pc/4];
+	fprintf(fp, "Next => ");
+	print_ir(ir, fp);
 
 	while (1) {
 		if (fp == stderr) {

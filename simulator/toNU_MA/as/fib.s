@@ -245,7 +245,7 @@ min_caml_start:
 	subi	%g2, %g31, 24
 	call	min_caml_create_array
 	ldi	%g2, %g31, 28
-	addi	%g4, %g0, 30
+	addi	%g4, %g0, 6
 	call	fib.342
 	mov	%g8, %g3
 	call	print_int.340
