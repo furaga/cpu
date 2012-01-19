@@ -37,12 +37,14 @@ int simulate(char *sfile) {
 	uint32_t ir, heap_size;
 	int fd,ret,i;
 	uint8_t opcode, funct;
-	FILE *lst_fp;
-	char lst_name[1024];
 	union {
 		uint32_t i;
 		float f;
 	} a, b, ans;
+#ifdef LST_FLAG
+	FILE *lst_fp;
+	char lst_name[1024];
+#endif
 
 	fd = open(sfile, O_RDONLY);
 	if (fd < 0) {
@@ -383,7 +385,9 @@ int simulate(char *sfile) {
 	} while(!((funct == HALT_F) && (opcode == SPECIAL)));
 
 
+#ifdef LST_FLAG
 	fclose(lst_fp);
+#endif
 	fprintf(stderr, "\nCPU Simulator Results\n");
 	fprintf(stderr, "cnt:%llu\n", cnt);
 	fflush(stderr);

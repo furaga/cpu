@@ -25,7 +25,7 @@ int statistics(FILE* fp,int init) {
 	
 	switch (opcode) {
 		case FPI:
-			count[076][0]++;
+			//count[076][0]++;
 			count[opcode][funct]++;
 			switch(funct) {
 				case FMUL_F:
@@ -68,7 +68,7 @@ int statistics(FILE* fp,int init) {
 			}
 			break;
 		case SPECIAL:
-			count[074][0]++;
+			//count[074][0]++;
 			count[opcode][funct]++;
 			switch(funct) {
 				case ADD_F: 
@@ -118,18 +118,18 @@ int statistics(FILE* fp,int init) {
 					reg_cnt[0][get_rdi(ir)]++;
 					break;
 				case HALT_F:
-		for (i = 0; i < REG_NUM; i++) {
-			fprintf(fp,"gr%02d: %10d\n", i,reg_cnt[0][i]);
-		}
-		for (i = 0; i < REG_NUM; i++) {
-			fprintf(fp,"fr%02d: %10d\n", i,reg_cnt[1][i]);
-		}
+		//for (i = 0; i < REG_NUM; i++) {
+			//fprintf(fp,"gr%02d: %10d\n", i,reg_cnt[0][i]);
+		//}
+		//for (i = 0; i < REG_NUM; i++) {
+			//fprintf(fp,"fr%02d: %10d\n", i,reg_cnt[1][i]);
+		//}
 					break;
 				default: break;		
 			}
 			break;
 		case IO:
-			count[066][0]++;
+			//count[066][0]++;
 			count[opcode][funct]++;
 			switch(funct) {
 				case OUTPUT_F:
@@ -142,7 +142,7 @@ int statistics(FILE* fp,int init) {
 				}
 			break;
 		default	:	
-			count[077][0]++;
+			//count[077][0]++;
 			count[opcode][0]++;
 			switch(opcode){
 				case LDI:

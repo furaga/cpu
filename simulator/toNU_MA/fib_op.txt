@@ -1,0 +1,29 @@
+simulate ..//../compiler/test/fib
+
+  btmplr: 0.040568         40
+     mul: 0.035497         35
+     add: 0.049696         49
+     sub: 0.038540         38
+   movlr: 0.040568         40
+    halt: 0.001014          1
+  output: 0.001014          1
+     jmp: 0.085193         84
+    mvlo: 0.008114          8
+    addi: 0.201826        199
+     jeq: 0.012170         12
+    mvhi: 0.008114          8
+    subi: 0.105477        104
+     jne: 0.029412         29
+    muli: 0.003043          3
+     jlt: 0.099391         98
+     ldi: 0.038540         38
+    slli: 0.006085          6
+    srli: 0.030426         30
+     sti: 0.044625         44
+    ldlr: 0.040568         40
+    stlr: 0.040568         40
+    link: 0.040568         40
+
+
+CPU Simulator Results
+cnt:987
