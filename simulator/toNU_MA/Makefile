@@ -1,7 +1,7 @@
 
 
 TARGET = test
-#ASM_FLAG = 
+ASM_FLAG = -b
 # -h or -b
 
 
@@ -14,10 +14,10 @@ lst: $(TARGET)
 	./sim_with_list $<
 
 $(TARGET): $(TARGET).s
-	./asmcho $<
+	./asmcho $(ASM_FLAG) $<
 
 asm: $(TARGET).s
-	./asmcho $<
+	./asmcho $(ASM_FLAG) $<
 
 debug: $(TARGET)
 	./debug_sim $<
