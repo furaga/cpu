@@ -168,9 +168,8 @@ int	assemble(char *sfile) {
 			if (output_type == 1) {
 
 				for (i = 0; i < output_line_cnt; i++) {
-					fprintf(fp, "\"");
 					hex2bin(output_data[i],fp);
-					fprintf(fp, "\",\n");
+					fprintf(fp, ",\n");
 				}
 
 			} else if (output_type == 2) {

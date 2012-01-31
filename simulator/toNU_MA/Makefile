@@ -1,7 +1,7 @@
 
 
 TARGET = test
-ASM_FLAG = -b
+#ASM_FLAG = 
 # -h or -b
 
 
