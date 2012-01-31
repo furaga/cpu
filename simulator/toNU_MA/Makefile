@@ -1,6 +1,6 @@
 
 
-TARGET = as/fib
+TARGET = test
 #ASM_FLAG = 
 # -h or -b
 
