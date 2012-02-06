@@ -12,6 +12,25 @@ $ make
 $ make wave
 
 
+top.vhd : cpuにクロックとIOを入れる。
+cpu15e.vhd : コアコントローラ？なぜ１５？
+			 statemachineでなく、異なる位相のclkを利用している。
+clk_gen.vhd : 4つのclkを生成。
+
+## fetch phase
+	fetch.vhd : PROM_OUT <- ROM[PC]
+## decode phase
+	decode.vhd : PROM_OUT からOPCODEとOP_DATAを分離。
+	reg_dc.vhd : 引数となるレジスタA, B、又、そのインデックスを返す。
+	ram_dc.vhd : 与えられたアドレスのRAMの中身を返す。
+## exec phase 
+	exec.vhd : 命令実行。
+## write-back phase
+	reg_wb.vhd : 書き込み。
+	ram_wb.vhd : 書き込み。
+
+
+
 ####################################
 2012年  2月  5日 日曜日 17:11:27 JST
 
