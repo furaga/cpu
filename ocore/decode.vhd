@@ -5,20 +5,20 @@ use IEEE.std_logic_unsigned.all;
 entity decode is
 port (
 CLK_DC	:	in	std_logic;
-PROM_OUT	:	in	std_logic_vector (14 downto 0);
-OP_CODE	:	out	std_logic_vector (3 downto 0);
-OP_DATA	:	out	std_logic_vector (7 downto 0)
+PROM_OUT	:	in	std_logic_vector (31 downto 0);
+OP_CODE	:	out	std_logic_vector (5 downto 0);
+OP_DATA	:	out	std_logic_vector (25 downto 0)
 );
 end decode;
 architecture RTL of decode is
 
 
 begin
-process(CLK_DC)
-begin
-if (CLK_DC'event and CLK_DC = '1') then
-   	OP_CODE <= PROM_OUT(14 downto 11);
-OP_DATA <= PROM_OUT(7 downto 0);
-end if;
-end process;
+	process(CLK_DC)
+	begin
+		if rising_edge(CLK_DC) then
+			OP_CODE <= PROM_OUT(31 downto 26);
+			OP_DATA <= PROM_OUT(25 downto 0);
+		end if;
+	end process;
 end RTL;

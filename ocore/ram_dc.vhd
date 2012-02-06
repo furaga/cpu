@@ -5,17 +5,17 @@ use IEEE.std_logic_unsigned.all;
 entity ram_dc is
 port (
 CLK_DC	:	in	std_logic;
-RAM_0	:	in	std_logic_vector (15 downto 0);
-RAM_1	:	in	std_logic_vector (15 downto 0);
-RAM_2	:	in	std_logic_vector (15 downto 0);
-RAM_3	:	in	std_logic_vector (15 downto 0);
-RAM_4	:	in	std_logic_vector (15 downto 0);
-RAM_5	:	in	std_logic_vector (15 downto 0);
-RAM_6	:	in	std_logic_vector (15 downto 0);
-RAM_7	:	in	std_logic_vector (15 downto 0);
-IO65_IN	:	in	std_logic_vector (15 downto 0);
+RAM_0	:	in	std_logic_vector (31 downto 0);
+RAM_1	:	in	std_logic_vector (31 downto 0);
+RAM_2	:	in	std_logic_vector (31 downto 0);
+RAM_3	:	in	std_logic_vector (31 downto 0);
+RAM_4	:	in	std_logic_vector (31 downto 0);
+RAM_5	:	in	std_logic_vector (31 downto 0);
+RAM_6	:	in	std_logic_vector (31 downto 0);
+RAM_7	:	in	std_logic_vector (31 downto 0);
+IO65_IN	:	in	std_logic_vector (31 downto 0);
 RAM_ADDR	:	in	std_logic_vector (7 downto 0);
-RAM_OUT	:	out	std_logic_vector (15 downto 0)
+RAM_OUT	:	out	std_logic_vector (31 downto 0)
 );
 end ram_dc;
 architecture RTL of ram_dc is

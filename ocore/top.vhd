@@ -18,16 +18,16 @@ architecture cpu of top is
 
 signal clk,iclk: std_logic;
 
-	component cpu15e is
+	component cpu is
 		port
 		(			
 		CLK	:	in	std_logic;
 		RESET	:	in	std_logic;
-		IO65_IN	:	in	std_logic_vector (15 downto 0);
-		IO64_OUT	:	out	std_logic_vector (15 downto 0)
+		IO65_IN	:	in	std_logic_vector (31 downto 0);
+		IO64_OUT	:	out	std_logic_vector (31 downto 0)
 		);				
 	end component;
-	signal O : std_logic_vector(15 downto 0);
+	signal O : std_logic_vector(31 downto 0);
 	signal reset : std_logic := '1';
 
 begin
@@ -41,9 +41,9 @@ begin
 		reset <= '0';
 	end process;
 
-	cpu : cpu15e port map (
-				--CLK => clk,
-				CLK => MCLK1,
+	clk <= MCLK1;
+	cpunit : cpu port map (
+				CLK => clk,
 				RESET => reset,
 				IO65_IN  => (others=>'0'),
 				IO64_OUT  => O);
