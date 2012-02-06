@@ -1,0 +1,18 @@
+
+####################################
+2012年  2月  6日 月曜日 14:38:23 JST
+下のアドレスに基づいてつくったコア。
+http://laputa.cs.shinshu-u.ac.jp/~yizawa/design_cpu/index.html
+
+ghdlシミュレータで正しく動作したとこまででpush。
+実機で動くかは試していない。
+
+($ sudo apt-get install gtkwave ghdl)
+$ make
+$ make wave
+
+
+####################################
+2012年  2月  5日 日曜日 17:11:27 JST
+
+ん。
