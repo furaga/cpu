@@ -16,7 +16,9 @@ architecture BEHAVIOR of fetch is
 	subtype WORD is std_logic_vector (31 downto 0);
 	type MEMORY is array (0 to 14) of WORD;
 	constant MEM : MEMORY := (
-
+x"00000008",
+x"12345678",
+x"87654321",
 x"1C600000",
 x"1C800001",
 x"1CA00000",
@@ -24,12 +26,9 @@ x"1CC0000A",
 x"00A42820",
 x"00651820",
 x"28A60008",
-x"08000010",
+x"0800001C",
 x"04600001",
 x"0000003F",
-x"00000000",
-x"00000000",
-x"00000000",
 x"00000000",
 x"00000000"
 

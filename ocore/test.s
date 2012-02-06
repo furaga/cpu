@@ -1,6 +1,8 @@
-.init_heap_size 32
+.init_heap_size 64
 D:
-	.long 0x00000000
+	.long 0x12345678
+D2:
+	.long 0x87654321
 	
 	mvlo %g3, 0
 	mvlo %g4, 1
@@ -12,6 +14,5 @@ Loop:
 	jeq %g5, %g6, L
 	jmp Loop
 L:
-	subi %g3, %g3, 7
 	output %g3
 	halt

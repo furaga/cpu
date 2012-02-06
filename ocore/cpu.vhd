@@ -35,22 +35,45 @@ port
 (				
 	CLK_DC	:	in	std_logic;
 	PROM_OUT	:	in	std_logic_vector (31 downto 0);
-	OP_CODE	:	out	std_logic_vector (5 downto 0);
-	OP_DATA	:	out	std_logic_vector (25 downto 0)
+	IR	:	out	std_logic_vector (31 downto 0)
 );				
 end component;			
 component reg_dc			
 port
 (				
 	CLK_DC	:	in	std_logic;
-	REG_0	:	in	std_logic_vector (31 downto 0);
-	REG_1	:	in	std_logic_vector (31 downto 0);
-	REG_2	:	in	std_logic_vector (31 downto 0);
-	REG_3	:	in	std_logic_vector (31 downto 0);
-	REG_4	:	in	std_logic_vector (31 downto 0);
-	REG_5	:	in	std_logic_vector (31 downto 0);
-	REG_6	:	in	std_logic_vector (31 downto 0);
-	REG_7	:	in	std_logic_vector (31 downto 0);
+	REG_00	:	in	std_logic_vector (31 downto 0);
+	REG_01	:	in	std_logic_vector (31 downto 0);
+	REG_02	:	in	std_logic_vector (31 downto 0);
+	REG_03	:	in	std_logic_vector (31 downto 0);
+	REG_04	:	in	std_logic_vector (31 downto 0);
+	REG_05	:	in	std_logic_vector (31 downto 0);
+	REG_06	:	in	std_logic_vector (31 downto 0);
+	REG_07	:	in	std_logic_vector (31 downto 0);
+	REG_08	:	in	std_logic_vector (31 downto 0);
+	REG_09	:	in	std_logic_vector (31 downto 0);
+	REG_10	:	in	std_logic_vector (31 downto 0);
+	REG_11	:	in	std_logic_vector (31 downto 0);
+	REG_12	:	in	std_logic_vector (31 downto 0);
+	REG_13	:	in	std_logic_vector (31 downto 0);
+	REG_14	:	in	std_logic_vector (31 downto 0);
+	REG_15	:	in	std_logic_vector (31 downto 0);
+	REG_16	:	in	std_logic_vector (31 downto 0);
+	REG_17	:	in	std_logic_vector (31 downto 0);
+	REG_18	:	in	std_logic_vector (31 downto 0);
+	REG_19	:	in	std_logic_vector (31 downto 0);
+	REG_20	:	in	std_logic_vector (31 downto 0);
+	REG_21	:	in	std_logic_vector (31 downto 0);
+	REG_22	:	in	std_logic_vector (31 downto 0);
+	REG_23	:	in	std_logic_vector (31 downto 0);
+	REG_24	:	in	std_logic_vector (31 downto 0);
+	REG_25	:	in	std_logic_vector (31 downto 0);
+	REG_26	:	in	std_logic_vector (31 downto 0);
+	REG_27	:	in	std_logic_vector (31 downto 0);
+	REG_28	:	in	std_logic_vector (31 downto 0);
+	REG_29	:	in	std_logic_vector (31 downto 0);
+	REG_30	:	in	std_logic_vector (31 downto 0);
+	REG_31	:	in	std_logic_vector (31 downto 0);
 	N_REG_IN	:	in	std_logic_vector (4 downto 0);
 	N_REG_OUT	:	out	std_logic_vector (4 downto 0);
 	REG_OUT	:	out	std_logic_vector (31 downto 0)
@@ -82,13 +105,14 @@ port
 (
 CLK_EX	:	in	std_logic;						-- clk
 RESET	:	in	std_logic;						-- reset
-OP_CODE	:	in	std_logic_vector (5 downto 0);	-- opcode
+IR		:   in	std_logic_vector (31 downto 0); -- instruction register
 PC_IN	:	in	std_logic_vector (31 downto 0);	-- current pc
 REG_S	:	in	std_logic_vector (31 downto 0);	-- value from rs(arg1)
 REG_T	:	in	std_logic_vector (31 downto 0);	-- value from rt(arg2)
 REG_D	:	in	std_logic_vector (31 downto 0);	-- value from rt(arg3)
-OP_DATA	:	in	std_logic_vector (25 downto 0);	-- _funct, _imm, _target(prom's lower bits)
 RAM_OUT	:	in	std_logic_vector (31 downto 0);	-- value from RAM
+LINK_IN	:	in	std_logic_vector (31 downto 0);
+LINK_OUT	:	out	std_logic_vector (31 downto 0);
 PC_OUT	:	out	std_logic_vector (31 downto 0);	-- next pc
 N_REG	:	out std_logic_vector (4 downto 0);
 REG_IN	:	out	std_logic_vector (31 downto 0);	-- value writing to reg
@@ -108,14 +132,38 @@ RESET	:	in	std_logic;
 N_REG	:	in	std_logic_vector (4 downto 0);
 REG_IN	:	in	std_logic_vector (31 downto 0);
 REG_WEN	:	in	std_logic;
-REG_0WB	:	out	std_logic_vector (31 downto 0);
-REG_1WB	:	out	std_logic_vector (31 downto 0);
-REG_2WB	:	out	std_logic_vector (31 downto 0);
-REG_3WB	:	out	std_logic_vector (31 downto 0);
-REG_4WB	:	out	std_logic_vector (31 downto 0);
-REG_5WB	:	out	std_logic_vector (31 downto 0);
-REG_6WB	:	out	std_logic_vector (31 downto 0);
-REG_7WB	:	out	std_logic_vector (31 downto 0)
+REG_00WB	:	out	std_logic_vector (31 downto 0);
+REG_01WB	:	out	std_logic_vector (31 downto 0);
+REG_02WB	:	out	std_logic_vector (31 downto 0);
+REG_03WB	:	out	std_logic_vector (31 downto 0);
+REG_04WB	:	out	std_logic_vector (31 downto 0);
+REG_05WB	:	out	std_logic_vector (31 downto 0);
+REG_06WB	:	out	std_logic_vector (31 downto 0);
+REG_07WB	:	out	std_logic_vector (31 downto 0);
+REG_08WB	:	out	std_logic_vector (31 downto 0);
+REG_09WB	:	out	std_logic_vector (31 downto 0);
+REG_10WB	:	out	std_logic_vector (31 downto 0);
+REG_11WB	:	out	std_logic_vector (31 downto 0);
+REG_12WB	:	out	std_logic_vector (31 downto 0);
+REG_13WB	:	out	std_logic_vector (31 downto 0);
+REG_14WB	:	out	std_logic_vector (31 downto 0);
+REG_15WB	:	out	std_logic_vector (31 downto 0);
+REG_16WB	:	out	std_logic_vector (31 downto 0);
+REG_17WB	:	out	std_logic_vector (31 downto 0);
+REG_18WB	:	out	std_logic_vector (31 downto 0);
+REG_19WB	:	out	std_logic_vector (31 downto 0);
+REG_20WB	:	out	std_logic_vector (31 downto 0);
+REG_21WB	:	out	std_logic_vector (31 downto 0);
+REG_22WB	:	out	std_logic_vector (31 downto 0);
+REG_23WB	:	out	std_logic_vector (31 downto 0);
+REG_24WB	:	out	std_logic_vector (31 downto 0);
+REG_25WB	:	out	std_logic_vector (31 downto 0);
+REG_26WB	:	out	std_logic_vector (31 downto 0);
+REG_27WB	:	out	std_logic_vector (31 downto 0);
+REG_28WB	:	out	std_logic_vector (31 downto 0);
+REG_29WB	:	out	std_logic_vector (31 downto 0);
+REG_30WB	:	out	std_logic_vector (31 downto 0);
+REG_31WB	:	out	std_logic_vector (31 downto 0)
 );				
 end component;
 
@@ -138,45 +186,71 @@ RAM_7	:	out	std_logic_vector (31 downto 0);
 IO64_OUT	:	out	std_logic_vector (31 downto 0)
 );				
 end component;				
-signal	CLK_FT	:	std_logic;
-signal	CLK_DC	:	std_logic;
-signal	CLK_EX	:	std_logic;
-signal	CLK_WB	:	std_logic;
-signal	P_COUNT	:	std_logic_vector (31 downto 0);
-signal	PROM_OUT	:	std_logic_vector (31 downto 0);
-signal	OP_CODE	:	std_logic_vector (5 downto 0);
-signal	OP_DATA	:	std_logic_vector (25 downto 0);
 
-signal	N_REG	:	std_logic_vector (4 downto 0);
-signal	N_REG_S	:	std_logic_vector (4 downto 0);
-signal	N_REG_T	:	std_logic_vector (4 downto 0);
-signal	N_REG_D	:	std_logic_vector (4 downto 0);
-signal	REG_IN	:	std_logic_vector (31 downto 0);
-signal	REG_S	:	std_logic_vector (31 downto 0);
-signal	REG_T	:	std_logic_vector (31 downto 0);
-signal	REG_D	:	std_logic_vector (31 downto 0);
-signal	REG_WEN	:	std_logic;
-signal	REG_0	:	std_logic_vector (31 downto 0);
-signal	REG_1	:	std_logic_vector (31 downto 0);
-signal	REG_2	:	std_logic_vector (31 downto 0);
-signal	REG_3	:	std_logic_vector (31 downto 0);
-signal	REG_4	:	std_logic_vector (31 downto 0);
-signal	REG_5	:	std_logic_vector (31 downto 0);
-signal	REG_6	:	std_logic_vector (31 downto 0);
-signal	REG_7	:	std_logic_vector (31 downto 0);
+	signal	CLK_FT	:	std_logic;
+	signal	CLK_DC	:	std_logic;
+	signal	CLK_EX	:	std_logic;
+	signal	CLK_WB	:	std_logic;
+	signal	P_COUNT	:	std_logic_vector (31 downto 0);
+	signal	PROM_OUT	:	std_logic_vector (31 downto 0);
+	signal	IR	:	std_logic_vector (31 downto 0);
 
-signal	N_RAM	:	std_logic_vector (31 downto 0);
-signal	RAM_IN	:	std_logic_vector (31 downto 0);
-signal	RAM_OUT	:	std_logic_vector (31 downto 0);
-signal	RAM_WEN	:	std_logic;
-signal	RAM_0	:	std_logic_vector (31 downto 0);
-signal	RAM_1	:	std_logic_vector (31 downto 0);
-signal	RAM_2	:	std_logic_vector (31 downto 0);
-signal	RAM_3	:	std_logic_vector (31 downto 0);
-signal	RAM_4	:	std_logic_vector (31 downto 0);
-signal	RAM_5	:	std_logic_vector (31 downto 0);
-signal	RAM_6	:	std_logic_vector (31 downto 0);
-signal	RAM_7	:	std_logic_vector (31 downto 0);
+	signal	N_REG	:	std_logic_vector (4 downto 0);
+	signal	N_REG_S	:	std_logic_vector (4 downto 0);
+	signal	N_REG_T	:	std_logic_vector (4 downto 0);
+	signal	N_REG_D	:	std_logic_vector (4 downto 0);
+	signal	REG_IN	:	std_logic_vector (31 downto 0);
+	signal	REG_S	:	std_logic_vector (31 downto 0);
+	signal	REG_T	:	std_logic_vector (31 downto 0);
+	signal	REG_D	:	std_logic_vector (31 downto 0);
+	signal	REG_WEN	:	std_logic;
+	signal	REG_00	:	std_logic_vector (31 downto 0);
+	signal	REG_01	:	std_logic_vector (31 downto 0);
+	signal	REG_02	:	std_logic_vector (31 downto 0);
+	signal	REG_03	:	std_logic_vector (31 downto 0);
+	signal	REG_04	:	std_logic_vector (31 downto 0);
+	signal	REG_05	:	std_logic_vector (31 downto 0);
+	signal	REG_06	:	std_logic_vector (31 downto 0);
+	signal	REG_07	:	std_logic_vector (31 downto 0);
+	signal	REG_08	:	std_logic_vector (31 downto 0);
+	signal	REG_09	:	std_logic_vector (31 downto 0);
+	signal	REG_10	:	std_logic_vector (31 downto 0);
+	signal	REG_11	:	std_logic_vector (31 downto 0);
+	signal	REG_12	:	std_logic_vector (31 downto 0);
+	signal	REG_13	:	std_logic_vector (31 downto 0);
+	signal	REG_14	:	std_logic_vector (31 downto 0);
+	signal	REG_15	:	std_logic_vector (31 downto 0);
+	signal	REG_16	:	std_logic_vector (31 downto 0);
+	signal	REG_17	:	std_logic_vector (31 downto 0);
+	signal	REG_18	:	std_logic_vector (31 downto 0);
+	signal	REG_19	:	std_logic_vector (31 downto 0);
+	signal	REG_20	:	std_logic_vector (31 downto 0);
+	signal	REG_21	:	std_logic_vector (31 downto 0);
+	signal	REG_22	:	std_logic_vector (31 downto 0);
+	signal	REG_23	:	std_logic_vector (31 downto 0);
+	signal	REG_24	:	std_logic_vector (31 downto 0);
+	signal	REG_25	:	std_logic_vector (31 downto 0);
+	signal	REG_26	:	std_logic_vector (31 downto 0);
+	signal	REG_27	:	std_logic_vector (31 downto 0);
+	signal	REG_28	:	std_logic_vector (31 downto 0);
+	signal	REG_29	:	std_logic_vector (31 downto 0);
+	signal	REG_30	:	std_logic_vector (31 downto 0);
+	signal	REG_31	:	std_logic_vector (31 downto 0);
+
+	signal	N_RAM	:	std_logic_vector (31 downto 0);
+	signal	RAM_IN	:	std_logic_vector (31 downto 0);
+	signal	RAM_OUT	:	std_logic_vector (31 downto 0);
+	signal	RAM_WEN	:	std_logic;
+	signal	RAM_0	:	std_logic_vector (31 downto 0);
+	signal	RAM_1	:	std_logic_vector (31 downto 0);
+	signal	RAM_2	:	std_logic_vector (31 downto 0);
+	signal	RAM_3	:	std_logic_vector (31 downto 0);
+	signal	RAM_4	:	std_logic_vector (31 downto 0);
+	signal	RAM_5	:	std_logic_vector (31 downto 0);
+	signal	RAM_6	:	std_logic_vector (31 downto 0);
+	signal	RAM_7	:	std_logic_vector (31 downto 0);
+
+	signal	LinkReg	:	std_logic_vector (31 downto 0);
 
 begin			
 
@@ -187,16 +261,30 @@ begin
 	fetch_u	:	fetch port map(CLK_FT, P_COUNT, PROM_OUT);
 
 -- decode phase
-	dec_u	:	decode port map(CLK_DC, PROM_OUT, OP_CODE, OP_DATA);
+	dec_u	:	decode port map(CLK_DC, PROM_OUT, IR);
 
-	regdec_rs	:	reg_dc port map(CLK_DC, REG_0, REG_1, REG_2, REG_3,
-		 REG_4, REG_5, REG_6, REG_7, PROM_OUT(25 downto 21),
+	regdec_rs	:	reg_dc port map(CLK_DC, 
+		REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
+		REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
+		REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
+		REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31, 
+		PROM_OUT(25 downto 21),
 		 N_REG_S, REG_S);
-	regdec_rt	:	reg_dc port map(CLK_DC, REG_0, REG_1, REG_2, REG_3,
-		 REG_4, REG_5, REG_6, REG_7, PROM_OUT(20 downto 16),
+
+	regdec_rt	:	reg_dc port map(CLK_DC, 
+		REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
+		REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
+		REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
+		REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31, 
+		PROM_OUT(20 downto 16),
 		 N_REG_T, REG_T);
-	regdec_rd	:	reg_dc port map(CLK_DC, REG_0, REG_1, REG_2, REG_3,
-		 REG_4, REG_5, REG_6, REG_7, PROM_OUT(15 downto 11),
+
+	regdec_rd	:	reg_dc port map(CLK_DC, 
+		REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
+		REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
+		REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
+		REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31, 
+		PROM_OUT(15 downto 11),
 		 N_REG_D, REG_D);
 
 	ramdec_u	:	ram_dc port map(CLK_DC, RAM_0, RAM_1, RAM_2, RAM_3,
@@ -205,15 +293,18 @@ begin
 		 PROM_OUT(7 downto 0), RAM_OUT);
 
 -- exec phase
-	exec_u	:	exec port map(CLK_EX, RESET, OP_CODE, P_COUNT,
-		 REG_S, REG_T, REG_D, OP_DATA, RAM_OUT, 
-		 P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_WEN, RAM_WEN);
+	exec_u	:	exec port map(CLK_EX, RESET, IR, P_COUNT,
+		 REG_S, REG_T, REG_D, RAM_OUT, LinkReg,
+		 LinkReg, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_WEN, RAM_WEN);
 
 -- write-back phase
 	regwb_u	:	reg_wb port map(CLK_WB, RESET,
 		 N_REG, REG_IN, REG_WEN,
-		 REG_0, REG_1, REG_2, REG_3,
-		 REG_4, REG_5, REG_6, REG_7);
+		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
+		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
+		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
+		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
+		 );
 	ramwb_u	:	ram_wb port map(CLK_WB, N_RAM, RAM_IN, RAM_WEN,
 		 RAM_0, RAM_1, RAM_2, RAM_3,
 		 RAM_4, RAM_5, RAM_6, RAM_7, IO64_OUT);
