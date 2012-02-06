@@ -14,7 +14,6 @@ $ make wave
 
 top.vhd : cpuにクロックとIOを入れる。
 cpu15e.vhd : コアコントローラ？なぜ１５？
-			 statemachineでなく、異なる位相のclkを利用している。
 clk_gen.vhd : 4つのclkを生成。
 
 ## fetch phase
