@@ -32,12 +32,10 @@ begin
 	process(RAM_WEN, addr_in)
 	begin
 		if (RAM_WEN='0') then
-			if (ADDR(6)='0') then
-				DATA_OUT <= ram_data(addr_in);
-			elsif (ADDR=65) then
+			if (addr_in = 4096) then
 				DATA_OUT <= IO65_IN;
-			else
-				DATA_OUT <= (others=>'0');
+			else 
+				DATA_OUT <= ram_data(addr_in);
 			end if;
 		end if;
 	end process;

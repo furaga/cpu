@@ -27,8 +27,20 @@ signal clk,iclk: std_logic;
 		IO64_OUT	:	out	std_logic_vector (31 downto 0)
 		);				
 	end component;
-	signal O : std_logic_vector(31 downto 0);
+
+	--component u232c is
+	  --generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
+	  --Port ( clk  : in  STD_LOGIC;
+			 --data : in  STD_LOGIC_VECTOR (7 downto 0);
+			 ----go   : in  STD_LOGIC;
+			 --busy : out STD_LOGIC;
+			 --tx   : out STD_LOGIC);
+	--end component;
+
 	signal reset : std_logic := '1';
+	signal send_busy : std_logic;
+	signal send_go : std_logic := '1';
+	signal send_data : std_logic_vector(31 downto 0);
 
 begin
 
@@ -46,5 +58,12 @@ begin
 				CLK => clk,
 				RESET => reset,
 				IO65_IN  => (others=>'0'),
-				IO64_OUT  => O);
+				IO64_OUT  => send_data);
+
+	--send_u : u232c port map (
+				--clk =>clk,
+				--data=>send_data(7 downto 0),
+				--go=>send_go,
+				--busy=>send_busy,
+				--tx=>RS_TX);
 end cpu;
