@@ -1,0 +1,19 @@
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
+
+entity decode is
+<%include file="decode_entity.tmp"/>
+end decode;
+
+architecture RTL of decode is
+
+
+begin
+	process(CLK_DC)
+	begin
+		if rising_edge(CLK_DC) then
+			IR <= PROM_OUT;
+		end if;
+	end process;
+end RTL;
+<%namespace name="oc" file="macro.tmp"/>

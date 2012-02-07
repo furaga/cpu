@@ -1,18 +1,18 @@
 TB = testbench
-OBJS = top.o clk_gen.o cpu.o fetch.o decode.o reg_dc.o ram_dc.o
-OBJS += exec.o reg_wb.o ram_wb.o testbench.o
+OBJS = top.o clk_gen.o cpu.o fetch.o decode.o reg_dc.o 
+OBJS += exec.o reg_wb.o testbench.o ram.o
+TMPL_DIR = ./tmpl
 
 TARGET = $(TB)
-SIM_TARGET = test
 
 IEEE = 'synopsys'
 TIME = 1000ns
 OPTION = -fexplicit
 .SUFFIXES: .vhd .vcd
-.PHONY: asm sim debug
 
+.PHONY: all wave
 all: $(OBJS) $(TB) $(TB).vcd
-wave: $(OBJS) $(TB).vcd
+wave: $(OBJS) $(TB) $(TB).vcd
 	gtkwave $(TB).vcd
 
 
@@ -24,10 +24,9 @@ $(TB):
 	ghdl -a --ieee=$(IEEE) $(OPTION) $<
 
 asm:
-	./asmcho -h $(SIM_TARGET).s
+	make -sC $(TMPL_DIR) asm
 sim:
-	./asmcho $(SIM_TARGET).s
-	./simcho $(SIM_TARGET)
+	make -sC $(TMPL_DIR) sim
 
 clean:
 	rm -f *.o *.vcd *.cf $(TB)

@@ -1,0 +1,4 @@
+## -*- coding: utf-8 -*-
+##<%namespace name="oc">
+<%def name="V32()">std_logic_vector(31 downto 0)</%def>
+##</%namespace>

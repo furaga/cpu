@@ -9,7 +9,9 @@ CLK_WB	:	in	std_logic;
 RESET	:	in	std_logic;
 N_REG	:	in	std_logic_vector (4 downto 0);
 REG_IN	:	in	std_logic_vector (31 downto 0);
+RAM_OUT	:	in	std_logic_vector (31 downto 0);
 REG_WEN	:	in	std_logic;
+FROM_RAM	:	in	std_logic;
 REG_00WB	:	out	std_logic_vector (31 downto 0);
 REG_01WB	:	out	std_logic_vector (31 downto 0);
 REG_02WB	:	out	std_logic_vector (31 downto 0);
@@ -47,8 +49,11 @@ end reg_wb;
 architecture RTL of reg_wb is
 	constant REG1_INIT : std_logic_vector(31 downto 0)
 				:= x"00000111";
+	signal REG_V : std_logic_vector(31 downto 0);
 
 begin
+	REG_V <= RAM_OUT when FROM_RAM='1' else REG_IN;
+	
 	process(CLK_WB, RESET)
 	begin
 	if (RESET='1') then
@@ -88,37 +93,37 @@ begin
 		if(REG_WEN = '1') then
 			case N_REG is
 				when "00000" => REG_00WB <= x"00000000";	-- REG_0
-				when "00001" => REG_01WB <= REG_IN;	-- REG_1
-				when "00010" => REG_02WB <= REG_IN;	-- REG_2
-				when "00011" => REG_03WB <= REG_IN;	-- REG_3
-				when "00100" => REG_04WB <= REG_IN;	-- REG_4
-				when "00101" => REG_05WB <= REG_IN;	-- REG_5
-				when "00110" => REG_06WB <= REG_IN;	-- REG_6
-				when "00111" => REG_07WB <= REG_IN;	-- REG_7
-				when "01000" => REG_08WB <= REG_IN;
-				when "01001" => REG_09WB <= REG_IN;
-				when "01010" => REG_10WB <= REG_IN;
-				when "01011" => REG_11WB <= REG_IN;
-				when "01100" => REG_12WB <= REG_IN;
-				when "01101" => REG_13WB <= REG_IN;
-				when "01110" => REG_14WB <= REG_IN;
-				when "01111" => REG_15WB <= REG_IN;
-				when "10000" => REG_16WB <= REG_IN;
-				when "10001" => REG_17WB <= REG_IN;
-				when "10010" => REG_18WB <= REG_IN;
-				when "10011" => REG_19WB <= REG_IN;
-				when "10100" => REG_20WB <= REG_IN;
-				when "10101" => REG_21WB <= REG_IN;
-				when "10110" => REG_22WB <= REG_IN;
-				when "10111" => REG_23WB <= REG_IN;
-				when "11000" => REG_24WB <= REG_IN;
-				when "11001" => REG_25WB <= REG_IN;
-				when "11010" => REG_26WB <= REG_IN;
-				when "11011" => REG_27WB <= REG_IN;
-				when "11100" => REG_28WB <= REG_IN;
-				when "11101" => REG_29WB <= REG_IN;
-				when "11110" => REG_30WB <= REG_IN;
-				when "11111" => REG_31WB <= REG_IN;
+				when "00001" => REG_01WB <= REG_V;
+				when "00010" => REG_02WB <= REG_V;
+				when "00011" => REG_03WB <= REG_V;
+				when "00100" => REG_04WB <= REG_V;
+				when "00101" => REG_05WB <= REG_V;
+				when "00110" => REG_06WB <= REG_V;
+				when "00111" => REG_07WB <= REG_V;
+				when "01000" => REG_08WB <= REG_V;
+				when "01001" => REG_09WB <= REG_V;
+				when "01010" => REG_10WB <= REG_V;
+				when "01011" => REG_11WB <= REG_V;
+				when "01100" => REG_12WB <= REG_V;
+				when "01101" => REG_13WB <= REG_V;
+				when "01110" => REG_14WB <= REG_V;
+				when "01111" => REG_15WB <= REG_V;
+				when "10000" => REG_16WB <= REG_V;
+				when "10001" => REG_17WB <= REG_V;
+				when "10010" => REG_18WB <= REG_V;
+				when "10011" => REG_19WB <= REG_V;
+				when "10100" => REG_20WB <= REG_V;
+				when "10101" => REG_21WB <= REG_V;
+				when "10110" => REG_22WB <= REG_V;
+				when "10111" => REG_23WB <= REG_V;
+				when "11000" => REG_24WB <= REG_V;
+				when "11001" => REG_25WB <= REG_V;
+				when "11010" => REG_26WB <= REG_V;
+				when "11011" => REG_27WB <= REG_V;
+				when "11100" => REG_28WB <= REG_V;
+				when "11101" => REG_29WB <= REG_V;
+				when "11110" => REG_30WB <= REG_V;
+				when "11111" => REG_31WB <= REG_V;
 
 				when others =>	
 			end case;
