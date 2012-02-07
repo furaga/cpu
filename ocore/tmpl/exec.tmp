@@ -1,30 +1,7 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
-use ieee.std_logic_arith.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 entity exec is
-	port
-	(
-	CLK_EX	:	in	std_logic;	-- clk
-	RESET	:	in	std_logic;	-- reset
-	IR		:   in	std_logic_vector (31 downto 0);	-- instruction register
-	PC_IN	:	in	std_logic_vector(31 downto 0);	-- current pc
-	REG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs
-	REG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt
-	REG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd
-	LINK_IN	:	in	std_logic_vector(31 downto 0);	-- current link register
-	LINK_OUT	:	out	std_logic_vector(31 downto 0);	-- next link register
-	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
-	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
-	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
-	N_RAM	:	out	std_logic_vector(19 downto 0);	-- ram address
-	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
-	REG_WEN_SRC	:	out	std_logic_vector(1 downto 0);	-- reg write enable and src flag
-	RAM_WEN	:	out	std_logic	-- ram write enable
-);
-
-
+<%include file="exec_entity.tmp"/>
 end exec;
 architecture RTL of exec is
 
@@ -37,9 +14,9 @@ architecture RTL of exec is
 	signal imm : std_logic_vector(15 downto 0);
 	signal target : std_logic_vector(25 downto 0);
 
-	signal n_reg_s : std_logic_vector(4 downto 0);
-	signal n_reg_t : std_logic_vector(4 downto 0);
-	signal n_reg_d : std_logic_vector(4 downto 0);
+	signal n_reg_s : ${oc.reg_index_t()};
+	signal n_reg_t : ${oc.reg_index_t()};
+	signal n_reg_d : ${oc.reg_index_t()};
 	signal init : std_logic := '1';
 
 begin
@@ -214,7 +191,5 @@ begin
 
 end RTL;
 
-
-
-
+<%namespace name="oc" file="macro.tmp"/>
 

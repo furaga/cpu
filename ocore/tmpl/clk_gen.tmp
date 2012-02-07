@@ -1,21 +1,8 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
-use ieee.std_logic_arith.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 
 entity clk_gen is
-	port (
-		CLK	:	in	std_logic;
-		CLK_FT	:	out	std_logic;
-		CLK_DC	:	out	std_logic;
-		CLK_EX	:	out	std_logic;
-		CLK_MA	:	out	std_logic;
-		CLK_WB	:	out	std_logic
-	);
-
-
-
+<%include file="clk_gen_entity.tmp"/>
 end clk_gen;
 
 architecture RTL of clk_gen is
@@ -70,6 +57,4 @@ begin
 	end process;
 
 end RTL;
-
-
-
+<%namespace name="oc" file="macro.tmp"/>

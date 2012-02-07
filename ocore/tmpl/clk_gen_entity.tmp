@@ -1,0 +1,11 @@
+## -*- coding: utf-8 -*-
+	port (
+		CLK	:	in	std_logic;
+		CLK_FT	:	out	std_logic;
+		CLK_DC	:	out	std_logic;
+		CLK_EX	:	out	std_logic;
+		CLK_MA	:	out	std_logic;
+		CLK_WB	:	out	std_logic
+	);
+<%namespace name="oc" file="macro.tmp"/>
+

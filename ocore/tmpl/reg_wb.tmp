@@ -1,57 +1,12 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
-use ieee.std_logic_arith.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 entity reg_wb is
-
-	port (
-		CLK_WB	:	in	std_logic;
-		RESET	:	in	std_logic;
-		N_REG	:	in	std_logic_vector(4 downto 0);
-		REG_IN	:	in	std_logic_vector(31 downto 0);
-		RAM_OUT	:	in	std_logic_vector(31 downto 0);
-		REG_WEN_SRC	:	in	std_logic_vector(1 downto 0);
-		REG_00WB	:	out	std_logic_vector(31 downto 0);
-		REG_01WB	:	out	std_logic_vector(31 downto 0);
-		REG_02WB	:	out	std_logic_vector(31 downto 0);
-		REG_03WB	:	out	std_logic_vector(31 downto 0);
-		REG_04WB	:	out	std_logic_vector(31 downto 0);
-		REG_05WB	:	out	std_logic_vector(31 downto 0);
-		REG_06WB	:	out	std_logic_vector(31 downto 0);
-		REG_07WB	:	out	std_logic_vector(31 downto 0);
-		REG_08WB	:	out	std_logic_vector(31 downto 0);
-		REG_09WB	:	out	std_logic_vector(31 downto 0);
-		REG_10WB	:	out	std_logic_vector(31 downto 0);
-		REG_11WB	:	out	std_logic_vector(31 downto 0);
-		REG_12WB	:	out	std_logic_vector(31 downto 0);
-		REG_13WB	:	out	std_logic_vector(31 downto 0);
-		REG_14WB	:	out	std_logic_vector(31 downto 0);
-		REG_15WB	:	out	std_logic_vector(31 downto 0);
-		REG_16WB	:	out	std_logic_vector(31 downto 0);
-		REG_17WB	:	out	std_logic_vector(31 downto 0);
-		REG_18WB	:	out	std_logic_vector(31 downto 0);
-		REG_19WB	:	out	std_logic_vector(31 downto 0);
-		REG_20WB	:	out	std_logic_vector(31 downto 0);
-		REG_21WB	:	out	std_logic_vector(31 downto 0);
-		REG_22WB	:	out	std_logic_vector(31 downto 0);
-		REG_23WB	:	out	std_logic_vector(31 downto 0);
-		REG_24WB	:	out	std_logic_vector(31 downto 0);
-		REG_25WB	:	out	std_logic_vector(31 downto 0);
-		REG_26WB	:	out	std_logic_vector(31 downto 0);
-		REG_27WB	:	out	std_logic_vector(31 downto 0);
-		REG_28WB	:	out	std_logic_vector(31 downto 0);
-		REG_29WB	:	out	std_logic_vector(31 downto 0);
-		REG_30WB	:	out	std_logic_vector(31 downto 0);
-		REG_31WB	:	out	std_logic_vector(31 downto 0)
-	);
-
-
+<%include file="reg_wb_entity.tmp"/>
 end reg_wb;
 architecture RTL of reg_wb is
-	constant reg1_init : std_logic_vector(31 downto 0)
+	constant reg1_init : ${oc.reg_t()}
 				:= x"00000111";
-	signal reg_v : std_logic_vector(31 downto 0);
+	signal reg_v : ${oc.reg_t()};
 	signal reg_wen : std_logic;
 	signal from_ram : std_logic;
 
@@ -139,7 +94,5 @@ begin
 	end process;
 
 end RTL;
-
-
-
+<%namespace name="oc" file="macro.tmp"/>
 

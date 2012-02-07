@@ -1,0 +1,7 @@
+## -*- coding: utf-8 -*-
+port (
+	CLK_FT	:	in	std_logic;
+	P_COUNT	:	in	${oc.V32()};
+	PROM_OUT	:	out	${oc.V32()}
+);
+<%namespace name="oc" file="macro.tmp"/>

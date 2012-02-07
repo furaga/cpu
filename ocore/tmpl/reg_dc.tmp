@@ -1,0 +1,54 @@
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
+
+entity reg_dc is
+<%include file="reg_dc_entity.tmp"/>
+end reg_dc;
+architecture RTL of reg_dc is
+
+begin
+	process(CLK_DC)
+	begin
+		if rising_edge(clk_dc) then
+		case N_REG_IN is
+			when "00000" => REG_OUT <= x"00000000";
+			when "00001" => REG_OUT <= REG_01;
+			when "00010" => REG_OUT <= REG_02;
+			when "00011" => REG_OUT <= REG_03;
+			when "00100" => REG_OUT <= REG_04;
+			when "00101" => REG_OUT <= REG_05;
+			when "00110" => REG_OUT <= REG_06;
+			when "00111" => REG_OUT <= REG_07;
+			when "01000" => REG_OUT <= REG_08;
+			when "01001" => REG_OUT <= REG_09;
+			when "01010" => REG_OUT <= REG_10;
+			when "01011" => REG_OUT <= REG_11;
+			when "01100" => REG_OUT <= REG_12;
+			when "01101" => REG_OUT <= REG_13;
+			when "01110" => REG_OUT <= REG_14;
+			when "01111" => REG_OUT <= REG_15;
+			when "10000" => REG_OUT <= REG_16;
+			when "10001" => REG_OUT <= REG_17;
+			when "10010" => REG_OUT <= REG_18;
+			when "10011" => REG_OUT <= REG_19;
+			when "10100" => REG_OUT <= REG_20;
+			when "10101" => REG_OUT <= REG_21;
+			when "10110" => REG_OUT <= REG_22;
+			when "10111" => REG_OUT <= REG_23;
+			when "11000" => REG_OUT <= REG_24;
+			when "11001" => REG_OUT <= REG_25;
+			when "11010" => REG_OUT <= REG_26;
+			when "11011" => REG_OUT <= REG_27;
+			when "11100" => REG_OUT <= REG_28;
+			when "11101" => REG_OUT <= REG_29;
+			when "11110" => REG_OUT <= REG_30;
+			when "11111" => REG_OUT <= REG_31;
+			when others =>
+		end case;
+		N_REG_OUT <= N_REG_IN;
+		end if;
+	end process;
+
+end RTL;
+<%namespace name="oc" file="macro.tmp"/>
+

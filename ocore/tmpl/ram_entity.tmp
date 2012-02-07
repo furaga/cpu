@@ -1,0 +1,11 @@
+## -*- coding: utf-8 -*-
+	port (
+		CLK_MA		: in	std_logic;
+		RAM_WEN		: in	std_logic;
+		ADDR		: in	${oc.ram_addr_t()};
+		DATA_IN		: in	${oc.ram_t()};
+		DATA_OUT	: out	${oc.ram_t()};
+		IO65_IN		: in	${oc.ram_t()};
+		IO64_OUT	: out	${oc.ram_t()}
+	);
+<%namespace name="oc" file="macro.tmp"/>

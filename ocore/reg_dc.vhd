@@ -1,47 +1,52 @@
-library IEEE;
-use IEEE.std_logic_1164.all;
-use IEEE.std_logic_unsigned.all;
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_unsigned.all;
+use ieee.std_logic_arith.all;
 
 
 entity reg_dc is
+
 	port (
 		CLK_DC	:	in	std_logic;
-		REG_00	:	in	std_logic_vector (31 downto 0);
-		REG_01	:	in	std_logic_vector (31 downto 0);
-		REG_02	:	in	std_logic_vector (31 downto 0);
-		REG_03	:	in	std_logic_vector (31 downto 0);
-		REG_04	:	in	std_logic_vector (31 downto 0);
-		REG_05	:	in	std_logic_vector (31 downto 0);
-		REG_06	:	in	std_logic_vector (31 downto 0);
-		REG_07	:	in	std_logic_vector (31 downto 0);
-		REG_08	:	in	std_logic_vector (31 downto 0);
-		REG_09	:	in	std_logic_vector (31 downto 0);
-		REG_10	:	in	std_logic_vector (31 downto 0);
-		REG_11	:	in	std_logic_vector (31 downto 0);
-		REG_12	:	in	std_logic_vector (31 downto 0);
-		REG_13	:	in	std_logic_vector (31 downto 0);
-		REG_14	:	in	std_logic_vector (31 downto 0);
-		REG_15	:	in	std_logic_vector (31 downto 0);
-		REG_16	:	in	std_logic_vector (31 downto 0);
-		REG_17	:	in	std_logic_vector (31 downto 0);
-		REG_18	:	in	std_logic_vector (31 downto 0);
-		REG_19	:	in	std_logic_vector (31 downto 0);
-		REG_20	:	in	std_logic_vector (31 downto 0);
-		REG_21	:	in	std_logic_vector (31 downto 0);
-		REG_22	:	in	std_logic_vector (31 downto 0);
-		REG_23	:	in	std_logic_vector (31 downto 0);
-		REG_24	:	in	std_logic_vector (31 downto 0);
-		REG_25	:	in	std_logic_vector (31 downto 0);
-		REG_26	:	in	std_logic_vector (31 downto 0);
-		REG_27	:	in	std_logic_vector (31 downto 0);
-		REG_28	:	in	std_logic_vector (31 downto 0);
-		REG_29	:	in	std_logic_vector (31 downto 0);
-		REG_30	:	in	std_logic_vector (31 downto 0);
-		REG_31	:	in	std_logic_vector (31 downto 0);
+		REG_00	:	in	std_logic_vector(31 downto 0);
+		REG_01	:	in	std_logic_vector(31 downto 0);
+		REG_02	:	in	std_logic_vector(31 downto 0);
+		REG_03	:	in	std_logic_vector(31 downto 0);
+		REG_04	:	in	std_logic_vector(31 downto 0);
+		REG_05	:	in	std_logic_vector(31 downto 0);
+		REG_06	:	in	std_logic_vector(31 downto 0);
+		REG_07	:	in	std_logic_vector(31 downto 0);
+		REG_08	:	in	std_logic_vector(31 downto 0);
+		REG_09	:	in	std_logic_vector(31 downto 0);
+		REG_10	:	in	std_logic_vector(31 downto 0);
+		REG_11	:	in	std_logic_vector(31 downto 0);
+		REG_12	:	in	std_logic_vector(31 downto 0);
+		REG_13	:	in	std_logic_vector(31 downto 0);
+		REG_14	:	in	std_logic_vector(31 downto 0);
+		REG_15	:	in	std_logic_vector(31 downto 0);
+		REG_16	:	in	std_logic_vector(31 downto 0);
+		REG_17	:	in	std_logic_vector(31 downto 0);
+		REG_18	:	in	std_logic_vector(31 downto 0);
+		REG_19	:	in	std_logic_vector(31 downto 0);
+		REG_20	:	in	std_logic_vector(31 downto 0);
+		REG_21	:	in	std_logic_vector(31 downto 0);
+		REG_22	:	in	std_logic_vector(31 downto 0);
+		REG_23	:	in	std_logic_vector(31 downto 0);
+		REG_24	:	in	std_logic_vector(31 downto 0);
+		REG_25	:	in	std_logic_vector(31 downto 0);
+		REG_26	:	in	std_logic_vector(31 downto 0);
+		REG_27	:	in	std_logic_vector(31 downto 0);
+		REG_28	:	in	std_logic_vector(31 downto 0);
+		REG_29	:	in	std_logic_vector(31 downto 0);
+		REG_30	:	in	std_logic_vector(31 downto 0);
+		REG_31	:	in	std_logic_vector(31 downto 0);
 		N_REG_IN	:	in	std_logic_vector (4 downto 0);
 		N_REG_OUT	:	out	std_logic_vector (4 downto 0);
-		REG_OUT	:	out	std_logic_vector (31 downto 0)
+		REG_OUT	:	out	std_logic_vector(31 downto 0)
 	);
+
+
+
 end reg_dc;
 architecture RTL of reg_dc is
 
@@ -89,3 +94,7 @@ begin
 	end process;
 
 end RTL;
+
+
+
+

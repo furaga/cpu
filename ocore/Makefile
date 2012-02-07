@@ -8,13 +8,29 @@ TARGET = $(TB)
 IEEE = 'synopsys'
 TIME = 1000ns
 OPTION = -fexplicit
-.SUFFIXES: .vhd .vcd
+.SUFFIXES: .vhd .vcd .tmp
 
-.PHONY: all wave
-all: $(OBJS) $(TB) $(TB).vcd
+.PHONY: default wave
+
+default: 
+	make -sC tmpl
+push:
+	make -sC tmpl push
+## reload
+rel:
+	make reload
+reload: 
+	make clean
+	make vcd
+
 wave: $(OBJS) $(TB) $(TB).vcd
+	make clean
+	make vcd
 	gtkwave $(TB).vcd
 
+
+vcd: $(OBJS) $(TB) $(TB).vcd
+	
 
 $(TB).vcd: $(TB) $(OBJS)
 	ghdl -r $(TB) --vcd=$@ --stop-time=$(TIME)

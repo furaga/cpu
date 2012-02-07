@@ -1,7 +1,8 @@
 RENDER = mako-render
 TREE = ..
 
-TARGET = decode.vhd
+TARGET = decode.vhd fetch.vhd reg_dc.vhd ram.vhd
+TARGET += clk_gen.vhd reg_wb.vhd exec.vhd cpu.vhd
 SIM_TARGET = ./test
 
 .SUFFIXES: .vhd .tmp
@@ -14,10 +15,24 @@ all: $(TARGET)
 
 BASE = skeleton.tmp macro.tmp
 decode.vhd: decode.tmp decode_entity.tmp $(BASE)
+fetch.vhd: fetch.tmp fetch_entity.tmp $(BASE)
+reg_dc.vhd: reg_dc.tmp reg_dc_entity.tmp $(BASE)
+reg_wb.vhd: reg_wb.tmp reg_wb_entity.tmp $(BASE)
+ram.vhd: ram.tmp ram_entity.tmp $(BASE)
+exec.vhd: exec.tmp exec_entity.tmp $(BASE)
+clk_gen.vhd: clk_gen.tmp clk_gen_entity.tmp $(BASE)
+cpu.vhd: cpu.tmp cpu_entity.tmp $(BASE)
 
 .PHONY: push clean
 push:
-	cp 
+	cp decode.vhd $(TREE)/decode.vhd
+	cp fetch.vhd $(TREE)/fetch.vhd
+	cp reg_dc.vhd $(TREE)/reg_dc.vhd
+	cp reg_wb.vhd $(TREE)/reg_wb.vhd
+	cp ram.vhd $(TREE)/ram.vhd
+	cp cpu.vhd $(TREE)/cpu.vhd
+	cp exec.vhd $(TREE)/exec.vhd
+	cp clk_gen.vhd $(TREE)/clk_gen.vhd
 
 out:
 
