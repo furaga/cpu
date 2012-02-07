@@ -2,6 +2,10 @@
 port (
 	CLK_DC	:	in	std_logic;
 	PROM_OUT	:	in ${oc.V32()};
-	IR	: out ${oc.V32()}
+	FP_OUT	:	in ${oc.reg_t()};
+	LINK_OUT	:	in ${oc.pc_t()};
+	IR	: out ${oc.V32()};
+	FP	:	out ${oc.ram_addr_t()};
+	LR	:	out ${oc.pc_t()}
 );
 <%namespace name="oc" file="macro.tmp"/>

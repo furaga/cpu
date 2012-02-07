@@ -10,25 +10,18 @@ TIME = 1000ns
 OPTION = -fexplicit
 .SUFFIXES: .vhd .vcd .tmp
 
-.PHONY: default wave
+.PHONY: default wave vcd reload
 
-default: 
-	make -sC tmpl
+default: push rel
+
+
 push:
+	make -sC tmpl
 	make -sC tmpl push
-## reload
-rel:
-	make reload
-reload: 
-	make clean
-	make vcd
-
-wave: $(OBJS) $(TB) $(TB).vcd
-	make clean
-	make vcd
+rel: reload
+reload: clean vcd
+wave: vcd
 	gtkwave $(TB).vcd
-
-
 vcd: $(OBJS) $(TB) $(TB).vcd
 	
 

@@ -1,17 +1,18 @@
 ## -*- coding: utf-8 -*-
 <%
-num_list = map ((lambda x : '%02d' % x), xrange(31))
+num_list = map ((lambda x : '%02d' % x), xrange(32))
 %>
 	port (
 		CLK_WB	:	in	std_logic;
 		RESET	:	in	std_logic;
 		N_REG	:	in	${oc.reg_index_t()};
 		REG_IN	:	in	${oc.reg_t()};
+		LR_IN	:	in	${oc.pc_t()};
 		RAM_OUT	:	in	${oc.reg_t()};
-		REG_WEN_SRC	:	in	std_logic_vector(1 downto 0);
+		REG_COND	:	in	std_logic_vector(3 downto 0);
 %for x in num_list:
 		REG_${x}WB	:	out	${oc.reg_t()};
 %endfor
-		REG_31WB	:	out	${oc.reg_t()}
+		LR_WB		:	out	${oc.pc_t()}
 	);
 <%namespace name="oc" file="macro.tmp"/>

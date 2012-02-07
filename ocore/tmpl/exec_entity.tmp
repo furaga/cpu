@@ -8,14 +8,15 @@
 	REG_S	:	in	${oc.reg_t()};	-- value of rs
 	REG_T	:	in	${oc.reg_t()};	-- value of rt
 	REG_D	:	in	${oc.reg_t()};	-- value of rd
-	LINK_IN	:	in	${oc.reg_t()};	-- current link register
-	LINK_OUT	:	out	${oc.reg_t()};	-- next link register
+	FP_OUT	:	in	${oc.ram_addr_t()};	-- current frame pinter
+	LR_OUT	:	in	${oc.pc_t()};	-- current link register
+	LR_IN	:	out	${oc.pc_t()};	-- next link register
 	PC_OUT	:	out	${oc.pc_t()};	-- next pc
 	N_REG	:	out ${oc.reg_index_t()};	-- register index
 	REG_IN	:	out	${oc.reg_t()};	-- value writing to reg
 	N_RAM	:	out	${oc.ram_addr_t()};	-- ram address
 	RAM_IN	:	out	${oc.ram_t()};	-- value writing to ram
-	REG_WEN_SRC	:	out	std_logic_vector(1 downto 0);	-- reg write enable and src flag
+	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
 );
 <%namespace name="oc" file="macro.tmp"/>

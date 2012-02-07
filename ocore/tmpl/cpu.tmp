@@ -49,11 +49,12 @@ end component;
 	signal	N_REG_S	:	std_logic_vector (4 downto 0);
 	signal	N_REG_T	:	std_logic_vector (4 downto 0);
 	signal	N_REG_D	:	std_logic_vector (4 downto 0);
+	signal	FramePointer	: ${oc.ram_addr_t()};
 	signal	REG_IN	:	std_logic_vector (31 downto 0);
 	signal	REG_S	:	std_logic_vector (31 downto 0);
 	signal	REG_T	:	std_logic_vector (31 downto 0);
 	signal	REG_D	:	std_logic_vector (31 downto 0);
-	signal	REG_WEN_SRC	:	std_logic_vector (1 downto 0);
+	signal	REG_COND	:	std_logic_vector (3 downto 0);
 	signal	REG_00	:	std_logic_vector (31 downto 0);
 	signal	REG_01	:	std_logic_vector (31 downto 0);
 	signal	REG_02	:	std_logic_vector (31 downto 0);
@@ -100,7 +101,9 @@ end component;
 	signal	RAM_6	:	std_logic_vector (31 downto 0);
 	signal	RAM_7	:	std_logic_vector (31 downto 0);
 
-	signal	LinkReg	:	std_logic_vector (31 downto 0);
+	signal	LR_IN	:	${oc.pc_t()};
+	signal	LR_OUT	:	${oc.pc_t()};
+	signal	LinkRegister	:	${oc.pc_t()};
 
 begin			
 
@@ -111,7 +114,10 @@ begin
 	fetch_u	:	fetch port map(CLK_FT, P_COUNT, PROM_OUT);
 
 -- decode phase
-	dec_u	:	decode port map(CLK_DC, PROM_OUT, IR);
+	dec_u	:	decode port map(CLK_DC,
+					PROM_OUT, REG_01, LR_OUT,
+					IR, FramePointer, LinkRegister
+					);
 
 	regdec_rs	:	reg_dc port map(CLK_DC, 
 		${REGS()},
@@ -130,8 +136,8 @@ begin
 
 -- exec phase
 	exec_u	:	exec port map(CLK_EX, RESET, IR, P_COUNT,
-		 REG_S, REG_T, REG_D, LinkReg,
-		 LinkReg, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_WEN_SRC,
+		 REG_S, REG_T, REG_D, FramePointer, LinkRegister,
+		 LR_IN, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_COND,
 		 RAM_WEN);
 
 -- memory access phase
@@ -140,8 +146,8 @@ begin
 	
 -- write-back phase
 	regwb_u	:	reg_wb port map(CLK_WB, RESET,
-		 N_REG, REG_IN, RAM_OUT, REG_WEN_SRC,
-		 ${REGS()}
+		 N_REG, REG_IN, LR_IN, RAM_OUT, REG_COND,
+		 ${REGS()}, LR_OUT
 	 );
 
 end RTL;			

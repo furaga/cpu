@@ -46,7 +46,11 @@ component decode
 port (
 	CLK_DC	:	in	std_logic;
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
-	IR	: out std_logic_vector(31 downto 0)
+	FP_OUT	:	in std_logic_vector(31 downto 0);
+	LINK_OUT	:	in std_logic_vector(31 downto 0);
+	IR	: out std_logic_vector(31 downto 0);
+	FP	:	out std_logic_vector(19 downto 0);
+	LR	:	out std_logic_vector(31 downto 0)
 );
 
 
@@ -108,14 +112,15 @@ component exec
 	REG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs
 	REG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt
 	REG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd
-	LINK_IN	:	in	std_logic_vector(31 downto 0);	-- current link register
-	LINK_OUT	:	out	std_logic_vector(31 downto 0);	-- next link register
+	FP_OUT	:	in	std_logic_vector(19 downto 0);	-- current frame pinter
+	LR_OUT	:	in	std_logic_vector(31 downto 0);	-- current link register
+	LR_IN	:	out	std_logic_vector(31 downto 0);	-- next link register
 	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
 	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
 	N_RAM	:	out	std_logic_vector(19 downto 0);	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
-	REG_WEN_SRC	:	out	std_logic_vector(1 downto 0);	-- reg write enable and src flag
+	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
 );
 
@@ -130,8 +135,9 @@ component reg_wb
 		RESET	:	in	std_logic;
 		N_REG	:	in	std_logic_vector(4 downto 0);
 		REG_IN	:	in	std_logic_vector(31 downto 0);
+		LR_IN	:	in	std_logic_vector(31 downto 0);
 		RAM_OUT	:	in	std_logic_vector(31 downto 0);
-		REG_WEN_SRC	:	in	std_logic_vector(1 downto 0);
+		REG_COND	:	in	std_logic_vector(3 downto 0);
 		REG_00WB	:	out	std_logic_vector(31 downto 0);
 		REG_01WB	:	out	std_logic_vector(31 downto 0);
 		REG_02WB	:	out	std_logic_vector(31 downto 0);
@@ -163,7 +169,8 @@ component reg_wb
 		REG_28WB	:	out	std_logic_vector(31 downto 0);
 		REG_29WB	:	out	std_logic_vector(31 downto 0);
 		REG_30WB	:	out	std_logic_vector(31 downto 0);
-		REG_31WB	:	out	std_logic_vector(31 downto 0)
+		REG_31WB	:	out	std_logic_vector(31 downto 0);
+		LR_WB		:	out	std_logic_vector(31 downto 0)
 	);
 
 
@@ -196,11 +203,12 @@ end component;
 	signal	N_REG_S	:	std_logic_vector (4 downto 0);
 	signal	N_REG_T	:	std_logic_vector (4 downto 0);
 	signal	N_REG_D	:	std_logic_vector (4 downto 0);
+	signal	FramePointer	: std_logic_vector(19 downto 0);
 	signal	REG_IN	:	std_logic_vector (31 downto 0);
 	signal	REG_S	:	std_logic_vector (31 downto 0);
 	signal	REG_T	:	std_logic_vector (31 downto 0);
 	signal	REG_D	:	std_logic_vector (31 downto 0);
-	signal	REG_WEN_SRC	:	std_logic_vector (1 downto 0);
+	signal	REG_COND	:	std_logic_vector (3 downto 0);
 	signal	REG_00	:	std_logic_vector (31 downto 0);
 	signal	REG_01	:	std_logic_vector (31 downto 0);
 	signal	REG_02	:	std_logic_vector (31 downto 0);
@@ -247,7 +255,9 @@ end component;
 	signal	RAM_6	:	std_logic_vector (31 downto 0);
 	signal	RAM_7	:	std_logic_vector (31 downto 0);
 
-	signal	LinkReg	:	std_logic_vector (31 downto 0);
+	signal	LR_IN	:	std_logic_vector(31 downto 0);
+	signal	LR_OUT	:	std_logic_vector(31 downto 0);
+	signal	LinkRegister	:	std_logic_vector(31 downto 0);
 
 begin			
 
@@ -258,7 +268,10 @@ begin
 	fetch_u	:	fetch port map(CLK_FT, P_COUNT, PROM_OUT);
 
 -- decode phase
-	dec_u	:	decode port map(CLK_DC, PROM_OUT, IR);
+	dec_u	:	decode port map(CLK_DC,
+					PROM_OUT, REG_01, LR_OUT,
+					IR, FramePointer, LinkRegister
+					);
 
 	regdec_rs	:	reg_dc port map(CLK_DC, 
 		
@@ -292,8 +305,8 @@ begin
 
 -- exec phase
 	exec_u	:	exec port map(CLK_EX, RESET, IR, P_COUNT,
-		 REG_S, REG_T, REG_D, LinkReg,
-		 LinkReg, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_WEN_SRC,
+		 REG_S, REG_T, REG_D, FramePointer, LinkRegister,
+		 LR_IN, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_COND,
 		 RAM_WEN);
 
 -- memory access phase
@@ -302,13 +315,13 @@ begin
 	
 -- write-back phase
 	regwb_u	:	reg_wb port map(CLK_WB, RESET,
-		 N_REG, REG_IN, RAM_OUT, REG_WEN_SRC,
+		 N_REG, REG_IN, LR_IN, RAM_OUT, REG_COND,
 		 
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
-
+, LR_OUT
 	 );
 
 end RTL;			

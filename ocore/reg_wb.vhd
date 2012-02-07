@@ -10,8 +10,9 @@ entity reg_wb is
 		RESET	:	in	std_logic;
 		N_REG	:	in	std_logic_vector(4 downto 0);
 		REG_IN	:	in	std_logic_vector(31 downto 0);
+		LR_IN	:	in	std_logic_vector(31 downto 0);
 		RAM_OUT	:	in	std_logic_vector(31 downto 0);
-		REG_WEN_SRC	:	in	std_logic_vector(1 downto 0);
+		REG_COND	:	in	std_logic_vector(3 downto 0);
 		REG_00WB	:	out	std_logic_vector(31 downto 0);
 		REG_01WB	:	out	std_logic_vector(31 downto 0);
 		REG_02WB	:	out	std_logic_vector(31 downto 0);
@@ -43,22 +44,32 @@ entity reg_wb is
 		REG_28WB	:	out	std_logic_vector(31 downto 0);
 		REG_29WB	:	out	std_logic_vector(31 downto 0);
 		REG_30WB	:	out	std_logic_vector(31 downto 0);
-		REG_31WB	:	out	std_logic_vector(31 downto 0)
+		REG_31WB	:	out	std_logic_vector(31 downto 0);
+		LR_WB		:	out	std_logic_vector(31 downto 0)
 	);
 
 
 end reg_wb;
 architecture RTL of reg_wb is
 	constant reg1_init : std_logic_vector(31 downto 0)
-				:= x"00000111";
+				:= x"00000007";
 	signal reg_v : std_logic_vector(31 downto 0);
+	signal lr_v : std_logic_vector(31 downto 0);
 	signal reg_wen : std_logic;
 	signal from_ram : std_logic;
+	signal gr_wen :std_logic;
+	signal gr_src :std_logic;
+	signal lr_wen :std_logic;
+	signal lr_src :std_logic;
 
 begin
-	reg_wen <= REG_WEN_SRC(1);
-	from_ram <= REG_WEN_SRC(0);
-	reg_v <= RAM_OUT when from_ram='1' else REG_IN;
+	gr_wen <= REG_COND(3);
+	gr_src <= REG_COND(2);
+	lr_wen <= REG_COND(1);
+	lr_src <= REG_COND(0);
+
+	reg_v <= RAM_OUT when gr_src='1' else REG_IN;
+	lr_v  <= RAM_OUT when lr_src='1' else LR_IN;
 	
 	process(CLK_WB, RESET)
 	begin
@@ -95,8 +106,9 @@ begin
 		REG_29WB <= (others=>'0');
 		REG_30WB <= (others=>'0');
 		REG_31WB <= (others=>'0');
+		LR_WB <= (others=>'0');
 	elsif(CLK_WB'event and CLK_WB = '1') then
-		if(reg_wen = '1') then
+		if gr_wen='1' then
 			case N_REG is
 				when "00000" => REG_00WB <= x"00000000";	-- REG_0
 				when "00001" => REG_01WB <= reg_v;
@@ -133,6 +145,9 @@ begin
 
 				when others =>	
 			end case;
+		end if;
+		if lr_wen='1' then
+			LR_WB <= lr_v;
 		end if;
 	end if;
 
