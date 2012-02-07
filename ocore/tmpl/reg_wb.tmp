@@ -5,7 +5,7 @@ entity reg_wb is
 end reg_wb;
 architecture RTL of reg_wb is
 	constant reg1_init : ${oc.reg_t()}
-				:= x"00000007";
+				:= x"00003ffc";
 	signal reg_v : ${oc.reg_t()};
 	signal lr_v : ${oc.reg_t()};
 	signal reg_wen : std_logic;

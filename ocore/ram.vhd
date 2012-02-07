@@ -20,10 +20,10 @@ end ram;
 
 architecture behavior of ram is
 	subtype ram_word is std_logic_vector(31 downto 0);
-	type ram_array is array (0 to 65) of ram_word;
+	type ram_array is array (0 to 4096) of ram_word;
 
 	signal ram_data : ram_array;
-	signal addr_in	: integer range 0 to 65;
+	signal addr_in	: integer range 0 to 4096;
 
 
 begin
@@ -33,10 +33,10 @@ begin
 	begin
 		if (rising_edge(CLK_MA)) then
 			if (RAM_WEN='1') then
-				if (ADDR(6) = '0') then
-					ram_data(addr_in) <= DATA_IN;
-				elsif (addr_in = 64) then
+				if (addr_in = 4096) then
 					IO64_OUT <= DATA_IN;
+				else 
+					ram_data(addr_in) <= DATA_IN;
 				end if;
 			end if;
 		end if;
@@ -45,12 +45,10 @@ begin
 	process(RAM_WEN, addr_in)
 	begin
 		if (RAM_WEN='0') then
-			if (ADDR(6)='0') then
-				DATA_OUT <= ram_data(addr_in);
-			elsif (ADDR=65) then
+			if (addr_in = 4096) then
 				DATA_OUT <= IO65_IN;
-			else
-				DATA_OUT <= (others=>'0');
+			else 
+				DATA_OUT <= ram_data(addr_in);
 			end if;
 		end if;
 	end process;

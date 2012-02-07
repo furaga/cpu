@@ -6,7 +6,7 @@ TMPL_DIR = ./tmpl
 TARGET = $(TB)
 
 IEEE = 'synopsys'
-TIME = 1000ns
+TIME = 10000ns
 OPTION = -fexplicit
 .SUFFIXES: .vhd .vcd .tmp
 

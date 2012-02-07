@@ -39,12 +39,13 @@ push:
 
 out:
 
-ASM = ./asmcho2
+ASM = ./asmcho3
+SIM = ./simcho2
 asm:
 	$(ASM) -h $(SIM_TARGET).s
 sim:
 	$(ASM) $(SIM_TARGET).s
-	./simcho $(SIM_TARGET)
+	$(SIM) $(SIM_TARGET)
 
 clean:
 	$(RM) *.vhd

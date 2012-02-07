@@ -46,6 +46,7 @@ architecture RTL of exec is
 	signal n_reg_t : std_logic_vector(4 downto 0);
 	signal n_reg_d : std_logic_vector(4 downto 0);
 	signal init : std_logic := '1';
+	signal debug_count : std_logic_vector (31 downto 0) := x"00000000";
 
 begin
 	op_code <= IR(31 downto 26);
@@ -64,6 +65,7 @@ begin
 	process(CLK_EX, RESET) 
 		variable heap_size : std_logic_vector(31 downto 0) := (others=>'0');
 		variable v32 : std_logic_vector(31 downto 0);
+		variable v20 : std_logic_vector(19 downto 0);
 		variable v_mul : std_logic_vector(63 downto 0);
 	begin
 		if (RESET = '1') then 
@@ -95,6 +97,7 @@ begin
 -----------------------------------------------------------
 -----------------------------------------------------------
 			else
+				debug_count <= debug_count + 1;
 				case op_code is
 
 					when "000000" =>	-- SPECIAL
@@ -126,7 +129,7 @@ begin
 							when "000000" => -- INPUT
 							when "000001" => -- OUTPUT
 								RAM_IN <= REG_S;
-								N_RAM <= x"00040";
+								N_RAM <= x"01000";
 								REG_COND <= "1000";
 								RAM_WEN <= '1'; 
 								PC_OUT <= PC_IN + 1;	
@@ -187,65 +190,67 @@ begin
 					when "110000" =>	-- CALL
 						REG_COND <= "1010";
 						N_REG <= "00001"; -- g1
-						REG_IN <= x"000"&(FP_OUT - 1); -- push
+						REG_IN <= x"000"&(FP_OUT - 4); -- push
 						RAM_WEN <= '1';
-						N_RAM <= FP_OUT;
+						N_RAM <= "00"&FP_OUT(19 downto 2);
 						RAM_IN <= LR_OUT;
 						LR_IN <= PC_IN + 1;
 						PC_OUT <= "00000000"&target(25 downto 2);
 					when "111000" =>	-- RETURN
 						REG_COND <= "1011";
 						N_REG <= "00001"; -- g1
-						REG_IN <= x"000"&(FP_OUT + 1); -- pop
+						v20 := FP_OUT + 4; -- next frame pointer
+						REG_IN <= x"000"&(FP_OUT + 4); -- pop
 						RAM_WEN <= '0';
-						N_RAM <= FP_OUT+1;
+						N_RAM <= "00"&v20(19 downto 2);
 						PC_OUT <= LR_OUT;
 					when "001010" =>	-- JEQ
-						REG_COND <= "1000";
+						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						if (REG_S = REG_T) then
-							--PC_OUT <= PC_IN + ("0000"&"0000"&"0000"&"00"&imm(15 downto 2));
 							PC_OUT <= PC_IN + (ex_imm(31)&ex_imm(31)&ex_imm(31 downto 2));
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "010010" =>	-- JNE
-						REG_COND <= "1000";
+						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						if (REG_S /= REG_T) then
-							--PC_OUT <= PC_IN + ("0000"&"0000"&"0000"&"00"&imm(15 downto 2));
 							PC_OUT <= PC_IN + (ex_imm(31)&ex_imm(31)&ex_imm(31 downto 2));
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "011010" =>	-- JLT
-						REG_COND <= "1000";
+						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						if (REG_S < REG_T) then
-							--PC_OUT <= PC_IN + ("0000"&"0000"&"0000"&"00"&imm(15 downto 2));
 							PC_OUT <= PC_IN + (ex_imm(31)&ex_imm(31)&ex_imm(31 downto 2));
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "000010" =>	-- JMP
-						REG_COND <= "1000";
+						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						PC_OUT <= ("00000000"&target(25 downto 2));
 					when "101011" =>	-- STI
-						v32 := REG_S + ex_imm;
-						RAM_IN <= REG_T;
+						v32 := REG_S - ex_imm;
 						N_RAM <= v32(21 downto 2);
+						RAM_IN <= REG_T;
 						REG_COND <= "0000";
 						RAM_WEN <= '1'; 
 						PC_OUT <= PC_IN + 1;	
 					when "100011" =>	-- LDI
-						v32 := REG_S + ex_imm;
+						v32 := REG_S - ex_imm;
 						N_RAM <= v32(21 downto 2);
 						N_REG <= n_reg_t;
 						REG_COND <= "1100";
 						RAM_WEN <= '0'; 
 						PC_OUT <= PC_IN + 1;	
 					when others =>	
+						REG_COND <= "0000";
+						RAM_WEN <= '0'; 
+						debug_count <= x"ffffffff";
+						PC_OUT <= PC_IN;
 				end case;	
 			end if;
 		end if;	
