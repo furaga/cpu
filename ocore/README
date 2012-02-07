@@ -9,6 +9,11 @@
 	とりあえずテンプレートは終了。
 
 命令を揃える。
+($ sudo apt-get install gtkwave ghdl)
+$ make
+$ make push
+$ make wave
+$ make rel (make reload)
 
 ####################################
 2012年  2月  7日 火曜日 12:53:50 JST
