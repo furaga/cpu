@@ -4,10 +4,11 @@
 <%def name="V32()">${V('31 downto 0')}</%def>
 <%def name="V20()">${V('19 downto 0')}</%def>
 <%def name="V16()">${V('15 downto 0')}</%def>
+<%def name="V8()">${V('7 downto 0')}</%def>
 <%def name="V5()">${V('4 downto 0')}</%def>
 
 <%def name="reg_t()">${V32()}</%def>
-<%def name="ram_t()">${V32()}</%def>
+<%def name="ram_t()">${V8()}</%def>
 <%def name="ir_t()">${V32()}</%def>
 <%def name="pc_t()">${V32()}</%def>
 <%def name="reg_index_t()">${V5()}</%def>

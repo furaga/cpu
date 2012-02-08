@@ -1,0 +1,7 @@
+## -*- coding: utf-8 -*-
+	port (
+		MCLK1 : in  STD_LOGIC;
+		RS_RX : in  STD_LOGIC;
+		RS_TX : out  STD_LOGIC
+	);
+<%namespace name="oc" file="macro.tmp"/>

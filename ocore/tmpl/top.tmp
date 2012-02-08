@@ -1,43 +1,16 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 --library UNISIM;
 --use UNISIM.VComponents.all;
 entity top is
-	port (
-		MCLK1 : in  STD_LOGIC;
-		RS_RX : in  STD_LOGIC;
-		RS_TX : out  STD_LOGIC
-	);
-
-
+<%include file="top_entity.tmp"/>
 end top;
 architecture board of top is
 	component core_c is
-	port
-	(			
-	CLK	:	in	std_logic;
-	RESET	:	in	std_logic;
-	IO_IN	:	in	std_logic_vector(7 downto 0);
-	SEND_GO	:	out std_logic;
-	IO_OUT	:	out	std_logic_vector(7 downto 0)
-	);				
-
-
+<%include file="core_c_entity.tmp"/>
 	end component;
 	component send is
-port(
-	CLK		:	in	std_logic;
-	RESET	:	in	std_logic;
-	CPU_GO	:	in	std_logic;
-	CPU_OUT	:	in	std_logic_vector(7 downto 0);
-	RS_TX	:	out	std_logic
-);
-
-
-
+<%include file="send_entity.tmp"/>
 	end component;
 
 	signal clk,iclk: std_logic;
@@ -74,7 +47,5 @@ begin
 	end process;
 
 end board;
-
-
-
+<%namespace name="oc" file="macro.tmp"/>
 

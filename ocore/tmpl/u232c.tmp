@@ -1,17 +1,7 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 entity u232c is
-  generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
-  Port ( clk  : in  std_logic;
-		 data : in  std_logic_vector (7 downto 0);
-		 go   : in  std_logic;
-		 busy : out std_logic;
-		 tx   : out std_logic);
-
-
+<%include file="u232c_entity.tmp"/>
 end u232c;
 
 architecture blackbox of u232c is
@@ -44,7 +34,5 @@ begin
   busy<= '0' when state="1011" else '1';
 end blackbox;
 
-
-
-
+<%namespace name="oc" file="macro.tmp"/>
 

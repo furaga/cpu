@@ -1,0 +1,10 @@
+## -*- coding: utf-8 -*-
+port(
+	CLK		:	in	std_logic;
+	RESET	:	in	std_logic;
+	CPU_GO	:	in	std_logic;
+	CPU_OUT	:	in	${oc.ram_t()};
+	RS_TX	:	out	std_logic
+);
+<%namespace name="oc" file="macro.tmp"/>
+

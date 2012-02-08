@@ -3,18 +3,19 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 
-entity cpu is
+entity core_c is
 	port
 	(			
 	CLK	:	in	std_logic;
 	RESET	:	in	std_logic;
 	IO_IN	:	in	std_logic_vector(7 downto 0);
+	SEND_GO	:	out std_logic;
 	IO_OUT	:	out	std_logic_vector(7 downto 0)
 	);				
 
 
-end cpu;
-architecture RTL of cpu is
+end core_c;
+architecture RTL of core_c is
 component clk_gen
 	port (
 		CLK	:	in	std_logic;
@@ -172,6 +173,7 @@ component ram is
 		DATA_IN		: in	std_logic_vector(31 downto 0);
 		DATA_OUT	: out	std_logic_vector(31 downto 0);
 		IO_IN		: in	std_logic_vector(7 downto 0);
+		SEND_GO		: out	std_logic;
 		IO_OUT	: out	std_logic_vector(7 downto 0)
 	);
 
@@ -246,10 +248,8 @@ begin
 	fetch_u	:	fetch port map(clk_ft, pc, prom_out);
 
 -- decode phase
-	dec_u	:	decode port map(clk_dc,
-					prom_out, REG_01, LR_OUT,
+	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT,
 					ir, FramePointer, LinkRegister);
-
 	regdec_rs	:	reg_dc port map(clk_dc, 
 		
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
@@ -278,9 +278,8 @@ begin
 		 LR_IN, pc, N_REG, REG_IN, RAM_ADDR, RAM_IN, REG_COND,
 		 ram_wen);
 
--- memory access phase
 	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
-							RAM_OUT, IO_IN, IO_OUT);
+							RAM_OUT, IO_IN, SEND_GO, IO_OUT);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,
@@ -294,8 +293,6 @@ begin
 
 
 end RTL;			
-
-
 
 
 

@@ -250,6 +250,12 @@ min_caml_start:
 	mov	%g8, %g3
 	call	print_int.340
 	addi	%g1, %g1, 4
+	addi	%g3, %g0, 48
+	output %g3
+	addi	%g3, %g3, 2
+	output %g3
+	addi	%g3, %g3, 2
+	output %g3
 	halt
 
 !==============================

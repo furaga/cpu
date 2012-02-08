@@ -3,7 +3,7 @@
 	(
 	CLK_EX	:	in	std_logic;	-- clk
 	RESET	:	in	std_logic;	-- reset
-	IR		:   in	std_logic_vector (31 downto 0);	-- instruction register
+	IR		:   in	${oc.ir_t()};	-- instruction register
 	PC_IN	:	in	${oc.pc_t()};	-- current pc
 	REG_S	:	in	${oc.reg_t()};	-- value of rs
 	REG_T	:	in	${oc.reg_t()};	-- value of rt
@@ -15,7 +15,7 @@
 	N_REG	:	out ${oc.reg_index_t()};	-- register index
 	REG_IN	:	out	${oc.reg_t()};	-- value writing to reg
 	RAM_ADDR	:	out	${oc.ram_addr_t()};	-- ram address
-	RAM_IN	:	out	${oc.ram_t()};	-- value writing to ram
+	RAM_IN	:	out	${oc.reg_t()};	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
 );
