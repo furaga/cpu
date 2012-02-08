@@ -81,7 +81,7 @@ begin
 		 ram_wen);
 
 	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
-							RAM_OUT, IO_IN, SEND_GO, IO_OUT);
+							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,

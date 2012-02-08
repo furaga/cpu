@@ -21,8 +21,8 @@ architecture RTL of exec is
 	signal n_reg_s : ${oc.reg_index_t()};
 	signal n_reg_t : ${oc.reg_index_t()};
 	signal n_reg_d : ${oc.reg_index_t()};
-	signal init : std_logic := '1';
 	signal debug_count : std_logic_vector (31 downto 0) := x"00000000";
+	signal heap_size : std_logic_vector(31 downto 0) := (others=>'0');
 
 begin
 	op_code <= IR(31 downto 26);
@@ -39,7 +39,6 @@ begin
 	n_reg_d <= op_data(15 downto 11);
 
 	process(CLK_EX, RESET) 
-		variable heap_size : std_logic_vector(31 downto 0) := (others=>'0');
 		variable v32 : std_logic_vector(31 downto 0);
 		variable v20 : std_logic_vector(19 downto 0);
 		variable v_mul : std_logic_vector(63 downto 0);
@@ -50,26 +49,21 @@ begin
 -----------------------------------------------------------
 ----	initialize (reg, ram, pc)
 -----------------------------------------------------------
-			if (init = '1') then
-				case PC_IN is
-					when x"00000000" => -- .init_heap_size
-						heap_size := IR;
-						REG_IN <= IR;
-						N_REG <= "00010"; -- g2
-						REG_COND <= "1000";
-						RAM_WEN <= '0';	
-						PC_OUT <= PC_IN + 1;
-					when others =>
-						RAM_IN <= IR;
-						v32 := PC_IN - 1;
-						RAM_ADDR <= v32(17 downto 0)&"00";
-						REG_COND <= "1000";
-						RAM_WEN <= '1';	
-						PC_OUT <= PC_IN + 1;
-						if (heap_size(31 downto 2) = PC_IN(29 downto 0)) then
-							init <= '0';
-						end if;
-				end case;
+			if PC_IN=0 then
+				heap_size <= IR;
+				REG_IN <= IR;
+				REG_COND <= "1000";
+				N_REG <= "00010"; -- g2
+				RAM_WEN <= '0';
+				PC_OUT <= PC_IN + 1;
+			elsif heap_size > 0 then
+				heap_size<=heap_size-4;
+				RAM_IN<=IR;
+				v32 := PC_IN - 1;
+				RAM_ADDR <= v32(17 downto 0)&"00";
+				REG_COND <= "1000";
+				RAM_WEN <= '1';	
+				PC_OUT <= PC_IN + 1;
 -----------------------------------------------------------
 -----------------------------------------------------------
 			else
@@ -106,11 +100,16 @@ begin
 					when "000001" =>	-- IO
 						case funct is
 							when "000000" => -- INPUT
+								REG_COND <= "1100";
+								RAM_WEN <= '0';
+								RAM_ADDR <= x"04000";
+								N_REG <= n_reg_d;
+								PC_OUT <= PC_IN + 1;	
 							when "000001" => -- OUTPUT
-								RAM_IN <= REG_S;
-								RAM_ADDR <= x"04001"; -- 16385
 								REG_COND <= "1000";
 								RAM_WEN <= '1'; 
+								RAM_IN <= REG_S;
+								RAM_ADDR <= x"04001"; -- 16385
 								PC_OUT <= PC_IN + 1;	
 							when others =>
 						end case;

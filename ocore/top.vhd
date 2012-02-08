@@ -21,20 +21,23 @@ architecture board of top is
 	CLK	:	in	std_logic;
 	RESET	:	in	std_logic;
 	IO_IN	:	in	std_logic_vector(7 downto 0);
-	SEND_GO	:	out std_logic;
+	IO_WR	:	out std_logic;
+	IO_RD	:	out std_logic;
 	IO_OUT	:	out	std_logic_vector(7 downto 0)
 	);				
 
 
 	end component;
-	component send is
-port(
-	CLK		:	in	std_logic;
-	RESET	:	in	std_logic;
-	CPU_GO	:	in	std_logic;
-	CPU_OUT	:	in	std_logic_vector(7 downto 0);
-	RS_TX	:	out	std_logic
-);
+	component io_dev is
+	port(
+		CLK		:	in	std_logic;
+		CPU_WR	:	in	std_logic;
+		CPU_RD	:	in	std_logic;
+		CPU_OUT	:	in	std_logic_vector(7 downto 0);
+		CPU_IN	:	out	std_logic_vector(7 downto 0);
+		RS_RX	:	in	std_logic;
+		RS_TX	:	out	std_logic
+	);
 
 
 
@@ -47,18 +50,26 @@ port(
 
 	signal cpu_out : std_logic_vector(7 downto 0);
 	signal cpu_in : std_logic_vector(7 downto 0);
+	signal cpu_wr :std_logic;
+	signal cpu_rd :std_logic;
 
-	signal send_go :std_logic;
 	signal io_ren :std_logic;
 
+
+	signal dev0 : std_logic;
+	signal dev08 : std_logic_vector(7 downto 0);
+
+	signal message : std_logic;
 begin
 
 	--ib: IBUFG port map (i=>MCLK1, o=>iclk);
 	--bg: BUFG port map (i=>iclk, o=>clk);
 	clk <= MCLK1;
 
-	cpunit : core_c port map(clk, reset, cpu_in, send_go, cpu_out);
-	send_u : send port map (clk, reset, send_go, cpu_out, RS_TX);
+	cpunit : core_c port map(clk, reset, cpu_in, cpu_wr, cpu_rd, cpu_out);
+	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, RS_RX, RS_TX);
+	test_send : io_dev port map (clk, cpu_wr, '0', cpu_out, dev08, '0', message);
+	test_recv : io_dev port map (clk, '0', cpu_rd, x"00", cpu_in, message, dev0);
 
 	count_down: process(clk, count)
 	begin

@@ -9,7 +9,8 @@ entity core_c is
 	CLK	:	in	std_logic;
 	RESET	:	in	std_logic;
 	IO_IN	:	in	std_logic_vector(7 downto 0);
-	SEND_GO	:	out std_logic;
+	IO_WR	:	out std_logic;
+	IO_RD	:	out std_logic;
 	IO_OUT	:	out	std_logic_vector(7 downto 0)
 	);				
 
@@ -173,7 +174,8 @@ component ram is
 		DATA_IN		: in	std_logic_vector(31 downto 0);
 		DATA_OUT	: out	std_logic_vector(31 downto 0);
 		IO_IN		: in	std_logic_vector(7 downto 0);
-		SEND_GO		: out	std_logic;
+		IO_WR		: out	std_logic;
+		IO_RD		: out	std_logic;
 		IO_OUT	: out	std_logic_vector(7 downto 0)
 	);
 
@@ -279,7 +281,7 @@ begin
 		 ram_wen);
 
 	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
-							RAM_OUT, IO_IN, SEND_GO, IO_OUT);
+							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,

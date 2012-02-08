@@ -16,7 +16,7 @@ ARCHITECTURE behavior OF testbench IS
   END COMPONENT;
   
   signal MCLK1 : std_logic := '0';
-  signal RS_RX : std_logic := '0';
+  signal RS_RX : std_logic := '1';
   signal RS_TX : std_logic;
 BEGIN
   

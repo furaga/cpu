@@ -6,7 +6,8 @@
 		DATA_IN		: in	${oc.reg_t()};
 		DATA_OUT	: out	${oc.reg_t()};
 		IO_IN		: in	${oc.ram_t()};
-		SEND_GO		: out	std_logic;
+		IO_WR		: out	std_logic;
+		IO_RD		: out	std_logic;
 		IO_OUT	: out	${oc.ram_t()}
 	);
 <%namespace name="oc" file="macro.tmp"/>

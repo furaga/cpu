@@ -1,6 +1,6 @@
 TB = testbench
 OBJS = top.o clk_gen.o core_c.o fetch.o decode.o reg_dc.o 
-OBJS += exec.o reg_wb.o testbench.o ram.o u232c.o send.o
+OBJS += exec.o reg_wb.o testbench.o ram.o u232c.o io_dev.o
 TMPL_DIR = ./tmpl
 
 TARGET = $(TB)
