@@ -1,10 +1,10 @@
 ## -*- coding: utf-8 -*-
 port (
 	CLK_DC	:	in	std_logic;
-	PROM_OUT	:	in ${oc.V32()};
+	PROM_OUT	:	in ${oc.ir_t()};
 	FP_OUT	:	in ${oc.reg_t()};
 	LINK_OUT	:	in ${oc.pc_t()};
-	IR	: out ${oc.V32()};
+	IR	: out ${oc.ir_t()};
 	FP	:	out ${oc.ram_addr_t()};
 	LR	:	out ${oc.pc_t()}
 );

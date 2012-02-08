@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 
 entity cpu is
 	port
@@ -32,7 +32,7 @@ end component;
 component fetch			
 port (
 	CLK_FT	:	in	std_logic;
-	P_COUNT	:	in	std_logic_vector(31 downto 0);
+	PC		:	in	std_logic_vector(31 downto 0);
 	PROM_OUT	:	out	std_logic_vector(31 downto 0)
 );
 
@@ -88,7 +88,6 @@ component reg_dc
 		REG_30	:	in	std_logic_vector(31 downto 0);
 		REG_31	:	in	std_logic_vector(31 downto 0);
 		N_REG_IN	:	in	std_logic_vector (4 downto 0);
-		N_REG_OUT	:	out	std_logic_vector (4 downto 0);
 		REG_OUT	:	out	std_logic_vector(31 downto 0)
 	);
 
@@ -111,7 +110,7 @@ component exec
 	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
 	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
-	N_RAM	:	out	std_logic_vector(19 downto 0);	-- ram address
+	RAM_ADDR	:	out	std_logic_vector(19 downto 0);	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
@@ -185,15 +184,13 @@ end component;
 	signal	CLK_EX	:	std_logic;
 	signal	CLK_MA	:	std_logic;
 	signal	CLK_WB	:	std_logic;
-	signal	P_COUNT	:	std_logic_vector (31 downto 0);
-	signal	PROM_OUT	:	std_logic_vector (31 downto 0);
-	signal	IR	:	std_logic_vector (31 downto 0);
 
-	signal	N_REG	:	std_logic_vector (4 downto 0);
-	signal	N_REG_S	:	std_logic_vector (4 downto 0);
-	signal	N_REG_T	:	std_logic_vector (4 downto 0);
-	signal	N_REG_D	:	std_logic_vector (4 downto 0);
+	signal	PC	:	std_logic_vector(31 downto 0);
+	signal	PROM_OUT	:	std_logic_vector(31 downto 0);
+	signal	IR	:	std_logic_vector(31 downto 0);
+
 	signal	FramePointer	: std_logic_vector(19 downto 0);
+	signal	N_REG	:	std_logic_vector (4 downto 0);
 	signal	REG_IN	:	std_logic_vector (31 downto 0);
 	signal	REG_S	:	std_logic_vector (31 downto 0);
 	signal	REG_T	:	std_logic_vector (31 downto 0);
@@ -232,7 +229,7 @@ end component;
 	signal	REG_29	:	std_logic_vector(31 downto 0);
 	signal	REG_30	:	std_logic_vector(31 downto 0);
 	signal	REG_31	:	std_logic_vector(31 downto 0);
-	signal	N_RAM	:	std_logic_vector (19 downto 0);
+	signal	RAM_ADDR	:	std_logic_vector (19 downto 0);
 	signal	RAM_IN	:	std_logic_vector (31 downto 0);
 	signal	RAM_OUT	:	std_logic_vector (31 downto 0);
 	signal	RAM_WEN	:	std_logic;
@@ -247,13 +244,12 @@ begin
 	clk_u	:	clk_gen port map(CLK, CLK_FT, CLK_DC, CLK_EX, CLK_MA, CLK_WB);
 
 -- fetch phase
-	fetch_u	:	fetch port map(CLK_FT, P_COUNT, PROM_OUT);
+	fetch_u	:	fetch port map(CLK_FT, PC, PROM_OUT);
 
 -- decode phase
 	dec_u	:	decode port map(CLK_DC,
 					PROM_OUT, REG_01, LR_OUT,
-					IR, FramePointer, LinkRegister
-					);
+					IR, FramePointer, LinkRegister);
 
 	regdec_rs	:	reg_dc port map(CLK_DC, 
 		
@@ -261,41 +257,33 @@ begin
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
-,
-		PROM_OUT(25 downto 21),
-		 N_REG_S, REG_S);
-
+, PROM_OUT(25 downto 21), REG_S);
 	regdec_rt	:	reg_dc port map(CLK_DC, 
 		
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
-,
-		PROM_OUT(20 downto 16),
-		 N_REG_T, REG_T);
-
+, PROM_OUT(20 downto 16), REG_T);
 	regdec_rd	:	reg_dc port map(CLK_DC, 
 		
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
-,
-		PROM_OUT(15 downto 11),
-		 N_REG_D, REG_D);
+, PROM_OUT(15 downto 11), REG_D);
 
 -- exec phase
-	exec_u	:	exec port map(CLK_EX, RESET, IR, P_COUNT,
+	exec_u	:	exec port map(CLK_EX, RESET, IR, PC,
 		 REG_S, REG_T, REG_D, FramePointer, LinkRegister,
-		 LR_IN, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_COND,
+		 LR_IN, PC, N_REG, REG_IN, RAM_ADDR, RAM_IN, REG_COND,
 		 RAM_WEN);
 
 -- memory access phase
-	ram_u	: ram port map (CLK_MA, RAM_WEN, N_RAM, RAM_IN,
+	ram_u	: ram port map (CLK_MA, RAM_WEN, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO65_IN, IO64_OUT);
 	
--- write-back phase
+-- write back phase
 	regwb_u	:	reg_wb port map(CLK_WB, RESET,
 		 N_REG, REG_IN, LR_IN, RAM_OUT, REG_COND,
 		 
@@ -303,8 +291,7 @@ begin
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
-, LR_OUT
-	 );
+, LR_OUT);
 
 end RTL;			
 

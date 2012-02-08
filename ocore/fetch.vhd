@@ -1,12 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 
 entity fetch is
 port (
 	CLK_FT	:	in	std_logic;
-	P_COUNT	:	in	std_logic_vector(31 downto 0);
+	PC		:	in	std_logic_vector(31 downto 0);
 	PROM_OUT	:	out	std_logic_vector(31 downto 0)
 );
 
@@ -198,7 +198,7 @@ x"AFE2001C",
 x"43E20018",
 x"C0000020",
 x"8FE2001C",
-x"20040009",
+x"20040006",
 x"C0000644",
 x"20680000",
 x"C0000324",
@@ -20025,7 +20025,7 @@ begin
 	read_op: process(CLK_FT)
 	begin
 		if (CLK_FT'event and CLK_FT = '1') then
-			PROM_OUT <= mem(conv_integer(P_COUNT(15 downto 0)));
+			PROM_OUT <= mem(conv_integer(PC(15 downto 0)));
 		end if;
 	end process;
 

@@ -1,11 +1,15 @@
 ## -*- coding: utf-8 -*-
-<%def name="V32()">std_logic_vector(31 downto 0)</%def>
-<%def name="V20()">std_logic_vector(19 downto 0)</%def>
-<%def name="V16()">std_logic_vector(15 downto 0)</%def>
-<%def name="V5()">std_logic_vector(4 downto 0)</%def>
+<%def name="V(size)">std_logic_vector(${size})</%def>
+
+<%def name="V32()">${V('31 downto 0')}</%def>
+<%def name="V20()">${V('19 downto 0')}</%def>
+<%def name="V16()">${V('15 downto 0')}</%def>
+<%def name="V5()">${V('4 downto 0')}</%def>
+
 <%def name="reg_t()">${V32()}</%def>
 <%def name="ram_t()">${V32()}</%def>
+<%def name="ir_t()">${V32()}</%def>
+<%def name="pc_t()">${V32()}</%def>
 <%def name="reg_index_t()">${V5()}</%def>
 <%def name="ram_addr_t()">${V20()}</%def>
-<%def name="pc_t()">${V32()}</%def>
 

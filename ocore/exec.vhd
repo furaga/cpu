@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 --use ieee.numeric_std.all;
 --use work.alu_pack.all;
 
@@ -22,7 +22,7 @@ entity exec is
 	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
 	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
-	N_RAM	:	out	std_logic_vector(19 downto 0);	-- ram address
+	RAM_ADDR	:	out	std_logic_vector(19 downto 0);	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
@@ -86,7 +86,7 @@ begin
 					when others =>
 						RAM_IN <= IR;
 						v32 := PC_IN - 1;
-						N_RAM <= v32(19 downto 0);
+						RAM_ADDR <= v32(19 downto 0);
 						REG_COND <= "1000";
 						RAM_WEN <= '1';	
 						PC_OUT <= PC_IN + 1;
@@ -129,7 +129,7 @@ begin
 							when "000000" => -- INPUT
 							when "000001" => -- OUTPUT
 								RAM_IN <= REG_S;
-								N_RAM <= x"01000";
+								RAM_ADDR <= x"01000";
 								REG_COND <= "1000";
 								RAM_WEN <= '1'; 
 								PC_OUT <= PC_IN + 1;	
@@ -192,7 +192,7 @@ begin
 						N_REG <= "00001"; -- g1
 						REG_IN <= x"000"&(FP_OUT - 4); -- push
 						RAM_WEN <= '1';
-						N_RAM <= "00"&FP_OUT(19 downto 2);
+						RAM_ADDR <= "00"&FP_OUT(19 downto 2);
 						RAM_IN <= LR_OUT;
 						LR_IN <= PC_IN + 1;
 						PC_OUT <= "00000000"&target(25 downto 2);
@@ -202,7 +202,7 @@ begin
 						v20 := FP_OUT + 4; -- next frame pointer
 						REG_IN <= x"000"&(FP_OUT + 4); -- pop
 						RAM_WEN <= '0';
-						N_RAM <= "00"&v20(19 downto 2);
+						RAM_ADDR <= "00"&v20(19 downto 2);
 						PC_OUT <= LR_OUT;
 					when "001010" =>	-- JEQ
 						REG_COND <= "0000";
@@ -234,14 +234,14 @@ begin
 						PC_OUT <= ("00000000"&target(25 downto 2));
 					when "101011" =>	-- STI
 						v32 := REG_S - ex_imm;
-						N_RAM <= v32(21 downto 2);
+						RAM_ADDR <= v32(21 downto 2);
 						RAM_IN <= REG_T;
 						REG_COND <= "0000";
 						RAM_WEN <= '1'; 
 						PC_OUT <= PC_IN + 1;	
 					when "100011" =>	-- LDI
 						v32 := REG_S - ex_imm;
-						N_RAM <= v32(21 downto 2);
+						RAM_ADDR <= v32(21 downto 2);
 						N_REG <= n_reg_t;
 						REG_COND <= "1100";
 						RAM_WEN <= '0'; 

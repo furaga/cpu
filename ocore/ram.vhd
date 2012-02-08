@@ -1,7 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_unsigned.all;
 use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
 
 
 entity ram is
@@ -20,8 +20,7 @@ end ram;
 
 architecture behavior of ram is
 	subtype ram_word is std_logic_vector(31 downto 0);
-	type ram_array is array (0 to 4096) of ram_word;
-
+	type ram_array is array (0 to 4095) of ram_word;
 	signal ram_data : ram_array;
 	signal addr_in	: integer range 0 to 4096;
 

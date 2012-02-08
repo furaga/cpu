@@ -31,15 +31,13 @@ end component;
 	signal	CLK_EX	:	std_logic;
 	signal	CLK_MA	:	std_logic;
 	signal	CLK_WB	:	std_logic;
-	signal	P_COUNT	:	std_logic_vector (31 downto 0);
-	signal	PROM_OUT	:	std_logic_vector (31 downto 0);
-	signal	IR	:	std_logic_vector (31 downto 0);
 
-	signal	N_REG	:	std_logic_vector (4 downto 0);
-	signal	N_REG_S	:	std_logic_vector (4 downto 0);
-	signal	N_REG_T	:	std_logic_vector (4 downto 0);
-	signal	N_REG_D	:	std_logic_vector (4 downto 0);
+	signal	PC	:	${oc.pc_t()};
+	signal	PROM_OUT	:	${oc.ir_t()};
+	signal	IR	:	${oc.ir_t()};
+
 	signal	FramePointer	: ${oc.ram_addr_t()};
+	signal	N_REG	:	std_logic_vector (4 downto 0);
 	signal	REG_IN	:	std_logic_vector (31 downto 0);
 	signal	REG_S	:	std_logic_vector (31 downto 0);
 	signal	REG_T	:	std_logic_vector (31 downto 0);
@@ -49,7 +47,7 @@ end component;
 %for x in num_list:
 	signal	REG_${x}	:	${oc.reg_t()};
 %endfor
-	signal	N_RAM	:	std_logic_vector (19 downto 0);
+	signal	RAM_ADDR	:	std_logic_vector (19 downto 0);
 	signal	RAM_IN	:	std_logic_vector (31 downto 0);
 	signal	RAM_OUT	:	std_logic_vector (31 downto 0);
 	signal	RAM_WEN	:	std_logic;
@@ -64,49 +62,39 @@ begin
 	clk_u	:	clk_gen port map(CLK, CLK_FT, CLK_DC, CLK_EX, CLK_MA, CLK_WB);
 
 -- fetch phase
-	fetch_u	:	fetch port map(CLK_FT, P_COUNT, PROM_OUT);
+	fetch_u	:	fetch port map(CLK_FT, PC, PROM_OUT);
 
 -- decode phase
 	dec_u	:	decode port map(CLK_DC,
 					PROM_OUT, REG_01, LR_OUT,
-					IR, FramePointer, LinkRegister
-					);
+					IR, FramePointer, LinkRegister);
 
 	regdec_rs	:	reg_dc port map(CLK_DC, 
-		${REGS()},
-		PROM_OUT(25 downto 21),
-		 N_REG_S, REG_S);
-
+		${REGs()}, PROM_OUT(25 downto 21), REG_S);
 	regdec_rt	:	reg_dc port map(CLK_DC, 
-		${REGS()},
-		PROM_OUT(20 downto 16),
-		 N_REG_T, REG_T);
-
+		${REGs()}, PROM_OUT(20 downto 16), REG_T);
 	regdec_rd	:	reg_dc port map(CLK_DC, 
-		${REGS()},
-		PROM_OUT(15 downto 11),
-		 N_REG_D, REG_D);
+		${REGs()}, PROM_OUT(15 downto 11), REG_D);
 
 -- exec phase
-	exec_u	:	exec port map(CLK_EX, RESET, IR, P_COUNT,
+	exec_u	:	exec port map(CLK_EX, RESET, IR, PC,
 		 REG_S, REG_T, REG_D, FramePointer, LinkRegister,
-		 LR_IN, P_COUNT, N_REG, REG_IN, N_RAM, RAM_IN, REG_COND,
+		 LR_IN, PC, N_REG, REG_IN, RAM_ADDR, RAM_IN, REG_COND,
 		 RAM_WEN);
 
 -- memory access phase
-	ram_u	: ram port map (CLK_MA, RAM_WEN, N_RAM, RAM_IN,
+	ram_u	: ram port map (CLK_MA, RAM_WEN, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO65_IN, IO64_OUT);
 	
--- write-back phase
+-- write back phase
 	regwb_u	:	reg_wb port map(CLK_WB, RESET,
 		 N_REG, REG_IN, LR_IN, RAM_OUT, REG_COND,
-		 ${REGS()}, LR_OUT
-	 );
+		 ${REGs()}, LR_OUT);
 
 end RTL;			
 
 <%namespace name="oc" file="macro.tmp"/>
-<%def name="REGS()">
+<%def name="REGs()">
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 

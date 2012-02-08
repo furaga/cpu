@@ -6,7 +6,7 @@ end fetch;
 
 architecture behavior of fetch is
 
-	subtype word_t is ${oc.V32()};
+	subtype word_t is ${oc.ir_t()};
 	type mem_t is array (0 to 19999) of word_t;
 	constant mem : mem_t := (
 <%include file="test"/>
@@ -16,7 +16,7 @@ begin
 	read_op: process(CLK_FT)
 	begin
 		if (CLK_FT'event and CLK_FT = '1') then
-			PROM_OUT <= mem(conv_integer(P_COUNT(15 downto 0)));
+			PROM_OUT <= mem(conv_integer(PC(15 downto 0)));
 		end if;
 	end process;
 

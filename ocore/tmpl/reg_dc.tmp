@@ -45,7 +45,6 @@ begin
 			when "11111" => REG_OUT <= REG_31;
 			when others =>
 		end case;
-		N_REG_OUT <= N_REG_IN;
 		end if;
 	end process;
 
