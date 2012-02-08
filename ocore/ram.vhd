@@ -42,7 +42,7 @@ begin
 		end if;
 	end process;
 
-	process(RAM_WEN, addr_in)
+	process(RAM_WEN, addr_in, ram_data, IO65_IN)
 	begin
 		if (RAM_WEN='0') then
 			if (addr_in = 4096) then

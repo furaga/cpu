@@ -15,9 +15,7 @@ entity cpu is
 
 
 end cpu;
-
 architecture RTL of cpu is
-
 component clk_gen			
 	port (
 		CLK	:	in	std_logic;
@@ -31,7 +29,6 @@ component clk_gen
 
 
 end component;			
-
 component fetch			
 port (
 	CLK_FT	:	in	std_logic;
@@ -41,7 +38,6 @@ port (
 
 
 end component;			
-
 component decode			
 port (
 	CLK_DC	:	in	std_logic;
@@ -55,7 +51,6 @@ port (
 
 
 end component;			
-
 component reg_dc			
 
 	port (
@@ -100,8 +95,6 @@ component reg_dc
 
 
 end component;			
-
-
 component exec
 	port
 	(
@@ -126,8 +119,6 @@ component exec
 
 
 end component;
-
-
 component reg_wb			
 
 	port (
@@ -175,7 +166,6 @@ component reg_wb
 
 
 end component;
-
 component ram is
 	port (
 		CLK_MA		: in	std_logic;
@@ -209,51 +199,43 @@ end component;
 	signal	REG_T	:	std_logic_vector (31 downto 0);
 	signal	REG_D	:	std_logic_vector (31 downto 0);
 	signal	REG_COND	:	std_logic_vector (3 downto 0);
-	signal	REG_00	:	std_logic_vector (31 downto 0);
-	signal	REG_01	:	std_logic_vector (31 downto 0);
-	signal	REG_02	:	std_logic_vector (31 downto 0);
-	signal	REG_03	:	std_logic_vector (31 downto 0);
-	signal	REG_04	:	std_logic_vector (31 downto 0);
-	signal	REG_05	:	std_logic_vector (31 downto 0);
-	signal	REG_06	:	std_logic_vector (31 downto 0);
-	signal	REG_07	:	std_logic_vector (31 downto 0);
-	signal	REG_08	:	std_logic_vector (31 downto 0);
-	signal	REG_09	:	std_logic_vector (31 downto 0);
-	signal	REG_10	:	std_logic_vector (31 downto 0);
-	signal	REG_11	:	std_logic_vector (31 downto 0);
-	signal	REG_12	:	std_logic_vector (31 downto 0);
-	signal	REG_13	:	std_logic_vector (31 downto 0);
-	signal	REG_14	:	std_logic_vector (31 downto 0);
-	signal	REG_15	:	std_logic_vector (31 downto 0);
-	signal	REG_16	:	std_logic_vector (31 downto 0);
-	signal	REG_17	:	std_logic_vector (31 downto 0);
-	signal	REG_18	:	std_logic_vector (31 downto 0);
-	signal	REG_19	:	std_logic_vector (31 downto 0);
-	signal	REG_20	:	std_logic_vector (31 downto 0);
-	signal	REG_21	:	std_logic_vector (31 downto 0);
-	signal	REG_22	:	std_logic_vector (31 downto 0);
-	signal	REG_23	:	std_logic_vector (31 downto 0);
-	signal	REG_24	:	std_logic_vector (31 downto 0);
-	signal	REG_25	:	std_logic_vector (31 downto 0);
-	signal	REG_26	:	std_logic_vector (31 downto 0);
-	signal	REG_27	:	std_logic_vector (31 downto 0);
-	signal	REG_28	:	std_logic_vector (31 downto 0);
-	signal	REG_29	:	std_logic_vector (31 downto 0);
-	signal	REG_30	:	std_logic_vector (31 downto 0);
-	signal	REG_31	:	std_logic_vector (31 downto 0);
 
+	signal	REG_00	:	std_logic_vector(31 downto 0);
+	signal	REG_01	:	std_logic_vector(31 downto 0);
+	signal	REG_02	:	std_logic_vector(31 downto 0);
+	signal	REG_03	:	std_logic_vector(31 downto 0);
+	signal	REG_04	:	std_logic_vector(31 downto 0);
+	signal	REG_05	:	std_logic_vector(31 downto 0);
+	signal	REG_06	:	std_logic_vector(31 downto 0);
+	signal	REG_07	:	std_logic_vector(31 downto 0);
+	signal	REG_08	:	std_logic_vector(31 downto 0);
+	signal	REG_09	:	std_logic_vector(31 downto 0);
+	signal	REG_10	:	std_logic_vector(31 downto 0);
+	signal	REG_11	:	std_logic_vector(31 downto 0);
+	signal	REG_12	:	std_logic_vector(31 downto 0);
+	signal	REG_13	:	std_logic_vector(31 downto 0);
+	signal	REG_14	:	std_logic_vector(31 downto 0);
+	signal	REG_15	:	std_logic_vector(31 downto 0);
+	signal	REG_16	:	std_logic_vector(31 downto 0);
+	signal	REG_17	:	std_logic_vector(31 downto 0);
+	signal	REG_18	:	std_logic_vector(31 downto 0);
+	signal	REG_19	:	std_logic_vector(31 downto 0);
+	signal	REG_20	:	std_logic_vector(31 downto 0);
+	signal	REG_21	:	std_logic_vector(31 downto 0);
+	signal	REG_22	:	std_logic_vector(31 downto 0);
+	signal	REG_23	:	std_logic_vector(31 downto 0);
+	signal	REG_24	:	std_logic_vector(31 downto 0);
+	signal	REG_25	:	std_logic_vector(31 downto 0);
+	signal	REG_26	:	std_logic_vector(31 downto 0);
+	signal	REG_27	:	std_logic_vector(31 downto 0);
+	signal	REG_28	:	std_logic_vector(31 downto 0);
+	signal	REG_29	:	std_logic_vector(31 downto 0);
+	signal	REG_30	:	std_logic_vector(31 downto 0);
+	signal	REG_31	:	std_logic_vector(31 downto 0);
 	signal	N_RAM	:	std_logic_vector (19 downto 0);
 	signal	RAM_IN	:	std_logic_vector (31 downto 0);
 	signal	RAM_OUT	:	std_logic_vector (31 downto 0);
 	signal	RAM_WEN	:	std_logic;
-	signal	RAM_0	:	std_logic_vector (31 downto 0);
-	signal	RAM_1	:	std_logic_vector (31 downto 0);
-	signal	RAM_2	:	std_logic_vector (31 downto 0);
-	signal	RAM_3	:	std_logic_vector (31 downto 0);
-	signal	RAM_4	:	std_logic_vector (31 downto 0);
-	signal	RAM_5	:	std_logic_vector (31 downto 0);
-	signal	RAM_6	:	std_logic_vector (31 downto 0);
-	signal	RAM_7	:	std_logic_vector (31 downto 0);
 
 	signal	LR_IN	:	std_logic_vector(31 downto 0);
 	signal	LR_OUT	:	std_logic_vector(31 downto 0);

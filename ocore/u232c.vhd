@@ -3,8 +3,9 @@ use IEEE.STD_LOGIC_1164.ALL;
 use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
+
 entity u232c is
-  generic (wtime: std_logic_vector(15 downto 0) := x"0001");
+  generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
   Port ( clk  : in  STD_LOGIC;
          data : in  STD_LOGIC_VECTOR (7 downto 0);
          go   : in  STD_LOGIC;
