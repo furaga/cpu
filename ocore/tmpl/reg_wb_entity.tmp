@@ -9,9 +9,13 @@ num_list = map ((lambda x : '%02d' % x), xrange(32))
 		REG_IN	:	in	${oc.reg_t()};
 		LR_IN	:	in	${oc.pc_t()};
 		RAM_OUT	:	in	${oc.reg_t()};
+		FR_FLAG	:	in	std_logic;
 		REG_COND	:	in	std_logic_vector(3 downto 0);
 %for x in num_list:
 		REG_${x}WB	:	out	${oc.reg_t()};
+%endfor
+%for x in num_list:
+		FREG_${x}WB	:	out	${oc.reg_t()};
 %endfor
 		LR_WB		:	out	${oc.pc_t()}
 	);

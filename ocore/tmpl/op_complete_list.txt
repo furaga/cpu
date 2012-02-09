@@ -1,6 +1,0 @@
-- 20
-- MVLO - MVHI - ADD - SUB
-- ADDI - SUBI - MULI - SLLI
-- SRLI - MUL - LDI - JEQ
-- JNE - JLT - JMP - LDI
-- STI - CALL - (OUTPUT) - HALT

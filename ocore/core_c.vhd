@@ -106,12 +106,18 @@ component exec
 	REG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs
 	REG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt
 	REG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd
+	FREG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs <== new
+	FREG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt <== new
+	FREG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd <== new
 	FP_OUT	:	in	std_logic_vector(19 downto 0);	-- current frame pinter
 	LR_OUT	:	in	std_logic_vector(31 downto 0);	-- current link register
 	LR_IN	:	out	std_logic_vector(31 downto 0);	-- next link register
 	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
+
 	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
+	N_FREG	:	out std_logic_vector(4 downto 0);	-- register index <== new
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
+	FR_FLAG :	out std_logic; -- <== new
 	RAM_ADDR	:	out	std_logic_vector(19 downto 0);	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
@@ -129,6 +135,7 @@ component reg_wb
 		REG_IN	:	in	std_logic_vector(31 downto 0);
 		LR_IN	:	in	std_logic_vector(31 downto 0);
 		RAM_OUT	:	in	std_logic_vector(31 downto 0);
+		FR_FLAG	:	in	std_logic;
 		REG_COND	:	in	std_logic_vector(3 downto 0);
 		REG_00WB	:	out	std_logic_vector(31 downto 0);
 		REG_01WB	:	out	std_logic_vector(31 downto 0);
@@ -162,6 +169,38 @@ component reg_wb
 		REG_29WB	:	out	std_logic_vector(31 downto 0);
 		REG_30WB	:	out	std_logic_vector(31 downto 0);
 		REG_31WB	:	out	std_logic_vector(31 downto 0);
+		FREG_00WB	:	out	std_logic_vector(31 downto 0);
+		FREG_01WB	:	out	std_logic_vector(31 downto 0);
+		FREG_02WB	:	out	std_logic_vector(31 downto 0);
+		FREG_03WB	:	out	std_logic_vector(31 downto 0);
+		FREG_04WB	:	out	std_logic_vector(31 downto 0);
+		FREG_05WB	:	out	std_logic_vector(31 downto 0);
+		FREG_06WB	:	out	std_logic_vector(31 downto 0);
+		FREG_07WB	:	out	std_logic_vector(31 downto 0);
+		FREG_08WB	:	out	std_logic_vector(31 downto 0);
+		FREG_09WB	:	out	std_logic_vector(31 downto 0);
+		FREG_10WB	:	out	std_logic_vector(31 downto 0);
+		FREG_11WB	:	out	std_logic_vector(31 downto 0);
+		FREG_12WB	:	out	std_logic_vector(31 downto 0);
+		FREG_13WB	:	out	std_logic_vector(31 downto 0);
+		FREG_14WB	:	out	std_logic_vector(31 downto 0);
+		FREG_15WB	:	out	std_logic_vector(31 downto 0);
+		FREG_16WB	:	out	std_logic_vector(31 downto 0);
+		FREG_17WB	:	out	std_logic_vector(31 downto 0);
+		FREG_18WB	:	out	std_logic_vector(31 downto 0);
+		FREG_19WB	:	out	std_logic_vector(31 downto 0);
+		FREG_20WB	:	out	std_logic_vector(31 downto 0);
+		FREG_21WB	:	out	std_logic_vector(31 downto 0);
+		FREG_22WB	:	out	std_logic_vector(31 downto 0);
+		FREG_23WB	:	out	std_logic_vector(31 downto 0);
+		FREG_24WB	:	out	std_logic_vector(31 downto 0);
+		FREG_25WB	:	out	std_logic_vector(31 downto 0);
+		FREG_26WB	:	out	std_logic_vector(31 downto 0);
+		FREG_27WB	:	out	std_logic_vector(31 downto 0);
+		FREG_28WB	:	out	std_logic_vector(31 downto 0);
+		FREG_29WB	:	out	std_logic_vector(31 downto 0);
+		FREG_30WB	:	out	std_logic_vector(31 downto 0);
+		FREG_31WB	:	out	std_logic_vector(31 downto 0);
 		LR_WB		:	out	std_logic_vector(31 downto 0)
 	);
 
@@ -194,14 +233,15 @@ end component;
 	signal	ir	:	std_logic_vector(31 downto 0);
 
 	signal	FramePointer	: std_logic_vector(19 downto 0);
-	signal	N_REG	:	std_logic_vector (4 downto 0);
-	signal	REG_IN	:	std_logic_vector (31 downto 0);
-	signal	REG_S	:	std_logic_vector (31 downto 0);
-	signal	REG_T	:	std_logic_vector (31 downto 0);
-	signal	REG_D	:	std_logic_vector (31 downto 0);
-	signal	FREG_S	:	std_logic_vector (31 downto 0);
-	signal	FREG_T	:	std_logic_vector (31 downto 0);
-	signal	FREG_D	:	std_logic_vector (31 downto 0);
+	signal	n_reg	:	std_logic_vector(4 downto 0);
+	signal	n_freg	:	std_logic_vector(4 downto 0);
+	signal	reg_in	:	std_logic_vector(31 downto 0);
+	signal	REG_S	:	std_logic_vector(31 downto 0);
+	signal	REG_T	:	std_logic_vector(31 downto 0);
+	signal	REG_D	:	std_logic_vector(31 downto 0);
+	signal	FREG_S	:	std_logic_vector(31 downto 0);
+	signal	FREG_T	:	std_logic_vector(31 downto 0);
+	signal	FREG_D	:	std_logic_vector(31 downto 0);
 	signal	REG_COND	:	std_logic_vector (3 downto 0);
 
 	signal	REG_00	:	std_logic_vector(31 downto 0);
@@ -268,14 +308,15 @@ end component;
 	signal	FREG_29	:	std_logic_vector(31 downto 0);
 	signal	FREG_30	:	std_logic_vector(31 downto 0);
 	signal	FREG_31	:	std_logic_vector(31 downto 0);
-	signal	RAM_ADDR	:	std_logic_vector (19 downto 0);
-	signal	RAM_IN	:	std_logic_vector (31 downto 0);
-	signal	RAM_OUT	:	std_logic_vector (31 downto 0);
+	signal	RAM_ADDR	:	std_logic_vector(19 downto 0);
+	signal	RAM_IN	:	std_logic_vector(31 downto 0);
+	signal	RAM_OUT	:	std_logic_vector(31 downto 0);
 	signal	ram_wen	:	std_logic;
 
 	signal	LR_IN	:	std_logic_vector(31 downto 0);
 	signal	LR_OUT	:	std_logic_vector(31 downto 0);
 	signal	LinkRegister	:	std_logic_vector(31 downto 0);
+	signal	fr_flag :	std_logic;
 
 begin			
 
@@ -327,21 +368,27 @@ begin
 
 -- exec phase
 	exec_u	:	exec port map(clk_ex, RESET, ir, pc,
-		 REG_S, REG_T, REG_D, FramePointer, LinkRegister,
-		 LR_IN, pc, N_REG, REG_IN, RAM_ADDR, RAM_IN, REG_COND,
+		 REG_S, REG_T, REG_D, FREG_S, FREG_T, FREG_D, FramePointer, LinkRegister,
+		 LR_IN, pc, n_reg, n_freg, reg_in, fr_flag, RAM_ADDR, RAM_IN, REG_COND,
 		 ram_wen);
 
+-- memory access phase
 	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,
-		 N_REG, REG_IN, LR_IN, RAM_OUT, REG_COND,
+		 n_reg, reg_in, LR_IN, RAM_OUT, fr_flag, REG_COND,
 		 
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
+, 
+		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
+		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
+		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
+		 FREG_24, FREG_25, FREG_26, FREG_27, FREG_28, FREG_29, FREG_30, FREG_31
 , LR_OUT);
 
 end RTL;			

@@ -8,12 +8,18 @@
 	REG_S	:	in	${oc.reg_t()};	-- value of rs
 	REG_T	:	in	${oc.reg_t()};	-- value of rt
 	REG_D	:	in	${oc.reg_t()};	-- value of rd
+	FREG_S	:	in	${oc.reg_t()};	-- value of rs <== new
+	FREG_T	:	in	${oc.reg_t()};	-- value of rt <== new
+	FREG_D	:	in	${oc.reg_t()};	-- value of rd <== new
 	FP_OUT	:	in	${oc.ram_addr_t()};	-- current frame pinter
 	LR_OUT	:	in	${oc.pc_t()};	-- current link register
 	LR_IN	:	out	${oc.pc_t()};	-- next link register
 	PC_OUT	:	out	${oc.pc_t()};	-- next pc
+
 	N_REG	:	out ${oc.reg_index_t()};	-- register index
+	N_FREG	:	out ${oc.reg_index_t()};	-- register index <== new
 	REG_IN	:	out	${oc.reg_t()};	-- value writing to reg
+	FR_FLAG :	out std_logic; -- <== new
 	RAM_ADDR	:	out	${oc.ram_addr_t()};	-- ram address
 	RAM_IN	:	out	${oc.reg_t()};	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
