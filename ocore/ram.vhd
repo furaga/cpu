@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
 
 
 entity ram is
@@ -22,7 +23,7 @@ end ram;
 
 architecture behavior of ram is
 	subtype ram_rec_t is std_logic_vector(7 downto 0);
-	type ram_array_t is array (0 to 16385) of ram_rec_t;
+	type ram_array_t is array (0 to 131072) of ram_rec_t;
 	signal ram_data : ram_array_t;
 	signal addr_in	: integer range 0 to 16385;
 

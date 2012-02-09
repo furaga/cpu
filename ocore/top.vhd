@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
 
 --library UNISIM;
 --use UNISIM.VComponents.all;
@@ -55,11 +56,9 @@ architecture board of top is
 
 	signal io_ren :std_logic;
 
-
 	signal dev0 : std_logic;
 	signal dev08 : std_logic_vector(7 downto 0);
 
-	signal message : std_logic;
 begin
 
 	--ib: IBUFG port map (i=>MCLK1, o=>iclk);
@@ -67,9 +66,9 @@ begin
 	clk <= MCLK1;
 
 	cpunit : core_c port map(clk, reset, cpu_in, cpu_wr, cpu_rd, cpu_out);
-	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, RS_RX, RS_TX);
-	test_send : io_dev port map (clk, cpu_wr, '0', cpu_out, dev08, '0', message);
-	test_recv : io_dev port map (clk, '0', cpu_rd, x"00", cpu_in, message, dev0);
+	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, RS_RX, RS_TX);
+	--test_send : io_dev port map (clk, cpu_wr, '0', cpu_out, dev08, '0', RS_TX);
+	--test_recv : io_dev port map (clk, '0', cpu_rd, x"00", cpu_in, RS_TX, dev0);
 
 	count_down: process(clk, count)
 	begin

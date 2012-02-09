@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
 --use ieee.numeric_std.all;
 --use work.alu_pack.all;
 
@@ -115,6 +116,20 @@ begin
 								REG_COND <= "1000";
 								RAM_WEN <= '0';	
 								PC_OUT <= PC_IN + 1;
+							when "001000" =>	-- BRANCH
+								REG_COND <= "0000";
+								RAM_WEN <= '0';	
+								RAM_ADDR <= x"00000";
+								PC_OUT <= REG_S;
+							when "110000" =>	-- CALLR
+								REG_COND <= "1010";
+								N_REG <= "00001"; -- g1
+								REG_IN <= x"000"&(FP_OUT - 4); -- push
+								RAM_WEN <= '1';
+								RAM_ADDR <= FP_OUT;
+								RAM_IN <= LR_OUT;
+								LR_IN <= PC_IN + 1;
+								PC_OUT <= REG_S;
 							when "111111" => -- HALT
 								REG_COND <= "0000";
 								RAM_WEN <= '0';	
@@ -197,7 +212,7 @@ begin
 						RAM_ADDR <= FP_OUT;
 						RAM_IN <= LR_OUT;
 						LR_IN <= PC_IN + 1;
-						PC_OUT <= "00000000"&target(25 downto 2);
+						PC_OUT <= "000000"&target(25 downto 0);
 					when "111000" =>	-- RETURN
 						REG_COND <= "1011";
 						N_REG <= "00001"; -- g1
@@ -209,7 +224,7 @@ begin
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						if (REG_S = REG_T) then
-							PC_OUT <= PC_IN + (ex_imm(31)&ex_imm(31)&ex_imm(31 downto 2));
+							PC_OUT <= PC_IN + ex_imm;
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
@@ -217,22 +232,22 @@ begin
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						if (REG_S /= REG_T) then
-							PC_OUT <= PC_IN + (ex_imm(31)&ex_imm(31)&ex_imm(31 downto 2));
+							PC_OUT <= PC_IN + ex_imm;
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "011010" =>	-- JLT
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
-						if (REG_S < REG_T) then
-							PC_OUT <= PC_IN + (ex_imm(31)&ex_imm(31)&ex_imm(31 downto 2));
+						if (signed(REG_S) < signed(REG_T)) then
+							PC_OUT <= PC_IN + ex_imm;
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "000010" =>	-- JMP
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
-						PC_OUT <= ("00000000"&target(25 downto 2));
+						PC_OUT <= ("000000"&target(25 downto 0));
 					when "101011" =>	-- STI
 						v32 := REG_S - ex_imm;
 						RAM_ADDR <= v32(19 downto 0);

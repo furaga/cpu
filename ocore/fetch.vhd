@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
 
 entity fetch is
 port (
@@ -18,16 +19,16 @@ architecture behavior of fetch is
 	subtype word_t is std_logic_vector(31 downto 0);
 	type mem_t is array (0 to 19999) of word_t;
 	constant mem : mem_t := (
+x"00000018",
 x"00000000",
+x"3F800000",
+x"BF800000",
+x"00800000",
+x"4B000000",
+x"4B000000",
 x"20030030",
 x"04600001",
-x"20030001",
-x"20030001",
-x"04002000",
-x"20840001",
-x"04800001",
 x"0000003F",
-x"00000000",
 x"00000000",
 x"00000000",
 x"00000000",

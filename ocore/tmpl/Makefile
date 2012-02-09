@@ -31,8 +31,8 @@ core_c.vhd: core_c.tmp $(ENTITIES) $(BASE)
 top.vhd: top.tmp top_entity.tmp core_c_entity.tmp io_dev_entity.tmp $(BASE)
 io_dev.vhd: io_dev.tmp io_dev_entity.tmp $(BASE)
 
-ASM = ./asmcho3
-SIM = ./simcho2
+ASM = ./asmcho
+SIM = ./simcho
 asm:
 	$(ASM) -h $(SIM_TARGET).s
 sim:

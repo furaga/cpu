@@ -42,10 +42,16 @@ end component;
 	signal	REG_S	:	std_logic_vector (31 downto 0);
 	signal	REG_T	:	std_logic_vector (31 downto 0);
 	signal	REG_D	:	std_logic_vector (31 downto 0);
+	signal	FREG_S	:	std_logic_vector (31 downto 0);
+	signal	FREG_T	:	std_logic_vector (31 downto 0);
+	signal	FREG_D	:	std_logic_vector (31 downto 0);
 	signal	REG_COND	:	std_logic_vector (3 downto 0);
 <% num_list = map ((lambda x : '%02d' % x), xrange(32)) %>
 %for x in num_list:
 	signal	REG_${x}	:	${oc.reg_t()};
+%endfor
+%for x in num_list:
+	signal	FREG_${x}	:	${oc.reg_t()};
 %endfor
 	signal	RAM_ADDR	:	std_logic_vector (19 downto 0);
 	signal	RAM_IN	:	std_logic_vector (31 downto 0);
@@ -67,12 +73,12 @@ begin
 -- decode phase
 	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT,
 					ir, FramePointer, LinkRegister);
-	regdec_rs	:	reg_dc port map(clk_dc, 
-		${REGs()}, prom_out(25 downto 21), REG_S);
-	regdec_rt	:	reg_dc port map(clk_dc, 
-		${REGs()}, prom_out(20 downto 16), REG_T);
-	regdec_rd	:	reg_dc port map(clk_dc, 
-		${REGs()}, prom_out(15 downto 11), REG_D);
+	regdec_rs:reg_dc port map(clk_dc, ${REGs()}, prom_out(25 downto 21), REG_S);
+	regdec_rt:reg_dc port map(clk_dc, ${REGs()}, prom_out(20 downto 16), REG_T);
+	regdec_rd:reg_dc port map(clk_dc, ${REGs()}, prom_out(15 downto 11), REG_D);
+	regdec_frs:reg_dc port map(clk_dc, ${FREGs()}, prom_out(25 downto 21), FREG_S);
+	regdec_frt:reg_dc port map(clk_dc, ${FREGs()}, prom_out(20 downto 16), FREG_T);
+	regdec_frd:reg_dc port map(clk_dc, ${FREGs()}, prom_out(15 downto 11), FREG_D);
 
 -- exec phase
 	exec_u	:	exec port map(clk_ex, RESET, ir, pc,
@@ -80,6 +86,7 @@ begin
 		 LR_IN, pc, N_REG, REG_IN, RAM_ADDR, RAM_IN, REG_COND,
 		 ram_wen);
 
+-- memory access phase
 	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
 	
@@ -88,7 +95,6 @@ begin
 		 N_REG, REG_IN, LR_IN, RAM_OUT, REG_COND,
 		 ${REGs()}, LR_OUT);
 
-
 end RTL;			
 <%namespace name="oc" file="macro.tmp"/>
 <%def name="REGs()">
@@ -96,4 +102,10 @@ end RTL;
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
+</%def>
+<%def name="FREGs()">
+		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
+		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
+		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
+		 FREG_24, FREG_25, FREG_26, FREG_27, FREG_28, FREG_29, FREG_30, FREG_31
 </%def>

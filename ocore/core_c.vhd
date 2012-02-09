@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
 
 entity core_c is
 	port
@@ -198,6 +199,9 @@ end component;
 	signal	REG_S	:	std_logic_vector (31 downto 0);
 	signal	REG_T	:	std_logic_vector (31 downto 0);
 	signal	REG_D	:	std_logic_vector (31 downto 0);
+	signal	FREG_S	:	std_logic_vector (31 downto 0);
+	signal	FREG_T	:	std_logic_vector (31 downto 0);
+	signal	FREG_D	:	std_logic_vector (31 downto 0);
 	signal	REG_COND	:	std_logic_vector (3 downto 0);
 
 	signal	REG_00	:	std_logic_vector(31 downto 0);
@@ -232,6 +236,38 @@ end component;
 	signal	REG_29	:	std_logic_vector(31 downto 0);
 	signal	REG_30	:	std_logic_vector(31 downto 0);
 	signal	REG_31	:	std_logic_vector(31 downto 0);
+	signal	FREG_00	:	std_logic_vector(31 downto 0);
+	signal	FREG_01	:	std_logic_vector(31 downto 0);
+	signal	FREG_02	:	std_logic_vector(31 downto 0);
+	signal	FREG_03	:	std_logic_vector(31 downto 0);
+	signal	FREG_04	:	std_logic_vector(31 downto 0);
+	signal	FREG_05	:	std_logic_vector(31 downto 0);
+	signal	FREG_06	:	std_logic_vector(31 downto 0);
+	signal	FREG_07	:	std_logic_vector(31 downto 0);
+	signal	FREG_08	:	std_logic_vector(31 downto 0);
+	signal	FREG_09	:	std_logic_vector(31 downto 0);
+	signal	FREG_10	:	std_logic_vector(31 downto 0);
+	signal	FREG_11	:	std_logic_vector(31 downto 0);
+	signal	FREG_12	:	std_logic_vector(31 downto 0);
+	signal	FREG_13	:	std_logic_vector(31 downto 0);
+	signal	FREG_14	:	std_logic_vector(31 downto 0);
+	signal	FREG_15	:	std_logic_vector(31 downto 0);
+	signal	FREG_16	:	std_logic_vector(31 downto 0);
+	signal	FREG_17	:	std_logic_vector(31 downto 0);
+	signal	FREG_18	:	std_logic_vector(31 downto 0);
+	signal	FREG_19	:	std_logic_vector(31 downto 0);
+	signal	FREG_20	:	std_logic_vector(31 downto 0);
+	signal	FREG_21	:	std_logic_vector(31 downto 0);
+	signal	FREG_22	:	std_logic_vector(31 downto 0);
+	signal	FREG_23	:	std_logic_vector(31 downto 0);
+	signal	FREG_24	:	std_logic_vector(31 downto 0);
+	signal	FREG_25	:	std_logic_vector(31 downto 0);
+	signal	FREG_26	:	std_logic_vector(31 downto 0);
+	signal	FREG_27	:	std_logic_vector(31 downto 0);
+	signal	FREG_28	:	std_logic_vector(31 downto 0);
+	signal	FREG_29	:	std_logic_vector(31 downto 0);
+	signal	FREG_30	:	std_logic_vector(31 downto 0);
+	signal	FREG_31	:	std_logic_vector(31 downto 0);
 	signal	RAM_ADDR	:	std_logic_vector (19 downto 0);
 	signal	RAM_IN	:	std_logic_vector (31 downto 0);
 	signal	RAM_OUT	:	std_logic_vector (31 downto 0);
@@ -252,27 +288,42 @@ begin
 -- decode phase
 	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT,
 					ir, FramePointer, LinkRegister);
-	regdec_rs	:	reg_dc port map(clk_dc, 
-		
+	regdec_rs:reg_dc port map(clk_dc, 
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
 , prom_out(25 downto 21), REG_S);
-	regdec_rt	:	reg_dc port map(clk_dc, 
-		
+	regdec_rt:reg_dc port map(clk_dc, 
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
 , prom_out(20 downto 16), REG_T);
-	regdec_rd	:	reg_dc port map(clk_dc, 
-		
+	regdec_rd:reg_dc port map(clk_dc, 
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 
 		 REG_08, REG_09, REG_10, REG_11, REG_12, REG_13, REG_14, REG_15, 
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
 , prom_out(15 downto 11), REG_D);
+	regdec_frs:reg_dc port map(clk_dc, 
+		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
+		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
+		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
+		 FREG_24, FREG_25, FREG_26, FREG_27, FREG_28, FREG_29, FREG_30, FREG_31
+, prom_out(25 downto 21), FREG_S);
+	regdec_frt:reg_dc port map(clk_dc, 
+		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
+		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
+		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
+		 FREG_24, FREG_25, FREG_26, FREG_27, FREG_28, FREG_29, FREG_30, FREG_31
+, prom_out(20 downto 16), FREG_T);
+	regdec_frd:reg_dc port map(clk_dc, 
+		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
+		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
+		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
+		 FREG_24, FREG_25, FREG_26, FREG_27, FREG_28, FREG_29, FREG_30, FREG_31
+, prom_out(15 downto 11), FREG_D);
 
 -- exec phase
 	exec_u	:	exec port map(clk_ex, RESET, ir, pc,
@@ -293,8 +344,8 @@ begin
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
 , LR_OUT);
 
-
 end RTL;			
+
 
 
 
