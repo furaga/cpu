@@ -39,9 +39,36 @@ entity exec is
 end exec;
 architecture RTL of exec is
 	component myfadd is
-		port (
-			I1, I2 : in  std_logic_vector(31 downto 0);
-			O  : out std_logic_vector(31 downto 0));
+port ( 
+    I1, I2 : in  std_logic_vector(31 downto 0);
+    O  : out std_logic_vector(31 downto 0));
+
+
+
+	end component;
+	component myfmul is
+port ( 
+    I1, I2 : in  std_logic_vector(31 downto 0);
+    O  : out std_logic_vector(31 downto 0));
+
+
+
+	end component;
+	component myfsqrt is
+port (
+    I  : in  std_logic_vector(31 downto 0);
+    O  : out std_logic_vector(31 downto 0));
+
+
+
+	end component;
+	component myfinv is
+port (
+    I  : in  std_logic_vector(31 downto 0);
+    O  : out std_logic_vector(31 downto 0));
+
+
+
 	end component;
 
 	signal op_code : std_logic_vector(5 downto 0);
@@ -65,17 +92,21 @@ architecture RTL of exec is
 	signal farg2 : std_logic_vector(31 downto 0);
 	signal fout_add : std_logic_vector(31 downto 0);
 	signal fout_sub : std_logic_vector(31 downto 0);
+	signal fout_mul : std_logic_vector(31 downto 0);
+	signal fout_sqrt : std_logic_vector(31 downto 0);
+	signal fout_div : std_logic_vector(31 downto 0);
 	signal freg_t_bar : std_logic_vector(31 downto 0);
-	signal fpu_out : std_logic_vector (0 to 31);
-	signal addi_out : std_logic_vector(31 downto 0);
 
-	signal test : std_logic_vector(3 downto 0):="1111";
-
+	signal inverted : std_logic_vector(31 downto 0);
 
 begin
+	freg_t_bar <= (not FREG_T(31))&FREG_T(30 downto 0);
 	fadd_u : myfadd port map (FREG_S, FREG_T, fout_add);
 	fsub_u : myfadd port map (FREG_S, freg_t_bar, fout_sub);
-	freg_t_bar <= (not FREG_T(31))&FREG_T(30 downto 0);
+	fmul_u : myfmul port map (FREG_S, FREG_T, fout_mul);
+	fsqrt_u : myfsqrt port map (FREG_S, fout_sqrt);
+	finv_u : myfinv port map (FREG_T, inverted);
+	fdiv_u : myfmul port map (FREG_S, inverted, fout_div);
 
 	op_code <= IR(31 downto 26);
 	op_data <= IR(25 downto 0);
@@ -190,7 +221,6 @@ begin
 								REG_COND <= "1100";
 								RAM_WEN <= '0'; 
 								PC_OUT <= PC_IN + 1;	
-
 							when "111111" => -- HALT
 								REG_COND <= "0000";
 								RAM_WEN <= '0';	
@@ -227,6 +257,27 @@ begin
 								PC_OUT <= PC_IN + 1;
 							when "000001" => -- FSUB
 								REG_IN <= fout_sub;
+								N_REG <= n_reg_d;
+								REG_COND <= "1000";
+								RAM_WEN <= '0';
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;
+							when "000010" => -- FMUL
+								REG_IN <= fout_mul;
+								N_REG <= n_reg_d;
+								REG_COND <= "1000";
+								RAM_WEN <= '0';
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;
+							when "000011" => -- FDIV
+								REG_IN <= fout_div;
+								N_REG <= n_reg_d;
+								REG_COND <= "1000";
+								RAM_WEN <= '0';
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;
+							when "000100" => -- FSQRT
+								REG_IN <= fout_sqrt;
 								N_REG <= n_reg_d;
 								REG_COND <= "1000";
 								RAM_WEN <= '0';

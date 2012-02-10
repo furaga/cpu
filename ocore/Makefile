@@ -1,7 +1,7 @@
 TB = testbench
 OBJS = top.o clk_gen.o core_c.o fetch.o decode.o reg_dc.o \
 	exec.o reg_wb.o testbench.o ram.o u232c.o io_dev.o \
-	fadd_ut.o 
+	fadd.o fmul.o fsqrt.o finv.o finv_table.o fsqrt_table.o
 		
 TMPL_DIR = ./tmpl
 
