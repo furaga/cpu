@@ -25,7 +25,7 @@ fetch.vhd: fetch.tmp fetch_entity.tmp $(BASE) asm
 reg_dc.vhd: reg_dc.tmp reg_dc_entity.tmp $(BASE)
 reg_wb.vhd: reg_wb.tmp reg_wb_entity.tmp $(BASE)
 ram.vhd: ram.tmp ram_entity.tmp $(BASE)
-exec.vhd: exec.tmp exec_entity.tmp $(BASE)
+exec.vhd: exec.tmp fpu_entity.tmp exec_entity.tmp $(BASE)
 clk_gen.vhd: clk_gen.tmp clk_gen_entity.tmp $(BASE)
 core_c.vhd: core_c.tmp $(ENTITIES) $(BASE)
 top.vhd: top.tmp top_entity.tmp core_c_entity.tmp io_dev_entity.tmp $(BASE)

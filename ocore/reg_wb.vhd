@@ -140,44 +140,45 @@ begin
 		REG_29WB	<= (others=>'0');
 		REG_30WB	<= (others=>'0');
 		REG_31WB	<= (others=>'0');
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
-		FREG_01WB 	<= reg1_init;
+		FREG_00WB 	<= (others=>'0');
+		FREG_01WB 	<= (others=>'0');
+		FREG_02WB 	<= (others=>'0');
+		FREG_03WB 	<= (others=>'0');
+		FREG_04WB 	<= (others=>'0');
+		FREG_05WB 	<= (others=>'0');
+		FREG_06WB 	<= (others=>'0');
+		FREG_07WB 	<= (others=>'0');
+		FREG_08WB 	<= (others=>'0');
+		FREG_09WB 	<= (others=>'0');
+		FREG_10WB 	<= (others=>'0');
+		FREG_11WB 	<= (others=>'0');
+		FREG_12WB 	<= (others=>'0');
+		FREG_13WB 	<= (others=>'0');
+		FREG_14WB 	<= (others=>'0');
+		FREG_15WB 	<= (others=>'0');
+		FREG_16WB 	<= (others=>'0');
+		FREG_17WB 	<= (others=>'0');
+		FREG_18WB 	<= (others=>'0');
+		FREG_19WB 	<= (others=>'0');
+		FREG_20WB 	<= (others=>'0');
+		FREG_21WB 	<= (others=>'0');
+		FREG_22WB 	<= (others=>'0');
+		FREG_23WB 	<= (others=>'0');
+		FREG_24WB 	<= (others=>'0');
+		FREG_25WB 	<= (others=>'0');
+		FREG_26WB 	<= (others=>'0');
+		FREG_27WB 	<= (others=>'0');
+		FREG_28WB 	<= (others=>'0');
+		FREG_29WB 	<= (others=>'0');
+		FREG_30WB 	<= (others=>'0');
+		FREG_31WB 	<= (others=>'0');
 		LR_WB <= (others=>'0');
-	elsif(CLK_WB'event and CLK_WB = '1') then
+	elsif rising_edge(CLK_WB) then
+
 		if reg_wen='1' then
 			if FR_FLAG='0' then
 				case N_REG is
-					when "00000" => REG_00WB <= x"00000000";	-- REG_0
+					--when "00000" => REG_00WB <= x"00000000";	-- REG_0
 					when "00001" => REG_01WB <= reg_v;
 					when "00010" => REG_02WB <= reg_v;
 					when "00011" => REG_03WB <= reg_v;
@@ -249,6 +250,7 @@ begin
 				end case;
 			end if;
 		end if;
+		REG_00WB <= (others=>'0');
 		if lr_wen='1' then
 			LR_WB <= lr_v;
 		end if;

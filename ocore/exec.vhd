@@ -38,6 +38,11 @@ entity exec is
 
 end exec;
 architecture RTL of exec is
+	component myfadd is
+		port (
+			I1, I2 : in  std_logic_vector(31 downto 0);
+			O  : out std_logic_vector(31 downto 0));
+	end component;
 
 	signal op_code : std_logic_vector(5 downto 0);
 	signal op_data : std_logic_vector(25 downto 0);
@@ -56,10 +61,24 @@ architecture RTL of exec is
 	signal heap_size : std_logic_vector(31 downto 0) := (others=>'0');
 	signal start : std_logic := '0';
 
+	signal farg1 : std_logic_vector(31 downto 0);
+	signal farg2 : std_logic_vector(31 downto 0);
+	signal fout_add : std_logic_vector(31 downto 0);
+	signal fout_sub : std_logic_vector(31 downto 0);
+	signal freg_t_bar : std_logic_vector(31 downto 0);
+	signal fpu_out : std_logic_vector (0 to 31);
+	signal addi_out : std_logic_vector(31 downto 0);
+
+	signal test : std_logic_vector(3 downto 0):="1111";
+
+
 begin
+	fadd_u : myfadd port map (FREG_S, FREG_T, fout_add);
+	fsub_u : myfadd port map (FREG_S, freg_t_bar, fout_sub);
+	freg_t_bar <= (not FREG_T(31))&FREG_T(30 downto 0);
+
 	op_code <= IR(31 downto 26);
 	op_data <= IR(25 downto 0);
-
 	shamt <= op_data(10 downto 6);
 	funct <= op_data(5 downto 0);
 	imm <= op_data(15 downto 0);
@@ -74,6 +93,7 @@ begin
 		variable v32 : std_logic_vector(31 downto 0);
 		variable v20 : std_logic_vector(19 downto 0);
 		variable v_mul : std_logic_vector(63 downto 0);
+		variable slide_num : integer range 0 to 65535;
 	begin
 		if (RESET = '1') then 
 			PC_OUT <= (others=>'0');
@@ -94,7 +114,7 @@ begin
 				RAM_IN<=IR;
 				v32 := PC_IN - 1;
 				RAM_ADDR <= v32(17 downto 0)&"00";
-				REG_COND <= "1000";
+				REG_COND <= "0000";
 				RAM_WEN <= '1';	
 				FR_FLAG <= '0';
 				PC_OUT <= PC_IN + 1;
@@ -198,6 +218,27 @@ begin
 						end case;
 					when "010001" => -- FPI
 						case funct is
+							when "000000" => -- FADD
+								REG_IN <= fout_add;
+								N_REG <= n_reg_d;
+								REG_COND <= "1000";
+								RAM_WEN <= '0';
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;
+							when "000001" => -- FSUB
+								REG_IN <= fout_sub;
+								N_REG <= n_reg_d;
+								REG_COND <= "1000";
+								RAM_WEN <= '0';
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;
+							when "000101" => -- FABS
+								REG_IN <= '0'&FREG_S(30 downto 0);
+								N_REG <= n_reg_d;
+								REG_COND <= "1000";
+								RAM_WEN <= '0';
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;
 							when "000110" => -- FMOV
 								REG_IN <= FREG_S;
 								N_REG <= n_reg_d;
@@ -252,16 +293,13 @@ begin
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
 					when "101000" =>	-- SLLI
-						case imm(1 downto 0) is
-							when "11" =>
-								REG_IN <= REG_S(28 downto 0)&"000";
-							when "10" =>
-								REG_IN <= REG_S(29 downto 0)&"00";
-							when "01" =>
-								REG_IN <= REG_S(30 downto 0)&"0";
-							when others =>
-								REG_IN <= REG_S;
-						end case;
+						slide_num := conv_integer(imm);
+						if slide_num < 32 then
+							REG_IN <= REG_S((31-slide_num) downto 0) &
+									  conv_std_logic_vector(0,slide_num);
+						else 
+							REG_IN <= (others=>'0');
+						end if;
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
@@ -269,7 +307,13 @@ begin
 						PC_OUT <= PC_IN + 1;
 
 					when "101010" =>	-- SRLI
-						REG_IN <= REG_S(31)&REG_S(31 downto 1);
+						slide_num := conv_integer(imm);
+						if slide_num < 32 then
+							REG_IN <= conv_std_logic_vector(REG_S(31),slide_num) &
+									  REG_S(31 downto slide_num);
+						else 
+							REG_IN <= (others=>'0');
+						end if;
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
@@ -290,7 +334,8 @@ begin
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0'; -- ok
-						if (FREG_S(31)='1' and FREG_T(31)='0') then
+
+						if (FREG_S(31)='1') and (FREG_T(31)='0') then
 							PC_OUT <= PC_IN + ex_imm;	-- true
 						elsif (FREG_S(31)='0' and FREG_T(31)='1') then
 							PC_OUT <= PC_IN + 1;		-- false
@@ -319,13 +364,6 @@ begin
 								end if;
 							end if;
 						end if;
-							
-						if (FREG_S = FREG_T) then
-							PC_OUT <= PC_IN + ex_imm;
-						else
-							PC_OUT <= PC_IN + 1;
-						end if;
-
 					when "110000" =>	-- CALL
 						REG_COND <= "1010";
 						N_REG <= "00001"; -- g1
@@ -427,8 +465,6 @@ begin
 						REG_COND <= "1100";
 						RAM_WEN <= '0'; 
 						PC_OUT <= PC_IN + 1;	
-
-
 					when others =>	
 						REG_COND <= "0000";
 						RAM_WEN <= '0'; 

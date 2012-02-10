@@ -1,9 +1,16 @@
-TB = testbench
-OBJS = top.o clk_gen.o core_c.o fetch.o decode.o reg_dc.o \
-	exec.o reg_wb.o testbench.o ram.o u232c.o io_dev.o \
-	fadd_ut.o 
-		
-TMPL_DIR = ./tmpl
+TB = top_tb
+OBJS =\
+expo.o\
+fpadder.o\
+fpu.o\
+rom.o\
+rom_false.o\
+rounding.o\
+rshifter.o\
+selector.o\
+sign.o\
+top.o\
+top_tb.o
 
 TARGET = $(TB)
 
@@ -14,10 +21,6 @@ OPTION = -fexplicit
 
 .PHONY: default wave vcd reload
 
-default: push rel
-
-push:
-	make -sC tmpl
 rel: reload
 reload: clean vcd
 wave: vcd
@@ -38,4 +41,4 @@ sim:
 	make -sC $(TMPL_DIR) sim
 
 clean:
-	rm -f *.s *.o *.vcd *.cf $(TB)
+	rm -f *.o *.vcd *.cf $(TB)

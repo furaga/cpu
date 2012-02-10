@@ -1,0 +1,6 @@
+## -*- coding: utf-8 -*-
+port ( 
+    I1, I2 : in  std_logic_vector (0 to 31);
+    O  : out std_logic_vector (0 to 31));
+<%namespace name="oc" file="macro.tmp"/>
+

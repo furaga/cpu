@@ -55,7 +55,7 @@ begin
 	begin
 		if rising_edge(clk_dc) then
 		case N_REG_IN is
-			when "00000" => REG_OUT <= x"00000000";
+			when "00000" => REG_OUT <= REG_00;
 			when "00001" => REG_OUT <= REG_01;
 			when "00010" => REG_OUT <= REG_02;
 			when "00011" => REG_OUT <= REG_03;
