@@ -25,7 +25,7 @@ architecture blackbox of u232c is
 
   signal recv_timer : std_logic_vector(15 downto 0) := (others=>'0');
   signal recvbuf: std_logic_vector(8 downto 0) := (others=>'0');
-  signal recv_state: std_logic_vector(3 downto 0) := "1111";
+  signal recv_state: std_logic_vector(3 downto 0) := "1001";
 begin
 
   send : process(clk)

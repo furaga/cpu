@@ -26,11 +26,17 @@ architecture arch of io_dev is
 	signal send_tail	: integer range 0 to ${oc.io_sbufsize()} := 0;
 	signal send_empty : std_logic := '0';
 
-	type recvbuf_t is array (0 to ${oc.io_rbufsize()}) of buf_rec_t;
-	signal recvbuf : recvbuf_t;
+	--signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
+	--signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 0;
 	signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
-	signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 0;
-	signal recv_empty : std_logic := '0';
+	signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 1137;
+	type recvbuf_t is array (0 to ${oc.io_rbufsize()}) of buf_rec_t;
+	--signal recvbuf : recvbuf_t;
+	signal recvbuf : recvbuf_t :=
+	(
+<%include file="contest_sld.txt"/>
+	);
+
 
 	signal u232c_o : std_logic_vector(7 downto 0);
 	signal u232c_i : std_logic_vector(7 downto 0);
@@ -38,18 +44,18 @@ architecture arch of io_dev is
 	signal send_go : std_logic;
 	signal send_busy : std_logic := '0';
 
-	signal recv_busy : std_logic;
+	signal recv_busy : std_logic := '0';
 
 	
 begin
-	rs232c: u232c generic map (wtime=>x"0000")
+	rs232c: u232c generic map (wtime=>${oc.io_wtime()})
 	port map (clk, u232c_o, send_go, send_busy, RS_TX, u232c_i, recv_busy, RS_RX);
 
 	send_enqueue : process(clk, CPU_WR, CPU_OUT)
 	begin
 		if rising_edge(clk) then
 			if CPU_WR='1' then
-				sendbuf(send_tail) <= CPU_OUT;
+				sendbuf(send_tail) <= CPU_OUT(7 downto 0);
 				send_tail <= send_tail + 1;
 			end if;
 		end if;
@@ -69,8 +75,10 @@ begin
 		end if;
 	end process;
 
-	recv_empty <= '1' when recv_head=recv_tail else '0';
-	CPU_IN <= recvbuf(recv_head);
+	NYET <= '1' when recv_head=recv_tail else '0';
+
+	CPU_IN <= x"000000"&recvbuf(recv_head);
+
 	recv_enqueue : process(recv_busy, u232c_i)
 	begin
 		if falling_edge(recv_busy) then
@@ -78,6 +86,7 @@ begin
 			recv_tail <= recv_tail+1;
 		end if;
 	end process;
+
 	recv_dequeue : process(CPU_RD)
 	begin
 		if rising_edge(CPU_RD) then

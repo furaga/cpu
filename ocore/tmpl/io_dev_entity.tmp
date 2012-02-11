@@ -3,8 +3,9 @@
 		CLK		:	in	std_logic;
 		CPU_WR	:	in	std_logic;
 		CPU_RD	:	in	std_logic;
-		CPU_OUT	:	in	${oc.ram_t()};
-		CPU_IN	:	out	${oc.ram_t()};
+		CPU_OUT	:	in	${oc.reg_t()};
+		CPU_IN	:	out	${oc.reg_t()};
+		NYET	:	out std_logic;
 		RS_RX	:	in	std_logic;
 		RS_TX	:	out	std_logic
 	);

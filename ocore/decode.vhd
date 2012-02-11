@@ -11,6 +11,7 @@ port (
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
 	FP_OUT	:	in std_logic_vector(31 downto 0);
 	LINK_OUT	:	in std_logic_vector(31 downto 0);
+	INPUT_FLAG	:	out std_logic;
 	IR	: out std_logic_vector(31 downto 0);
 	FP	:	out std_logic_vector(19 downto 0);
 	LR	:	out std_logic_vector(31 downto 0)
@@ -29,6 +30,12 @@ begin
 			IR <= PROM_OUT;
 			FP <= FP_OUT(19 downto 0);
 			LR <= LINK_OUT(31 downto 0);
+			if PROM_OUT(31 downto 26)="000001" and
+			   PROM_OUT(5 downto 0)="000000" then
+				INPUT_FLAG <= '1';
+			else
+				INPUT_FLAG <= '0';
+			end if;
 		end if;
 	end process;
 end RTL;

@@ -63,17 +63,19 @@ end component;
 	signal	LR_OUT	:	${oc.pc_t()};
 	signal	LinkRegister	:	${oc.pc_t()};
 	signal	fr_flag :	std_logic;
+	signal	input_flag :	std_logic;
 
 begin			
 
 -- clk(state machine)
-	clk_u	:	clk_gen port map(CLK, clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
+	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
+				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
 
 -- fetch phase
 	fetch_u	:	fetch port map(clk_ft, pc, prom_out);
 
 -- decode phase
-	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT,
+	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT, input_flag,
 					ir, FramePointer, LinkRegister);
 	regdec_rs:reg_dc port map(clk_dc, ${REGs()}, prom_out(25 downto 21), REG_S);
 	regdec_rt:reg_dc port map(clk_dc, ${REGs()}, prom_out(20 downto 16), REG_T);

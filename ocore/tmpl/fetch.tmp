@@ -15,7 +15,7 @@ architecture behavior of fetch is
 begin
 	read_op: process(CLK_FT)
 	begin
-		if (CLK_FT'event and CLK_FT = '1') then
+		if rising_edge(CLK_FT) then
 			PROM_OUT <= mem(conv_integer(PC(15 downto 0)));
 		end if;
 	end process;

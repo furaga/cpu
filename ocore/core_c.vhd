@@ -9,10 +9,11 @@ entity core_c is
 	(			
 	CLK	:	in	std_logic;
 	RESET	:	in	std_logic;
-	IO_IN	:	in	std_logic_vector(7 downto 0);
+	NYET	:	in	std_logic;
+	IO_IN	:	in	std_logic_vector(31 downto 0);
 	IO_WR	:	out std_logic;
 	IO_RD	:	out std_logic;
-	IO_OUT	:	out	std_logic_vector(7 downto 0)
+	IO_OUT	:	out	std_logic_vector(31 downto 0)
 	);				
 
 
@@ -21,6 +22,8 @@ architecture RTL of core_c is
 component clk_gen
 	port (
 		CLK	:	in	std_logic;
+		INPUT_FLAG	: in std_logic;
+		NYET		: in std_logic;
 		CLK_FT	:	out	std_logic;
 		CLK_DC	:	out	std_logic;
 		CLK_EX	:	out	std_logic;
@@ -46,6 +49,7 @@ port (
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
 	FP_OUT	:	in std_logic_vector(31 downto 0);
 	LINK_OUT	:	in std_logic_vector(31 downto 0);
+	INPUT_FLAG	:	out std_logic;
 	IR	: out std_logic_vector(31 downto 0);
 	FP	:	out std_logic_vector(19 downto 0);
 	LR	:	out std_logic_vector(31 downto 0)
@@ -213,10 +217,10 @@ component ram is
 		ADDR		: in	std_logic_vector(19 downto 0);
 		DATA_IN		: in	std_logic_vector(31 downto 0);
 		DATA_OUT	: out	std_logic_vector(31 downto 0);
-		IO_IN		: in	std_logic_vector(7 downto 0);
+		IO_IN		: in	std_logic_vector(31 downto 0);
 		IO_WR		: out	std_logic;
 		IO_RD		: out	std_logic;
-		IO_OUT	: out	std_logic_vector(7 downto 0)
+		IO_OUT	: out	std_logic_vector(31 downto 0)
 	);
 
 
@@ -317,17 +321,19 @@ end component;
 	signal	LR_OUT	:	std_logic_vector(31 downto 0);
 	signal	LinkRegister	:	std_logic_vector(31 downto 0);
 	signal	fr_flag :	std_logic;
+	signal	input_flag :	std_logic;
 
 begin			
 
 -- clk(state machine)
-	clk_u	:	clk_gen port map(CLK, clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
+	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
+				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
 
 -- fetch phase
 	fetch_u	:	fetch port map(clk_ft, pc, prom_out);
 
 -- decode phase
-	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT,
+	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT, input_flag,
 					ir, FramePointer, LinkRegister);
 	regdec_rs:reg_dc port map(clk_dc, 
 		 REG_00, REG_01, REG_02, REG_03, REG_04, REG_05, REG_06, REG_07, 

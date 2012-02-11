@@ -8,13 +8,13 @@ TMPL_DIR = ./tmpl
 TARGET = $(TB)
 
 IEEE = 'synopsys'
-TIME = 10000ns
+TIME = 100us
 OPTION = -fexplicit
 .SUFFIXES: .vhd .vcd .tmp
 
 .PHONY: default wave vcd reload
 
-default: push 
+default: push
 
 push:
 	make -sC tmpl

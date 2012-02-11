@@ -1,10 +1,11 @@
 ## -*- coding: utf-8 -*-
 
-#<%def name="ram_size()">524288</%def>
-#<%def name="addr_in_max()">524289</%def>
-#<%def name="output_addr()">524289</%def>
-#<%def name="input_addr()">524288</%def>
-#<%def name="bottom_addr()">524284</%def>
+##<%def name="ram_size()">524288</%def>
+##<%def name="addr_in_max()">524289</%def>
+##<%def name="output_addr()">524289</%def>
+##<%def name="input_addr()">524288</%def>
+##<%def name="bottom_addr()">524284</%def>
+
 <%def name="ram_size()">65536</%def>
 <%def name="addr_in_max()">65537</%def>
 <%def name="output_addr()">65537</%def>
@@ -13,7 +14,8 @@
 
 ##<%def name="io_sbufsize()">262144</%def>
 <%def name="io_sbufsize()">2047</%def>
-<%def name="io_rbufsize()">2047</%def>
+<%def name="io_rbufsize()">1137</%def>
+<%def name="io_wtime()">x"0000"</%def>
 
 <%def name="V(size)">std_logic_vector(${size})</%def>
 
@@ -23,6 +25,7 @@
 <%def name="V8()">${V('7 downto 0')}</%def>
 <%def name="V5()">${V('4 downto 0')}</%def>
 
+<%def name="io_bus_t()">${V32()}</%def>
 <%def name="reg_t()">${V32()}</%def>
 <%def name="ram_t()">${V8()}</%def>
 <%def name="ir_t()">${V32()}</%def>

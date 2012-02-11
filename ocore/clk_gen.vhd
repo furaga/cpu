@@ -8,6 +8,8 @@ use ieee.std_logic_unsigned.all;
 entity clk_gen is
 	port (
 		CLK	:	in	std_logic;
+		INPUT_FLAG	: in std_logic;
+		NYET		: in std_logic;
 		CLK_FT	:	out	std_logic;
 		CLK_DC	:	out	std_logic;
 		CLK_EX	:	out	std_logic;
@@ -27,7 +29,7 @@ begin
 
 	cascade: process(CLK)
 	begin
-		if (CLK'event and CLK = '1') then
+		if rising_edge(CLK) then
 			case count is
 				when "000" =>
 					CLK_FT <= '1';
@@ -51,12 +53,22 @@ begin
 					CLK_WB <= '0';
 					count <= count + 1;
 				when "011" =>
-					CLK_FT <= '0';
-					CLK_DC <= '0';
-					CLK_EX <= '0';
-					CLK_MA <= '1';
-					CLK_WB <= '0';
-					count <= count + 1;
+					if INPUT_FLAG='1' and NYET='1' then
+						CLK_FT <= '0';
+						CLK_DC <= '0';
+						CLK_EX <= '1';
+						CLK_MA <= '0';
+						CLK_WB <= '0';
+						count <= count;
+					else
+						CLK_FT <= '0';
+						CLK_DC <= '0';
+						CLK_EX <= '0';
+						CLK_MA <= '1';
+						CLK_WB <= '0';
+						count <= count + 1;
+					end if;
+
 				when "100" =>
 					CLK_FT <= '0';
 					CLK_DC <= '0';
