@@ -14,7 +14,7 @@ OPTION = -fexplicit
 
 .PHONY: default wave vcd reload
 
-default: push rel
+default: push 
 
 push:
 	make -sC tmpl

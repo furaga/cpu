@@ -23,9 +23,9 @@ end ram;
 
 architecture behavior of ram is
 	subtype ram_rec_t is std_logic_vector(7 downto 0);
-	type ram_array_t is array (0 to 131072) of ram_rec_t;
+	type ram_array_t is array (0 to 65536) of ram_rec_t;
 	signal ram_data : ram_array_t;
-	signal addr_in	: integer range 0 to 16385;
+	signal addr_in	: integer range 0 to 65537;
 
 begin
 
@@ -37,10 +37,10 @@ begin
 	begin
 		if (rising_edge(CLK_MA)) then
 			if (RAM_WEN='1') then
-				if (addr_in = 16385) then
+				if (addr_in = 65537) then
 					IO_WR <= '1';
 					IO_OUT <= DATA_IN(7 downto 0);
-				elsif (addr_in < 16380) then
+				elsif (addr_in < 65532) then
 					IO_WR <= '0';
 					ram_data(addr_in + 0) <= DATA_IN(7  downto 0);
 					ram_data(addr_in + 1) <= DATA_IN(15 downto 8);
@@ -60,7 +60,7 @@ begin
 	process(CLK_MA, RAM_WEN, addr_in, ram_data, IO_IN)
 	begin
 		if (RAM_WEN='0') then
-			if (addr_in = 16384) then
+			if (addr_in = 65536) then
 				DATA_OUT <= x"000000"&IO_IN;
 				if rising_edge(CLK_MA) then
 					IO_RD <= '1';
@@ -68,7 +68,7 @@ begin
 				if falling_edge(CLK_MA) then
 					IO_RD <= '0';
 				end if;
-			elsif (addr_in < 16380) then
+			elsif (addr_in < 65532) then
 				IO_RD <= '0';
 				DATA_OUT(7  downto 0)  <= ram_data(addr_in + 0);
 				DATA_OUT(15 downto 8)  <= ram_data(addr_in + 1);

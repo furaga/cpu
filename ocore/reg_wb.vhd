@@ -86,7 +86,7 @@ entity reg_wb is
 end reg_wb;
 architecture RTL of reg_wb is
 	constant reg1_init : std_logic_vector(31 downto 0)
-				:= x"00003ffc";
+				:= conv_std_logic_vector(65532, 32);
 	signal reg_v : std_logic_vector(31 downto 0);
 	signal lr_v : std_logic_vector(31 downto 0);
 	signal from_ram : std_logic;

@@ -35,16 +35,16 @@ architecture arch of io_dev is
 
 	subtype buf_rec_t is std_logic_vector(7 downto 0);
 
-	type sendbuf_t is array (0 to 1023) of buf_rec_t;
+	type sendbuf_t is array (0 to 2047) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
-	signal send_head	: integer range 0 to 1023 := 0;
-	signal send_tail	: integer range 0 to 1023 := 0;
+	signal send_head	: integer range 0 to 2047 := 0;
+	signal send_tail	: integer range 0 to 2047 := 0;
 	signal send_empty : std_logic := '0';
 
-	type recvbuf_t is array (0 to 1023) of buf_rec_t;
+	type recvbuf_t is array (0 to 2047) of buf_rec_t;
 	signal recvbuf : recvbuf_t;
-	signal recv_head	: integer range 0 to 1023 := 0;
-	signal recv_tail	: integer range 0 to 1023 := 0;
+	signal recv_head	: integer range 0 to 2047 := 0;
+	signal recv_tail	: integer range 0 to 2047 := 0;
 	signal recv_empty : std_logic := '0';
 
 	signal u232c_o : std_logic_vector(7 downto 0);

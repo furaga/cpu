@@ -233,7 +233,7 @@ begin
 							when "000000" => -- INPUT
 								REG_COND <= "1100";
 								RAM_WEN <= '0';
-								RAM_ADDR <= x"04000";
+								RAM_ADDR <= conv_std_logic_vector(65536,20);
 								N_REG <= n_reg_d;
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
@@ -241,7 +241,7 @@ begin
 								REG_COND <= "0000";
 								RAM_WEN <= '1'; 
 								RAM_IN <= REG_S;
-								RAM_ADDR <= x"04001"; -- 16385
+								RAM_ADDR <= conv_std_logic_vector(65537,20); -- 16385
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
 							when others =>
@@ -391,29 +391,20 @@ begin
 						elsif (FREG_S(31)='0' and FREG_T(31)='1') then
 							PC_OUT <= PC_IN + 1;		-- false
 						elsif (FREG_S(31)='0' and FREG_T(31)='0') then
-							if (FREG_S(30 downto 23) < FREG_T(30 downto 23)) then
+
+							if (FREG_S(30 downto 0) < FREG_T(30 downto 0)) then
 								PC_OUT <= PC_IN + ex_imm;	-- true
-							elsif (FREG_S(30 downto 23) > FREG_T(30 downto 23)) then
+							elsif (FREG_S(30 downto 0) > FREG_T(30 downto 0)) then
 								PC_OUT <= PC_IN + 1;		-- false
-							else
-								if (FREG_S(22 downto 0) < FREG_T(22 downto 0)) then
-									PC_OUT <= PC_IN + ex_imm;	-- true
-								else
-									PC_OUT <= PC_IN + 1;		-- false
-								end if;
 							end if;
+
 						else --(FREG_S(31)='1' and FREG_T(31)='1')
-							if (FREG_S(30 downto 23) > FREG_T(30 downto 23)) then
+							if (FREG_S(30 downto 0) > FREG_T(30 downto 0)) then
 								PC_OUT <= PC_IN + ex_imm;	-- true
-							elsif (FREG_S(30 downto 23) < FREG_T(30 downto 23)) then
+							elsif (FREG_S(30 downto 0) < FREG_T(30 downto 0)) then
 								PC_OUT <= PC_IN + 1;		-- false
-							else
-								if (FREG_S(22 downto 0) > FREG_T(22 downto 0)) then
-									PC_OUT <= PC_IN + ex_imm;	-- true
-								else
-									PC_OUT <= PC_IN + 1;		-- false
-								end if;
 							end if;
+
 						end if;
 					when "110000" =>	-- CALL
 						REG_COND <= "1010";
