@@ -1,3 +1,26 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
+
+entity fetch is
+port (
+	CLK_FT	:	in	std_logic;
+	PC		:	in	std_logic_vector(31 downto 0);
+	PROM_OUT	:	out	std_logic_vector(31 downto 0)
+);
+
+
+end fetch;
+
+architecture behavior of fetch is
+
+	subtype word_t is std_logic_vector(31 downto 0);
+	type mem_t is array (0 to 32767) of word_t;
+	signal addr_in	: integer range 0 to 32767;
+
+	constant mem : mem_t := (
 x"0000004C",
 x"00000000",
 x"3F800000",
@@ -32766,3 +32789,19 @@ x"00000000",
 x"00000000",
 x"00000000",
 x"00000000"
+
+	 );
+
+begin
+	addr_in <= conv_integer(PC(14 downto 0));
+	read_op: process(CLK_FT)
+	begin
+		if rising_edge(CLK_FT) then
+			PROM_OUT <= mem(addr_in);
+		end if;
+	end process;
+
+end behavior;
+
+
+

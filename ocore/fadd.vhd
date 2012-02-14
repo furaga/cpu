@@ -2,6 +2,7 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+use work.std_logic_1164_additional.all;
 entity myfadd is
   port (
     I1, I2 : in  std_logic_vector(31 downto 0);
@@ -12,7 +13,8 @@ architecture op of myfadd is
 
 	signal S1, S2, SO: std_logic;
 	signal E1, E2, EO : std_logic_vector(7 downto 0);
-	signal F1, F2, FO : std_logic_vector(23 downto 0); -- added hidden bit
+	signal F1, F2 : std_logic_vector(23 downto 0); -- added hidden bit
+	signal FO : std_logic_vector(24 downto 0);
 	signal RAW_O : std_logic_vector(31 downto 0);
 
 	signal winnerE : std_logic_vector(7 downto 0);
@@ -47,8 +49,6 @@ begin
 	SO <= '1' when (S1='1'and S2='1') 
 			  or ((S1='1') and (I1(30 downto 0)>I2(30 downto 0))) 
 			  or ((S2='1') and (I1(30 downto 0)<I2(30 downto 0)))
-			  --or ((S1='1') and ((E1>E2) or ((E1=E2) and (F1>F2)))) 
-			  --or ((S2='1') and ((E1<E2) or ((E1=E2) and (F1<F2))))
 			  else '0';
 ------------------------------------------------------------------------
 	
@@ -57,9 +57,6 @@ begin
 	loserE  <= E2 when E1>E2 else E1;
 	loserF  <= F2 when E1>E2 else F1;
 
-	rshiftwidth	<= conv_integer(winnerE - loserE);
-	rshiftedF <= conv_std_logic_vector(0,rshiftwidth)&loserF(23 downto rshiftwidth) 	
-				when rshiftwidth < 24 else (others=>'0');
 
 	raw_frac <= ('0'&rshiftedF) + ('0'&winnerF) 
 				when S1=S2 and E1/=0 and E2 /=0 else
@@ -73,10 +70,12 @@ begin
 			(others=>'0') when lshiftwidth=25 or winnerE<(lshiftwidth-1) else
 			winnerE-(lshiftwidth-1);
 
-	FO	<=	raw_frac(24 downto 1) when lshiftwidth=0 else
+
+	rshiftwidth	<= conv_integer(winnerE - loserE);
+	rshiftedF <= loserF srl rshiftwidth when rshiftwidth < 24 else (others=>'0');
+	FO	<=	'0'&raw_frac(24 downto 1) when lshiftwidth=0 else
 			(others=>'0') when lshiftwidth=25 else
-			raw_frac((23-(lshiftwidth-1)) downto 0) & 
-			conv_std_logic_vector(0,lshiftwidth-1);
+			raw_frac sll (lshiftwidth-1);
 			
 	LZC : process(raw_frac)
 		variable V : std_logic_vector(25 downto 0);

@@ -46,7 +46,6 @@ architecture board of top is
 
 	end component;
 
-	signal clk,iclk: std_logic;
 	signal reset : std_logic := '1';
 	signal count : std_logic_vector(3 downto 0) := "1111";
 	signal read_ready : std_logic;
@@ -60,20 +59,38 @@ architecture board of top is
 	signal nyet   :std_logic;
 	signal pipe   :std_logic;
 
+	signal clk1x,iclk,clk0,clk2,clk2x: std_logic;
 
 begin
 
 	--ib: IBUFG port map (i=>MCLK1, o=>iclk);
-	--bg: BUFG port map (i=>iclk, o=>clk);
+	--bg1: BUFG port map (i=>clk0, o=>clk1x);
+	--bg2: BUFG port map (i=>clk2, o=>clk2x);
+	--dll: CLKDLL port map (
+		  --CLK0 => clk0,
+		  --CLK180 => open,
+		  --CLK270 => open,
+		  --CLK2X => clk2,
+		  --CLK90 => open,
+		  --CLKDV => open,
+		  --LOCKED => open,
+		  --CLKFB => clk1x,
+		  --CLKIN => iclk,
+		  --RST => '0'
+	--);
 	clk <= MCLK1;
 
-	cpunit : core_c port map(clk, reset, nyet, cpu_in, cpu_wr, cpu_rd, cpu_out);
-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
+	cpunit : core_c port map(clk1x, reset, nyet, cpu_in, cpu_wr, cpu_rd, cpu_out);
+	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
+			-- normal style.
+	iounit : io_dev port map (clk1x, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
+			-- no input. recvbuf is already filled with sld data.
 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
+			-- like loopback.
 
-	count_down: process(clk, count)
+	count_down: process(clk1x, count)
 	begin
-		if rising_edge(clk) then
+		if rising_edge(clk1x) then
 			case count  is
 				when "0000"=>
 					count <= count;

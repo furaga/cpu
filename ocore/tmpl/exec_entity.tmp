@@ -20,7 +20,7 @@
 	N_FREG	:	out ${oc.reg_index_t()};	-- register index <== new
 	REG_IN	:	out	${oc.reg_t()};	-- value writing to reg
 	FR_FLAG :	out std_logic; -- <== new
-	RAM_ADDR	:	out	${oc.ram_addr_t()};	-- ram address
+	RAM_ADDR	:	out	${oc.ram_addr_t()} := (others=>'0');	-- ram address
 	RAM_IN	:	out	${oc.reg_t()};	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable

@@ -18,7 +18,7 @@ architecture arch of io_dev is
 		);
 	end component;
 
-	subtype buf_rec_t is ${oc.ram_t()};
+	subtype buf_rec_t is ${oc.buf_rec_t()};
 
 	type sendbuf_t is array (0 to ${oc.io_sbufsize()}) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
@@ -31,11 +31,11 @@ architecture arch of io_dev is
 	signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
 	signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 1137;
 	type recvbuf_t is array (0 to ${oc.io_rbufsize()}) of buf_rec_t;
-	--signal recvbuf : recvbuf_t;
-	signal recvbuf : recvbuf_t :=
-	(
-<%include file="contest_sld.txt"/>
-	);
+	signal recvbuf : recvbuf_t;
+	--signal recvbuf : recvbuf_t :=
+	--(
+##<%include file="contest_sld.txt"/>
+	--);
 
 
 	signal u232c_o : std_logic_vector(7 downto 0);
@@ -51,13 +51,14 @@ begin
 	rs232c: u232c generic map (wtime=>${oc.io_wtime()})
 	port map (clk, u232c_o, send_go, send_busy, RS_TX, u232c_i, recv_busy, RS_RX);
 
-	send_enqueue : process(clk, CPU_WR, CPU_OUT)
+------------------------------------------------------------------------
+---- send
+------------------------------------------------------------------------
+	send_enqueue : process(CPU_WR, CPU_OUT)
 	begin
-		if rising_edge(clk) then
-			if CPU_WR='1' then
-				sendbuf(send_tail) <= CPU_OUT(7 downto 0);
-				send_tail <= send_tail + 1;
-			end if;
+		if rising_edge(CPU_WR) then
+			sendbuf(send_tail) <= CPU_OUT(7 downto 0);
+			send_tail <= send_tail + 1;
 		end if;
 	end process;
 
@@ -66,19 +67,22 @@ begin
 	begin
 		if rising_edge(clk) then
 			u232c_o <= sendbuf(send_head);
+
 			if send_busy='0' and send_go='0' then
 				send_go<=not send_empty;
 				send_head <= send_head + conv_integer(not send_empty);
 			else
 				send_go<='0';
 			end if;
+
 		end if;
 	end process;
 
+------------------------------------------------------------------------
+---- recv
+------------------------------------------------------------------------
 	NYET <= '1' when recv_head=recv_tail else '0';
-
 	CPU_IN <= x"000000"&recvbuf(recv_head);
-
 	recv_enqueue : process(recv_busy, u232c_i)
 	begin
 		if falling_edge(recv_busy) then

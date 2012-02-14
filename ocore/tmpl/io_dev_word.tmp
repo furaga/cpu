@@ -1,23 +1,7 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
---use ieee.std_logic_signed.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 entity io_dev is
-	port(
-		CLK		:	in	std_logic;
-		CPU_WR	:	in	std_logic;
-		CPU_RD	:	in	std_logic;
-		CPU_OUT	:	in	std_logic_vector(31 downto 0);
-		CPU_IN	:	out	std_logic_vector(31 downto 0);
-		NYET	:	out std_logic;
-		RS_RX	:	in	std_logic;
-		RS_TX	:	out	std_logic
-	);
-
-
-
+<%include file="io_dev_entity.tmp"/>
 end io_dev;
 
 architecture arch of io_dev is
@@ -34,23 +18,24 @@ architecture arch of io_dev is
 		);
 	end component;
 
-	subtype buf_rec_t is std_logic_vector(7 downto 0);
+	subtype buf_rec_t is ${oc.ram_t()};
 
-	type sendbuf_t is array (0 to 2047) of buf_rec_t;
+	type sendbuf_t is array (0 to ${oc.io_sbufsize()}) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
-	signal send_head	: integer range 0 to 2047 := 0;
-	signal send_tail	: integer range 0 to 2047 := 0;
+	signal send_head	: integer range 0 to ${oc.io_sbufsize()} := 0;
+	signal send_tail	: integer range 0 to ${oc.io_sbufsize()} := 0;
 	signal send_empty : std_logic := '0';
 
-	--signal recv_head	: integer range 0 to 1137 := 0;
-	--signal recv_tail	: integer range 0 to 1137 := 0;
-	signal recv_head	: integer range 0 to 1137 := 0;
-	signal recv_tail	: integer range 0 to 1137 := 1137;
-	type recvbuf_t is array (0 to 1137) of buf_rec_t;
-	signal recvbuf : recvbuf_t;
-	--signal recvbuf : recvbuf_t :=
-	--(
-	--);
+	--signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
+	--signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 0;
+	signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
+	signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 1137;
+	type recvbuf_t is array (0 to ${oc.io_rbufsize()}) of buf_rec_t;
+	--signal recvbuf : recvbuf_t;
+	signal recvbuf : recvbuf_t :=
+	(
+<%include file="contest_sld.txt"/>
+	);
 
 
 	signal u232c_o : std_logic_vector(7 downto 0);
@@ -63,17 +48,22 @@ architecture arch of io_dev is
 
 	
 begin
-	rs232c: u232c generic map (wtime=>x"0000")
+	rs232c: u232c generic map (wtime=>${oc.io_wtime()})
 	port map (clk, u232c_o, send_go, send_busy, RS_TX, u232c_i, recv_busy, RS_RX);
-
 ------------------------------------------------------------------------
 ---- send
 ------------------------------------------------------------------------
-	send_enqueue : process(CPU_WR, CPU_OUT)
+	send_enqueue : process(clk, CPU_WR, CPU_OUT)
 	begin
-		if rising_edge(CPU_WR) then
-			sendbuf(send_tail) <= CPU_OUT(7 downto 0);
-			send_tail <= send_tail + 1;
+		if rising_edge(clk) then
+			if CPU_WR='1' then
+				-- little endian
+				sendbuf(send_tail+0) <= CPU_OUT(7  downto  0);
+				sendbuf(send_tail+1) <= CPU_OUT(15 downto  8);
+				sendbuf(send_tail+2) <= CPU_OUT(23 downto 16);
+				sendbuf(send_tail+3) <= CPU_OUT(31 downto 24);
+				send_tail <= send_tail + 4;
+			end if;
 		end if;
 	end process;
 
@@ -82,22 +72,26 @@ begin
 	begin
 		if rising_edge(clk) then
 			u232c_o <= sendbuf(send_head);
-
 			if send_busy='0' and send_go='0' then
 				send_go<=not send_empty;
 				send_head <= send_head + conv_integer(not send_empty);
 			else
 				send_go<='0';
 			end if;
-
 		end if;
 	end process;
 
 ------------------------------------------------------------------------
 ---- recv
 ------------------------------------------------------------------------
-	NYET <= '1' when recv_head=recv_tail else '0';
-	CPU_IN <= x"000000"&recvbuf(recv_head);
+
+	NYET <= '1' when (recv_head+4)>recv_tail else '0';
+	-- little endian
+	CPU_IN(7  downto  0) <= recvbuf(recv_head+0);
+	CPU_IN(15 downto  8) <= recvbuf(recv_head+1);
+	CPU_IN(23 downto 16) <= recvbuf(recv_head+2);
+	CPU_IN(31 downto 24) <= recvbuf(recv_head+3);
+
 	recv_enqueue : process(recv_busy, u232c_i)
 	begin
 		if falling_edge(recv_busy) then
@@ -109,11 +103,9 @@ begin
 	recv_dequeue : process(CPU_RD)
 	begin
 		if rising_edge(CPU_RD) then
-			recv_head <= recv_head+1;
+			recv_head <= recv_head+4;
 		end if;
 	end process;
 
 end arch;
-
-
-
+<%namespace name="oc" file="macro.tmp"/>

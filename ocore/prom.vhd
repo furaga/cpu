@@ -1,3 +1,26 @@
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.std_logic_arith.all;
+use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
+
+entity prom is
+	port (
+		clka : in std_logic;
+		addra : in std_logic_vector(14 downto 0);
+		douta : out std_logic_vector(31 downto 0)
+	);
+
+
+
+end prom;
+
+architecture behavior of prom is
+	subtype word_t is std_logic_vector(31 downto 0);
+	type mem_t is array (0 to 32767) of word_t;
+	signal addr_in	: integer range 0 to 32767;
+
+	constant mem : mem_t := (
 x"0000004C",
 x"00000000",
 x"3F800000",
@@ -32766,3 +32789,21 @@ x"00000000",
 x"00000000",
 x"00000000",
 x"00000000"
+
+	 );
+
+	signal state : std_logic := '0';
+
+begin
+	prom_sim: process(clka)
+	begin
+		if rising_edge(clka) then
+			addr_in <= conv_integer(addra);
+			douta <= mem(addr_in);
+		end if;
+	end process;
+
+end behavior;
+
+
+

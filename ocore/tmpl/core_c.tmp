@@ -7,8 +7,8 @@ architecture RTL of core_c is
 component clk_gen
 <%include file="clk_gen_entity.tmp"/>
 end component;
-component fetch
-<%include file="fetch_entity.tmp"/>
+component prom
+<%include file="prom_entity.tmp"/>
 end component;
 component decode
 <%include file="decode_entity.tmp"/>
@@ -34,6 +34,7 @@ end component;
 
 	signal	pc	:	${oc.pc_t()};
 	signal	prom_out	:	${oc.ir_t()};
+	signal	raw_prom_out	:	${oc.ir_t()};
 	signal	ir	:	${oc.ir_t()};
 
 	signal	FramePointer	: ${oc.ram_addr_t()};
@@ -64,15 +65,25 @@ end component;
 	signal	LinkRegister	:	${oc.pc_t()};
 	signal	fr_flag :	std_logic;
 	signal	input_flag :	std_logic;
+	signal	ram_io_wr : std_logic;
+	signal	ram_io_rd : std_logic;
 
 begin			
 
 -- clk(state machine)
 	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
-
 -- fetch phase
-	fetch_u	:	fetch port map(clk_ft, pc, prom_out);
+	prom_u	:	prom port map(CLK, pc(14 downto 0), raw_prom_out);
+
+-- redundant ?
+	process(clk_ft)
+	begin
+		if rising_edge(clk_ft) then
+			prom_out <= raw_prom_out;
+		end if;
+	end process;
+	--fetch_u	:	fetch port map(clk_ft, pc, prom_out);
 
 -- decode phase
 	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT, input_flag,
@@ -91,7 +102,7 @@ begin
 		 ram_wen);
 
 -- memory access phase
-	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+	ram_u	: ram port map (CLK, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
 	
 -- write back phase

@@ -34,12 +34,13 @@ component clk_gen
 
 
 end component;
-component fetch
-port (
-	CLK_FT	:	in	std_logic;
-	PC		:	in	std_logic_vector(31 downto 0);
-	PROM_OUT	:	out	std_logic_vector(31 downto 0)
-);
+component prom
+	port (
+		clka : in std_logic;
+		addra : in std_logic_vector(14 downto 0);
+		douta : out std_logic_vector(31 downto 0)
+	);
+
 
 
 end component;
@@ -122,7 +123,7 @@ component exec
 	N_FREG	:	out std_logic_vector(4 downto 0);	-- register index <== new
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
 	FR_FLAG :	out std_logic; -- <== new
-	RAM_ADDR	:	out	std_logic_vector(19 downto 0);	-- ram address
+	RAM_ADDR	:	out	std_logic_vector(19 downto 0) := (others=>'0');	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
@@ -212,14 +213,15 @@ component reg_wb
 end component;
 component ram is
 	port (
+		CLK		: in	std_logic;
 		CLK_MA		: in	std_logic;
 		RAM_WEN		: in	std_logic;
 		ADDR		: in	std_logic_vector(19 downto 0);
 		DATA_IN		: in	std_logic_vector(31 downto 0);
 		DATA_OUT	: out	std_logic_vector(31 downto 0);
 		IO_IN		: in	std_logic_vector(31 downto 0);
-		IO_WR		: out	std_logic;
-		IO_RD		: out	std_logic;
+		IO_WR		: out	std_logic := '0';
+		IO_RD		: out	std_logic := '0';
 		IO_OUT	: out	std_logic_vector(31 downto 0)
 	);
 
@@ -230,10 +232,13 @@ end component;
 	signal	clk_dc	:	std_logic;
 	signal	clk_ex	:	std_logic;
 	signal	clk_ma	:	std_logic;
+	signal	clk_ma_dly	:	std_logic;
 	signal	clk_wb	:	std_logic;
+	signal	clk_wb_dly	:	std_logic;
 
 	signal	pc	:	std_logic_vector(31 downto 0);
 	signal	prom_out	:	std_logic_vector(31 downto 0);
+	signal	raw_prom_out	:	std_logic_vector(31 downto 0);
 	signal	ir	:	std_logic_vector(31 downto 0);
 
 	signal	FramePointer	: std_logic_vector(19 downto 0);
@@ -322,15 +327,25 @@ end component;
 	signal	LinkRegister	:	std_logic_vector(31 downto 0);
 	signal	fr_flag :	std_logic;
 	signal	input_flag :	std_logic;
+	signal	ram_io_wr : std_logic;
+	signal	ram_io_rd : std_logic;
 
 begin			
 
 -- clk(state machine)
 	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
-
 -- fetch phase
-	fetch_u	:	fetch port map(clk_ft, pc, prom_out);
+	prom_u	:	prom port map(CLK, pc(14 downto 0), raw_prom_out);
+
+-- redundant ?
+	process(clk_ft)
+	begin
+		if rising_edge(clk_ft) then
+			prom_out <= raw_prom_out;
+		end if;
+	end process;
+	--fetch_u	:	fetch port map(clk_ft, pc, prom_out);
 
 -- decode phase
 	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT, input_flag,
@@ -379,7 +394,7 @@ begin
 		 ram_wen);
 
 -- memory access phase
-	ram_u	: ram port map (clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+	ram_u	: ram port map (CLK, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
 	
 -- write back phase

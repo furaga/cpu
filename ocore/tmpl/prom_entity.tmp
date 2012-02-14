@@ -1,0 +1,8 @@
+## -*- coding: utf-8 -*-
+	port (
+		clka : in std_logic;
+		addra : in std_logic_vector(14 downto 0);
+		douta : out std_logic_vector(31 downto 0)
+	);
+<%namespace name="oc" file="macro.tmp"/>
+

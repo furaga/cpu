@@ -1,16 +1,16 @@
 ## -*- coding: utf-8 -*-
+##512 * 1024 = 524288
+## 64 * 1024 = 65536
+## 32 * 1024 = 32768
+## 16 * 1024 = 16384
+##128 * 1024 = 131072 min-rt
+##  4 * 1024 = 4096
 
-##<%def name="ram_size()">524288</%def>
-##<%def name="addr_in_max()">524289</%def>
-##<%def name="output_addr()">524289</%def>
-##<%def name="input_addr()">524288</%def>
-##<%def name="bottom_addr()">524284</%def>
 
-<%def name="ram_size()">65536</%def>
-<%def name="addr_in_max()">65537</%def>
-<%def name="output_addr()">65537</%def>
-<%def name="input_addr()">65536</%def>
-<%def name="bottom_addr()">65532</%def>
+<%def name="ram_size()">4095</%def>
+
+<%def name="prom_size()">32767</%def>
+<%def name="pc_t()">${V32()}</%def>
 
 ##<%def name="io_sbufsize()">262144</%def>
 <%def name="io_sbufsize()">2047</%def>
@@ -27,9 +27,9 @@
 
 <%def name="io_bus_t()">${V32()}</%def>
 <%def name="reg_t()">${V32()}</%def>
-<%def name="ram_t()">${V8()}</%def>
+<%def name="ram_t()">${V32()}</%def>
+<%def name="buf_rec_t()">${V8()}</%def>
 <%def name="ir_t()">${V32()}</%def>
-<%def name="pc_t()">${V32()}</%def>
 <%def name="reg_index_t()">${V5()}</%def>
 <%def name="ram_addr_t()">${V20()}</%def>
 

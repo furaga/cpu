@@ -37,14 +37,16 @@ begin
 				E1 + E2 - 126 when raw_FO(25)='1' else
 				E1 + E2 - 127;
 
+
 	EO	<=	(others=>'0') when raw_EO(8)='1' else raw_EO;
+
 	FO	<=	(others=>'0') when raw_EO(8)='1' else 
 			raw_FO(24 downto 2) when raw_FO(25)='1' else
 			raw_FO(23 downto 1);
 
 	upper <= F1U * F2U;
 	cross <= F1U * F2L + F1L * F2U;
-	raw_FO <= upper + (x"000"&cross(23 downto 11)); -------
+	raw_FO <= upper + (x"000"&cross(23 downto 11)) + 2; -------
 
 
 

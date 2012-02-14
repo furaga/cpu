@@ -2,17 +2,22 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+
 entity FMUL is
+    
   port (
     CLK : in std_logic;
     I1, I2 : in  std_logic_vector (0 to 31);
     O      : out std_logic_vector (0 to 31));
+
 end FMUL;
 
 architecture fmul_archi of FMUL is
+
   signal S1, S2 : std_logic;
   signal E1, E2 : std_logic_vector(0 to 8);
   signal C1H, C2H, C1L, C2L : std_logic_vector(0 to 12);
+
 -- Sは符号、Eは指数（繰り上がりに備えて9桁あり、右づめ。）、Cは仮数（Hが上12桁プラスhiddenで13桁、Lが下11桁。繰り上がりに備えて26桁あり。）
 
 begin  -- fmul_archi
@@ -45,13 +50,16 @@ begin  -- fmul_archi
     variable LH : std_logic_vector(0 to 25);
     variable C3A : std_logic_vector(0 to 22);
 
+
+
     begin
 --符号部
-		if (S1 = S2) then
-			S3 := '0';
-		else 
-			S3 := '1';
+
+      if (S1 = S2) then
+		  S3 := '0';
+		else S3 := '1';
 		end if;
+
 --指数部
      if E1 = conv_std_logic_vector(0, 9) or E2 = conv_std_logic_vector(0, 9) then
        E3 := conv_std_logic_vector(0, 9);
@@ -89,5 +97,4 @@ begin  -- fmul_archi
       O(9 to 31) <= C3A(0 to 22);
 		
    end process;
-
 end fmul_archi;

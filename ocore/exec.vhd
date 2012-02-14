@@ -3,8 +3,10 @@ use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 --use ieee.std_logic_signed.all;
---use ieee.numeric_std.all;
---use work.alu_pack.all;
+
+
+use work.std_logic_1164_additional.all;
+
 
 
 entity exec is
@@ -29,7 +31,7 @@ entity exec is
 	N_FREG	:	out std_logic_vector(4 downto 0);	-- register index <== new
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
 	FR_FLAG :	out std_logic; -- <== new
-	RAM_ADDR	:	out	std_logic_vector(19 downto 0);	-- ram address
+	RAM_ADDR	:	out	std_logic_vector(19 downto 0) := (others=>'0');	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
 	RAM_WEN	:	out	std_logic	-- ram write enable
@@ -156,7 +158,7 @@ begin
 				REG_COND <= "0000";
 				RAM_WEN <= '1';
 				RAM_IN <= x"000000aa";
-				RAM_ADDR <= conv_std_logic_vector(65537,20); -- 16385
+				RAM_ADDR <= x"80001";
 				start<='1';
 -----------------------------------------------------------
 -----------------------------------------------------------
@@ -238,7 +240,7 @@ begin
 							when "000000" => -- INPUT
 								REG_COND <= "1100";
 								RAM_WEN <= '0';
-								RAM_ADDR <= conv_std_logic_vector(65536,20);
+								RAM_ADDR <= x"80000";
 								N_REG <= n_reg_d;
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
@@ -246,7 +248,7 @@ begin
 								REG_COND <= "0000";
 								RAM_WEN <= '1'; 
 								RAM_IN <= REG_S;
-								RAM_ADDR <= conv_std_logic_vector(65537,20); -- 16385
+								RAM_ADDR <= x"80001";
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
 							when others =>
@@ -363,12 +365,21 @@ begin
 						RAM_ADDR <= (others=>'0');
 					when "101000" =>	-- SLLI
 						slide_num := conv_integer(imm);
-						if slide_num < 32 then
-							REG_IN <= REG_S((31-slide_num) downto 0) &
-									  conv_std_logic_vector(0,slide_num);
-						else 
-							REG_IN <= (others=>'0');
-						end if;
+						REG_IN <= REG_S sll slide_num;
+
+						--case slide_num is
+							--when 0 =>
+								--REG_IN <= REG_S;
+							--when 1 =>
+								--REG_IN <= REG_S(30 downto 0)&'0';
+							--when 2 =>
+								--REG_IN <= REG_S(29 downto 0)&"00";
+							--when 3 =>
+								--REG_IN <= REG_S(28 downto 0)&"000";
+							----when others =>
+								--REG_IN <= REG_S;
+						--end case;
+
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
@@ -378,12 +389,23 @@ begin
 
 					when "101010" =>	-- SRLI
 						slide_num := conv_integer(imm);
-						if slide_num < 32 then
-							REG_IN <= conv_std_logic_vector(REG_S(31),slide_num) &
-									  REG_S(31 downto slide_num);
-						else 
-							REG_IN <= (others=>'0');
-						end if;
+						REG_IN <= REG_S sra slide_num;
+						--case slide_num is
+							--when 0 =>
+								--REG_IN <= REG_S;
+							--when 1 =>
+								--REG_IN <= REG_S(31)&REG_S(31 downto 1);
+							--when others =>
+								--REG_IN <= REG_S;
+						--end case;
+
+
+						--if slide_num < 32 then
+							--REG_IN <= conv_std_logic_vector(REG_S(31),slide_num) &
+									  --REG_S(31 downto slide_num);
+						--else 
+							--REG_IN <= (others=>'0');
+						--end if;
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
@@ -416,14 +438,14 @@ begin
 
 							if (FREG_S(30 downto 0) < FREG_T(30 downto 0)) then
 								PC_OUT <= PC_IN + ex_imm;	-- true
-							elsif (FREG_S(30 downto 0) > FREG_T(30 downto 0)) then
+							else
 								PC_OUT <= PC_IN + 1;		-- false
 							end if;
 
 						else --(FREG_S(31)='1' and FREG_T(31)='1')
 							if (FREG_S(30 downto 0) > FREG_T(30 downto 0)) then
 								PC_OUT <= PC_IN + ex_imm;	-- true
-							elsif (FREG_S(30 downto 0) < FREG_T(30 downto 0)) then
+							else
 								PC_OUT <= PC_IN + 1;		-- false
 							end if;
 
@@ -480,7 +502,7 @@ begin
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
 						RAM_ADDR <= (others=>'0');
-						PC_OUT <= ("000000"&target(25 downto 0));
+						PC_OUT <= "000000"&target(25 downto 0);
 
 					when "011011" =>	-- ST
 						v32 := REG_S + REG_T;
