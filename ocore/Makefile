@@ -2,8 +2,8 @@ TB = testbench
 #io_dev.o 
 OBJS = top.o clk_gen.o core_c.o decode.o reg_dc.o \
 	std_logic_1164_additional.o \
-	exec.o reg_wb.o testbench.o ram.o u232c.o prom.o\
-	io_dev.o \
+	exec.o reg_wb.o testbench.o mem_acc.o u232c.o \
+	io_dev.o prom.o fetch.o ram.o clk_delay.o\
 	fadd.o fmul.o fsqrt.o finv.o finv_table.o fsqrt_table.o
 		
 TMPL_DIR = ./tmpl

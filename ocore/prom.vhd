@@ -8,14 +8,13 @@ entity prom is
 	port (
 		clka : in std_logic;
 		addra : in std_logic_vector(14 downto 0);
-		douta : out std_logic_vector(31 downto 0)
-	);
+		douta : out std_logic_vector(31 downto 0));
 
 
 
 end prom;
 
-architecture behavior of prom is
+architecture RTL of prom is
 	subtype word_t is std_logic_vector(31 downto 0);
 	type mem_t is array (0 to 32767) of word_t;
 	signal addr_in	: integer range 0 to 32767;
@@ -32792,7 +32791,6 @@ x"00000000"
 
 	 );
 
-	signal state : std_logic := '0';
 
 begin
 	prom_sim: process(clka)
@@ -32803,7 +32801,7 @@ begin
 		end if;
 	end process;
 
-end behavior;
+end RTL;
 
 
 

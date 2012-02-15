@@ -13,6 +13,7 @@ entity exec is
 	port
 	(
 	CLK_EX	:	in	std_logic;	-- clk
+	CLK_TABLE	:	in	std_logic;	-- clk
 	RESET	:	in	std_logic;	-- reset
 	IR		:   in	std_logic_vector(31 downto 0);	-- instruction register
 	PC_IN	:	in	std_logic_vector(31 downto 0);	-- current pc
@@ -28,7 +29,6 @@ entity exec is
 	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
 
 	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
-	N_FREG	:	out std_logic_vector(4 downto 0);	-- register index <== new
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
 	FR_FLAG :	out std_logic; -- <== new
 	RAM_ADDR	:	out	std_logic_vector(19 downto 0) := (others=>'0');	-- ram address
@@ -42,6 +42,7 @@ end exec;
 architecture RTL of exec is
 	component myfadd is
 port ( 
+	CLK_TABLE : in std_logic;
     I1, I2 : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 
@@ -50,6 +51,7 @@ port (
 	end component;
 	component myfmul is
 port ( 
+	CLK_TABLE : in std_logic;
     I1, I2 : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 
@@ -58,6 +60,7 @@ port (
 	end component;
 	component myfsqrt is
 port (
+	CLK_TABLE : in std_logic;
     I  : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 
@@ -66,6 +69,7 @@ port (
 	end component;
 	component myfinv is
 port (
+	CLK_TABLE : in std_logic;
     I  : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 
@@ -103,12 +107,12 @@ port (
 
 begin
 	freg_t_bar <= (not FREG_T(31))&FREG_T(30 downto 0);
-	fadd_u : myfadd port map (FREG_S, FREG_T, fout_add);
-	fsub_u : myfadd port map (FREG_S, freg_t_bar, fout_sub);
-	fmul_u : myfmul port map (FREG_S, FREG_T, fout_mul);
-	fsqrt_u : myfsqrt port map (FREG_S, fout_sqrt);
-	finv_u : myfinv port map (FREG_T, inverted);
-	fdiv_u : myfmul port map (FREG_S, inverted, fout_div);
+	fadd_u : myfadd port map (CLK_TABLE, FREG_S, FREG_T, fout_add);
+	fsub_u : myfadd port map (CLK_TABLE, FREG_S, freg_t_bar, fout_sub);
+	fmul_u : myfmul port map (CLK_TABLE, FREG_S, FREG_T, fout_mul);
+	fsqrt_u : myfsqrt port map (CLK_TABLE, FREG_S, fout_sqrt);
+	finv_u : myfinv port map (CLK_TABLE, FREG_T, inverted);
+	fdiv_u : myfmul port map (CLK_TABLE, FREG_S, inverted, fout_div);
 
 	op_code <= IR(31 downto 26);
 	op_data <= IR(25 downto 0);
@@ -158,7 +162,7 @@ begin
 				REG_COND <= "0000";
 				RAM_WEN <= '1';
 				RAM_IN <= x"000000aa";
-				RAM_ADDR <= x"80001";
+				RAM_ADDR <= x"80000";
 				start<='1';
 -----------------------------------------------------------
 -----------------------------------------------------------
@@ -248,7 +252,7 @@ begin
 								REG_COND <= "0000";
 								RAM_WEN <= '1'; 
 								RAM_IN <= REG_S;
-								RAM_ADDR <= x"80001";
+								RAM_ADDR <= x"80000";
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
 							when others =>

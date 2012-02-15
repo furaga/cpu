@@ -5,7 +5,7 @@ entity reg_wb is
 end reg_wb;
 architecture RTL of reg_wb is
 	constant reg1_init : ${oc.reg_t()}
-				:= conv_std_logic_vector(${oc.ram_size()}, 32);
+				:= conv_std_logic_vector(${oc.reg1_init()}, 32);
 	signal reg_v : ${oc.reg_t()};
 	signal lr_v : ${oc.pc_t()};
 	signal from_ram : std_logic;

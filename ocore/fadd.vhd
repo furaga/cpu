@@ -5,6 +5,7 @@ use ieee.std_logic_unsigned.all;
 use work.std_logic_1164_additional.all;
 entity myfadd is
   port (
+	CLK_TABLE : in std_logic;
     I1, I2 : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 end myfadd;

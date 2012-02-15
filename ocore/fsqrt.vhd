@@ -4,6 +4,7 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 entity myfsqrt is
   port (
+	CLK_TABLE : in std_logic;
     I  : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 end myfsqrt;
@@ -11,8 +12,9 @@ end myfsqrt;
 architecture op of myfsqrt is
 	component fsqrt_table is
 	  port (
-		KEY   : in  std_logic_vector(9 downto 0);
-		DATA  : out std_logic_vector(35 downto 0));
+		clka : in std_logic;
+		addra : in std_logic_vector(9 downto 0);
+		douta : out std_logic_vector(35 downto 0));
 	end component;
 
 	signal SO: std_logic;
@@ -33,7 +35,7 @@ begin
 	O <= SO&EO&FO;
 	SO <= '0';
 	E <= I(30 downto 23);
-	table : fsqrt_table port map(key, table_out);
+	table : fsqrt_table port map(CLK_TABLE, key, table_out);
 
 	key <= I(23 downto 14);
 	const23 <= table_out(35 downto 13);

@@ -2,6 +2,7 @@
 	port
 	(			
 	CLK	:	in	std_logic;
+	CLK2X	:	in	std_logic;
 	RESET	:	in	std_logic;
 	NYET	:	in	std_logic;
 	IO_IN	:	in	${oc.io_bus_t()};

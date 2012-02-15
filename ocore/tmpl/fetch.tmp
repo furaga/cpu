@@ -4,21 +4,22 @@ entity fetch is
 <%include file="fetch_entity.tmp"/>
 end fetch;
 
-architecture behavior of fetch is
+architecture RTL of fetch is
+	component prom is
+	<%include file="prom_entity.tmp"/>
+	end component;
 
-	subtype word_t is ${oc.ir_t()};
-	type mem_t is array (0 to 19999) of word_t;
-	constant mem : mem_t := (
-<%include file="test"/>
-	 );
+	signal	raw_prom_out	:	${oc.ir_t()};
 
 begin
-	read_op: process(CLK_FT)
+	prom_u	:	prom port map(CLK, PC(14 downto 0), raw_prom_out);
+
+	fetch: process(CLK_FT) 
 	begin
 		if rising_edge(CLK_FT) then
-			PROM_OUT <= mem(conv_integer(PC(15 downto 0)));
+			PROM_OUT <= raw_prom_out;
 		end if;
 	end process;
 
-end behavior;
+end RTL;
 <%namespace name="oc" file="macro.tmp"/>

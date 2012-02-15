@@ -4,14 +4,17 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 entity fsqrt_table is
   port (
-    KEY   : in  std_logic_vector(9 downto 0);
-    DATA  : out std_logic_vector(35 downto 0));
+		clka : in std_logic;
+		addra : in std_logic_vector(9 downto 0);
+		douta : out std_logic_vector(35 downto 0));
 end fsqrt_table;
 
 architecture op of fsqrt_table is
 
 	subtype table_rec_t is std_logic_vector(35 downto 0);
 	type table_t is array (0 to 1023) of table_rec_t;
+	signal addr_in	: integer range 0 to 1023;
+
 	constant table : table_t := (
 x"6A09E969E",
 x"6A6461698",
@@ -1038,9 +1041,13 @@ x"69820AB54",
 x"69AF5AB52",
 x"69DCA4B51"
 );
-	signal key_in : integer range 0 to 1023;
 
 begin
-	key_in <= conv_integer(KEY);
-	DATA <=	table(key_in);
+	prom_sim: process(clka)
+	begin
+		if rising_edge(clka) then
+			addr_in <= conv_integer(addra);
+			douta <= table(addr_in);
+		end if;
+	end process;
 end op;

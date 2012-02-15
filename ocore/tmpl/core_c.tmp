@@ -4,29 +4,33 @@ entity core_c is
 <%include file="core_c_entity.tmp"/>
 end core_c;
 architecture RTL of core_c is
-component clk_gen
+component clk_gen is
 <%include file="clk_gen_entity.tmp"/>
 end component;
-component prom
-<%include file="prom_entity.tmp"/>
+component clk_delay is
+<%include file="clk_delay_entity.tmp"/>
 end component;
-component decode
+component fetch is
+<%include file="fetch_entity.tmp"/>
+end component;
+component decode is
 <%include file="decode_entity.tmp"/>
 end component;
-component reg_dc
+component reg_dc is
 <%include file="reg_dc_entity.tmp"/>
 end component;
-component exec
+component exec is
 <%include file="exec_entity.tmp"/>
 end component;
-component reg_wb
+component reg_wb is
 <%include file="reg_wb_entity.tmp"/>
 end component;
-component ram is
-<%include file="ram_entity.tmp"/>
+component mem_acc is
+<%include file="mem_acc_entity.tmp"/>
 end component;
 
 	signal	clk_ft	:	std_logic;
+	signal	clk_ft_dly	:	std_logic;
 	signal	clk_dc	:	std_logic;
 	signal	clk_ex	:	std_logic;
 	signal	clk_ma	:	std_logic;
@@ -34,12 +38,10 @@ end component;
 
 	signal	pc	:	${oc.pc_t()};
 	signal	prom_out	:	${oc.ir_t()};
-	signal	raw_prom_out	:	${oc.ir_t()};
 	signal	ir	:	${oc.ir_t()};
 
 	signal	FramePointer	: ${oc.ram_addr_t()};
 	signal	n_reg	:	${oc.reg_index_t()};
-	signal	n_freg	:	${oc.reg_index_t()};
 	signal	reg_in	:	${oc.reg_t()};
 	signal	REG_S	:	${oc.reg_t()};
 	signal	REG_T	:	${oc.reg_t()};
@@ -73,17 +75,9 @@ begin
 -- clk(state machine)
 	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
+	delay_ft : clk_delay port map(CLK, clk_ft, clk_ft_dly);
 -- fetch phase
-	prom_u	:	prom port map(CLK, pc(14 downto 0), raw_prom_out);
-
--- redundant ?
-	process(clk_ft)
-	begin
-		if rising_edge(clk_ft) then
-			prom_out <= raw_prom_out;
-		end if;
-	end process;
-	--fetch_u	:	fetch port map(clk_ft, pc, prom_out);
+	fetch_u	:	fetch port map(CLK, clk_ft, pc, prom_out);
 
 -- decode phase
 	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT, input_flag,
@@ -91,19 +85,20 @@ begin
 	regdec_rs:reg_dc port map(clk_dc, ${REGs()}, prom_out(25 downto 21), REG_S);
 	regdec_rt:reg_dc port map(clk_dc, ${REGs()}, prom_out(20 downto 16), REG_T);
 	regdec_rd:reg_dc port map(clk_dc, ${REGs()}, prom_out(15 downto 11), REG_D);
-	regdec_frs:reg_dc port map(clk_dc, ${FREGs()}, prom_out(25 downto 21), FREG_S);
-	regdec_frt:reg_dc port map(clk_dc, ${FREGs()}, prom_out(20 downto 16), FREG_T);
+	regdec_frs:reg_dc port map(clk_ft_dly, ${FREGs()}, prom_out(25 downto 21), FREG_S);
+	regdec_frt:reg_dc port map(clk_ft_dly, ${FREGs()}, prom_out(20 downto 16), FREG_T);
 	regdec_frd:reg_dc port map(clk_dc, ${FREGs()}, prom_out(15 downto 11), FREG_D);
 
 -- exec phase
-	exec_u	:	exec port map(clk_ex, RESET, ir, pc,
+	exec_u	:	exec port map(clk_ex, CLK2X, RESET, ir, pc,
 		 REG_S, REG_T, REG_D, FREG_S, FREG_T, FREG_D, FramePointer, LinkRegister,
-		 LR_IN, pc, n_reg, n_freg, reg_in, fr_flag, RAM_ADDR, RAM_IN, REG_COND,
+		 LR_IN, pc, n_reg, reg_in, fr_flag, RAM_ADDR, RAM_IN, REG_COND,
 		 ram_wen);
 
 -- memory access phase
-	ram_u	: ram port map (CLK, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+	memacc_u	: mem_acc port map (CLK2X, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
+						
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,

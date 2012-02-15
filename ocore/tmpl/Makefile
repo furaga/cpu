@@ -1,8 +1,8 @@
 RENDER = mako-render
 OCORE_DIR = ..
 
-MODULES = decode reg_dc ram clk_gen reg_wb exec core_c top \
-	io_dev io_dev_word prom
+MODULES = decode reg_dc mem_acc clk_gen reg_wb exec core_c top \
+	io_dev io_dev_word prom ram fetch clk_delay
 
 TARGET = $(MODULES:%=%.vhd)
 SIM_TARGET = ./test
@@ -25,6 +25,7 @@ fetch.vhd: fetch.tmp fetch_entity.tmp $(BASE) asm
 prom.vhd: prom.tmp prom_entity.tmp $(BASE) asm
 reg_dc.vhd: reg_dc.tmp reg_dc_entity.tmp $(BASE)
 reg_wb.vhd: reg_wb.tmp reg_wb_entity.tmp $(BASE)
+mem_acc.vhd: mem_acc.tmp mem_acc_entity.tmp $(BASE)
 ram.vhd: ram.tmp ram_entity.tmp $(BASE)
 exec.vhd: exec.tmp fpu_entity.tmp exec_entity.tmp $(BASE)
 clk_gen.vhd: clk_gen.tmp clk_gen_entity.tmp $(BASE)

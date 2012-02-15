@@ -4,6 +4,7 @@ use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
 entity myfinv is
   port (
+	CLK_TABLE : in std_logic;
     I  : in  std_logic_vector(31 downto 0);
     O  : out std_logic_vector(31 downto 0));
 end myfinv;
@@ -11,8 +12,9 @@ end myfinv;
 architecture op of myfinv is
 	component finv_table is
 	  port (
-		KEY   : in  std_logic_vector(9 downto 0);
-		DATA  : out std_logic_vector(35 downto 0));
+		clka : in std_logic;
+		addra : in std_logic_vector(9 downto 0);
+		douta : out std_logic_vector(35 downto 0));
 	end component;
 
 	signal SO: std_logic;
@@ -33,7 +35,7 @@ begin
 	SO <= I(31);
 	E <= I(30 downto 23);
 	F <= I(22 downto 0);
-	table : finv_table port map(key, table_out);
+	table : finv_table port map(CLK_TABLE, key, table_out);
 
 	key <= I(22 downto 13);
 	const23 <= table_out(35 downto 13);

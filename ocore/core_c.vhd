@@ -8,6 +8,7 @@ entity core_c is
 	port
 	(			
 	CLK	:	in	std_logic;
+	CLK2X	:	in	std_logic;
 	RESET	:	in	std_logic;
 	NYET	:	in	std_logic;
 	IO_IN	:	in	std_logic_vector(31 downto 0);
@@ -19,7 +20,7 @@ entity core_c is
 
 end core_c;
 architecture RTL of core_c is
-component clk_gen
+component clk_gen is
 	port (
 		CLK	:	in	std_logic;
 		INPUT_FLAG	: in std_logic;
@@ -34,17 +35,27 @@ component clk_gen
 
 
 end component;
-component prom
+component clk_delay is
 	port (
-		clka : in std_logic;
-		addra : in std_logic_vector(14 downto 0);
-		douta : out std_logic_vector(31 downto 0)
+		CLK	:	in	std_logic;
+		DIN	:	in	std_logic;
+		QOUT	:	out	std_logic
 	);
 
 
 
 end component;
-component decode
+component fetch is
+	port (
+		CLK : in std_logic;
+		CLK_FT : in std_logic;
+		PC : in std_logic_vector(31 downto 0);
+		PROM_OUT : out std_logic_vector(31 downto 0));
+
+
+
+end component;
+component decode is
 port (
 	CLK_DC	:	in	std_logic;
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
@@ -58,7 +69,7 @@ port (
 
 
 end component;
-component reg_dc
+component reg_dc is
 
 	port (
 		CLK_DC	:	in	std_logic;
@@ -101,10 +112,11 @@ component reg_dc
 
 
 end component;
-component exec
+component exec is
 	port
 	(
 	CLK_EX	:	in	std_logic;	-- clk
+	CLK_TABLE	:	in	std_logic;	-- clk
 	RESET	:	in	std_logic;	-- reset
 	IR		:   in	std_logic_vector(31 downto 0);	-- instruction register
 	PC_IN	:	in	std_logic_vector(31 downto 0);	-- current pc
@@ -120,7 +132,6 @@ component exec
 	PC_OUT	:	out	std_logic_vector(31 downto 0);	-- next pc
 
 	N_REG	:	out std_logic_vector(4 downto 0);	-- register index
-	N_FREG	:	out std_logic_vector(4 downto 0);	-- register index <== new
 	REG_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to reg
 	FR_FLAG :	out std_logic; -- <== new
 	RAM_ADDR	:	out	std_logic_vector(19 downto 0) := (others=>'0');	-- ram address
@@ -131,7 +142,7 @@ component exec
 
 
 end component;
-component reg_wb
+component reg_wb is
 
 	port (
 		CLK_WB	:	in	std_logic;
@@ -211,9 +222,9 @@ component reg_wb
 
 
 end component;
-component ram is
+component mem_acc is
 	port (
-		CLK		: in	std_logic;
+		CLK2X		: in	std_logic;
 		CLK_MA		: in	std_logic;
 		RAM_WEN		: in	std_logic;
 		ADDR		: in	std_logic_vector(19 downto 0);
@@ -226,24 +237,22 @@ component ram is
 	);
 
 
+
 end component;
 
 	signal	clk_ft	:	std_logic;
+	signal	clk_ft_dly	:	std_logic;
 	signal	clk_dc	:	std_logic;
 	signal	clk_ex	:	std_logic;
 	signal	clk_ma	:	std_logic;
-	signal	clk_ma_dly	:	std_logic;
 	signal	clk_wb	:	std_logic;
-	signal	clk_wb_dly	:	std_logic;
 
 	signal	pc	:	std_logic_vector(31 downto 0);
 	signal	prom_out	:	std_logic_vector(31 downto 0);
-	signal	raw_prom_out	:	std_logic_vector(31 downto 0);
 	signal	ir	:	std_logic_vector(31 downto 0);
 
 	signal	FramePointer	: std_logic_vector(19 downto 0);
 	signal	n_reg	:	std_logic_vector(4 downto 0);
-	signal	n_freg	:	std_logic_vector(4 downto 0);
 	signal	reg_in	:	std_logic_vector(31 downto 0);
 	signal	REG_S	:	std_logic_vector(31 downto 0);
 	signal	REG_T	:	std_logic_vector(31 downto 0);
@@ -335,17 +344,9 @@ begin
 -- clk(state machine)
 	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
+	delay_ft : clk_delay port map(CLK, clk_ft, clk_ft_dly);
 -- fetch phase
-	prom_u	:	prom port map(CLK, pc(14 downto 0), raw_prom_out);
-
--- redundant ?
-	process(clk_ft)
-	begin
-		if rising_edge(clk_ft) then
-			prom_out <= raw_prom_out;
-		end if;
-	end process;
-	--fetch_u	:	fetch port map(clk_ft, pc, prom_out);
+	fetch_u	:	fetch port map(CLK, clk_ft, pc, prom_out);
 
 -- decode phase
 	dec_u	:	decode port map(clk_dc, prom_out, REG_01, LR_OUT, input_flag,
@@ -368,13 +369,13 @@ begin
 		 REG_16, REG_17, REG_18, REG_19, REG_20, REG_21, REG_22, REG_23, 
 		 REG_24, REG_25, REG_26, REG_27, REG_28, REG_29, REG_30, REG_31
 , prom_out(15 downto 11), REG_D);
-	regdec_frs:reg_dc port map(clk_dc, 
+	regdec_frs:reg_dc port map(clk_ft_dly, 
 		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
 		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
 		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
 		 FREG_24, FREG_25, FREG_26, FREG_27, FREG_28, FREG_29, FREG_30, FREG_31
 , prom_out(25 downto 21), FREG_S);
-	regdec_frt:reg_dc port map(clk_dc, 
+	regdec_frt:reg_dc port map(clk_ft_dly, 
 		 FREG_00, FREG_01, FREG_02, FREG_03, FREG_04, FREG_05, FREG_06, FREG_07, 
 		 FREG_08, FREG_09, FREG_10, FREG_11, FREG_12, FREG_13, FREG_14, FREG_15, 
 		 FREG_16, FREG_17, FREG_18, FREG_19, FREG_20, FREG_21, FREG_22, FREG_23, 
@@ -388,14 +389,15 @@ begin
 , prom_out(15 downto 11), FREG_D);
 
 -- exec phase
-	exec_u	:	exec port map(clk_ex, RESET, ir, pc,
+	exec_u	:	exec port map(clk_ex, CLK2X, RESET, ir, pc,
 		 REG_S, REG_T, REG_D, FREG_S, FREG_T, FREG_D, FramePointer, LinkRegister,
-		 LR_IN, pc, n_reg, n_freg, reg_in, fr_flag, RAM_ADDR, RAM_IN, REG_COND,
+		 LR_IN, pc, n_reg, reg_in, fr_flag, RAM_ADDR, RAM_IN, REG_COND,
 		 ram_wen);
 
 -- memory access phase
-	ram_u	: ram port map (CLK, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+	memacc_u	: mem_acc port map (CLK2X, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
+						
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,

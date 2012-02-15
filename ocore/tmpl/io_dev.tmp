@@ -31,11 +31,11 @@ architecture arch of io_dev is
 	signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
 	signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 1137;
 	type recvbuf_t is array (0 to ${oc.io_rbufsize()}) of buf_rec_t;
-	signal recvbuf : recvbuf_t;
-	--signal recvbuf : recvbuf_t :=
-	--(
-##<%include file="contest_sld.txt"/>
-	--);
+	--signal recvbuf : recvbuf_t;
+	signal recvbuf : recvbuf_t :=
+	(
+<%include file="contest_sld.txt"/>
+	);
 
 
 	signal u232c_o : std_logic_vector(7 downto 0);

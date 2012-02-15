@@ -2,6 +2,7 @@
 	port
 	(
 	CLK_EX	:	in	std_logic;	-- clk
+	CLK_TABLE	:	in	std_logic;	-- clk
 	RESET	:	in	std_logic;	-- reset
 	IR		:   in	${oc.ir_t()};	-- instruction register
 	PC_IN	:	in	${oc.pc_t()};	-- current pc
@@ -17,7 +18,6 @@
 	PC_OUT	:	out	${oc.pc_t()};	-- next pc
 
 	N_REG	:	out ${oc.reg_index_t()};	-- register index
-	N_FREG	:	out ${oc.reg_index_t()};	-- register index <== new
 	REG_IN	:	out	${oc.reg_t()};	-- value writing to reg
 	FR_FLAG :	out std_logic; -- <== new
 	RAM_ADDR	:	out	${oc.ram_addr_t()} := (others=>'0');	-- ram address
