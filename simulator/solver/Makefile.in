@@ -15,10 +15,9 @@ MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 # Set Vars below
 ###################################
 #TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
-TEST_TARGET = inprod float
-#float
+TEST_TARGET = inprod
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
-RT_TARGET = contest
+RT_TARGET = charhan
 #DEBUG_MACRO = -D DEBUG_FLAG
 #DEBUG_MACRO = -D LST_FLAG
 #DEBUG_MACRO += -D STATS_FLAG

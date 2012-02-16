@@ -9,17 +9,14 @@ int main() {
 	union {
 		float f;
 		uint32_t i;
-	} a,b,c;
-	int i;
+	} a,b,c,d;
 
-	c.f = 1000000.0;
-	a.f = 1.0005;
-	for (i = 0; i < 10000000; i++) {
-		//c.f = c.f / a.f;
-		b.i = _finv(a.i);
-		c.f = c.f * b.f;
-	}
-	printf("%.30f\n", c.f);
+	a.i = 0x44604260;
+	b.i = 0x44604148;
+
+
+	printf("%23.20lf\n", a.f);
+	printf("%23.20lf\n", b.f);
 	
 	return 0;
 }

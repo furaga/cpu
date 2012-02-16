@@ -18,11 +18,6 @@ assemble.o: $(ASMH) encode_op.o mnemonic.o
 encode_op.o: $(ASMH)
 mnemonic.o: $(ASMH)
 
-ocore_asmcho: ocore_asmcho.o ocore_assemble.o encode_op.o ocore_mnemonic.o
-ocore_asmcho.o : $(ASMH) ocore_assemble.o
-ocore_assemble.o: $(ASMH) encode_op.o ocore_mnemonic.o
-ocore_mnemonic.o: $(ASMH)
-
 asm:
 	$(ASM) $(ASM_FLAGS) $(ASM_TARGET)
 rt:

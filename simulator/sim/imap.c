@@ -6,8 +6,8 @@ const char *InstMap[INST_NUM] = {
 "muli",  "    ","jlt", "st",  "    ","    ","int_of_float","    ",
 "divi",  "    ","jle", "ldi", "    ","    ","float_of_int","    ",
 "slli",  "    ","srli","sti", "    ","    ","    ","    ",
-"call",  "fld", "fjeq","ldlr","    ","io","    ","    ",
-"return","fst", "fjlt","stlr","special","link","fpi","others",
+"call",  "fldi", "fjeq","ldlr","    ","io","    ","    ",
+"return","fsti", "fjlt","stlr","special","link","fpi","others",
 };
 const char *InstTyMap[INST_NUM] = {
 "    ","    ","fl",  "    ","    ","    ","else", "fgi",
@@ -26,8 +26,8 @@ const char *SFunctMap[INST_NUM] = {
 "mul",   "    ","    ","nor",  "    ","    ","    ","    ",
 "add",   "    ","sub", "",   "and", "or",  "    ","    ",
 "",      "    ","    ","",   "    ","    ","    ","    ",
-"callR", "    ","    ","movlr","    ","    ","    ","    ",
-"    ",  "    ","    ","", "    ","    ","    ","halt",
+"callR", "fld","","movlr","    ","    ","    ","    ",
+"    ",  "fst","","", "    ","    ","    ","halt",
 };
 const char *SFunctTyMap[INST_NUM] = {
 "fggg","    ","fggg","    ","    ","    ","    ","   ",
@@ -36,8 +36,8 @@ const char *SFunctTyMap[INST_NUM] = {
 "fggg","    ","fggg","fggg","    ","    ","    ","    ",
 "fggg","    ","fggg","","fggg","fggg","    ","    ",
 "",    "    ","    ","","    ","    ","    ","    ",
-"fg",  "    ","    ","f",   "    ","    ","    ","    ",
-"    ","    ","    ","",   "    ","    ","    ","f",
+"fg",  "ffgg","    ","f",   "    ","    ","    ","    ",
+"    ","ffgg","    ","",   "    ","    ","    ","f",
 };
 const char *FFunctMap[INST_NUM] = {
 "fadd","fsub","fmul","fdiv","fsqrt","fabs","fmov","fneg",

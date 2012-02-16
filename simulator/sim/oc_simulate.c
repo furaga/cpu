@@ -6,9 +6,9 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdint.h>
+#include <assert.h>
 #include <math.h>
 #include "sim.h"
-
 
 int32_t reg[REG_NUM];
 uint32_t freg[REG_NUM];
@@ -17,6 +17,9 @@ uint32_t ram[RAM_NUM];
 uint32_t pc;
 uint32_t lr, tmplr;
 long long unsigned cnt;
+void to_bin(uint32_t);
+#define dump(x) fprintf(stderr, "%s: ", #x); to_bin(x);
+#define EXPO 0x7f800000
 
 // define fetch functions ////////////////////
 DEF_ELE_GET(get_opcode, 26, 0x3f);		
@@ -39,12 +42,13 @@ int simulate(char *sfile) {
 	union {
 		uint32_t i;
 		float f;
-	} a, b, ans;
+	} a, b, out, ans;
+	int sendbuf_count = 0;
 #ifdef LST_FLAG
 	FILE *lst_fp;
 	char lst_name[1024];
 #endif
-	uint32_t g1_min = RAM_NUM, g2_max = 0;
+	//uint32_t g1_min = 4*RAM_NUM, g2_max = 0;
 
 	fd = open(sfile, O_RDONLY);
 	if (fd < 0) {
@@ -59,9 +63,9 @@ int simulate(char *sfile) {
 	reg[2] = 0;
 
 	heap_size = rom[0];
-	pc+=4;
-	for (i = 0; heap_size > 0; i++,pc+=4) {
-		ram[reg[2]/4] = rom[pc/4];
+	pc++;
+	for (i = 0; heap_size > 0; i++,pc++) {
+		ram[reg[2]/4] = rom[pc];
 		reg[2] += 4;
 		heap_size -= 4;
 	}
@@ -88,10 +92,17 @@ int simulate(char *sfile) {
 #endif
 	do{
 		
-		g1_min = (g1_min < reg[1]) ? g1_min : reg[1];
-		g2_max = (g2_max > reg[2]) ? g2_max : reg[2];
+		if (reg[1] < 0 || reg[2] < 0)  {
+			break;
+		}
 
-		ir = rom[pc/4];
+		if (!(cnt % 13750)) {
+			if (sendbuf_count >0) {
+				sendbuf_count--;
+			}
+		}
+
+		ir = rom[pc];
 		cnt++;
 #ifdef LST_FLAG
 		print_ir(ir, lst_fp);
@@ -99,9 +110,7 @@ int simulate(char *sfile) {
 
 #ifdef STATS_FLAG
 		statistics(stderr,0);
-		fprintf(stderr, "why");
 #endif
-		fprintf(stderr, "why");
 
 #ifdef DEBUG_FLAG
 		debug();
@@ -109,48 +118,32 @@ int simulate(char *sfile) {
 
 		opcode = get_opcode(ir);
 		funct = get_funct(ir);
-		pc+=4;
+		pc++;
 		if (!(cnt % 100000000)) {
 			fprintf(stderr, ".");
 			fflush(stderr);
 		}
    
 		switch(opcode){
-			case LINK:
-				lr = (pc-4) + _IMM;
-				break;
 			case LD:
 				_GRD = ram[(_GRS + _GRT)/4];
 				break;
 			case ST:
 				ram[(_GRS + _GRT)/4] = _GRD;
 				break;
-
 			case LDI:
 				IF0_BREAK_S
 				_GRT = ram[(_GRS - _IMM)/4];
 				break;
-
 			case STI:
 				ram[(_GRS - _IMM)/4] = _GRT;
 				break;
-			case FSTI:
-				ram[(_GRS - _IMM)/4] = _FRT;
-				break;
-			case LDLR:
-				lr = ram[(_GRS - _IMM)/4];
-				break;
-			case STLR:
-				ram[(_GRS - _IMM)/4] = lr;
-				break;
-
 			case FLDI:
 				_FRT = ram[(_GRS - _IMM)/4];
 				break;
-
 			case JNE:
 				if (_GRS != _GRT)
-					pc += _IMM - 4;
+					pc += _IMM - 1;
 				break;
 			case ADDI:
 				IF0_BREAK_T
@@ -167,9 +160,12 @@ int simulate(char *sfile) {
 				a.i = _FRS;
 				b.i = _FRT;
 				if (a.f < b.f) {
-					pc += _IMM - 4;
+					pc += _IMM - 1;
 				} else {
 				}
+				break;
+			case FSTI:
+				ram[(_GRS - _IMM)/4] = _FRT;
 				break;
 			case SUBI:
 				IF0_BREAK_T
@@ -184,11 +180,11 @@ int simulate(char *sfile) {
 				a.i = _FRS;
 				b.i = _FRT;
 				if (a.f == b.f) 
-					pc += _IMM - 4;
+					pc += _IMM - 1;
 				break;
 			case JLT:
 				if (_GRS < _GRT) {
-					pc += _IMM - 4;
+					pc += _IMM - 1;
 				} else {
 				}
 				break;
@@ -204,7 +200,7 @@ int simulate(char *sfile) {
 				break;
 			case JEQ:
 				if (_GRS == _GRT)
-					pc += _IMM - 4;
+					pc += _IMM - 1;
 				break;
 			case MULI:
 				IF0_BREAK_T
@@ -219,71 +215,32 @@ int simulate(char *sfile) {
 				IF0_BREAK_S
 				_GRS = (_GRS & (0xffff<<16)) | (_IMM & 0xffff);
 				break;
-			//case PADD:
-				//IF0_BREAK_T
-				//_GRT = (pc - 4) + _IMM;
-				//lr = (pc  + 4);
-				//break;
 			case DIVI:
 				IF0_BREAK_T
 				_GRT = _GRS / _IMM;
 				break;
-			case SIN:
-				a.i = _FRS;
-				ans.f = sinf(a.f);
-				_FRD = ans.i;
-	//fprintf(stderr, "sin before:%f after:%f\n", a.f,ans.f);
-				break;
-			case COS:
-				a.i = _FRS;
-				ans.f = cosf(a.f);
-				_FRD = ans.i;
-	//fprintf(stderr, "cos before:%f after:%f\n", a.f,ans.f);
-				break;
-			case ATAN:
-				a.i = _FRS;
-				ans.f = atanf(a.f);
-				_FRD = ans.i;
-	//fprintf(stderr, "atan before:%f after:%f\n", a.f,ans.f);
-				break;
-			case I_OF_F:
-				IF0_BREAK_D
-				a.i = _FRS;
-				_GRD = (int32_t) a.f;
-	//fprintf(stderr, "ioff before:%X after:%f\n", _FRS, _GRD);
-				break;
-			case F_OF_I:
-				a.f = (float) _GRS;
-				_FRD = a.i;
-	//fprintf(stderr, "fofi before:%X after:%f\n", _GRS, _FRD);
-				break;
 			case FPI:
 				switch(funct) {
 					case FMUL_F:
-						a.i = _FRS;
-						b.i = _FRT;
-						ans.f = a.f * b.f;
-						_FRD = ans.i;
-					/*
 						_FRD = _fmul(_FRS, _FRT);
-					*/
+						break;
+					case FDIV_F:
+						a.i = _finv(_FRT);
+						_FRD = _fmul(_FRS, a.i);
 						break;
 					case FADD_F:
 						a.i = _FRS;
 						b.i = _FRT;
-						ans.f = a.f + b.f;
-						_FRD = ans.i;
-						_FRD = _fadd(_FRS, _FRT);
+						out.i = _fadd(_FRS, _FRT);
+						_FRD = out.i;
+
 						break;
 					case FSUB_F:
 						a.i = _FRS;
-						b.i = _FRT;
-						ans.f = a.f - b.f;
-						_FRD = ans.i;
-						_FRD = _fadd(_FRS, 
-							(_FRT & (0x1 << 31)) ?
-										 (_FRT & 0x7fffffff) :
-										 (_FRT | (0x1 << 31)));
+						b.i = (_FRT >> 31) ? (_FRT & 0x7fffffff) : (_FRT | 0x80000000);
+						out.i = _fadd(_FRS, b.i);
+						_FRD = out.i;
+						
 						break;
 					case FABS_F:
 						_FRD = 0x7fffffff & _FRS;
@@ -299,20 +256,11 @@ int simulate(char *sfile) {
 					case FSQRT_F:
 						_FRD = _fsqrt(_FRS);
 						break;
-					case FDIV_F:
-						a.i = _FRS;
-						b.i = _FRT;
-						b.i = _finv(b.i);
-						ans.f = a.f * b.f;
-						_FRD = ans.i;
-						/*
-						_FRD = _fmul(a.i, b.i);
-						*/
-						break;
 					default: break;
 
 				}
 				break;
+
 
 			case SPECIAL:
 				switch(funct) {
@@ -333,12 +281,6 @@ int simulate(char *sfile) {
 					case B_F:
 						pc = _GRS;
 						break;
-					case MOVLR_F:
-						tmplr = lr;
-						break;
-					case BTMPLR_F:
-						pc = tmplr;
-						break;
 					case FLD_F:
 						_FRD = ram[(_GRS + _GRT)/4];
 						break;
@@ -353,7 +295,6 @@ int simulate(char *sfile) {
 						IF0_BREAK_D
 						_GRD = _GRS * _GRT;
 						break;
-
 					//case DIV_F:
 						//IF0_BREAK_D
 						//_GRD = _GRS / _GRT;
@@ -362,10 +303,6 @@ int simulate(char *sfile) {
 						IF0_BREAK_D
 						_GRD = _GRS & _GRT;
 						break;
-					//case PADD_F:
-						//IF0_BREAK_D
-						//_GRD = pc + 4 + _GRT;
-						//break;
 					case OR_F:
 						IF0_BREAK_D
 						_GRD = _GRS | _GRT;
@@ -387,17 +324,23 @@ int simulate(char *sfile) {
 				switch(funct) {
 					case OUTPUT_F:
 						if (_GRS >> 8) {
-							fprintf(stderr,"errrrrrrrrrrr\n");
+							fprintf(stderr,"output caution\n");
 						}
-						//fprintf(stderr, "%10d\n", cnt);
+						sendbuf_count++;
+						//fprintf(stderr, "%u %15llu\n", 0x1adb, sendbuf_count);
 						putchar(_GRS&0xff);
 						fflush(stdout);
 						break;
 					case INPUT_F:
 						ret = scanf("%c", (char*)&_GRD);
-						//fprintf(stderr, "%d,", ret);
+						//fprintf(stderr, "%15llu\n", cnt);
+						//fprintf(stderr, "x\"%02X\",\n", _GRD&0xff);
 						IF0_BREAK_D
+						if (ret==0) {
+							fprintf(stderr,"input error\n");
+						}
 						_GRD = _GRD & 0xff;
+
 						break;
 					}
 				break;
@@ -412,9 +355,17 @@ int simulate(char *sfile) {
 #endif
 	fprintf(stderr, "\nCPU Simulator Results\n");
 	fprintf(stderr, "cnt:%llu\n", cnt);
-	fprintf(stderr, "g1_min: %u(dec)\n", g1_min);
-	fprintf(stderr, "g2_max: %u(dec)\n", g2_max);
 	fflush(stderr);
 
 	return 0;
+
+						/*
+						if ((ans.i&EXPO) != (out.i&EXPO)) {
+							dump(a.i);
+							dump(b.i);
+							dump(out.i);
+							dump(ans.i);
+							assert(0);
+						}
+						*/
 } 

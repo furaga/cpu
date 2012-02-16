@@ -1,26 +1,17 @@
 .init_heap_size 32
 FLOAT_ONE:
 	.long 0x3f800000
-
-	jmp start
-NewLine:
-	mvlo %g10, 10
-	output %g10
-	movlr
-	addi %g1, %g1, 4
-	ldlr %g1, 0
-	btmplr
 	
 start:
+	mvlo %g3, 48
+	output %g3
+
 	subi	%g1, %g1, 32
 	addi %g28, %g0, 1
 	addi %g29, %g0, -1
 	addi %g15, %g0, 54
 	sti %g15, %g31, 4
 	
-!0
-	mvlo %g3, 48
-	output %g3
 !!!! call NewLine
 	stlr %g1, 0
 	subi %g1, %g1, 4
@@ -114,3 +105,10 @@ Ltrue8:
 
 ! jeq jne jlt output mvhi slli mvlo srli subi stlr 
 !link jmp btmplr addi ldlr movlr halt
+NewLine:
+	mvlo %g10, 10
+	output %g10
+	movlr
+	addi %g1, %g1, 4
+	ldlr %g1, 0
+	btmplr

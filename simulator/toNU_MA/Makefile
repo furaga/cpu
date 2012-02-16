@@ -1,7 +1,5 @@
-
-
-TARGET = test
-#ASM_FLAG = 
+TARGET = test2
+#ASM_FLAG = -b
 # -h or -b
 
 

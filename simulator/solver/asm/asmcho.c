@@ -23,8 +23,6 @@ int main(int argc, char **argv, char **envp) {
 			output_type = 1;
 		} else if (strcmp(argv[i], "-h") == 0) {
 			output_type = 2;
-		} else if (strcmp(argv[i], "-coe") == 0) {
-			output_type = 3;
 		}
 	}
 

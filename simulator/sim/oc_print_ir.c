@@ -13,15 +13,19 @@ void print_ir(uint32_t ir, FILE *fp) {
 	static const char *fggg = "%s\tg%d=%d g%d=%d g%d=%d\n";
 	static const char *fggi = "%s\tg%d=%d g%d=%d %d\n";
 	static const char *fggl = "%s\tg%d=%d g%d=%d %x\n";
-	static const char *ffgg = "%s\n";
 	static const char *fff = "%s\tf%d=%08X f%d=%08X\n";
 	static const char *fffl = "%s\tf%d=%08X f%d=%08X %x\n";
 	static const char *ffff = "%s\tf%d=%08X f%d=%08X f%d=%08X\n";
+	static const char *ffff2 = "%s\tf%d=%13.10f f%d=%13.10f f%d=%13.10f\n";
 	static const char *ffgi = "%s\tf%d=%08X g%d=%d %d\n";
 	uint32_t opcode,funct;
 	const char *name,*type,*f_type,*f_name;
+	union {
+		uint32_t i;
+		float f;
+	} a, b, c;
 	
-	fprintf(fp, "%4llx.[%4x] x%08X ", cnt, pc>>2, ir);
+	fprintf(fp, "%4llx.[%4x] x%08X ", cnt, pc, ir);
 
 	opcode = get_opcode(ir);
 	funct = get_funct(ir);
@@ -56,10 +60,6 @@ void print_ir(uint32_t ir, FILE *fp) {
 			// b, callR 
 			fprintf(fp, fg, f_name, get_rsi(ir), _GRS);
 		} else 
-		if (strcmp(f_type, "ffgg") == 0) {
-			// b, callR 
-			fprintf(fp, ffgg, f_name);
-		} else 
 		if (strcmp(f_type, "f") == 0) {
 			// halt
 			fprintf(fp, f, f_name);
@@ -85,7 +85,9 @@ void print_ir(uint32_t ir, FILE *fp) {
 		}else 
 		if (strcmp(f_type, "ffff") == 0) {
 			// fadd fsub fmul fdiv
-			fprintf(fp, ffff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
+			a.i = _FRD; b.i = _FRS; c.i = _FRT;
+			//fprintf(fp, ffff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
+			fprintf(fp, ffff2, f_name, get_rdi(ir), a.f, get_rsi(ir), b.f, get_rti(ir), c.f);
 		} else {
 			fprintf(fp, "Undefined FPI IR\n");
 		}
@@ -144,8 +146,8 @@ void print_ir(uint32_t ir, FILE *fp) {
 		fprintf(fp, ffff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
 	}else 
 	if (strcmp(type, "ffgi") == 0) {
-		// fld fst
-		fprintf(fp, ffgi, name, get_rsi(ir), _FRS, get_rdi(ir), _GRT, _IMM);
+		// fldi fsti
+		fprintf(fp, ffgi, name, get_rti(ir), _FRT, get_rsi(ir), _GRS, _IMM);
 	}else{
 		fprintf(fp, "Undefined ir\n");
 	}
