@@ -60,20 +60,21 @@ begin
 
 
 	raw_frac <= ('0'&rshiftedF) + ('0'&winnerF) 
-				when S1=S2 and E1/=0 and E2 /=0 else
+				when S1=S2 else
 			  ('0'&rshiftedF) - ('0'&winnerF)
-			  	when S1/=S2 and E1/=0 and E2 /= 0 and rshiftedF > winnerF else 
+			  	when S1/=S2 and (rshiftedF > winnerF) else 
 			  ('0'&winnerF) - ('0'&rshiftedF)
-			  	when S1/=S2 and E1/=0 and E2 /= 0 and rshiftedF < winnerF else 
+			  	when S1/=S2 and (rshiftedF <= winnerF) else 
 				raw_frac;
 	
 	EO	<=	winnerE+1  when lshiftwidth=0 else
-			(others=>'0') when lshiftwidth=25 or winnerE<(lshiftwidth-1) else
+			(others=>'0') when lshiftwidth=25 or winnerE<=(lshiftwidth-1) else
 			winnerE-(lshiftwidth-1);
 
 
 	rshiftwidth	<= conv_integer(winnerE - loserE);
 	rshiftedF <= loserF srl rshiftwidth when rshiftwidth < 24 else (others=>'0');
+
 	FO	<=	'0'&raw_frac(24 downto 1) when lshiftwidth=0 else
 			(others=>'0') when lshiftwidth=25 else
 			raw_frac sll (lshiftwidth-1);

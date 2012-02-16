@@ -5,38 +5,33 @@
 ## 32 * 1024 = 32768
 ## 16 * 1024 = 16384
 ##  4 * 1024 = 4096
-
 ## ram
 ##128 * 1024 = 131072 min_rt
-## 64 * 1024 = 65536  min_rt
 ##  4 * 1024 = 4096   fib
 
+<%def name="reg1_init()">131071</%def>
+<%def name="sim_sramsize()">${reg1_init()}</%def>
+<%def name="sim_sramaddr()">ZA(16 downto 0)</%def>
+<%def name="mem_acc_sram_addr()">"000"&ADDR(18 downto 2)</%def>
 
-<%def name="reg1_init()">4095</%def>
-<%def name="ram_size()">4095</%def>
-<%def name="ram_sim_t()">${V('11 downto 0')}</%def>
-
-<%def name="prom_size()">32767</%def>
-<%def name="pc_t()">${V32()}</%def>
-
-##<%def name="io_sbufsize()">262144</%def>
-<%def name="io_sbufsize()">2047</%def>
-<%def name="io_rbufsize()">1137</%def>
+<%def name="io_buf_rec_t()">${V8()}</%def>
 <%def name="io_wtime()">x"0000"</%def>
 
-<%def name="V(size)">std_logic_vector(${size})</%def>
+## 14bit (16384  32bit)
+<%def name="prom_msb()">13</%def>
+<%def name="sim_prom_size()">32767</%def>
+<%def name="pc_t()">${V32()}</%def>
 
+<%def name="io_bus_t()">${V32()}</%def>
+<%def name="reg_t()">${V32()}</%def>
+<%def name="ram_t()">${V32()}</%def>
+<%def name="ir_t()">${V32()}</%def>
+<%def name="reg_index_t()">${V5()}</%def>
+<%def name="ram_addr_t()">${V20()}</%def>
+
+<%def name="V(size)">std_logic_vector(${size})</%def>
 <%def name="V32()">${V('31 downto 0')}</%def>
 <%def name="V20()">${V('19 downto 0')}</%def>
 <%def name="V16()">${V('15 downto 0')}</%def>
 <%def name="V8()">${V('7 downto 0')}</%def>
 <%def name="V5()">${V('4 downto 0')}</%def>
-
-<%def name="io_bus_t()">${V32()}</%def>
-<%def name="reg_t()">${V32()}</%def>
-<%def name="ram_t()">${V32()}</%def>
-<%def name="buf_rec_t()">${V8()}</%def>
-<%def name="ir_t()">${V32()}</%def>
-<%def name="reg_index_t()">${V5()}</%def>
-<%def name="ram_addr_t()">${V20()}</%def>
-

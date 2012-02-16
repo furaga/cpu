@@ -3,7 +3,7 @@ TB = testbench
 OBJS = top.o clk_gen.o core_c.o decode.o reg_dc.o \
 	std_logic_1164_additional.o \
 	exec.o reg_wb.o testbench.o mem_acc.o u232c.o \
-	io_dev.o prom.o fetch.o ram.o clk_delay.o\
+	io_dev.o prom.o fetch.o clk_delay.o sram.o\
 	fadd.o fmul.o fsqrt.o finv.o finv_table.o fsqrt_table.o
 		
 TMPL_DIR = ./tmpl
@@ -11,7 +11,7 @@ TMPL_DIR = ./tmpl
 TARGET = $(TB)
 
 IEEE = 'synopsys'
-TIME = 40us
+TIME = 100us
 OPTION = -fexplicit
 .SUFFIXES: .vhd .vcd .tmp
 

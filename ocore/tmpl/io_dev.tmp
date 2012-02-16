@@ -4,7 +4,7 @@ entity io_dev is
 <%include file="io_dev_entity.tmp"/>
 end io_dev;
 
-architecture arch of io_dev is
+architecture RTL of io_dev is
 	component u232c is
   generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
   Port ( clk  : in  std_logic;
@@ -13,68 +13,57 @@ architecture arch of io_dev is
 		 send_busy : out std_logic;
 		 tx   : out std_logic;
 		 recv_data : out std_logic_vector (7 downto 0);
-		 recv_busy : out std_logic;
+		 recv_ready : out std_logic;
 		 rx   : in std_logic
 		);
 	end component;
 
-	subtype buf_rec_t is ${oc.buf_rec_t()};
+	subtype buf_rec_t is std_logic_vector(7 downto 0);
 
-	type sendbuf_t is array (0 to ${oc.io_sbufsize()}) of buf_rec_t;
+	type sendbuf_t is array (0 to 65535) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
-	signal send_head	: integer range 0 to ${oc.io_sbufsize()} := 0;
-	signal send_tail	: integer range 0 to ${oc.io_sbufsize()} := 0;
+	signal send_head	: std_logic_vector(15 downto 0) := (others=>'0');
+	signal send_tail	: std_logic_vector(15 downto 0) := (others=>'0');
 	signal send_empty : std_logic := '0';
 
-	--signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
-	--signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 0;
-	signal recv_head	: integer range 0 to ${oc.io_rbufsize()} := 0;
-	signal recv_tail	: integer range 0 to ${oc.io_rbufsize()} := 1137;
-	type recvbuf_t is array (0 to ${oc.io_rbufsize()}) of buf_rec_t;
-	--signal recvbuf : recvbuf_t;
-	signal recvbuf : recvbuf_t :=
-	(
-<%include file="contest_sld.txt"/>
-	);
-
-
+	signal recv_head	: std_logic_vector(11 downto 0) := (others=>'0');
+	signal recv_tail	: std_logic_vector(11 downto 0) := (others=>'0');
+	type recvbuf_t is array (0 to 2047) of buf_rec_t;
+	signal recvbuf : recvbuf_t;
 	signal u232c_o : std_logic_vector(7 downto 0);
 	signal u232c_i : std_logic_vector(7 downto 0);
 
 	signal send_go : std_logic;
 	signal send_busy : std_logic := '0';
 
-	signal recv_busy : std_logic := '0';
+	signal recv_ready : std_logic;
 
 	
 begin
+	
 	rs232c: u232c generic map (wtime=>${oc.io_wtime()})
-	port map (clk, u232c_o, send_go, send_busy, RS_TX, u232c_i, recv_busy, RS_RX);
+	port map (clk, u232c_o, send_go, send_busy, RS_TX, 
+				   u232c_i, recv_ready, RS_RX);
 
 ------------------------------------------------------------------------
 ---- send
 ------------------------------------------------------------------------
-	send_enqueue : process(CPU_WR, CPU_OUT)
-	begin
-		if rising_edge(CPU_WR) then
-			sendbuf(send_tail) <= CPU_OUT(7 downto 0);
-			send_tail <= send_tail + 1;
-		end if;
-	end process;
-
 	send_empty <= '1' when send_head=send_tail else '0';
-	send_dequeue: process(clk, send_busy)
+	send: process(CLK)
 	begin
-		if rising_edge(clk) then
-			u232c_o <= sendbuf(send_head);
+		if rising_edge(CLK) then
+			if CPU_WR='1' then
+				sendbuf(conv_integer(send_tail)) <= CPU_OUT(7 downto 0);
+				send_tail <= send_tail + 1;
+			end if;
 
 			if send_busy='0' and send_go='0' then
+				u232c_o <= sendbuf(conv_integer(send_head));
 				send_go<=not send_empty;
 				send_head <= send_head + conv_integer(not send_empty);
 			else
 				send_go<='0';
 			end if;
-
 		end if;
 	end process;
 
@@ -82,21 +71,21 @@ begin
 ---- recv
 ------------------------------------------------------------------------
 	NYET <= '1' when recv_head=recv_tail else '0';
-	CPU_IN <= x"000000"&recvbuf(recv_head);
-	recv_enqueue : process(recv_busy, u232c_i)
+	receive : process(CLK)
 	begin
-		if falling_edge(recv_busy) then
-			recvbuf(recv_tail)<=u232c_i;
-			recv_tail <= recv_tail+1;
+		if rising_edge(CLK) then
+			if CPU_RD='1' then
+				CPU_IN <= x"000000"&recvbuf(conv_integer(recv_head));
+				recv_head <= recv_head+1;
+			end if;
+
+			if recv_ready='1' then
+				recvbuf(conv_integer(recv_tail))<=u232c_i;
+				recv_tail <= recv_tail+1;
+			end if;
 		end if;
 	end process;
 
-	recv_dequeue : process(CPU_RD)
-	begin
-		if rising_edge(CPU_RD) then
-			recv_head <= recv_head+1;
-		end if;
-	end process;
 
-end arch;
+end RTL;
 <%namespace name="oc" file="macro.tmp"/>

@@ -39,16 +39,13 @@ architecture RTL of exec is
 	signal heap_size : std_logic_vector(31 downto 0) := (others=>'0');
 	signal start : std_logic := '0';
 
-	signal farg1 : ${oc.reg_t()};
-	signal farg2 : ${oc.reg_t()};
 	signal fout_add : ${oc.reg_t()};
 	signal fout_sub : ${oc.reg_t()};
 	signal fout_mul : ${oc.reg_t()};
 	signal fout_sqrt : ${oc.reg_t()};
 	signal fout_div : ${oc.reg_t()};
 	signal freg_t_bar : ${oc.reg_t()};
-
-	signal inverted : std_logic_vector(31 downto 0);
+	signal inverted : std_logic_vector(31 downto 0) := (others=>'0');
 
 begin
 	freg_t_bar <= (not FREG_T(31))&FREG_T(30 downto 0);
@@ -109,7 +106,6 @@ begin
 				RAM_IN <= x"000000aa";
 				RAM_ADDR <= x"80000";
 				start<='1';
------------------------------------------------------------
 -----------------------------------------------------------
 -----------------------------------------------------------
 			else
@@ -316,19 +312,6 @@ begin
 						slide_num := conv_integer(imm);
 						REG_IN <= REG_S sll slide_num;
 
-						--case slide_num is
-							--when 0 =>
-								--REG_IN <= REG_S;
-							--when 1 =>
-								--REG_IN <= REG_S(30 downto 0)&'0';
-							--when 2 =>
-								--REG_IN <= REG_S(29 downto 0)&"00";
-							--when 3 =>
-								--REG_IN <= REG_S(28 downto 0)&"000";
-							----when others =>
-								--REG_IN <= REG_S;
-						--end case;
-
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
@@ -339,22 +322,7 @@ begin
 					when "101010" =>	-- SRLI
 						slide_num := conv_integer(imm);
 						REG_IN <= REG_S sra slide_num;
-						--case slide_num is
-							--when 0 =>
-								--REG_IN <= REG_S;
-							--when 1 =>
-								--REG_IN <= REG_S(31)&REG_S(31 downto 1);
-							--when others =>
-								--REG_IN <= REG_S;
-						--end case;
 
-
-						--if slide_num < 32 then
-							--REG_IN <= conv_std_logic_vector(REG_S(31),slide_num) &
-									  --REG_S(31 downto slide_num);
-						--else 
-							--REG_IN <= (others=>'0');
-						--end if;
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	

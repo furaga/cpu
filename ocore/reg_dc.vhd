@@ -42,7 +42,7 @@ entity reg_dc is
 		REG_30	:	in	std_logic_vector(31 downto 0);
 		REG_31	:	in	std_logic_vector(31 downto 0);
 		N_REG_IN	:	in	std_logic_vector (4 downto 0);
-		REG_OUT	:	out	std_logic_vector(31 downto 0)
+		REG_OUT	:	out	std_logic_vector(31 downto 0) := (others=>'0')
 	);
 
 

@@ -245,10 +245,11 @@ min_caml_start:
 	subi	%g2, %g31, 24
 	call	min_caml_create_array
 	ldi	%g2, %g31, 28
-	addi	%g4, %g0, 30
-	call	fib.342
+	addi	%g5, %g0, 10
+	addi	%g4, %g0, 3
+	call	ack.346
 	mov	%g8, %g3
-	call	print_int.340
+	call	print_int.344
 	addi	%g1, %g1, 4
 	halt
 
@@ -258,25 +259,25 @@ min_caml_start:
 ! use_regs = [%g9, %g8, %g7, %g6, %g5, %g4, %g3, %g27, %f15]
 ! ret type = Int
 !================================
-div_binary_search.335:
+div_binary_search.339:
 	add	%g3, %g5, %g6
 	srli	%g4, %g3, 1
 	mul	%g9, %g4, %g7
 	sub	%g3, %g6, %g5
-	jlt	%g28, %g3, jle_else.689
+	jlt	%g28, %g3, jle_else.697
 	mov	%g3, %g5
 	return
-jle_else.689:
-	jlt	%g9, %g8, jle_else.690
-	jne	%g9, %g8, jeq_else.691
+jle_else.697:
+	jlt	%g9, %g8, jle_else.698
+	jne	%g9, %g8, jeq_else.699
 	mov	%g3, %g4
 	return
-jeq_else.691:
+jeq_else.699:
 	mov	%g6, %g4
-	jmp	div_binary_search.335
-jle_else.690:
+	jmp	div_binary_search.339
+jle_else.698:
 	mov	%g5, %g4
-	jmp	div_binary_search.335
+	jmp	div_binary_search.339
 
 !==============================
 ! args = [%g8]
@@ -284,102 +285,42 @@ jle_else.690:
 ! use_regs = [%g9, %g8, %g7, %g6, %g5, %g4, %g3, %g27, %g11, %g10, %f15, %dummy]
 ! ret type = Unit
 !================================
-print_int.340:
-	jlt	%g8, %g0, jge_else.692
+print_int.344:
+	jlt	%g8, %g0, jge_else.700
 	mvhi	%g7, 1525
 	mvlo	%g7, 57600
 	addi	%g5, %g0, 0
 	addi	%g6, %g0, 3
 	sti	%g8, %g1, 0
 	subi	%g1, %g1, 8
-	call	div_binary_search.335
+	call	div_binary_search.339
 	addi	%g1, %g1, 8
 	mvhi	%g4, 1525
 	mvlo	%g4, 57600
 	mul	%g4, %g3, %g4
 	ldi	%g8, %g1, 0
 	sub	%g8, %g8, %g4
-	jlt	%g0, %g3, jle_else.693
+	jlt	%g0, %g3, jle_else.701
 	addi	%g10, %g0, 0
-	jmp	jle_cont.694
-jle_else.693:
+	jmp	jle_cont.702
+jle_else.701:
 	addi	%g4, %g0, 48
 	add	%g3, %g4, %g3
 	output	%g3
 	addi	%g10, %g0, 1
-jle_cont.694:
+jle_cont.702:
 	mvhi	%g7, 152
 	mvlo	%g7, 38528
 	addi	%g5, %g0, 0
 	addi	%g6, %g0, 10
 	sti	%g8, %g1, 4
 	subi	%g1, %g1, 12
-	call	div_binary_search.335
+	call	div_binary_search.339
 	addi	%g1, %g1, 12
 	mvhi	%g4, 152
 	mvlo	%g4, 38528
 	mul	%g4, %g3, %g4
 	ldi	%g8, %g1, 4
-	sub	%g8, %g8, %g4
-	jlt	%g0, %g3, jle_else.695
-	jne	%g10, %g0, jeq_else.697
-	addi	%g11, %g0, 0
-	jmp	jeq_cont.698
-jeq_else.697:
-	addi	%g4, %g0, 48
-	add	%g3, %g4, %g3
-	output	%g3
-	addi	%g11, %g0, 1
-jeq_cont.698:
-	jmp	jle_cont.696
-jle_else.695:
-	addi	%g4, %g0, 48
-	add	%g3, %g4, %g3
-	output	%g3
-	addi	%g11, %g0, 1
-jle_cont.696:
-	mvhi	%g7, 15
-	mvlo	%g7, 16960
-	addi	%g5, %g0, 0
-	addi	%g6, %g0, 10
-	sti	%g8, %g1, 8
-	subi	%g1, %g1, 16
-	call	div_binary_search.335
-	addi	%g1, %g1, 16
-	mvhi	%g4, 15
-	mvlo	%g4, 16960
-	mul	%g4, %g3, %g4
-	ldi	%g8, %g1, 8
-	sub	%g8, %g8, %g4
-	jlt	%g0, %g3, jle_else.699
-	jne	%g11, %g0, jeq_else.701
-	addi	%g10, %g0, 0
-	jmp	jeq_cont.702
-jeq_else.701:
-	addi	%g4, %g0, 48
-	add	%g3, %g4, %g3
-	output	%g3
-	addi	%g10, %g0, 1
-jeq_cont.702:
-	jmp	jle_cont.700
-jle_else.699:
-	addi	%g4, %g0, 48
-	add	%g3, %g4, %g3
-	output	%g3
-	addi	%g10, %g0, 1
-jle_cont.700:
-	mvhi	%g7, 1
-	mvlo	%g7, 34464
-	addi	%g5, %g0, 0
-	addi	%g6, %g0, 10
-	sti	%g8, %g1, 12
-	subi	%g1, %g1, 20
-	call	div_binary_search.335
-	addi	%g1, %g1, 20
-	mvhi	%g4, 1
-	mvlo	%g4, 34464
-	mul	%g4, %g3, %g4
-	ldi	%g8, %g1, 12
 	sub	%g8, %g8, %g4
 	jlt	%g0, %g3, jle_else.703
 	jne	%g10, %g0, jeq_else.705
@@ -398,16 +339,18 @@ jle_else.703:
 	output	%g3
 	addi	%g11, %g0, 1
 jle_cont.704:
-	addi	%g7, %g0, 10000
+	mvhi	%g7, 15
+	mvlo	%g7, 16960
 	addi	%g5, %g0, 0
 	addi	%g6, %g0, 10
-	sti	%g8, %g1, 16
-	subi	%g1, %g1, 24
-	call	div_binary_search.335
-	addi	%g1, %g1, 24
-	addi	%g4, %g0, 10000
+	sti	%g8, %g1, 8
+	subi	%g1, %g1, 16
+	call	div_binary_search.339
+	addi	%g1, %g1, 16
+	mvhi	%g4, 15
+	mvlo	%g4, 16960
 	mul	%g4, %g3, %g4
-	ldi	%g8, %g1, 16
+	ldi	%g8, %g1, 8
 	sub	%g8, %g8, %g4
 	jlt	%g0, %g3, jle_else.707
 	jne	%g11, %g0, jeq_else.709
@@ -426,15 +369,18 @@ jle_else.707:
 	output	%g3
 	addi	%g10, %g0, 1
 jle_cont.708:
-	addi	%g7, %g0, 1000
+	mvhi	%g7, 1
+	mvlo	%g7, 34464
 	addi	%g5, %g0, 0
 	addi	%g6, %g0, 10
-	sti	%g8, %g1, 20
-	subi	%g1, %g1, 28
-	call	div_binary_search.335
-	addi	%g1, %g1, 28
-	muli	%g4, %g3, 1000
-	ldi	%g8, %g1, 20
+	sti	%g8, %g1, 12
+	subi	%g1, %g1, 20
+	call	div_binary_search.339
+	addi	%g1, %g1, 20
+	mvhi	%g4, 1
+	mvlo	%g4, 34464
+	mul	%g4, %g3, %g4
+	ldi	%g8, %g1, 12
 	sub	%g8, %g8, %g4
 	jlt	%g0, %g3, jle_else.711
 	jne	%g10, %g0, jeq_else.713
@@ -453,15 +399,16 @@ jle_else.711:
 	output	%g3
 	addi	%g11, %g0, 1
 jle_cont.712:
-	addi	%g7, %g0, 100
+	addi	%g7, %g0, 10000
 	addi	%g5, %g0, 0
 	addi	%g6, %g0, 10
-	sti	%g8, %g1, 24
-	subi	%g1, %g1, 32
-	call	div_binary_search.335
-	addi	%g1, %g1, 32
-	muli	%g4, %g3, 100
-	ldi	%g8, %g1, 24
+	sti	%g8, %g1, 16
+	subi	%g1, %g1, 24
+	call	div_binary_search.339
+	addi	%g1, %g1, 24
+	addi	%g4, %g0, 10000
+	mul	%g4, %g3, %g4
+	ldi	%g8, %g1, 16
 	sub	%g8, %g8, %g4
 	jlt	%g0, %g3, jle_else.715
 	jne	%g11, %g0, jeq_else.717
@@ -480,67 +427,120 @@ jle_else.715:
 	output	%g3
 	addi	%g10, %g0, 1
 jle_cont.716:
+	addi	%g7, %g0, 1000
+	addi	%g5, %g0, 0
+	addi	%g6, %g0, 10
+	sti	%g8, %g1, 20
+	subi	%g1, %g1, 28
+	call	div_binary_search.339
+	addi	%g1, %g1, 28
+	muli	%g4, %g3, 1000
+	ldi	%g8, %g1, 20
+	sub	%g8, %g8, %g4
+	jlt	%g0, %g3, jle_else.719
+	jne	%g10, %g0, jeq_else.721
+	addi	%g11, %g0, 0
+	jmp	jeq_cont.722
+jeq_else.721:
+	addi	%g4, %g0, 48
+	add	%g3, %g4, %g3
+	output	%g3
+	addi	%g11, %g0, 1
+jeq_cont.722:
+	jmp	jle_cont.720
+jle_else.719:
+	addi	%g4, %g0, 48
+	add	%g3, %g4, %g3
+	output	%g3
+	addi	%g11, %g0, 1
+jle_cont.720:
+	addi	%g7, %g0, 100
+	addi	%g5, %g0, 0
+	addi	%g6, %g0, 10
+	sti	%g8, %g1, 24
+	subi	%g1, %g1, 32
+	call	div_binary_search.339
+	addi	%g1, %g1, 32
+	muli	%g4, %g3, 100
+	ldi	%g8, %g1, 24
+	sub	%g8, %g8, %g4
+	jlt	%g0, %g3, jle_else.723
+	jne	%g11, %g0, jeq_else.725
+	addi	%g10, %g0, 0
+	jmp	jeq_cont.726
+jeq_else.725:
+	addi	%g4, %g0, 48
+	add	%g3, %g4, %g3
+	output	%g3
+	addi	%g10, %g0, 1
+jeq_cont.726:
+	jmp	jle_cont.724
+jle_else.723:
+	addi	%g4, %g0, 48
+	add	%g3, %g4, %g3
+	output	%g3
+	addi	%g10, %g0, 1
+jle_cont.724:
 	addi	%g7, %g0, 10
 	addi	%g5, %g0, 0
 	addi	%g6, %g0, 10
 	sti	%g8, %g1, 28
 	subi	%g1, %g1, 36
-	call	div_binary_search.335
+	call	div_binary_search.339
 	addi	%g1, %g1, 36
 	muli	%g4, %g3, 10
 	ldi	%g8, %g1, 28
 	sub	%g4, %g8, %g4
-	jlt	%g0, %g3, jle_else.719
-	jne	%g10, %g0, jeq_else.721
+	jlt	%g0, %g3, jle_else.727
+	jne	%g10, %g0, jeq_else.729
 	addi	%g5, %g0, 0
-	jmp	jeq_cont.722
-jeq_else.721:
+	jmp	jeq_cont.730
+jeq_else.729:
 	addi	%g5, %g0, 48
 	add	%g3, %g5, %g3
 	output	%g3
 	addi	%g5, %g0, 1
-jeq_cont.722:
-	jmp	jle_cont.720
-jle_else.719:
+jeq_cont.730:
+	jmp	jle_cont.728
+jle_else.727:
 	addi	%g5, %g0, 48
 	add	%g3, %g5, %g3
 	output	%g3
 	addi	%g5, %g0, 1
-jle_cont.720:
+jle_cont.728:
 	addi	%g3, %g0, 48
 	add	%g3, %g3, %g4
 	output	%g3
 	return
-jge_else.692:
+jge_else.700:
 	addi	%g3, %g0, 45
 	output	%g3
 	sub	%g8, %g0, %g8
-	jmp	print_int.340
+	jmp	print_int.344
 
 !==============================
-! args = [%g4]
+! args = [%g5, %g4]
 ! fargs = []
 ! use_regs = [%g5, %g4, %g3, %g27, %f15]
 ! ret type = Int
 !================================
-fib.342:
-	jlt	%g28, %g4, jle_else.723
-	mov	%g3, %g4
+ack.346:
+	jlt	%g0, %g5, jle_else.731
+	addi	%g3, %g4, 1
 	return
-jle_else.723:
-	subi	%g3, %g4, 1
-	sti	%g4, %g1, 0
-	mov	%g4, %g3
+jle_else.731:
+	jlt	%g0, %g4, jle_else.732
+	subi	%g5, %g5, 1
+	addi	%g4, %g0, 1
+	jmp	ack.346
+jle_else.732:
+	subi	%g3, %g5, 1
+	subi	%g4, %g4, 1
+	sti	%g3, %g1, 0
 	subi	%g1, %g1, 8
-	call	fib.342
+	call	ack.346
 	addi	%g1, %g1, 8
+	mov	%g4, %g3
+	ldi	%g3, %g1, 0
 	mov	%g5, %g3
-	ldi	%g4, %g1, 0
-	subi	%g4, %g4, 2
-	sti	%g5, %g1, 4
-	subi	%g1, %g1, 12
-	call	fib.342
-	addi	%g1, %g1, 12
-	ldi	%g5, %g1, 4
-	add	%g3, %g5, %g3
-	return
+	jmp	ack.346

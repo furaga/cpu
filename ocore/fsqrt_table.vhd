@@ -6,7 +6,7 @@ entity fsqrt_table is
   port (
 		clka : in std_logic;
 		addra : in std_logic_vector(9 downto 0);
-		douta : out std_logic_vector(35 downto 0));
+		douta : out std_logic_vector(35 downto 0) := (others=>'0'));
 end fsqrt_table;
 
 architecture op of fsqrt_table is

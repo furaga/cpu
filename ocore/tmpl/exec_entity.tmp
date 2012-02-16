@@ -9,9 +9,9 @@
 	REG_S	:	in	${oc.reg_t()};	-- value of rs
 	REG_T	:	in	${oc.reg_t()};	-- value of rt
 	REG_D	:	in	${oc.reg_t()};	-- value of rd
-	FREG_S	:	in	${oc.reg_t()};	-- value of rs <== new
-	FREG_T	:	in	${oc.reg_t()};	-- value of rt <== new
-	FREG_D	:	in	${oc.reg_t()};	-- value of rd <== new
+	FREG_S	:	in	${oc.reg_t()} :=(others=>'0');	-- value of rs <== new
+	FREG_T	:	in	${oc.reg_t()} :=(others=>'0');	-- value of rt <== new
+	FREG_D	:	in	${oc.reg_t()} :=(others=>'0');	-- value of rd <== new
 	FP_OUT	:	in	${oc.ram_addr_t()};	-- current frame pinter
 	LR_OUT	:	in	${oc.pc_t()};	-- current link register
 	LR_IN	:	out	${oc.pc_t()};	-- next link register
@@ -23,6 +23,6 @@
 	RAM_ADDR	:	out	${oc.ram_addr_t()} := (others=>'0');	-- ram address
 	RAM_IN	:	out	${oc.reg_t()};	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
-	RAM_WEN	:	out	std_logic	-- ram write enable
+	RAM_WEN	:	out	std_logic := '0'	-- ram write enable
 );
 <%namespace name="oc" file="macro.tmp"/>

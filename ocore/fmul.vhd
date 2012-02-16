@@ -16,7 +16,7 @@ architecture op of myfmul is
 	signal E1, E2, EO : std_logic_vector(8 downto 0); -- 9bit for overflow, underflow
 	signal F1H, F1L, F2H, F2L : std_logic_vector(12 downto 0);
 	signal FO	: std_logic_vector(22 downto 0);
-	signal HH,HL,LH, cross: std_logic_vector(25 downto 0);
+	signal HH,HL,LH: std_logic_vector(25 downto 0);
 	signal raw_FO : std_logic_vector(25 downto 0);
 	signal raw_EO : std_logic_vector(8 downto 0);
 
@@ -48,7 +48,7 @@ begin
 	HH <= F1H * F2H;
 	HL <= F1H * F2L;
 	LH <= F1L * F2H;
-	raw_FO <= HH + (HL srl 11) + (LH srl 11) + 2;
+	raw_FO <= HH + (HL srl 11) + (LH srl 11) + 0;
 
 
 end op;

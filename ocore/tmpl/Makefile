@@ -2,9 +2,9 @@ RENDER = mako-render
 OCORE_DIR = ..
 
 MODULES = decode reg_dc mem_acc clk_gen reg_wb exec core_c top \
-	io_dev io_dev_word prom ram fetch clk_delay
+	io_dev prom fetch clk_delay sram
 
-TARGET = $(MODULES:%=%.vhd)
+TARGET = $(MODULES:%=%.vhd) testbench.vhd
 SIM_TARGET = ./test
 
 .SUFFIXES: .vhd .tmp
@@ -34,6 +34,8 @@ core_c.vhd: core_c.tmp $(ENTITIES) $(BASE)
 top.vhd: top.tmp top_entity.tmp core_c_entity.tmp io_dev_entity.tmp $(BASE)
 io_dev.vhd: io_dev.tmp io_dev_entity.tmp $(BASE)
 io_dev_word.vhd: io_dev_word.tmp io_dev_entity.tmp $(BASE)
+testbench.vhd: testbench.tmp top_entity.tmp sram_entity.tmp $(BASE)
+sram.vhd: sram.tmp sram_entity.tmp $(BASE)
 
 ASM = ./asmcho
 SIM = ./simcho

@@ -1,9 +1,5 @@
-library ieee;
-use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
-use ieee.std_logic_unsigned.all;
---use ieee.std_logic_signed.all;
-
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton.tmp"/>
 
 ENTITY testbench IS
 END testbench;
@@ -11,41 +7,10 @@ END testbench;
 ARCHITECTURE behavior OF testbench IS 
   
 	COMPONENT top is
-	port (
-		MCLK1	: in  STD_LOGIC;
-		RS_RX	: in  STD_LOGIC;
-		RS_TX	: out  STD_LOGIC;
-
-		ZA		: out std_logic_vector(19 downto 0);	-- Address
-		XWA		: out std_logic;	-- Write Enable
-		ZD		: inout std_logic_vector(31 downto 0);	-- Data InOut
-		ZCLKMA	: out std_logic_vector(1 downto 0);	-- clk
-
----- fixed 
-		XE1		: out std_logic := '0'; -- enable
-		E2A		: out std_logic := '1'; -- enable
-		XE3		: out std_logic := '0'; -- enable
-		XZBE	: out std_logic_vector(3 downto 0) := "0000"; -- byte access
-		XGA		: out std_logic := '0'; -- output enable
-		XZCKE	: out std_logic := '0'; -- clk enable
-		ADVA	: out std_logic := '0'; -- burst access off
-		XFT		: out std_logic := '0'; -- Flow Through mode on
-		XLBO	: out std_logic := '1'; -- burst access off
-		ZZA		: out std_logic := '0' -- sleep mode off	
-);
-
-
+<%include file="top_entity.tmp"/>
 	END COMPONENT;
 	COMPONENT sram is
-	port (
-		ZA		: in std_logic_vector(19 downto 0);	-- Address
-		XWA		: in std_logic;	-- Write Enable
-		ZD		: inout std_logic_vector(31 downto 0);	-- Data InOut
-		ZCLKMA	: in std_logic_vector(1 downto 0)	-- clk
-	);
-
-
-
+<%include file="sram_entity.tmp"/>
 	END COMPONENT;
 
 	signal MCLK1 : std_logic := '0';
@@ -132,7 +97,5 @@ BEGIN
   --end process;
 
 END;
-
-
-
+<%namespace name="oc" file="macro.tmp"/>
 

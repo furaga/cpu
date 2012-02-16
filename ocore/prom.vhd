@@ -7,7 +7,7 @@ use ieee.std_logic_unsigned.all;
 entity prom is
 	port (
 		clka : in std_logic;
-		addra : in std_logic_vector(14 downto 0);
+		addra : in std_logic_vector(13 downto 0);
 		douta : out std_logic_vector(31 downto 0));
 
 

@@ -20,9 +20,9 @@ entity exec is
 	REG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs
 	REG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt
 	REG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd
-	FREG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs <== new
-	FREG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt <== new
-	FREG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd <== new
+	FREG_S	:	in	std_logic_vector(31 downto 0) :=(others=>'0');	-- value of rs <== new
+	FREG_T	:	in	std_logic_vector(31 downto 0) :=(others=>'0');	-- value of rt <== new
+	FREG_D	:	in	std_logic_vector(31 downto 0) :=(others=>'0');	-- value of rd <== new
 	FP_OUT	:	in	std_logic_vector(19 downto 0);	-- current frame pinter
 	LR_OUT	:	in	std_logic_vector(31 downto 0);	-- current link register
 	LR_IN	:	out	std_logic_vector(31 downto 0);	-- next link register
@@ -34,7 +34,7 @@ entity exec is
 	RAM_ADDR	:	out	std_logic_vector(19 downto 0) := (others=>'0');	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
-	RAM_WEN	:	out	std_logic	-- ram write enable
+	RAM_WEN	:	out	std_logic := '0'	-- ram write enable
 );
 
 
@@ -94,16 +94,13 @@ port (
 	signal heap_size : std_logic_vector(31 downto 0) := (others=>'0');
 	signal start : std_logic := '0';
 
-	signal farg1 : std_logic_vector(31 downto 0);
-	signal farg2 : std_logic_vector(31 downto 0);
 	signal fout_add : std_logic_vector(31 downto 0);
 	signal fout_sub : std_logic_vector(31 downto 0);
 	signal fout_mul : std_logic_vector(31 downto 0);
 	signal fout_sqrt : std_logic_vector(31 downto 0);
 	signal fout_div : std_logic_vector(31 downto 0);
 	signal freg_t_bar : std_logic_vector(31 downto 0);
-
-	signal inverted : std_logic_vector(31 downto 0);
+	signal inverted : std_logic_vector(31 downto 0) := (others=>'0');
 
 begin
 	freg_t_bar <= (not FREG_T(31))&FREG_T(30 downto 0);
@@ -164,7 +161,6 @@ begin
 				RAM_IN <= x"000000aa";
 				RAM_ADDR <= x"80000";
 				start<='1';
------------------------------------------------------------
 -----------------------------------------------------------
 -----------------------------------------------------------
 			else
@@ -371,19 +367,6 @@ begin
 						slide_num := conv_integer(imm);
 						REG_IN <= REG_S sll slide_num;
 
-						--case slide_num is
-							--when 0 =>
-								--REG_IN <= REG_S;
-							--when 1 =>
-								--REG_IN <= REG_S(30 downto 0)&'0';
-							--when 2 =>
-								--REG_IN <= REG_S(29 downto 0)&"00";
-							--when 3 =>
-								--REG_IN <= REG_S(28 downto 0)&"000";
-							----when others =>
-								--REG_IN <= REG_S;
-						--end case;
-
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
@@ -394,22 +377,7 @@ begin
 					when "101010" =>	-- SRLI
 						slide_num := conv_integer(imm);
 						REG_IN <= REG_S sra slide_num;
-						--case slide_num is
-							--when 0 =>
-								--REG_IN <= REG_S;
-							--when 1 =>
-								--REG_IN <= REG_S(31)&REG_S(31 downto 1);
-							--when others =>
-								--REG_IN <= REG_S;
-						--end case;
 
-
-						--if slide_num < 32 then
-							--REG_IN <= conv_std_logic_vector(REG_S(31),slide_num) &
-									  --REG_S(31 downto slide_num);
-						--else 
-							--REG_IN <= (others=>'0');
-						--end if;
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	

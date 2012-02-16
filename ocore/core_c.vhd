@@ -14,7 +14,11 @@ entity core_c is
 	IO_IN	:	in	std_logic_vector(31 downto 0);
 	IO_WR	:	out std_logic;
 	IO_RD	:	out std_logic;
-	IO_OUT	:	out	std_logic_vector(31 downto 0)
+	IO_OUT	:	out	std_logic_vector(31 downto 0);
+	SRAM_ZA	:	out std_logic_vector(19 downto 0);
+	SRAM_XWA:	out std_logic;
+	SRAM_ZD	:	inout std_logic_vector(31 downto 0);
+	SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
 	);				
 
 
@@ -106,7 +110,7 @@ component reg_dc is
 		REG_30	:	in	std_logic_vector(31 downto 0);
 		REG_31	:	in	std_logic_vector(31 downto 0);
 		N_REG_IN	:	in	std_logic_vector (4 downto 0);
-		REG_OUT	:	out	std_logic_vector(31 downto 0)
+		REG_OUT	:	out	std_logic_vector(31 downto 0) := (others=>'0')
 	);
 
 
@@ -123,9 +127,9 @@ component exec is
 	REG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs
 	REG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt
 	REG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd
-	FREG_S	:	in	std_logic_vector(31 downto 0);	-- value of rs <== new
-	FREG_T	:	in	std_logic_vector(31 downto 0);	-- value of rt <== new
-	FREG_D	:	in	std_logic_vector(31 downto 0);	-- value of rd <== new
+	FREG_S	:	in	std_logic_vector(31 downto 0) :=(others=>'0');	-- value of rs <== new
+	FREG_T	:	in	std_logic_vector(31 downto 0) :=(others=>'0');	-- value of rt <== new
+	FREG_D	:	in	std_logic_vector(31 downto 0) :=(others=>'0');	-- value of rd <== new
 	FP_OUT	:	in	std_logic_vector(19 downto 0);	-- current frame pinter
 	LR_OUT	:	in	std_logic_vector(31 downto 0);	-- current link register
 	LR_IN	:	out	std_logic_vector(31 downto 0);	-- next link register
@@ -137,7 +141,7 @@ component exec is
 	RAM_ADDR	:	out	std_logic_vector(19 downto 0) := (others=>'0');	-- ram address
 	RAM_IN	:	out	std_logic_vector(31 downto 0);	-- value writing to ram
 	REG_COND	:	out	std_logic_vector(3 downto 0);	-- reg flags
-	RAM_WEN	:	out	std_logic	-- ram write enable
+	RAM_WEN	:	out	std_logic := '0'	-- ram write enable
 );
 
 
@@ -225,6 +229,7 @@ end component;
 component mem_acc is
 	port (
 		CLK2X		: in	std_logic;
+		CLK_EX_DLY	: in	std_logic;
 		CLK_MA		: in	std_logic;
 		RAM_WEN		: in	std_logic;
 		ADDR		: in	std_logic_vector(19 downto 0);
@@ -233,7 +238,11 @@ component mem_acc is
 		IO_IN		: in	std_logic_vector(31 downto 0);
 		IO_WR		: out	std_logic := '0';
 		IO_RD		: out	std_logic := '0';
-		IO_OUT	: out	std_logic_vector(31 downto 0)
+		IO_OUT	: out	std_logic_vector(31 downto 0);
+		SRAM_ZA	:	out std_logic_vector(19 downto 0);
+		SRAM_XWA:	out std_logic := '1';
+		SRAM_ZD	:	inout std_logic_vector(31 downto 0);
+		SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
 	);
 
 
@@ -244,6 +253,7 @@ end component;
 	signal	clk_ft_dly	:	std_logic;
 	signal	clk_dc	:	std_logic;
 	signal	clk_ex	:	std_logic;
+	signal	clk_ex_dly	:	std_logic;
 	signal	clk_ma	:	std_logic;
 	signal	clk_wb	:	std_logic;
 
@@ -345,6 +355,7 @@ begin
 	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
 	delay_ft : clk_delay port map(CLK, clk_ft, clk_ft_dly);
+	delay_ex : clk_delay port map(CLK, clk_ex, clk_ex_dly);
 -- fetch phase
 	fetch_u	:	fetch port map(CLK, clk_ft, pc, prom_out);
 
@@ -395,9 +406,9 @@ begin
 		 ram_wen);
 
 -- memory access phase
-	memacc_u	: mem_acc port map (CLK2X, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
-							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT);
-						
+	memacc_u	: mem_acc port map (CLK2X, clk_ex_dly, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT,
+							SRAM_ZA,SRAM_XWA,SRAM_ZD,SRAM_ZCLKMA);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,

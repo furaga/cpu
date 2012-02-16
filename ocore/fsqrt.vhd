@@ -34,17 +34,16 @@ architecture op of myfsqrt is
 begin
 	O <= SO&EO&FO;
 	SO <= '0';
-	E <= I(30 downto 23);
 	table : fsqrt_table port map(CLK_TABLE, key, table_out);
 
+	E <= I(30 downto 23);
 	key <= I(23 downto 14);
+
 	const23 <= table_out(35 downto 13);
 	grad13  <= table_out(12 downto 0);
 	in14  	<= I(13 downto 0);
-
 	mul_ret <= ('0'&grad13) * in14;
 	FO <= const23 + ("00000000"&mul_ret(27 downto 13));
-
 	Etmp <= 127 + ('0'&E);
 	EO	<= Etmp(8 downto 1);
 

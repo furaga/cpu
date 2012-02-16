@@ -1,7 +1,6 @@
 ## -*- coding: utf-8 -*-
 	port (
 		CLK2X		: in	std_logic;
-		CLK_EX_DLY	: in	std_logic;
 		CLK_MA		: in	std_logic;
 		RAM_WEN		: in	std_logic;
 		ADDR		: in	${oc.ram_addr_t()};
@@ -10,11 +9,6 @@
 		IO_IN		: in	${oc.io_bus_t()};
 		IO_WR		: out	std_logic := '0';
 		IO_RD		: out	std_logic := '0';
-		IO_OUT	: out	${oc.io_bus_t()};
-		SRAM_ZA	:	out std_logic_vector(19 downto 0);
-		SRAM_XWA:	out std_logic := '1';
-		SRAM_ZD	:	inout std_logic_vector(31 downto 0);
-		SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
+		IO_OUT	: out	${oc.io_bus_t()}
 	);
 <%namespace name="oc" file="macro.tmp"/>
-

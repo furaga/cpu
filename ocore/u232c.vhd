@@ -11,7 +11,7 @@ entity u232c is
 		 send_busy : out std_logic;
 		 tx   : out std_logic;
 		 recv_data : out std_logic_vector (7 downto 0);
-		 recv_busy : out std_logic;
+		 recv_ready : out std_logic;
 		 rx   : in std_logic
 		);
 
@@ -32,7 +32,7 @@ begin
   begin
     if rising_edge(clk) then
       case send_state is
-        when "1011"=>
+        when "1011"=> -- wait
           if send_go='1' then
             sendbuf<=send_data&"0";
             send_state<=send_state-1;
@@ -56,26 +56,33 @@ begin
   begin
     if rising_edge(clk) then
       case recv_state is
-        when "1111"=>
-			recv_data<= recvbuf(7 downto 0); -- ignore stop bit
-			recv_state<="1001";
-        when "1001"=>
+        when "1111"=> -- recv_data set
+			recv_data<= recvbuf(7 downto 0);
+			recv_ready<= '1';
+			recv_state <= recv_state-1;
+		when "1110"=> -- wait stop bit
+			recv_ready<= '0';
+			if rx='1' then 
+				recv_state<="1001";
+			end if;
+        when "1001"=> -- 9 wait start bit
+			recv_ready<= '0';
 			if rx = '0' then -- start bit
 				recv_state<=recv_state-1;
-				recv_timer <=wtime;
+				recv_timer <=wtime + 0; -- 1000
 			end if;
-        when others=>
-          if recv_timer=0 then
-            recvbuf <= rx&recvbuf(8 downto 1);
-            recv_timer<=wtime;
-            recv_state<=recv_state-1;
-          else
-            recv_timer<=recv_timer -1;
-          end if;
+        when others=> -- 8 - 0
+			recv_ready<= '0';
+			if recv_timer=0 then
+				recvbuf <= rx&recvbuf(8 downto 1);
+				recv_timer<=wtime;
+				recv_state<=recv_state-1;
+			else
+				recv_timer<=recv_timer -1;
+			end if;
       end case;
     end if;
   end process;
-  recv_busy<= '0' when recv_state = "1001" else '1';
 
 
 end blackbox;

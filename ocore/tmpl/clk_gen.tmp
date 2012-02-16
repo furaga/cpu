@@ -30,29 +30,28 @@ begin
 					CLK_WB <= '0';
 					count <= count + 1;
 				when "010" =>
-					CLK_FT <= '0';
-					CLK_DC <= '0';
-					CLK_EX <= '1';
-					CLK_MA <= '0';
-					CLK_WB <= '0';
-					count <= count + 1;
-				when "011" =>
 					if INPUT_FLAG='1' and NYET='1' then
 						CLK_FT <= '0';
-						CLK_DC <= '0';
-						CLK_EX <= '1';
+						CLK_DC <= '1';
+						CLK_EX <= '0';
 						CLK_MA <= '0';
 						CLK_WB <= '0';
 						count <= count;
 					else
 						CLK_FT <= '0';
 						CLK_DC <= '0';
-						CLK_EX <= '0';
-						CLK_MA <= '1';
+						CLK_EX <= '1';
+						CLK_MA <= '0';
 						CLK_WB <= '0';
 						count <= count + 1;
 					end if;
-
+				when "011" =>
+					CLK_FT <= '0';
+					CLK_DC <= '0';
+					CLK_EX <= '0';
+					CLK_MA <= '1';
+					CLK_WB <= '0';
+					count <= count + 1;
 				when "100" =>
 					CLK_FT <= '0';
 					CLK_DC <= '0';

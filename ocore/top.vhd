@@ -8,10 +8,27 @@ use ieee.std_logic_unsigned.all;
 --use UNISIM.VComponents.all;
 entity top is
 	port (
-		MCLK1 : in  STD_LOGIC;
-		RS_RX : in  STD_LOGIC;
-		RS_TX : out  STD_LOGIC
-	);
+		MCLK1	: in  STD_LOGIC;
+		RS_RX	: in  STD_LOGIC;
+		RS_TX	: out  STD_LOGIC;
+
+		ZA		: out std_logic_vector(19 downto 0);	-- Address
+		XWA		: out std_logic;	-- Write Enable
+		ZD		: inout std_logic_vector(31 downto 0);	-- Data InOut
+		ZCLKMA	: out std_logic_vector(1 downto 0);	-- clk
+
+---- fixed 
+		XE1		: out std_logic := '0'; -- enable
+		E2A		: out std_logic := '1'; -- enable
+		XE3		: out std_logic := '0'; -- enable
+		XZBE	: out std_logic_vector(3 downto 0) := "0000"; -- byte access
+		XGA		: out std_logic := '0'; -- output enable
+		XZCKE	: out std_logic := '0'; -- clk enable
+		ADVA	: out std_logic := '0'; -- burst access off
+		XFT		: out std_logic := '0'; -- Flow Through mode on
+		XLBO	: out std_logic := '1'; -- burst access off
+		ZZA		: out std_logic := '0' -- sleep mode off	
+);
 
 
 end top;
@@ -26,7 +43,11 @@ architecture board of top is
 	IO_IN	:	in	std_logic_vector(31 downto 0);
 	IO_WR	:	out std_logic;
 	IO_RD	:	out std_logic;
-	IO_OUT	:	out	std_logic_vector(31 downto 0)
+	IO_OUT	:	out	std_logic_vector(31 downto 0);
+	SRAM_ZA	:	out std_logic_vector(19 downto 0);
+	SRAM_XWA:	out std_logic;
+	SRAM_ZD	:	inout std_logic_vector(31 downto 0);
+	SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
 	);				
 
 
@@ -64,6 +85,16 @@ architecture board of top is
 	signal clk_dly, clk0,clk2,clk2x : std_logic;
 
 begin
+	XE1		<='0';
+	E2A		<='1';
+	XE3		<='0';
+	XZBE	<="0000";
+	XGA		<='0';
+	XZCKE	<='0';
+	ADVA	<='0';
+	XFT		<='0';
+	XLBO	<='1';
+	ZZA		<='0';
 
 	--ib: IBUFG port map (i=>MCLK1, o=>iclk);
 	--bg1: BUFG port map (i=>clk0, o=>clk);
@@ -85,15 +116,16 @@ begin
 	begin
 	---- initialize with '1' or '0'?
 		clk2x<='1';
-		wait for 0.5 ns;
+		wait for 3.63 ns;
 		clk2x<='0';
-		wait for 0.5 ns;
+		wait for 3.63 ns;
 	end process;
 
-	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, cpu_wr, cpu_rd, cpu_out);
-	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
+	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, 
+		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD, ZCLKMA);
+	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
 			-- normal style.
-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
+	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
 			-- no input. recvbuf is already filled with sld data.
 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
 			-- like loopback.

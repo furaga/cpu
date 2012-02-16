@@ -19,7 +19,7 @@ architecture RTL of fetch is
 	component prom is
 		port (
 		clka : in std_logic;
-		addra : in std_logic_vector(14 downto 0);
+		addra : in std_logic_vector(13 downto 0);
 		douta : out std_logic_vector(31 downto 0));
 
 
@@ -29,7 +29,7 @@ architecture RTL of fetch is
 	signal	raw_prom_out	:	std_logic_vector(31 downto 0);
 
 begin
-	prom_u	:	prom port map(CLK, PC(14 downto 0), raw_prom_out);
+	prom_u	:	prom port map(CLK, PC(13 downto 0), raw_prom_out);
 
 	fetch: process(CLK_FT) 
 	begin

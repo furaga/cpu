@@ -12,7 +12,7 @@ architecture RTL of fetch is
 	signal	raw_prom_out	:	${oc.ir_t()};
 
 begin
-	prom_u	:	prom port map(CLK, PC(14 downto 0), raw_prom_out);
+	prom_u	:	prom port map(CLK, PC(${oc.prom_msb()} downto 0), raw_prom_out);
 
 	fetch: process(CLK_FT) 
 	begin
