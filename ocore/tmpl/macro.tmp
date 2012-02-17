@@ -18,7 +18,8 @@
 <%def name="io_wtime()">x"0000"</%def>
 
 ## 14bit (16384  32bit)
-<%def name="prom_msb()">13</%def>
+##<%def name="prom_msb()">13</%def>
+<%def name="prom_msb()">9</%def>
 <%def name="sim_prom_size()">32767</%def>
 <%def name="pc_t()">${V32()}</%def>
 

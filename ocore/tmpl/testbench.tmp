@@ -63,38 +63,99 @@ BEGIN
   clkgen: process
   begin
     mclk1<='0';
-    wait for 7.26 ns;
+    wait for 1 ns;
     mclk1<='1';
-    wait for 7.26 ns;
+    wait for 1 ns;
   end process;
 
-  --input : process
-  	--variable wtime : std_logic_vector(3 downto 0) := x"7";
-  	--variable timer : std_logic_vector(3 downto 0) := x"7";
-  --begin
-	--RS_RX <= '1';
-  	--wait for 1 us;
-	--RS_RX <= '0'; -- start bit
-	--wait for 116.16 ns;
-	--RS_RX <= '1';
-	--wait for 116.16 ns;
-	--RS_RX <= '0';
-	--wait for 116.16 ns;
-	--RS_RX <= '1';
-	--wait for 116.16 ns;
-	--RS_RX <= '0';
-	--wait for 116.16 ns;
-	--RS_RX <= '1';
-	--wait for 116.16 ns;
-	--RS_RX <= '0';
-	--wait for 116.16 ns;
-	--RS_RX <= '1';
-	--wait for 116.16 ns;
-	--RS_RX <= '0';
-	--wait for 116.16 ns;
-	--RS_RX <= '1';
-	--wait for 100 ms;
-  --end process;
+  input : process
+  	variable wtime : std_logic_vector(3 downto 0) := x"7";
+  	variable timer : std_logic_vector(3 downto 0) := x"7";
+  begin
+	RS_RX <= '1';
+  	wait for 1 us;
+	RS_RX <= '0'; -- start bit
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1'; -- stop bit
+	wait for 116.16 ns;
+	RS_RX <= '0'; -- start bit
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1'; -- stop bit
+	wait for 116.16 ns;
+	RS_RX <= '0'; -- start bit
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '1'; -- stop bit
+	wait for 116.16 ns;
+	RS_RX <= '0'; -- start bit
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '0';
+	wait for 116.16 ns;
+	RS_RX <= '1';
+	wait for 116.16 ns;
+	RS_RX <= '1'; -- stop bit
+
+	wait for 100 ms;
+  end process;
 
 END;
 <%namespace name="oc" file="macro.tmp"/>

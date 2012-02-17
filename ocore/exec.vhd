@@ -153,7 +153,7 @@ begin
 				RAM_WEN <= '1';	
 				FR_FLAG <= '0';
 				PC_OUT <= PC_IN + 1;
-			elsif start='0' then
+			elsif start='0' and debug_count=0 then
 				FR_FLAG <= '0';
 				PC_OUT <= PC_IN;
 				REG_COND <= "0000";

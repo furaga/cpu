@@ -2,6 +2,8 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
+--use ieee.std_logic_signed.all;
+
 
 entity u232c is
   generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
@@ -26,6 +28,7 @@ architecture blackbox of u232c is
   signal recv_timer : std_logic_vector(15 downto 0) := (others=>'0');
   signal recvbuf: std_logic_vector(8 downto 0) := (others=>'0');
   signal recv_state: std_logic_vector(3 downto 0) := "1001";
+  signal rxdata: std_logic_vector(7 downto 0) := (others=>'0');
 begin
 
   send : process(clk)
@@ -86,8 +89,6 @@ begin
 
 
 end blackbox;
-
-
 
 
 

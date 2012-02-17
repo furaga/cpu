@@ -2,7 +2,7 @@ RENDER = mako-render
 OCORE_DIR = ..
 
 MODULES = decode reg_dc mem_acc clk_gen reg_wb exec core_c top \
-	io_dev prom fetch clk_delay sram
+	io_dev prom fetch clk_delay sram u232c
 
 TARGET = $(MODULES:%=%.vhd) testbench.vhd
 SIM_TARGET = ./test
@@ -32,10 +32,10 @@ clk_gen.vhd: clk_gen.tmp clk_gen_entity.tmp $(BASE)
 clk_dly.vhd: clk_dly.tmp clk_dly_entity.tmp $(BASE)
 core_c.vhd: core_c.tmp $(ENTITIES) $(BASE)
 top.vhd: top.tmp top_entity.tmp core_c_entity.tmp io_dev_entity.tmp $(BASE)
-io_dev.vhd: io_dev.tmp io_dev_entity.tmp $(BASE)
-io_dev_word.vhd: io_dev_word.tmp io_dev_entity.tmp $(BASE)
+io_dev.vhd: io_dev.tmp io_dev_entity.tmp u232c_entity.tmp $(BASE)
 testbench.vhd: testbench.tmp top_entity.tmp sram_entity.tmp $(BASE)
 sram.vhd: sram.tmp sram_entity.tmp $(BASE)
+u232c.vhd: u232c.tmp u232c_entity.tmp $(BASE)
 
 ASM = ./asmcho
 SIM = ./simcho

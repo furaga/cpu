@@ -11,7 +11,7 @@ TMPL_DIR = ./tmpl
 TARGET = $(TB)
 
 IEEE = 'synopsys'
-TIME = 100us
+TIME = 100ms
 OPTION = -fexplicit
 .SUFFIXES: .vhd .vcd .tmp
 
@@ -28,6 +28,9 @@ wave: vcd
 vcd: $(OBJS) $(TB) $(TB).vcd
 ise:
 	make -C ../
+
+vsim :
+	cp *.vhd ../vsim_space/
 	
 
 $(TB).vcd: $(TB) $(OBJS)
