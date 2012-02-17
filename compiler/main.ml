@@ -30,7 +30,7 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 	Id.counter := 0;
 	Typing.extenv := M.empty;
 	let simm = 
-		ConstFoldVirtual.f
+(*		ConstFoldVirtual.f*)
 			(Simm.f
 				(Sglobal.f
 					(Virtual.f !print_flg
@@ -47,11 +47,11 @@ let lexbuf outchan l = (* バッファをコンパイルしてチャンネルへ出力する (caml2htm
 (*ignore (Coloring.f (Block.f simm));*)
 											
 	if !Closure.exist_cls then
-		(print_endline "Not Coloring";
+		(Printf.eprintf "Not Coloring\n";
 		(* RegAlloc3はクロージャが作られたときにバグるのでRegAllocで代用 *)
 		Emit.f outchan 	(RegAlloc.f simm))
 	else
-		(print_endline "Coloring";
+		(Printf.eprintf "Coloring\n";
 (*		let toasm = ToAsm.f (Coloring.f (Block.f simm)) in
 		Printf.printf "asm -> block -> asm %s\n" (string_of_bool (simm = toasm));*)
 		Emit.f outchan 	

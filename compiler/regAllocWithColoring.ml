@@ -34,7 +34,7 @@ let rec g dest cont regenv = function (* 命令列のレジスタ割り当て (c
       	else if t = Type.Unit then
       		"%dummy"
       	else
-      		try M.find x !Coloring.color with Not_found -> Printf.printf "not found %s\n" x; assert false in
+      		try M.find x !Coloring.color with Not_found -> Printf.eprintf "not found %s\n" x; assert false in
 	  let (e2', regenv2) = g dest cont (add x r regenv1) e in
 	  (concat e1' (r, t) e2', regenv2)
 and g'_and_restore dest cont regenv exp = (* 使用される変数をスタックからレジスタへRestore (caml2html: regalloc_unspill) *)
@@ -139,7 +139,7 @@ and get_use_regs' id = function
 	| _ -> S.empty												(* それ以外の式に現れるレジスタは退避しなくてもいい *)
 	
 let h { name = Id.L(x); args = ys; fargs = zs; body = e; ret = t } = (* 関数のレジスタ割り当て (caml2html: regalloc_h) *)
-	Printf.printf "<%s>\n" x;
+	(*Printf.printf "<%s>\n" x;*)
 
 	(* すべての関数はvirtual.mlでfundataに登録されているはず *)
 	let data =

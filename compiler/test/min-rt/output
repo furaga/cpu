@@ -1,0 +1,1702 @@
+free variable input_char assumed as external
+free variable float_of_int assumed as external
+free variable print_char assumed as external
+free variable sqrt assumed as external
+free variable floor assumed as external
+free variable int_of_float assumed as external
+uninstantiated type variable detected; assuming int
+iteration 1000
+Before Inline: 21586
+After Inline: 21586
+iteration 999
+Before Inline: 20547
+After Inline: 20547
+iteration 998
+Before Inline: 20547
+After Inline: 20547
+CLOSURE NOT EXISTS
+Coloring
+START make Blocks
+<min_caml_start>
+<fless.2464>
+<fispos.2467>
+<fisneg.2469>
+<fiszero.2471>
+<xor.2473>
+<fabs.2476>
+<fneg.2480>
+<fhalf.2482>
+<fsqr.2484>
+<atan_sub.2489>
+<atan.2493>
+<tan_sub.6105>
+<tan.2495>
+<sin_sub.2497>
+<sin.2499>
+<cos.2501>
+<mul10.2503>
+<read_int_token.2507>
+<read_int.2510>
+<read_float_token1.2516>
+<read_float_token2.2519>
+<read_float.2521>
+<div_binary_search.2523>
+<print_int.2528>
+<sgn.2560>
+<fneg_cond.2562>
+<add_mod5.2565>
+<vecset.2568>
+<vecfill.2573>
+<vecbzero.2576>
+<veccpy.2578>
+<vecunit_sgn.2586>
+<veciprod.2589>
+<veciprod2.2592>
+<vecaccum.2597>
+<vecadd.2601>
+<vecscale.2607>
+<vecaccumv.2610>
+<o_texturetype.2614>
+<o_form.2616>
+<o_reflectiontype.2618>
+<o_isinvert.2620>
+<o_isrot.2622>
+<o_param_a.2624>
+<o_param_b.2626>
+<o_param_c.2628>
+<o_param_abc.2630>
+<o_param_x.2632>
+<o_param_y.2634>
+<o_param_z.2636>
+<o_diffuse.2638>
+<o_hilight.2640>
+<o_color_red.2642>
+<o_color_green.2644>
+<o_color_blue.2646>
+<o_param_r1.2648>
+<o_param_r2.2650>
+<o_param_r3.2652>
+<o_param_ctbl.2654>
+<p_rgb.2656>
+<p_intersection_points.2658>
+<p_surface_ids.2660>
+<p_calc_diffuse.2662>
+<p_energy.2664>
+<p_received_ray_20percent.2666>
+<p_group_id.2668>
+<p_set_group_id.2670>
+<p_nvectors.2673>
+<d_vec.2675>
+<d_const.2677>
+<r_surface_id.2679>
+<r_dvec.2681>
+<r_bright.2683>
+<rad.2685>
+<read_screen_settings.2687>
+<read_light.2689>
+<rotate_quadratic_matrix.2691>
+<read_nth_object.2694>
+<read_object.2696>
+<read_all_object.2698>
+<read_net_item.2700>
+<read_or_network.2702>
+<read_and_network.2704>
+<read_parameter.2706>
+<solver_rect_surface.2708>
+<solver_rect.2717>
+<solver_surface.2723>
+<quadratic.2729>
+<bilinear.2734>
+<solver_second.2742>
+<solver.2748>
+<solver_rect_fast.2752>
+<solver_surface_fast.2759>
+<solver_second_fast.2765>
+<solver_fast.2771>
+<solver_surface_fast2.2775>
+<solver_second_fast2.2782>
+<solver_fast2.2789>
+<setup_rect_table.2792>
+<setup_surface_table.2795>
+<setup_second_table.2798>
+<iter_setup_dirvec_constants.2801>
+<setup_dirvec_constants.2804>
+<setup_startp_constants.2806>
+<setup_startp.2809>
+<is_rect_outside.2811>
+<is_plane_outside.2816>
+<is_second_outside.2821>
+<is_outside.2826>
+<check_all_inside.2831>
+<shadow_check_and_group.2837>
+<shadow_check_one_or_group.2840>
+<shadow_check_one_or_matrix.2843>
+<solve_each_element.2846>
+<solve_one_or_network.2850>
+<trace_or_matrix.2854>
+<judge_intersection.2858>
+<solve_each_element_fast.2860>
+<solve_one_or_network_fast.2864>
+<trace_or_matrix_fast.2868>
+<judge_intersection_fast.2872>
+<get_nvector_rect.2874>
+<get_nvector_plane.2876>
+<get_nvector_second.2878>
+<get_nvector.2880>
+<utexture.2883>
+<add_light.2886>
+<trace_reflections.2890>
+<trace_ray.2895>
+<trace_diffuse_ray.2901>
+<iter_trace_diffuse_rays.2904>
+<trace_diffuse_rays.2909>
+<trace_diffuse_ray_80percent.2913>
+<calc_diffuse_using_1point.2917>
+<calc_diffuse_using_5points.2920>
+<do_without_neighbors.2926>
+<neighbors_exist.2929>
+<get_surface_id.2933>
+<neighbors_are_available.2936>
+<try_exploit_neighbors.2942>
+<write_ppm_header.2949>
+<write_rgb_element.2951>
+<write_rgb.2953>
+<pretrace_diffuse_rays.2955>
+<pretrace_pixels.2958>
+<pretrace_line.2965>
+<scan_pixel.2969>
+<scan_line.2975>
+<create_float5x3array.2981>
+<create_pixel.2983>
+<init_line_elements.2985>
+<create_pixelline.2988>
+<adjust_position.2990>
+<calc_dirvec.2993>
+<calc_dirvecs.3001>
+<calc_dirvec_rows.3006>
+<create_dirvec.3010>
+<create_dirvec_elements.3012>
+<create_dirvecs.3015>
+<init_dirvec_constants.3017>
+<init_vecset_constants.3020>
+<init_dirvecs.3022>
+<add_reflection.3024>
+<setup_rect_reflection.3031>
+<setup_surface_reflection.3034>
+<setup_reflections.3037>
+<rt.3039>
+END make Blocks
+register allocation: may take some time (up to a few minutes, depending on the size of functions)
+
+<fless.2464> スピル 0 回目
+<fless.2464> INITIALIZE : 0.000000 秒
+<fless.2464> LIVENESS.ANALYSIS : 0.000000 秒
+<fless.2464> BUILD : 0.000000 秒
+<fless.2464> MAKE_WORKLIST : 0.000000 秒
+<fless.2464> MAIN_LOOP : 0.000000 秒
+<fless.2464> ASSIGN_COLORS : 0.000000 秒
+
+
+<fispos.2467> スピル 0 回目
+<fispos.2467> INITIALIZE : 0.000000 秒
+<fispos.2467> LIVENESS.ANALYSIS : 0.000000 秒
+<fispos.2467> BUILD : 0.000000 秒
+<fispos.2467> MAKE_WORKLIST : 0.000000 秒
+<fispos.2467> MAIN_LOOP : 0.000000 秒
+<fispos.2467> ASSIGN_COLORS : 0.000000 秒
+
+
+<fisneg.2469> スピル 0 回目
+<fisneg.2469> INITIALIZE : 0.000000 秒
+<fisneg.2469> LIVENESS.ANALYSIS : 0.000000 秒
+<fisneg.2469> BUILD : 0.000000 秒
+<fisneg.2469> MAKE_WORKLIST : 0.000000 秒
+<fisneg.2469> MAIN_LOOP : 0.000000 秒
+<fisneg.2469> ASSIGN_COLORS : 0.000000 秒
+
+
+<fiszero.2471> スピル 0 回目
+<fiszero.2471> INITIALIZE : 0.000000 秒
+<fiszero.2471> LIVENESS.ANALYSIS : 0.000000 秒
+<fiszero.2471> BUILD : 0.000000 秒
+<fiszero.2471> MAKE_WORKLIST : 0.000000 秒
+<fiszero.2471> MAIN_LOOP : 0.000000 秒
+<fiszero.2471> ASSIGN_COLORS : 0.000000 秒
+
+
+<xor.2473> スピル 0 回目
+<xor.2473> INITIALIZE : 0.000000 秒
+<xor.2473> LIVENESS.ANALYSIS : 0.000000 秒
+<xor.2473> BUILD : 0.000000 秒
+<xor.2473> MAKE_WORKLIST : 0.000000 秒
+<xor.2473> MAIN_LOOP : 0.000000 秒
+<xor.2473> ASSIGN_COLORS : 0.000000 秒
+
+
+<fabs.2476> スピル 0 回目
+<fabs.2476> INITIALIZE : 0.000000 秒
+<fabs.2476> LIVENESS.ANALYSIS : 0.000000 秒
+<fabs.2476> BUILD : 0.000000 秒
+<fabs.2476> MAKE_WORKLIST : 0.000000 秒
+<fabs.2476> MAIN_LOOP : 0.000000 秒
+<fabs.2476> ASSIGN_COLORS : 0.000000 秒
+
+
+<fneg.2480> スピル 0 回目
+<fneg.2480> INITIALIZE : 0.000000 秒
+<fneg.2480> LIVENESS.ANALYSIS : 0.000000 秒
+<fneg.2480> BUILD : 0.000000 秒
+<fneg.2480> MAKE_WORKLIST : 0.000000 秒
+<fneg.2480> MAIN_LOOP : 0.000000 秒
+<fneg.2480> ASSIGN_COLORS : 0.000000 秒
+
+
+<fhalf.2482> スピル 0 回目
+<fhalf.2482> INITIALIZE : 0.000000 秒
+<fhalf.2482> LIVENESS.ANALYSIS : 0.000000 秒
+<fhalf.2482> BUILD : 0.000000 秒
+<fhalf.2482> MAKE_WORKLIST : 0.000000 秒
+<fhalf.2482> MAIN_LOOP : 0.000000 秒
+<fhalf.2482> ASSIGN_COLORS : 0.000000 秒
+
+
+<fsqr.2484> スピル 0 回目
+<fsqr.2484> INITIALIZE : 0.000000 秒
+<fsqr.2484> LIVENESS.ANALYSIS : 0.000000 秒
+<fsqr.2484> BUILD : 0.000000 秒
+<fsqr.2484> MAKE_WORKLIST : 0.000000 秒
+<fsqr.2484> MAIN_LOOP : 0.000000 秒
+<fsqr.2484> ASSIGN_COLORS : 0.000000 秒
+
+
+<atan_sub.2489> スピル 0 回目
+<atan_sub.2489> INITIALIZE : 0.000000 秒
+<atan_sub.2489> LIVENESS.ANALYSIS : 0.000000 秒
+<atan_sub.2489> BUILD : 0.000000 秒
+<atan_sub.2489> MAKE_WORKLIST : 0.000000 秒
+<atan_sub.2489> MAIN_LOOP : 0.000000 秒
+<atan_sub.2489> ASSIGN_COLORS : 0.010000 秒
+
+
+<atan.2493> スピル 0 回目
+<atan.2493> INITIALIZE : 0.000000 秒
+<atan.2493> LIVENESS.ANALYSIS : 0.000000 秒
+<atan.2493> BUILD : 0.000000 秒
+<atan.2493> MAKE_WORKLIST : 0.000000 秒
+<atan.2493> MAIN_LOOP : 0.000000 秒
+<atan.2493> ASSIGN_COLORS : 0.000000 秒
+
+
+<tan_sub.6105> スピル 0 回目
+<tan_sub.6105> INITIALIZE : 0.000000 秒
+<tan_sub.6105> LIVENESS.ANALYSIS : 0.000000 秒
+<tan_sub.6105> BUILD : 0.000000 秒
+<tan_sub.6105> MAKE_WORKLIST : 0.000000 秒
+<tan_sub.6105> MAIN_LOOP : 0.000000 秒
+<tan_sub.6105> ASSIGN_COLORS : 0.000000 秒
+
+
+<tan.2495> スピル 0 回目
+<tan.2495> INITIALIZE : 0.000000 秒
+<tan.2495> LIVENESS.ANALYSIS : 0.000000 秒
+<tan.2495> BUILD : 0.000000 秒
+<tan.2495> MAKE_WORKLIST : 0.000000 秒
+<tan.2495> MAIN_LOOP : 0.000000 秒
+<tan.2495> ASSIGN_COLORS : 0.000000 秒
+
+
+<sin_sub.2497> スピル 0 回目
+<sin_sub.2497> INITIALIZE : 0.000000 秒
+<sin_sub.2497> LIVENESS.ANALYSIS : 0.000000 秒
+<sin_sub.2497> BUILD : 0.000000 秒
+<sin_sub.2497> MAKE_WORKLIST : 0.000000 秒
+<sin_sub.2497> MAIN_LOOP : 0.000000 秒
+<sin_sub.2497> ASSIGN_COLORS : 0.000000 秒
+
+
+<sin.2499> スピル 0 回目
+<sin.2499> INITIALIZE : 0.000000 秒
+<sin.2499> LIVENESS.ANALYSIS : 0.000000 秒
+<sin.2499> BUILD : 0.000000 秒
+<sin.2499> MAKE_WORKLIST : 0.000000 秒
+<sin.2499> MAIN_LOOP : 0.000000 秒
+<sin.2499> ASSIGN_COLORS : 0.000000 秒
+
+
+<cos.2501> スピル 0 回目
+<cos.2501> INITIALIZE : 0.000000 秒
+<cos.2501> LIVENESS.ANALYSIS : 0.000000 秒
+<cos.2501> BUILD : 0.000000 秒
+<cos.2501> MAKE_WORKLIST : 0.000000 秒
+<cos.2501> MAIN_LOOP : 0.000000 秒
+<cos.2501> ASSIGN_COLORS : 0.000000 秒
+
+
+<mul10.2503> スピル 0 回目
+<mul10.2503> INITIALIZE : 0.000000 秒
+<mul10.2503> LIVENESS.ANALYSIS : 0.000000 秒
+<mul10.2503> BUILD : 0.000000 秒
+<mul10.2503> MAKE_WORKLIST : 0.000000 秒
+<mul10.2503> MAIN_LOOP : 0.000000 秒
+<mul10.2503> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_int_token.2507> スピル 0 回目
+<read_int_token.2507> INITIALIZE : 0.010000 秒
+<read_int_token.2507> LIVENESS.ANALYSIS : 0.000000 秒
+<read_int_token.2507> BUILD : 0.000000 秒
+<read_int_token.2507> MAKE_WORKLIST : 0.000000 秒
+<read_int_token.2507> MAIN_LOOP : 0.000000 秒
+<read_int_token.2507> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_int.2510> スピル 0 回目
+<read_int.2510> INITIALIZE : 0.000000 秒
+<read_int.2510> LIVENESS.ANALYSIS : 0.000000 秒
+<read_int.2510> BUILD : 0.000000 秒
+<read_int.2510> MAKE_WORKLIST : 0.000000 秒
+<read_int.2510> MAIN_LOOP : 0.000000 秒
+<read_int.2510> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_float_token1.2516> スピル 0 回目
+<read_float_token1.2516> INITIALIZE : 0.000000 秒
+<read_float_token1.2516> LIVENESS.ANALYSIS : 0.000000 秒
+<read_float_token1.2516> BUILD : 0.000000 秒
+<read_float_token1.2516> MAKE_WORKLIST : 0.000000 秒
+<read_float_token1.2516> MAIN_LOOP : 0.000000 秒
+<read_float_token1.2516> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_float_token2.2519> スピル 0 回目
+<read_float_token2.2519> INITIALIZE : 0.000000 秒
+<read_float_token2.2519> LIVENESS.ANALYSIS : 0.000000 秒
+<read_float_token2.2519> BUILD : 0.000000 秒
+<read_float_token2.2519> MAKE_WORKLIST : 0.000000 秒
+<read_float_token2.2519> MAIN_LOOP : 0.000000 秒
+<read_float_token2.2519> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_float.2521> スピル 0 回目
+<read_float.2521> INITIALIZE : 0.000000 秒
+<read_float.2521> LIVENESS.ANALYSIS : 0.000000 秒
+<read_float.2521> BUILD : 0.000000 秒
+<read_float.2521> MAKE_WORKLIST : 0.000000 秒
+<read_float.2521> MAIN_LOOP : 0.000000 秒
+<read_float.2521> ASSIGN_COLORS : 0.000000 秒
+
+
+<div_binary_search.2523> スピル 0 回目
+<div_binary_search.2523> INITIALIZE : 0.000000 秒
+<div_binary_search.2523> LIVENESS.ANALYSIS : 0.000000 秒
+<div_binary_search.2523> BUILD : 0.000000 秒
+<div_binary_search.2523> MAKE_WORKLIST : 0.010000 秒
+<div_binary_search.2523> MAIN_LOOP : 0.000000 秒
+<div_binary_search.2523> ASSIGN_COLORS : 0.000000 秒
+
+
+<print_int.2528> スピル 0 回目
+<print_int.2528> INITIALIZE : 0.000000 秒
+<print_int.2528> LIVENESS.ANALYSIS : 0.000000 秒
+<print_int.2528> BUILD : 0.000000 秒
+<print_int.2528> MAKE_WORKLIST : 0.000000 秒
+<print_int.2528> MAIN_LOOP : 0.000000 秒
+<print_int.2528> ASSIGN_COLORS : 0.000000 秒
+
+
+<sgn.2560> スピル 0 回目
+<sgn.2560> INITIALIZE : 0.000000 秒
+<sgn.2560> LIVENESS.ANALYSIS : 0.000000 秒
+<sgn.2560> BUILD : 0.000000 秒
+<sgn.2560> MAKE_WORKLIST : 0.000000 秒
+<sgn.2560> MAIN_LOOP : 0.000000 秒
+<sgn.2560> ASSIGN_COLORS : 0.000000 秒
+
+
+<fneg_cond.2562> スピル 0 回目
+<fneg_cond.2562> INITIALIZE : 0.000000 秒
+<fneg_cond.2562> LIVENESS.ANALYSIS : 0.000000 秒
+<fneg_cond.2562> BUILD : 0.000000 秒
+<fneg_cond.2562> MAKE_WORKLIST : 0.000000 秒
+<fneg_cond.2562> MAIN_LOOP : 0.000000 秒
+<fneg_cond.2562> ASSIGN_COLORS : 0.000000 秒
+
+
+<add_mod5.2565> スピル 0 回目
+<add_mod5.2565> INITIALIZE : 0.000000 秒
+<add_mod5.2565> LIVENESS.ANALYSIS : 0.000000 秒
+<add_mod5.2565> BUILD : 0.000000 秒
+<add_mod5.2565> MAKE_WORKLIST : 0.000000 秒
+<add_mod5.2565> MAIN_LOOP : 0.000000 秒
+<add_mod5.2565> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecset.2568> スピル 0 回目
+<vecset.2568> INITIALIZE : 0.000000 秒
+<vecset.2568> LIVENESS.ANALYSIS : 0.000000 秒
+<vecset.2568> BUILD : 0.000000 秒
+<vecset.2568> MAKE_WORKLIST : 0.000000 秒
+<vecset.2568> MAIN_LOOP : 0.000000 秒
+<vecset.2568> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecfill.2573> スピル 0 回目
+<vecfill.2573> INITIALIZE : 0.000000 秒
+<vecfill.2573> LIVENESS.ANALYSIS : 0.000000 秒
+<vecfill.2573> BUILD : 0.000000 秒
+<vecfill.2573> MAKE_WORKLIST : 0.000000 秒
+<vecfill.2573> MAIN_LOOP : 0.000000 秒
+<vecfill.2573> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecbzero.2576> スピル 0 回目
+<vecbzero.2576> INITIALIZE : 0.000000 秒
+<vecbzero.2576> LIVENESS.ANALYSIS : 0.000000 秒
+<vecbzero.2576> BUILD : 0.000000 秒
+<vecbzero.2576> MAKE_WORKLIST : 0.000000 秒
+<vecbzero.2576> MAIN_LOOP : 0.000000 秒
+<vecbzero.2576> ASSIGN_COLORS : 0.000000 秒
+
+
+<veccpy.2578> スピル 0 回目
+<veccpy.2578> INITIALIZE : 0.000000 秒
+<veccpy.2578> LIVENESS.ANALYSIS : 0.000000 秒
+<veccpy.2578> BUILD : 0.000000 秒
+<veccpy.2578> MAKE_WORKLIST : 0.000000 秒
+<veccpy.2578> MAIN_LOOP : 0.000000 秒
+<veccpy.2578> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecunit_sgn.2586> スピル 0 回目
+<vecunit_sgn.2586> INITIALIZE : 0.000000 秒
+<vecunit_sgn.2586> LIVENESS.ANALYSIS : 0.000000 秒
+<vecunit_sgn.2586> BUILD : 0.000000 秒
+<vecunit_sgn.2586> MAKE_WORKLIST : 0.000000 秒
+<vecunit_sgn.2586> MAIN_LOOP : 0.000000 秒
+<vecunit_sgn.2586> ASSIGN_COLORS : 0.000000 秒
+
+
+<veciprod.2589> スピル 0 回目
+<veciprod.2589> INITIALIZE : 0.000000 秒
+<veciprod.2589> LIVENESS.ANALYSIS : 0.000000 秒
+<veciprod.2589> BUILD : 0.000000 秒
+<veciprod.2589> MAKE_WORKLIST : 0.010000 秒
+<veciprod.2589> MAIN_LOOP : 0.000000 秒
+<veciprod.2589> ASSIGN_COLORS : 0.000000 秒
+
+
+<veciprod2.2592> スピル 0 回目
+<veciprod2.2592> INITIALIZE : 0.000000 秒
+<veciprod2.2592> LIVENESS.ANALYSIS : 0.000000 秒
+<veciprod2.2592> BUILD : 0.000000 秒
+<veciprod2.2592> MAKE_WORKLIST : 0.000000 秒
+<veciprod2.2592> MAIN_LOOP : 0.000000 秒
+<veciprod2.2592> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecaccum.2597> スピル 0 回目
+<vecaccum.2597> INITIALIZE : 0.000000 秒
+<vecaccum.2597> LIVENESS.ANALYSIS : 0.000000 秒
+<vecaccum.2597> BUILD : 0.000000 秒
+<vecaccum.2597> MAKE_WORKLIST : 0.000000 秒
+<vecaccum.2597> MAIN_LOOP : 0.000000 秒
+<vecaccum.2597> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecadd.2601> スピル 0 回目
+<vecadd.2601> INITIALIZE : 0.000000 秒
+<vecadd.2601> LIVENESS.ANALYSIS : 0.000000 秒
+<vecadd.2601> BUILD : 0.000000 秒
+<vecadd.2601> MAKE_WORKLIST : 0.000000 秒
+<vecadd.2601> MAIN_LOOP : 0.000000 秒
+<vecadd.2601> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecscale.2607> スピル 0 回目
+<vecscale.2607> INITIALIZE : 0.000000 秒
+<vecscale.2607> LIVENESS.ANALYSIS : 0.000000 秒
+<vecscale.2607> BUILD : 0.000000 秒
+<vecscale.2607> MAKE_WORKLIST : 0.000000 秒
+<vecscale.2607> MAIN_LOOP : 0.000000 秒
+<vecscale.2607> ASSIGN_COLORS : 0.000000 秒
+
+
+<vecaccumv.2610> スピル 0 回目
+<vecaccumv.2610> INITIALIZE : 0.000000 秒
+<vecaccumv.2610> LIVENESS.ANALYSIS : 0.000000 秒
+<vecaccumv.2610> BUILD : 0.000000 秒
+<vecaccumv.2610> MAKE_WORKLIST : 0.000000 秒
+<vecaccumv.2610> MAIN_LOOP : 0.000000 秒
+<vecaccumv.2610> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_texturetype.2614> スピル 0 回目
+<o_texturetype.2614> INITIALIZE : 0.000000 秒
+<o_texturetype.2614> LIVENESS.ANALYSIS : 0.000000 秒
+<o_texturetype.2614> BUILD : 0.000000 秒
+<o_texturetype.2614> MAKE_WORKLIST : 0.000000 秒
+<o_texturetype.2614> MAIN_LOOP : 0.000000 秒
+<o_texturetype.2614> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_form.2616> スピル 0 回目
+<o_form.2616> INITIALIZE : 0.000000 秒
+<o_form.2616> LIVENESS.ANALYSIS : 0.000000 秒
+<o_form.2616> BUILD : 0.000000 秒
+<o_form.2616> MAKE_WORKLIST : 0.000000 秒
+<o_form.2616> MAIN_LOOP : 0.000000 秒
+<o_form.2616> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_reflectiontype.2618> スピル 0 回目
+<o_reflectiontype.2618> INITIALIZE : 0.000000 秒
+<o_reflectiontype.2618> LIVENESS.ANALYSIS : 0.000000 秒
+<o_reflectiontype.2618> BUILD : 0.000000 秒
+<o_reflectiontype.2618> MAKE_WORKLIST : 0.000000 秒
+<o_reflectiontype.2618> MAIN_LOOP : 0.000000 秒
+<o_reflectiontype.2618> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_isinvert.2620> スピル 0 回目
+<o_isinvert.2620> INITIALIZE : 0.000000 秒
+<o_isinvert.2620> LIVENESS.ANALYSIS : 0.000000 秒
+<o_isinvert.2620> BUILD : 0.000000 秒
+<o_isinvert.2620> MAKE_WORKLIST : 0.000000 秒
+<o_isinvert.2620> MAIN_LOOP : 0.000000 秒
+<o_isinvert.2620> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_isrot.2622> スピル 0 回目
+<o_isrot.2622> INITIALIZE : 0.000000 秒
+<o_isrot.2622> LIVENESS.ANALYSIS : 0.000000 秒
+<o_isrot.2622> BUILD : 0.000000 秒
+<o_isrot.2622> MAKE_WORKLIST : 0.000000 秒
+<o_isrot.2622> MAIN_LOOP : 0.000000 秒
+<o_isrot.2622> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_a.2624> スピル 0 回目
+<o_param_a.2624> INITIALIZE : 0.000000 秒
+<o_param_a.2624> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_a.2624> BUILD : 0.000000 秒
+<o_param_a.2624> MAKE_WORKLIST : 0.000000 秒
+<o_param_a.2624> MAIN_LOOP : 0.000000 秒
+<o_param_a.2624> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_b.2626> スピル 0 回目
+<o_param_b.2626> INITIALIZE : 0.000000 秒
+<o_param_b.2626> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_b.2626> BUILD : 0.000000 秒
+<o_param_b.2626> MAKE_WORKLIST : 0.000000 秒
+<o_param_b.2626> MAIN_LOOP : 0.000000 秒
+<o_param_b.2626> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_c.2628> スピル 0 回目
+<o_param_c.2628> INITIALIZE : 0.000000 秒
+<o_param_c.2628> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_c.2628> BUILD : 0.000000 秒
+<o_param_c.2628> MAKE_WORKLIST : 0.000000 秒
+<o_param_c.2628> MAIN_LOOP : 0.000000 秒
+<o_param_c.2628> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_abc.2630> スピル 0 回目
+<o_param_abc.2630> INITIALIZE : 0.000000 秒
+<o_param_abc.2630> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_abc.2630> BUILD : 0.000000 秒
+<o_param_abc.2630> MAKE_WORKLIST : 0.000000 秒
+<o_param_abc.2630> MAIN_LOOP : 0.000000 秒
+<o_param_abc.2630> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_x.2632> スピル 0 回目
+<o_param_x.2632> INITIALIZE : 0.000000 秒
+<o_param_x.2632> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_x.2632> BUILD : 0.000000 秒
+<o_param_x.2632> MAKE_WORKLIST : 0.000000 秒
+<o_param_x.2632> MAIN_LOOP : 0.000000 秒
+<o_param_x.2632> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_y.2634> スピル 0 回目
+<o_param_y.2634> INITIALIZE : 0.010000 秒
+<o_param_y.2634> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_y.2634> BUILD : 0.000000 秒
+<o_param_y.2634> MAKE_WORKLIST : 0.000000 秒
+<o_param_y.2634> MAIN_LOOP : 0.000000 秒
+<o_param_y.2634> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_z.2636> スピル 0 回目
+<o_param_z.2636> INITIALIZE : 0.000000 秒
+<o_param_z.2636> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_z.2636> BUILD : 0.000000 秒
+<o_param_z.2636> MAKE_WORKLIST : 0.000000 秒
+<o_param_z.2636> MAIN_LOOP : 0.000000 秒
+<o_param_z.2636> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_diffuse.2638> スピル 0 回目
+<o_diffuse.2638> INITIALIZE : 0.000000 秒
+<o_diffuse.2638> LIVENESS.ANALYSIS : 0.000000 秒
+<o_diffuse.2638> BUILD : 0.000000 秒
+<o_diffuse.2638> MAKE_WORKLIST : 0.000000 秒
+<o_diffuse.2638> MAIN_LOOP : 0.000000 秒
+<o_diffuse.2638> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_hilight.2640> スピル 0 回目
+<o_hilight.2640> INITIALIZE : 0.000000 秒
+<o_hilight.2640> LIVENESS.ANALYSIS : 0.000000 秒
+<o_hilight.2640> BUILD : 0.000000 秒
+<o_hilight.2640> MAKE_WORKLIST : 0.000000 秒
+<o_hilight.2640> MAIN_LOOP : 0.000000 秒
+<o_hilight.2640> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_color_red.2642> スピル 0 回目
+<o_color_red.2642> INITIALIZE : 0.000000 秒
+<o_color_red.2642> LIVENESS.ANALYSIS : 0.000000 秒
+<o_color_red.2642> BUILD : 0.000000 秒
+<o_color_red.2642> MAKE_WORKLIST : 0.000000 秒
+<o_color_red.2642> MAIN_LOOP : 0.000000 秒
+<o_color_red.2642> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_color_green.2644> スピル 0 回目
+<o_color_green.2644> INITIALIZE : 0.000000 秒
+<o_color_green.2644> LIVENESS.ANALYSIS : 0.000000 秒
+<o_color_green.2644> BUILD : 0.000000 秒
+<o_color_green.2644> MAKE_WORKLIST : 0.000000 秒
+<o_color_green.2644> MAIN_LOOP : 0.000000 秒
+<o_color_green.2644> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_color_blue.2646> スピル 0 回目
+<o_color_blue.2646> INITIALIZE : 0.000000 秒
+<o_color_blue.2646> LIVENESS.ANALYSIS : 0.000000 秒
+<o_color_blue.2646> BUILD : 0.000000 秒
+<o_color_blue.2646> MAKE_WORKLIST : 0.000000 秒
+<o_color_blue.2646> MAIN_LOOP : 0.000000 秒
+<o_color_blue.2646> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_r1.2648> スピル 0 回目
+<o_param_r1.2648> INITIALIZE : 0.000000 秒
+<o_param_r1.2648> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_r1.2648> BUILD : 0.000000 秒
+<o_param_r1.2648> MAKE_WORKLIST : 0.000000 秒
+<o_param_r1.2648> MAIN_LOOP : 0.000000 秒
+<o_param_r1.2648> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_r2.2650> スピル 0 回目
+<o_param_r2.2650> INITIALIZE : 0.000000 秒
+<o_param_r2.2650> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_r2.2650> BUILD : 0.000000 秒
+<o_param_r2.2650> MAKE_WORKLIST : 0.000000 秒
+<o_param_r2.2650> MAIN_LOOP : 0.000000 秒
+<o_param_r2.2650> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_r3.2652> スピル 0 回目
+<o_param_r3.2652> INITIALIZE : 0.000000 秒
+<o_param_r3.2652> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_r3.2652> BUILD : 0.000000 秒
+<o_param_r3.2652> MAKE_WORKLIST : 0.000000 秒
+<o_param_r3.2652> MAIN_LOOP : 0.000000 秒
+<o_param_r3.2652> ASSIGN_COLORS : 0.000000 秒
+
+
+<o_param_ctbl.2654> スピル 0 回目
+<o_param_ctbl.2654> INITIALIZE : 0.000000 秒
+<o_param_ctbl.2654> LIVENESS.ANALYSIS : 0.000000 秒
+<o_param_ctbl.2654> BUILD : 0.000000 秒
+<o_param_ctbl.2654> MAKE_WORKLIST : 0.000000 秒
+<o_param_ctbl.2654> MAIN_LOOP : 0.000000 秒
+<o_param_ctbl.2654> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_rgb.2656> スピル 0 回目
+<p_rgb.2656> INITIALIZE : 0.000000 秒
+<p_rgb.2656> LIVENESS.ANALYSIS : 0.000000 秒
+<p_rgb.2656> BUILD : 0.000000 秒
+<p_rgb.2656> MAKE_WORKLIST : 0.000000 秒
+<p_rgb.2656> MAIN_LOOP : 0.000000 秒
+<p_rgb.2656> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_intersection_points.2658> スピル 0 回目
+<p_intersection_points.2658> INITIALIZE : 0.000000 秒
+<p_intersection_points.2658> LIVENESS.ANALYSIS : 0.000000 秒
+<p_intersection_points.2658> BUILD : 0.000000 秒
+<p_intersection_points.2658> MAKE_WORKLIST : 0.000000 秒
+<p_intersection_points.2658> MAIN_LOOP : 0.000000 秒
+<p_intersection_points.2658> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_surface_ids.2660> スピル 0 回目
+<p_surface_ids.2660> INITIALIZE : 0.000000 秒
+<p_surface_ids.2660> LIVENESS.ANALYSIS : 0.000000 秒
+<p_surface_ids.2660> BUILD : 0.000000 秒
+<p_surface_ids.2660> MAKE_WORKLIST : 0.000000 秒
+<p_surface_ids.2660> MAIN_LOOP : 0.000000 秒
+<p_surface_ids.2660> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_calc_diffuse.2662> スピル 0 回目
+<p_calc_diffuse.2662> INITIALIZE : 0.000000 秒
+<p_calc_diffuse.2662> LIVENESS.ANALYSIS : 0.000000 秒
+<p_calc_diffuse.2662> BUILD : 0.000000 秒
+<p_calc_diffuse.2662> MAKE_WORKLIST : 0.000000 秒
+<p_calc_diffuse.2662> MAIN_LOOP : 0.000000 秒
+<p_calc_diffuse.2662> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_energy.2664> スピル 0 回目
+<p_energy.2664> INITIALIZE : 0.000000 秒
+<p_energy.2664> LIVENESS.ANALYSIS : 0.000000 秒
+<p_energy.2664> BUILD : 0.000000 秒
+<p_energy.2664> MAKE_WORKLIST : 0.000000 秒
+<p_energy.2664> MAIN_LOOP : 0.000000 秒
+<p_energy.2664> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_received_ray_20percent.2666> スピル 0 回目
+<p_received_ray_20percent.2666> INITIALIZE : 0.000000 秒
+<p_received_ray_20percent.2666> LIVENESS.ANALYSIS : 0.000000 秒
+<p_received_ray_20percent.2666> BUILD : 0.000000 秒
+<p_received_ray_20percent.2666> MAKE_WORKLIST : 0.000000 秒
+<p_received_ray_20percent.2666> MAIN_LOOP : 0.000000 秒
+<p_received_ray_20percent.2666> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_group_id.2668> スピル 0 回目
+<p_group_id.2668> INITIALIZE : 0.000000 秒
+<p_group_id.2668> LIVENESS.ANALYSIS : 0.000000 秒
+<p_group_id.2668> BUILD : 0.000000 秒
+<p_group_id.2668> MAKE_WORKLIST : 0.000000 秒
+<p_group_id.2668> MAIN_LOOP : 0.000000 秒
+<p_group_id.2668> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_set_group_id.2670> スピル 0 回目
+<p_set_group_id.2670> INITIALIZE : 0.000000 秒
+<p_set_group_id.2670> LIVENESS.ANALYSIS : 0.000000 秒
+<p_set_group_id.2670> BUILD : 0.000000 秒
+<p_set_group_id.2670> MAKE_WORKLIST : 0.000000 秒
+<p_set_group_id.2670> MAIN_LOOP : 0.000000 秒
+<p_set_group_id.2670> ASSIGN_COLORS : 0.000000 秒
+
+
+<p_nvectors.2673> スピル 0 回目
+<p_nvectors.2673> INITIALIZE : 0.000000 秒
+<p_nvectors.2673> LIVENESS.ANALYSIS : 0.000000 秒
+<p_nvectors.2673> BUILD : 0.000000 秒
+<p_nvectors.2673> MAKE_WORKLIST : 0.000000 秒
+<p_nvectors.2673> MAIN_LOOP : 0.000000 秒
+<p_nvectors.2673> ASSIGN_COLORS : 0.000000 秒
+
+
+<d_vec.2675> スピル 0 回目
+<d_vec.2675> INITIALIZE : 0.000000 秒
+<d_vec.2675> LIVENESS.ANALYSIS : 0.000000 秒
+<d_vec.2675> BUILD : 0.000000 秒
+<d_vec.2675> MAKE_WORKLIST : 0.000000 秒
+<d_vec.2675> MAIN_LOOP : 0.000000 秒
+<d_vec.2675> ASSIGN_COLORS : 0.000000 秒
+
+
+<d_const.2677> スピル 0 回目
+<d_const.2677> INITIALIZE : 0.000000 秒
+<d_const.2677> LIVENESS.ANALYSIS : 0.000000 秒
+<d_const.2677> BUILD : 0.000000 秒
+<d_const.2677> MAKE_WORKLIST : 0.000000 秒
+<d_const.2677> MAIN_LOOP : 0.000000 秒
+<d_const.2677> ASSIGN_COLORS : 0.000000 秒
+
+
+<r_surface_id.2679> スピル 0 回目
+<r_surface_id.2679> INITIALIZE : 0.000000 秒
+<r_surface_id.2679> LIVENESS.ANALYSIS : 0.000000 秒
+<r_surface_id.2679> BUILD : 0.000000 秒
+<r_surface_id.2679> MAKE_WORKLIST : 0.000000 秒
+<r_surface_id.2679> MAIN_LOOP : 0.000000 秒
+<r_surface_id.2679> ASSIGN_COLORS : 0.000000 秒
+
+
+<r_dvec.2681> スピル 0 回目
+<r_dvec.2681> INITIALIZE : 0.000000 秒
+<r_dvec.2681> LIVENESS.ANALYSIS : 0.000000 秒
+<r_dvec.2681> BUILD : 0.000000 秒
+<r_dvec.2681> MAKE_WORKLIST : 0.000000 秒
+<r_dvec.2681> MAIN_LOOP : 0.000000 秒
+<r_dvec.2681> ASSIGN_COLORS : 0.000000 秒
+
+
+<r_bright.2683> スピル 0 回目
+<r_bright.2683> INITIALIZE : 0.000000 秒
+<r_bright.2683> LIVENESS.ANALYSIS : 0.000000 秒
+<r_bright.2683> BUILD : 0.010000 秒
+<r_bright.2683> MAKE_WORKLIST : 0.000000 秒
+<r_bright.2683> MAIN_LOOP : 0.000000 秒
+<r_bright.2683> ASSIGN_COLORS : 0.000000 秒
+
+
+<rad.2685> スピル 0 回目
+<rad.2685> INITIALIZE : 0.000000 秒
+<rad.2685> LIVENESS.ANALYSIS : 0.000000 秒
+<rad.2685> BUILD : 0.000000 秒
+<rad.2685> MAKE_WORKLIST : 0.000000 秒
+<rad.2685> MAIN_LOOP : 0.000000 秒
+<rad.2685> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_screen_settings.2687> スピル 0 回目
+<read_screen_settings.2687> INITIALIZE : 0.000000 秒
+<read_screen_settings.2687> LIVENESS.ANALYSIS : 0.000000 秒
+<read_screen_settings.2687> BUILD : 0.000000 秒
+<read_screen_settings.2687> MAKE_WORKLIST : 0.000000 秒
+<read_screen_settings.2687> MAIN_LOOP : 0.000000 秒
+<read_screen_settings.2687> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_light.2689> スピル 0 回目
+<read_light.2689> INITIALIZE : 0.000000 秒
+<read_light.2689> LIVENESS.ANALYSIS : 0.000000 秒
+<read_light.2689> BUILD : 0.000000 秒
+<read_light.2689> MAKE_WORKLIST : 0.000000 秒
+<read_light.2689> MAIN_LOOP : 0.000000 秒
+<read_light.2689> ASSIGN_COLORS : 0.000000 秒
+
+
+<rotate_quadratic_matrix.2691> スピル 0 回目
+<rotate_quadratic_matrix.2691> INITIALIZE : 0.000000 秒
+<rotate_quadratic_matrix.2691> LIVENESS.ANALYSIS : 0.000000 秒
+<rotate_quadratic_matrix.2691> BUILD : 0.020000 秒
+<rotate_quadratic_matrix.2691> MAKE_WORKLIST : 0.000000 秒
+<rotate_quadratic_matrix.2691> MAIN_LOOP : 0.000000 秒
+<rotate_quadratic_matrix.2691> ASSIGN_COLORS : 0.010000 秒
+
+
+<read_nth_object.2694> スピル 0 回目
+<read_nth_object.2694> INITIALIZE : 0.000000 秒
+<read_nth_object.2694> LIVENESS.ANALYSIS : 0.000000 秒
+<read_nth_object.2694> BUILD : 0.010000 秒
+<read_nth_object.2694> MAKE_WORKLIST : 0.000000 秒
+<read_nth_object.2694> MAIN_LOOP : 0.000000 秒
+<read_nth_object.2694> ASSIGN_COLORS : 0.010000 秒
+
+
+<read_object.2696> スピル 0 回目
+<read_object.2696> INITIALIZE : 0.000000 秒
+<read_object.2696> LIVENESS.ANALYSIS : 0.000000 秒
+<read_object.2696> BUILD : 0.000000 秒
+<read_object.2696> MAKE_WORKLIST : 0.000000 秒
+<read_object.2696> MAIN_LOOP : 0.000000 秒
+<read_object.2696> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_all_object.2698> スピル 0 回目
+<read_all_object.2698> INITIALIZE : 0.000000 秒
+<read_all_object.2698> LIVENESS.ANALYSIS : 0.000000 秒
+<read_all_object.2698> BUILD : 0.000000 秒
+<read_all_object.2698> MAKE_WORKLIST : 0.000000 秒
+<read_all_object.2698> MAIN_LOOP : 0.000000 秒
+<read_all_object.2698> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_net_item.2700> スピル 0 回目
+<read_net_item.2700> INITIALIZE : 0.000000 秒
+<read_net_item.2700> LIVENESS.ANALYSIS : 0.000000 秒
+<read_net_item.2700> BUILD : 0.000000 秒
+<read_net_item.2700> MAKE_WORKLIST : 0.000000 秒
+<read_net_item.2700> MAIN_LOOP : 0.000000 秒
+<read_net_item.2700> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_or_network.2702> スピル 0 回目
+<read_or_network.2702> INITIALIZE : 0.010000 秒
+<read_or_network.2702> LIVENESS.ANALYSIS : 0.000000 秒
+<read_or_network.2702> BUILD : 0.000000 秒
+<read_or_network.2702> MAKE_WORKLIST : 0.000000 秒
+<read_or_network.2702> MAIN_LOOP : 0.000000 秒
+<read_or_network.2702> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_and_network.2704> スピル 0 回目
+<read_and_network.2704> INITIALIZE : 0.000000 秒
+<read_and_network.2704> LIVENESS.ANALYSIS : 0.000000 秒
+<read_and_network.2704> BUILD : 0.000000 秒
+<read_and_network.2704> MAKE_WORKLIST : 0.000000 秒
+<read_and_network.2704> MAIN_LOOP : 0.000000 秒
+<read_and_network.2704> ASSIGN_COLORS : 0.000000 秒
+
+
+<read_parameter.2706> スピル 0 回目
+<read_parameter.2706> INITIALIZE : 0.000000 秒
+<read_parameter.2706> LIVENESS.ANALYSIS : 0.000000 秒
+<read_parameter.2706> BUILD : 0.000000 秒
+<read_parameter.2706> MAKE_WORKLIST : 0.000000 秒
+<read_parameter.2706> MAIN_LOOP : 0.000000 秒
+<read_parameter.2706> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_rect_surface.2708> スピル 0 回目
+<solver_rect_surface.2708> INITIALIZE : 0.000000 秒
+<solver_rect_surface.2708> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_rect_surface.2708> BUILD : 0.000000 秒
+<solver_rect_surface.2708> MAKE_WORKLIST : 0.000000 秒
+<solver_rect_surface.2708> MAIN_LOOP : 0.000000 秒
+<solver_rect_surface.2708> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_rect.2717> スピル 0 回目
+<solver_rect.2717> INITIALIZE : 0.000000 秒
+<solver_rect.2717> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_rect.2717> BUILD : 0.010000 秒
+<solver_rect.2717> MAKE_WORKLIST : 0.000000 秒
+<solver_rect.2717> MAIN_LOOP : 0.000000 秒
+<solver_rect.2717> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_surface.2723> スピル 0 回目
+<solver_surface.2723> INITIALIZE : 0.000000 秒
+<solver_surface.2723> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_surface.2723> BUILD : 0.000000 秒
+<solver_surface.2723> MAKE_WORKLIST : 0.000000 秒
+<solver_surface.2723> MAIN_LOOP : 0.000000 秒
+<solver_surface.2723> ASSIGN_COLORS : 0.000000 秒
+
+
+<quadratic.2729> スピル 0 回目
+<quadratic.2729> INITIALIZE : 0.000000 秒
+<quadratic.2729> LIVENESS.ANALYSIS : 0.000000 秒
+<quadratic.2729> BUILD : 0.000000 秒
+<quadratic.2729> MAKE_WORKLIST : 0.000000 秒
+<quadratic.2729> MAIN_LOOP : 0.000000 秒
+<quadratic.2729> ASSIGN_COLORS : 0.000000 秒
+
+
+<bilinear.2734> スピル 0 回目
+<bilinear.2734> INITIALIZE : 0.000000 秒
+<bilinear.2734> LIVENESS.ANALYSIS : 0.000000 秒
+<bilinear.2734> BUILD : 0.010000 秒
+<bilinear.2734> MAKE_WORKLIST : 0.000000 秒
+<bilinear.2734> MAIN_LOOP : 0.000000 秒
+<bilinear.2734> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_second.2742> スピル 0 回目
+<solver_second.2742> INITIALIZE : 0.000000 秒
+<solver_second.2742> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_second.2742> BUILD : 0.000000 秒
+<solver_second.2742> MAKE_WORKLIST : 0.000000 秒
+<solver_second.2742> MAIN_LOOP : 0.000000 秒
+<solver_second.2742> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver.2748> スピル 0 回目
+<solver.2748> INITIALIZE : 0.000000 秒
+<solver.2748> LIVENESS.ANALYSIS : 0.000000 秒
+<solver.2748> BUILD : 0.000000 秒
+<solver.2748> MAKE_WORKLIST : 0.000000 秒
+<solver.2748> MAIN_LOOP : 0.000000 秒
+<solver.2748> ASSIGN_COLORS : 0.010000 秒
+
+
+<solver_rect_fast.2752> スピル 0 回目
+<solver_rect_fast.2752> INITIALIZE : 0.000000 秒
+<solver_rect_fast.2752> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_rect_fast.2752> BUILD : 0.000000 秒
+<solver_rect_fast.2752> MAKE_WORKLIST : 0.000000 秒
+<solver_rect_fast.2752> MAIN_LOOP : 0.010000 秒
+<solver_rect_fast.2752> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_surface_fast.2759> スピル 0 回目
+<solver_surface_fast.2759> INITIALIZE : 0.000000 秒
+<solver_surface_fast.2759> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_surface_fast.2759> BUILD : 0.000000 秒
+<solver_surface_fast.2759> MAKE_WORKLIST : 0.000000 秒
+<solver_surface_fast.2759> MAIN_LOOP : 0.000000 秒
+<solver_surface_fast.2759> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_second_fast.2765> スピル 0 回目
+<solver_second_fast.2765> INITIALIZE : 0.000000 秒
+<solver_second_fast.2765> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_second_fast.2765> BUILD : 0.000000 秒
+<solver_second_fast.2765> MAKE_WORKLIST : 0.000000 秒
+<solver_second_fast.2765> MAIN_LOOP : 0.000000 秒
+<solver_second_fast.2765> ASSIGN_COLORS : 0.010000 秒
+
+
+<solver_fast.2771> スピル 0 回目
+<solver_fast.2771> INITIALIZE : 0.000000 秒
+<solver_fast.2771> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_fast.2771> BUILD : 0.000000 秒
+<solver_fast.2771> MAKE_WORKLIST : 0.000000 秒
+<solver_fast.2771> MAIN_LOOP : 0.000000 秒
+<solver_fast.2771> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_surface_fast2.2775> スピル 0 回目
+<solver_surface_fast2.2775> INITIALIZE : 0.000000 秒
+<solver_surface_fast2.2775> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_surface_fast2.2775> BUILD : 0.000000 秒
+<solver_surface_fast2.2775> MAKE_WORKLIST : 0.000000 秒
+<solver_surface_fast2.2775> MAIN_LOOP : 0.000000 秒
+<solver_surface_fast2.2775> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_second_fast2.2782> スピル 0 回目
+<solver_second_fast2.2782> INITIALIZE : 0.000000 秒
+<solver_second_fast2.2782> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_second_fast2.2782> BUILD : 0.000000 秒
+<solver_second_fast2.2782> MAKE_WORKLIST : 0.000000 秒
+<solver_second_fast2.2782> MAIN_LOOP : 0.000000 秒
+<solver_second_fast2.2782> ASSIGN_COLORS : 0.000000 秒
+
+
+<solver_fast2.2789> スピル 0 回目
+<solver_fast2.2789> INITIALIZE : 0.000000 秒
+<solver_fast2.2789> LIVENESS.ANALYSIS : 0.000000 秒
+<solver_fast2.2789> BUILD : 0.000000 秒
+<solver_fast2.2789> MAKE_WORKLIST : 0.000000 秒
+<solver_fast2.2789> MAIN_LOOP : 0.010000 秒
+<solver_fast2.2789> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_rect_table.2792> スピル 0 回目
+<setup_rect_table.2792> INITIALIZE : 0.000000 秒
+<setup_rect_table.2792> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_rect_table.2792> BUILD : 0.000000 秒
+<setup_rect_table.2792> MAKE_WORKLIST : 0.000000 秒
+<setup_rect_table.2792> MAIN_LOOP : 0.000000 秒
+<setup_rect_table.2792> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_surface_table.2795> スピル 0 回目
+<setup_surface_table.2795> INITIALIZE : 0.000000 秒
+<setup_surface_table.2795> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_surface_table.2795> BUILD : 0.000000 秒
+<setup_surface_table.2795> MAKE_WORKLIST : 0.000000 秒
+<setup_surface_table.2795> MAIN_LOOP : 0.000000 秒
+<setup_surface_table.2795> ASSIGN_COLORS : 0.010000 秒
+
+
+<setup_second_table.2798> スピル 0 回目
+<setup_second_table.2798> INITIALIZE : 0.000000 秒
+<setup_second_table.2798> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_second_table.2798> BUILD : 0.000000 秒
+<setup_second_table.2798> MAKE_WORKLIST : 0.000000 秒
+<setup_second_table.2798> MAIN_LOOP : 0.000000 秒
+<setup_second_table.2798> ASSIGN_COLORS : 0.000000 秒
+
+
+<iter_setup_dirvec_constants.2801> スピル 0 回目
+<iter_setup_dirvec_constants.2801> INITIALIZE : 0.000000 秒
+<iter_setup_dirvec_constants.2801> LIVENESS.ANALYSIS : 0.000000 秒
+<iter_setup_dirvec_constants.2801> BUILD : 0.010000 秒
+<iter_setup_dirvec_constants.2801> MAKE_WORKLIST : 0.000000 秒
+<iter_setup_dirvec_constants.2801> MAIN_LOOP : 0.000000 秒
+<iter_setup_dirvec_constants.2801> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_dirvec_constants.2804> スピル 0 回目
+<setup_dirvec_constants.2804> INITIALIZE : 0.000000 秒
+<setup_dirvec_constants.2804> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_dirvec_constants.2804> BUILD : 0.000000 秒
+<setup_dirvec_constants.2804> MAKE_WORKLIST : 0.000000 秒
+<setup_dirvec_constants.2804> MAIN_LOOP : 0.000000 秒
+<setup_dirvec_constants.2804> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_startp_constants.2806> スピル 0 回目
+<setup_startp_constants.2806> INITIALIZE : 0.000000 秒
+<setup_startp_constants.2806> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_startp_constants.2806> BUILD : 0.000000 秒
+<setup_startp_constants.2806> MAKE_WORKLIST : 0.000000 秒
+<setup_startp_constants.2806> MAIN_LOOP : 0.000000 秒
+<setup_startp_constants.2806> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_startp.2809> スピル 0 回目
+<setup_startp.2809> INITIALIZE : 0.000000 秒
+<setup_startp.2809> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_startp.2809> BUILD : 0.000000 秒
+<setup_startp.2809> MAKE_WORKLIST : 0.000000 秒
+<setup_startp.2809> MAIN_LOOP : 0.000000 秒
+<setup_startp.2809> ASSIGN_COLORS : 0.000000 秒
+
+
+<is_rect_outside.2811> スピル 0 回目
+<is_rect_outside.2811> INITIALIZE : 0.000000 秒
+<is_rect_outside.2811> LIVENESS.ANALYSIS : 0.000000 秒
+<is_rect_outside.2811> BUILD : 0.000000 秒
+<is_rect_outside.2811> MAKE_WORKLIST : 0.000000 秒
+<is_rect_outside.2811> MAIN_LOOP : 0.000000 秒
+<is_rect_outside.2811> ASSIGN_COLORS : 0.000000 秒
+
+
+<is_plane_outside.2816> スピル 0 回目
+<is_plane_outside.2816> INITIALIZE : 0.010000 秒
+<is_plane_outside.2816> LIVENESS.ANALYSIS : 0.000000 秒
+<is_plane_outside.2816> BUILD : 0.000000 秒
+<is_plane_outside.2816> MAKE_WORKLIST : 0.000000 秒
+<is_plane_outside.2816> MAIN_LOOP : 0.000000 秒
+<is_plane_outside.2816> ASSIGN_COLORS : 0.000000 秒
+
+
+<is_second_outside.2821> スピル 0 回目
+<is_second_outside.2821> INITIALIZE : 0.000000 秒
+<is_second_outside.2821> LIVENESS.ANALYSIS : 0.000000 秒
+<is_second_outside.2821> BUILD : 0.000000 秒
+<is_second_outside.2821> MAKE_WORKLIST : 0.000000 秒
+<is_second_outside.2821> MAIN_LOOP : 0.000000 秒
+<is_second_outside.2821> ASSIGN_COLORS : 0.000000 秒
+
+
+<is_outside.2826> スピル 0 回目
+<is_outside.2826> INITIALIZE : 0.000000 秒
+<is_outside.2826> LIVENESS.ANALYSIS : 0.000000 秒
+<is_outside.2826> BUILD : 0.000000 秒
+<is_outside.2826> MAKE_WORKLIST : 0.000000 秒
+<is_outside.2826> MAIN_LOOP : 0.000000 秒
+<is_outside.2826> ASSIGN_COLORS : 0.000000 秒
+
+
+<check_all_inside.2831> スピル 0 回目
+<check_all_inside.2831> INITIALIZE : 0.000000 秒
+<check_all_inside.2831> LIVENESS.ANALYSIS : 0.000000 秒
+<check_all_inside.2831> BUILD : 0.000000 秒
+<check_all_inside.2831> MAKE_WORKLIST : 0.000000 秒
+<check_all_inside.2831> MAIN_LOOP : 0.000000 秒
+<check_all_inside.2831> ASSIGN_COLORS : 0.000000 秒
+
+
+<shadow_check_and_group.2837> スピル 0 回目
+<shadow_check_and_group.2837> INITIALIZE : 0.000000 秒
+<shadow_check_and_group.2837> LIVENESS.ANALYSIS : 0.000000 秒
+<shadow_check_and_group.2837> BUILD : 0.000000 秒
+<shadow_check_and_group.2837> MAKE_WORKLIST : 0.000000 秒
+<shadow_check_and_group.2837> MAIN_LOOP : 0.000000 秒
+<shadow_check_and_group.2837> ASSIGN_COLORS : 0.010000 秒
+
+
+<shadow_check_one_or_group.2840> スピル 0 回目
+<shadow_check_one_or_group.2840> INITIALIZE : 0.000000 秒
+<shadow_check_one_or_group.2840> LIVENESS.ANALYSIS : 0.000000 秒
+<shadow_check_one_or_group.2840> BUILD : 0.000000 秒
+<shadow_check_one_or_group.2840> MAKE_WORKLIST : 0.000000 秒
+<shadow_check_one_or_group.2840> MAIN_LOOP : 0.000000 秒
+<shadow_check_one_or_group.2840> ASSIGN_COLORS : 0.000000 秒
+
+
+<shadow_check_one_or_matrix.2843> スピル 0 回目
+<shadow_check_one_or_matrix.2843> INITIALIZE : 0.000000 秒
+<shadow_check_one_or_matrix.2843> LIVENESS.ANALYSIS : 0.000000 秒
+<shadow_check_one_or_matrix.2843> BUILD : 0.000000 秒
+<shadow_check_one_or_matrix.2843> MAKE_WORKLIST : 0.000000 秒
+<shadow_check_one_or_matrix.2843> MAIN_LOOP : 0.000000 秒
+<shadow_check_one_or_matrix.2843> ASSIGN_COLORS : 0.000000 秒
+
+
+<solve_each_element.2846> スピル 0 回目
+<solve_each_element.2846> INITIALIZE : 0.000000 秒
+<solve_each_element.2846> LIVENESS.ANALYSIS : 0.000000 秒
+<solve_each_element.2846> BUILD : 0.000000 秒
+<solve_each_element.2846> MAKE_WORKLIST : 0.000000 秒
+<solve_each_element.2846> MAIN_LOOP : 0.000000 秒
+<solve_each_element.2846> ASSIGN_COLORS : 0.010000 秒
+
+
+<solve_one_or_network.2850> スピル 0 回目
+<solve_one_or_network.2850> INITIALIZE : 0.000000 秒
+<solve_one_or_network.2850> LIVENESS.ANALYSIS : 0.000000 秒
+<solve_one_or_network.2850> BUILD : 0.000000 秒
+<solve_one_or_network.2850> MAKE_WORKLIST : 0.000000 秒
+<solve_one_or_network.2850> MAIN_LOOP : 0.000000 秒
+<solve_one_or_network.2850> ASSIGN_COLORS : 0.000000 秒
+
+
+<trace_or_matrix.2854> スピル 0 回目
+<trace_or_matrix.2854> INITIALIZE : 0.000000 秒
+<trace_or_matrix.2854> LIVENESS.ANALYSIS : 0.000000 秒
+<trace_or_matrix.2854> BUILD : 0.000000 秒
+<trace_or_matrix.2854> MAKE_WORKLIST : 0.000000 秒
+<trace_or_matrix.2854> MAIN_LOOP : 0.000000 秒
+<trace_or_matrix.2854> ASSIGN_COLORS : 0.000000 秒
+
+
+<judge_intersection.2858> スピル 0 回目
+<judge_intersection.2858> INITIALIZE : 0.000000 秒
+<judge_intersection.2858> LIVENESS.ANALYSIS : 0.000000 秒
+<judge_intersection.2858> BUILD : 0.000000 秒
+<judge_intersection.2858> MAKE_WORKLIST : 0.000000 秒
+<judge_intersection.2858> MAIN_LOOP : 0.000000 秒
+<judge_intersection.2858> ASSIGN_COLORS : 0.000000 秒
+
+
+<solve_each_element_fast.2860> スピル 0 回目
+<solve_each_element_fast.2860> INITIALIZE : 0.000000 秒
+<solve_each_element_fast.2860> LIVENESS.ANALYSIS : 0.000000 秒
+<solve_each_element_fast.2860> BUILD : 0.010000 秒
+<solve_each_element_fast.2860> MAKE_WORKLIST : 0.000000 秒
+<solve_each_element_fast.2860> MAIN_LOOP : 0.000000 秒
+<solve_each_element_fast.2860> ASSIGN_COLORS : 0.000000 秒
+
+
+<solve_one_or_network_fast.2864> スピル 0 回目
+<solve_one_or_network_fast.2864> INITIALIZE : 0.000000 秒
+<solve_one_or_network_fast.2864> LIVENESS.ANALYSIS : 0.000000 秒
+<solve_one_or_network_fast.2864> BUILD : 0.000000 秒
+<solve_one_or_network_fast.2864> MAKE_WORKLIST : 0.000000 秒
+<solve_one_or_network_fast.2864> MAIN_LOOP : 0.000000 秒
+<solve_one_or_network_fast.2864> ASSIGN_COLORS : 0.000000 秒
+
+
+<trace_or_matrix_fast.2868> スピル 0 回目
+<trace_or_matrix_fast.2868> INITIALIZE : 0.000000 秒
+<trace_or_matrix_fast.2868> LIVENESS.ANALYSIS : 0.000000 秒
+<trace_or_matrix_fast.2868> BUILD : 0.000000 秒
+<trace_or_matrix_fast.2868> MAKE_WORKLIST : 0.000000 秒
+<trace_or_matrix_fast.2868> MAIN_LOOP : 0.000000 秒
+<trace_or_matrix_fast.2868> ASSIGN_COLORS : 0.000000 秒
+
+
+<judge_intersection_fast.2872> スピル 0 回目
+<judge_intersection_fast.2872> INITIALIZE : 0.000000 秒
+<judge_intersection_fast.2872> LIVENESS.ANALYSIS : 0.000000 秒
+<judge_intersection_fast.2872> BUILD : 0.000000 秒
+<judge_intersection_fast.2872> MAKE_WORKLIST : 0.000000 秒
+<judge_intersection_fast.2872> MAIN_LOOP : 0.000000 秒
+<judge_intersection_fast.2872> ASSIGN_COLORS : 0.000000 秒
+
+
+<get_nvector_rect.2874> スピル 0 回目
+<get_nvector_rect.2874> INITIALIZE : 0.000000 秒
+<get_nvector_rect.2874> LIVENESS.ANALYSIS : 0.000000 秒
+<get_nvector_rect.2874> BUILD : 0.000000 秒
+<get_nvector_rect.2874> MAKE_WORKLIST : 0.000000 秒
+<get_nvector_rect.2874> MAIN_LOOP : 0.000000 秒
+<get_nvector_rect.2874> ASSIGN_COLORS : 0.010000 秒
+
+
+<get_nvector_plane.2876> スピル 0 回目
+<get_nvector_plane.2876> INITIALIZE : 0.000000 秒
+<get_nvector_plane.2876> LIVENESS.ANALYSIS : 0.000000 秒
+<get_nvector_plane.2876> BUILD : 0.000000 秒
+<get_nvector_plane.2876> MAKE_WORKLIST : 0.000000 秒
+<get_nvector_plane.2876> MAIN_LOOP : 0.000000 秒
+<get_nvector_plane.2876> ASSIGN_COLORS : 0.000000 秒
+
+
+<get_nvector_second.2878> スピル 0 回目
+<get_nvector_second.2878> INITIALIZE : 0.000000 秒
+<get_nvector_second.2878> LIVENESS.ANALYSIS : 0.000000 秒
+<get_nvector_second.2878> BUILD : 0.000000 秒
+<get_nvector_second.2878> MAKE_WORKLIST : 0.000000 秒
+<get_nvector_second.2878> MAIN_LOOP : 0.000000 秒
+<get_nvector_second.2878> ASSIGN_COLORS : 0.000000 秒
+
+
+<get_nvector.2880> スピル 0 回目
+<get_nvector.2880> INITIALIZE : 0.000000 秒
+<get_nvector.2880> LIVENESS.ANALYSIS : 0.000000 秒
+<get_nvector.2880> BUILD : 0.000000 秒
+<get_nvector.2880> MAKE_WORKLIST : 0.000000 秒
+<get_nvector.2880> MAIN_LOOP : 0.000000 秒
+<get_nvector.2880> ASSIGN_COLORS : 0.000000 秒
+
+
+<utexture.2883> スピル 0 回目
+<utexture.2883> INITIALIZE : 0.000000 秒
+<utexture.2883> LIVENESS.ANALYSIS : 0.010000 秒
+<utexture.2883> BUILD : 0.000000 秒
+<utexture.2883> MAKE_WORKLIST : 0.000000 秒
+<utexture.2883> MAIN_LOOP : 0.010000 秒
+<utexture.2883> ASSIGN_COLORS : 0.010000 秒
+
+
+<add_light.2886> スピル 0 回目
+<add_light.2886> INITIALIZE : 0.000000 秒
+<add_light.2886> LIVENESS.ANALYSIS : 0.000000 秒
+<add_light.2886> BUILD : 0.000000 秒
+<add_light.2886> MAKE_WORKLIST : 0.000000 秒
+<add_light.2886> MAIN_LOOP : 0.000000 秒
+<add_light.2886> ASSIGN_COLORS : 0.000000 秒
+
+
+<trace_reflections.2890> スピル 0 回目
+<trace_reflections.2890> INITIALIZE : 0.000000 秒
+<trace_reflections.2890> LIVENESS.ANALYSIS : 0.010000 秒
+<trace_reflections.2890> BUILD : 0.000000 秒
+<trace_reflections.2890> MAKE_WORKLIST : 0.000000 秒
+<trace_reflections.2890> MAIN_LOOP : 0.000000 秒
+<trace_reflections.2890> ASSIGN_COLORS : 0.000000 秒
+
+
+<trace_ray.2895> スピル 0 回目
+<trace_ray.2895> INITIALIZE : 0.000000 秒
+<trace_ray.2895> LIVENESS.ANALYSIS : 0.000000 秒
+<trace_ray.2895> BUILD : 0.010000 秒
+<trace_ray.2895> MAKE_WORKLIST : 0.010000 秒
+<trace_ray.2895> MAIN_LOOP : 0.000000 秒
+<trace_ray.2895> ASSIGN_COLORS : 0.010000 秒
+
+
+<trace_diffuse_ray.2901> スピル 0 回目
+<trace_diffuse_ray.2901> INITIALIZE : 0.000000 秒
+<trace_diffuse_ray.2901> LIVENESS.ANALYSIS : 0.000000 秒
+<trace_diffuse_ray.2901> BUILD : 0.000000 秒
+<trace_diffuse_ray.2901> MAKE_WORKLIST : 0.000000 秒
+<trace_diffuse_ray.2901> MAIN_LOOP : 0.000000 秒
+<trace_diffuse_ray.2901> ASSIGN_COLORS : 0.000000 秒
+
+
+<iter_trace_diffuse_rays.2904> スピル 0 回目
+<iter_trace_diffuse_rays.2904> INITIALIZE : 0.000000 秒
+<iter_trace_diffuse_rays.2904> LIVENESS.ANALYSIS : 0.000000 秒
+<iter_trace_diffuse_rays.2904> BUILD : 0.010000 秒
+<iter_trace_diffuse_rays.2904> MAKE_WORKLIST : 0.000000 秒
+<iter_trace_diffuse_rays.2904> MAIN_LOOP : 0.000000 秒
+<iter_trace_diffuse_rays.2904> ASSIGN_COLORS : 0.000000 秒
+
+
+<trace_diffuse_rays.2909> スピル 0 回目
+<trace_diffuse_rays.2909> INITIALIZE : 0.000000 秒
+<trace_diffuse_rays.2909> LIVENESS.ANALYSIS : 0.000000 秒
+<trace_diffuse_rays.2909> BUILD : 0.000000 秒
+<trace_diffuse_rays.2909> MAKE_WORKLIST : 0.000000 秒
+<trace_diffuse_rays.2909> MAIN_LOOP : 0.000000 秒
+<trace_diffuse_rays.2909> ASSIGN_COLORS : 0.000000 秒
+
+
+<trace_diffuse_ray_80percent.2913> スピル 0 回目
+<trace_diffuse_ray_80percent.2913> INITIALIZE : 0.000000 秒
+<trace_diffuse_ray_80percent.2913> LIVENESS.ANALYSIS : 0.000000 秒
+<trace_diffuse_ray_80percent.2913> BUILD : 0.000000 秒
+<trace_diffuse_ray_80percent.2913> MAKE_WORKLIST : 0.000000 秒
+<trace_diffuse_ray_80percent.2913> MAIN_LOOP : 0.000000 秒
+<trace_diffuse_ray_80percent.2913> ASSIGN_COLORS : 0.000000 秒
+
+
+<calc_diffuse_using_1point.2917> スピル 0 回目
+<calc_diffuse_using_1point.2917> INITIALIZE : 0.000000 秒
+<calc_diffuse_using_1point.2917> LIVENESS.ANALYSIS : 0.000000 秒
+<calc_diffuse_using_1point.2917> BUILD : 0.000000 秒
+<calc_diffuse_using_1point.2917> MAKE_WORKLIST : 0.000000 秒
+<calc_diffuse_using_1point.2917> MAIN_LOOP : 0.000000 秒
+<calc_diffuse_using_1point.2917> ASSIGN_COLORS : 0.000000 秒
+
+
+<calc_diffuse_using_5points.2920> スピル 0 回目
+<calc_diffuse_using_5points.2920> INITIALIZE : 0.010000 秒
+<calc_diffuse_using_5points.2920> LIVENESS.ANALYSIS : 0.000000 秒
+<calc_diffuse_using_5points.2920> BUILD : 0.000000 秒
+<calc_diffuse_using_5points.2920> MAKE_WORKLIST : 0.000000 秒
+<calc_diffuse_using_5points.2920> MAIN_LOOP : 0.000000 秒
+<calc_diffuse_using_5points.2920> ASSIGN_COLORS : 0.000000 秒
+
+
+<do_without_neighbors.2926> スピル 0 回目
+<do_without_neighbors.2926> INITIALIZE : 0.000000 秒
+<do_without_neighbors.2926> LIVENESS.ANALYSIS : 0.000000 秒
+<do_without_neighbors.2926> BUILD : 0.000000 秒
+<do_without_neighbors.2926> MAKE_WORKLIST : 0.000000 秒
+<do_without_neighbors.2926> MAIN_LOOP : 0.000000 秒
+<do_without_neighbors.2926> ASSIGN_COLORS : 0.010000 秒
+
+
+<neighbors_exist.2929> スピル 0 回目
+<neighbors_exist.2929> INITIALIZE : 0.000000 秒
+<neighbors_exist.2929> LIVENESS.ANALYSIS : 0.000000 秒
+<neighbors_exist.2929> BUILD : 0.000000 秒
+<neighbors_exist.2929> MAKE_WORKLIST : 0.000000 秒
+<neighbors_exist.2929> MAIN_LOOP : 0.000000 秒
+<neighbors_exist.2929> ASSIGN_COLORS : 0.000000 秒
+
+
+<get_surface_id.2933> スピル 0 回目
+<get_surface_id.2933> INITIALIZE : 0.000000 秒
+<get_surface_id.2933> LIVENESS.ANALYSIS : 0.000000 秒
+<get_surface_id.2933> BUILD : 0.000000 秒
+<get_surface_id.2933> MAKE_WORKLIST : 0.000000 秒
+<get_surface_id.2933> MAIN_LOOP : 0.000000 秒
+<get_surface_id.2933> ASSIGN_COLORS : 0.000000 秒
+
+
+<neighbors_are_available.2936> スピル 0 回目
+<neighbors_are_available.2936> INITIALIZE : 0.000000 秒
+<neighbors_are_available.2936> LIVENESS.ANALYSIS : 0.000000 秒
+<neighbors_are_available.2936> BUILD : 0.000000 秒
+<neighbors_are_available.2936> MAKE_WORKLIST : 0.000000 秒
+<neighbors_are_available.2936> MAIN_LOOP : 0.000000 秒
+<neighbors_are_available.2936> ASSIGN_COLORS : 0.000000 秒
+
+
+<try_exploit_neighbors.2942> スピル 0 回目
+<try_exploit_neighbors.2942> INITIALIZE : 0.000000 秒
+<try_exploit_neighbors.2942> LIVENESS.ANALYSIS : 0.000000 秒
+<try_exploit_neighbors.2942> BUILD : 0.000000 秒
+<try_exploit_neighbors.2942> MAKE_WORKLIST : 0.000000 秒
+<try_exploit_neighbors.2942> MAIN_LOOP : 0.000000 秒
+<try_exploit_neighbors.2942> ASSIGN_COLORS : 0.000000 秒
+
+
+<write_ppm_header.2949> スピル 0 回目
+<write_ppm_header.2949> INITIALIZE : 0.000000 秒
+<write_ppm_header.2949> LIVENESS.ANALYSIS : 0.000000 秒
+<write_ppm_header.2949> BUILD : 0.000000 秒
+<write_ppm_header.2949> MAKE_WORKLIST : 0.000000 秒
+<write_ppm_header.2949> MAIN_LOOP : 0.000000 秒
+<write_ppm_header.2949> ASSIGN_COLORS : 0.010000 秒
+
+
+<write_rgb_element.2951> スピル 0 回目
+<write_rgb_element.2951> INITIALIZE : 0.000000 秒
+<write_rgb_element.2951> LIVENESS.ANALYSIS : 0.000000 秒
+<write_rgb_element.2951> BUILD : 0.000000 秒
+<write_rgb_element.2951> MAKE_WORKLIST : 0.000000 秒
+<write_rgb_element.2951> MAIN_LOOP : 0.000000 秒
+<write_rgb_element.2951> ASSIGN_COLORS : 0.000000 秒
+
+
+<write_rgb.2953> スピル 0 回目
+<write_rgb.2953> INITIALIZE : 0.000000 秒
+<write_rgb.2953> LIVENESS.ANALYSIS : 0.000000 秒
+<write_rgb.2953> BUILD : 0.000000 秒
+<write_rgb.2953> MAKE_WORKLIST : 0.000000 秒
+<write_rgb.2953> MAIN_LOOP : 0.000000 秒
+<write_rgb.2953> ASSIGN_COLORS : 0.000000 秒
+
+
+<pretrace_diffuse_rays.2955> スピル 0 回目
+<pretrace_diffuse_rays.2955> INITIALIZE : 0.000000 秒
+<pretrace_diffuse_rays.2955> LIVENESS.ANALYSIS : 0.000000 秒
+<pretrace_diffuse_rays.2955> BUILD : 0.000000 秒
+<pretrace_diffuse_rays.2955> MAKE_WORKLIST : 0.000000 秒
+<pretrace_diffuse_rays.2955> MAIN_LOOP : 0.000000 秒
+<pretrace_diffuse_rays.2955> ASSIGN_COLORS : 0.000000 秒
+
+
+<pretrace_pixels.2958> スピル 0 回目
+<pretrace_pixels.2958> INITIALIZE : 0.000000 秒
+<pretrace_pixels.2958> LIVENESS.ANALYSIS : 0.000000 秒
+<pretrace_pixels.2958> BUILD : 0.000000 秒
+<pretrace_pixels.2958> MAKE_WORKLIST : 0.010000 秒
+<pretrace_pixels.2958> MAIN_LOOP : 0.000000 秒
+<pretrace_pixels.2958> ASSIGN_COLORS : 0.000000 秒
+
+
+<pretrace_line.2965> スピル 0 回目
+<pretrace_line.2965> INITIALIZE : 0.000000 秒
+<pretrace_line.2965> LIVENESS.ANALYSIS : 0.000000 秒
+<pretrace_line.2965> BUILD : 0.000000 秒
+<pretrace_line.2965> MAKE_WORKLIST : 0.000000 秒
+<pretrace_line.2965> MAIN_LOOP : 0.000000 秒
+<pretrace_line.2965> ASSIGN_COLORS : 0.000000 秒
+
+
+<scan_pixel.2969> スピル 0 回目
+<scan_pixel.2969> INITIALIZE : 0.000000 秒
+<scan_pixel.2969> LIVENESS.ANALYSIS : 0.010000 秒
+<scan_pixel.2969> BUILD : 0.000000 秒
+<scan_pixel.2969> MAKE_WORKLIST : 0.000000 秒
+<scan_pixel.2969> MAIN_LOOP : 0.000000 秒
+<scan_pixel.2969> ASSIGN_COLORS : 0.000000 秒
+
+
+<scan_line.2975> スピル 0 回目
+<scan_line.2975> INITIALIZE : 0.000000 秒
+<scan_line.2975> LIVENESS.ANALYSIS : 0.000000 秒
+<scan_line.2975> BUILD : 0.000000 秒
+<scan_line.2975> MAKE_WORKLIST : 0.000000 秒
+<scan_line.2975> MAIN_LOOP : 0.000000 秒
+<scan_line.2975> ASSIGN_COLORS : 0.000000 秒
+
+
+<create_float5x3array.2981> スピル 0 回目
+<create_float5x3array.2981> INITIALIZE : 0.000000 秒
+<create_float5x3array.2981> LIVENESS.ANALYSIS : 0.000000 秒
+<create_float5x3array.2981> BUILD : 0.000000 秒
+<create_float5x3array.2981> MAKE_WORKLIST : 0.000000 秒
+<create_float5x3array.2981> MAIN_LOOP : 0.000000 秒
+<create_float5x3array.2981> ASSIGN_COLORS : 0.000000 秒
+
+
+<create_pixel.2983> スピル 0 回目
+<create_pixel.2983> INITIALIZE : 0.000000 秒
+<create_pixel.2983> LIVENESS.ANALYSIS : 0.000000 秒
+<create_pixel.2983> BUILD : 0.010000 秒
+<create_pixel.2983> MAKE_WORKLIST : 0.000000 秒
+<create_pixel.2983> MAIN_LOOP : 0.000000 秒
+<create_pixel.2983> ASSIGN_COLORS : 0.000000 秒
+
+
+<init_line_elements.2985> スピル 0 回目
+<init_line_elements.2985> INITIALIZE : 0.000000 秒
+<init_line_elements.2985> LIVENESS.ANALYSIS : 0.000000 秒
+<init_line_elements.2985> BUILD : 0.000000 秒
+<init_line_elements.2985> MAKE_WORKLIST : 0.000000 秒
+<init_line_elements.2985> MAIN_LOOP : 0.000000 秒
+<init_line_elements.2985> ASSIGN_COLORS : 0.000000 秒
+
+
+<create_pixelline.2988> スピル 0 回目
+<create_pixelline.2988> INITIALIZE : 0.000000 秒
+<create_pixelline.2988> LIVENESS.ANALYSIS : 0.000000 秒
+<create_pixelline.2988> BUILD : 0.000000 秒
+<create_pixelline.2988> MAKE_WORKLIST : 0.000000 秒
+<create_pixelline.2988> MAIN_LOOP : 0.000000 秒
+<create_pixelline.2988> ASSIGN_COLORS : 0.000000 秒
+
+
+<adjust_position.2990> スピル 0 回目
+<adjust_position.2990> INITIALIZE : 0.000000 秒
+<adjust_position.2990> LIVENESS.ANALYSIS : 0.000000 秒
+<adjust_position.2990> BUILD : 0.000000 秒
+<adjust_position.2990> MAKE_WORKLIST : 0.000000 秒
+<adjust_position.2990> MAIN_LOOP : 0.000000 秒
+<adjust_position.2990> ASSIGN_COLORS : 0.000000 秒
+
+
+<calc_dirvec.2993> スピル 0 回目
+<calc_dirvec.2993> INITIALIZE : 0.000000 秒
+<calc_dirvec.2993> LIVENESS.ANALYSIS : 0.000000 秒
+<calc_dirvec.2993> BUILD : 0.000000 秒
+<calc_dirvec.2993> MAKE_WORKLIST : 0.000000 秒
+<calc_dirvec.2993> MAIN_LOOP : 0.010000 秒
+<calc_dirvec.2993> ASSIGN_COLORS : 0.000000 秒
+
+
+<calc_dirvecs.3001> スピル 0 回目
+<calc_dirvecs.3001> INITIALIZE : 0.000000 秒
+<calc_dirvecs.3001> LIVENESS.ANALYSIS : 0.000000 秒
+<calc_dirvecs.3001> BUILD : 0.000000 秒
+<calc_dirvecs.3001> MAKE_WORKLIST : 0.000000 秒
+<calc_dirvecs.3001> MAIN_LOOP : 0.000000 秒
+<calc_dirvecs.3001> ASSIGN_COLORS : 0.000000 秒
+
+
+<calc_dirvec_rows.3006> スピル 0 回目
+<calc_dirvec_rows.3006> INITIALIZE : 0.000000 秒
+<calc_dirvec_rows.3006> LIVENESS.ANALYSIS : 0.000000 秒
+<calc_dirvec_rows.3006> BUILD : 0.000000 秒
+<calc_dirvec_rows.3006> MAKE_WORKLIST : 0.000000 秒
+<calc_dirvec_rows.3006> MAIN_LOOP : 0.000000 秒
+<calc_dirvec_rows.3006> ASSIGN_COLORS : 0.000000 秒
+
+
+<create_dirvec.3010> スピル 0 回目
+<create_dirvec.3010> INITIALIZE : 0.000000 秒
+<create_dirvec.3010> LIVENESS.ANALYSIS : 0.000000 秒
+<create_dirvec.3010> BUILD : 0.000000 秒
+<create_dirvec.3010> MAKE_WORKLIST : 0.000000 秒
+<create_dirvec.3010> MAIN_LOOP : 0.000000 秒
+<create_dirvec.3010> ASSIGN_COLORS : 0.000000 秒
+
+
+<create_dirvec_elements.3012> スピル 0 回目
+<create_dirvec_elements.3012> INITIALIZE : 0.000000 秒
+<create_dirvec_elements.3012> LIVENESS.ANALYSIS : 0.000000 秒
+<create_dirvec_elements.3012> BUILD : 0.010000 秒
+<create_dirvec_elements.3012> MAKE_WORKLIST : 0.000000 秒
+<create_dirvec_elements.3012> MAIN_LOOP : 0.000000 秒
+<create_dirvec_elements.3012> ASSIGN_COLORS : 0.000000 秒
+
+
+<create_dirvecs.3015> スピル 0 回目
+<create_dirvecs.3015> INITIALIZE : 0.000000 秒
+<create_dirvecs.3015> LIVENESS.ANALYSIS : 0.000000 秒
+<create_dirvecs.3015> BUILD : 0.000000 秒
+<create_dirvecs.3015> MAKE_WORKLIST : 0.000000 秒
+<create_dirvecs.3015> MAIN_LOOP : 0.000000 秒
+<create_dirvecs.3015> ASSIGN_COLORS : 0.000000 秒
+
+
+<init_dirvec_constants.3017> スピル 0 回目
+<init_dirvec_constants.3017> INITIALIZE : 0.000000 秒
+<init_dirvec_constants.3017> LIVENESS.ANALYSIS : 0.000000 秒
+<init_dirvec_constants.3017> BUILD : 0.000000 秒
+<init_dirvec_constants.3017> MAKE_WORKLIST : 0.000000 秒
+<init_dirvec_constants.3017> MAIN_LOOP : 0.000000 秒
+<init_dirvec_constants.3017> ASSIGN_COLORS : 0.000000 秒
+
+
+<init_vecset_constants.3020> スピル 0 回目
+<init_vecset_constants.3020> INITIALIZE : 0.000000 秒
+<init_vecset_constants.3020> LIVENESS.ANALYSIS : 0.000000 秒
+<init_vecset_constants.3020> BUILD : 0.000000 秒
+<init_vecset_constants.3020> MAKE_WORKLIST : 0.000000 秒
+<init_vecset_constants.3020> MAIN_LOOP : 0.000000 秒
+<init_vecset_constants.3020> ASSIGN_COLORS : 0.000000 秒
+
+
+<init_dirvecs.3022> スピル 0 回目
+<init_dirvecs.3022> INITIALIZE : 0.000000 秒
+<init_dirvecs.3022> LIVENESS.ANALYSIS : 0.000000 秒
+<init_dirvecs.3022> BUILD : 0.000000 秒
+<init_dirvecs.3022> MAKE_WORKLIST : 0.000000 秒
+<init_dirvecs.3022> MAIN_LOOP : 0.000000 秒
+<init_dirvecs.3022> ASSIGN_COLORS : 0.000000 秒
+
+
+<add_reflection.3024> スピル 0 回目
+<add_reflection.3024> INITIALIZE : 0.000000 秒
+<add_reflection.3024> LIVENESS.ANALYSIS : 0.000000 秒
+<add_reflection.3024> BUILD : 0.000000 秒
+<add_reflection.3024> MAKE_WORKLIST : 0.000000 秒
+<add_reflection.3024> MAIN_LOOP : 0.000000 秒
+<add_reflection.3024> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_rect_reflection.3031> スピル 0 回目
+<setup_rect_reflection.3031> INITIALIZE : 0.000000 秒
+<setup_rect_reflection.3031> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_rect_reflection.3031> BUILD : 0.000000 秒
+<setup_rect_reflection.3031> MAKE_WORKLIST : 0.000000 秒
+<setup_rect_reflection.3031> MAIN_LOOP : 0.000000 秒
+<setup_rect_reflection.3031> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_surface_reflection.3034> スピル 0 回目
+<setup_surface_reflection.3034> INITIALIZE : 0.000000 秒
+<setup_surface_reflection.3034> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_surface_reflection.3034> BUILD : 0.010000 秒
+<setup_surface_reflection.3034> MAKE_WORKLIST : 0.000000 秒
+<setup_surface_reflection.3034> MAIN_LOOP : 0.000000 秒
+<setup_surface_reflection.3034> ASSIGN_COLORS : 0.000000 秒
+
+
+<setup_reflections.3037> スピル 0 回目
+<setup_reflections.3037> INITIALIZE : 0.000000 秒
+<setup_reflections.3037> LIVENESS.ANALYSIS : 0.000000 秒
+<setup_reflections.3037> BUILD : 0.000000 秒
+<setup_reflections.3037> MAKE_WORKLIST : 0.000000 秒
+<setup_reflections.3037> MAIN_LOOP : 0.000000 秒
+<setup_reflections.3037> ASSIGN_COLORS : 0.000000 秒
+
+
+<rt.3039> スピル 0 回目
+<rt.3039> INITIALIZE : 0.000000 秒
+<rt.3039> LIVENESS.ANALYSIS : 0.000000 秒
+<rt.3039> BUILD : 0.000000 秒
+<rt.3039> MAKE_WORKLIST : 0.000000 秒
+<rt.3039> MAIN_LOOP : 0.000000 秒
+<rt.3039> ASSIGN_COLORS : 0.000000 秒
+
+
+<min_caml_start> スピル 0 回目
+<min_caml_start> INITIALIZE : 0.010000 秒
+<min_caml_start> LIVENESS.ANALYSIS : 0.000000 秒
+<min_caml_start> BUILD : 0.010000 秒
+<min_caml_start> MAKE_WORKLIST : 0.000000 秒
+<min_caml_start> MAIN_LOOP : 0.000000 秒
+<min_caml_start> ASSIGN_COLORS : 0.010000 秒
+
+generating assembly...

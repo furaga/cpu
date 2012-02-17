@@ -1,0 +1,1 @@
+betaTuple.cmi: kNormal.cmi 

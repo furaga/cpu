@@ -277,7 +277,7 @@ let f flg e =
 			print_prog 0 program;
 			print_newline();
 *)			
-			(if !exist_cls then print_endline "CLOSURE EXISTS" else print_endline "CLOSURE NOT EXISTS");
+			(if !exist_cls then Printf.eprintf "CLOSURE EXISTS\n" else Printf.eprintf "CLOSURE NOT EXISTS\n");
 			
 			flush stdout;
 		end;

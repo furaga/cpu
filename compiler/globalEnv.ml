@@ -43,7 +43,6 @@ let rec g envi = function
 				add_offset x (List.length xs)
 			| ExtFunApp (name, [z; _]) when memi z envi && (name = "create_array" || name = "create_float_array") -> 
 				(* min-rtのdummyとかは配列長が０だったりするけど、そういうものにも正のオフセットを与える *)
-  	  			Printf.printf "Array %s\n" x;
 				env := M.add x t !env;
   	  			direct_env := M.add x t !direct_env;
 				add_offset x (max 1 (findi z envi))
@@ -61,8 +60,10 @@ let rec g envi = function
 
 let f e =
 	g M.empty e;
-	print_string "globalEnv.env(globalEnv.ml) = \n\t";
+	(*print_string "globalEnv.env(globalEnv.ml) = \n\t";
 	M.iter (fun x y -> Printf.printf "%s " x) !env;
 	print_newline ();
+	
 	M.print "GlobalEnv.offsets : " !offsets string_of_int;
+	*)
 	e

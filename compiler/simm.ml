@@ -100,7 +100,7 @@ let rec g env = function (* 命令列の13bit即値最適化 (caml2html: simm13_g) *)
       		)
       	)
       )
-  | Let((x, t) as xt, exp, e) -> Let(xt, g' env exp, g env e)
+  | Let(xt, exp, e) -> Let(xt, g' env exp, g env e)
   | Forget _ -> assert false
 and g' env = function (* 各命令の13bit即値最適化 (caml2html: simm13_gprime) *)
   | Add(x, V(y)) when M.mem y env -> Add(x, C(M.find y env))
@@ -118,7 +118,10 @@ and g' env = function (* 各命令の13bit即値最適化 (caml2html: simm13_gprime) *)
   | St(x, y, V(z)) when M.mem z env -> St(x, y, C(M.find z env))
   | LdDF(x, V(y)) when M.mem y env -> LdDF(x, C(M.find y env))
   | StDF(x, y, V(z)) when M.mem z env -> StDF(x, y, C(M.find z env))
-
+(*  | IfEq(x, V(y), e1, e2) when M.mem y env -> IfEq(x, C(M.find y env), g env e1, g env e2)
+  | IfLE(x, V(y), e1, e2) when M.mem y env -> IfLE(x, C(M.find y env), g env e1, g env e2)
+  | IfGE(x, V(y), e1, e2) when M.mem y env -> IfGE(x, C(M.find y env), g env e1, g env e2)
+*)
   | IfEq(x, C(y), e1, e2) -> IfEq(x, C y, g env e1, g env e2)
   | IfLE(x, C(y), e1, e2) -> IfLE(x, C y, g env e1, g env e2)
   | IfGE(x, C(y), e1, e2) -> IfGE(x, C y, g env e1, g env e2)
@@ -134,5 +137,5 @@ let h { name = l; args = xs; fargs = ys; body = e; ret = t } = (* トップレベル関
 
 let f (Prog(data, fundefs, e)) = (* プログラム全体の13bit即値最適化 *)
   let ans = Prog(data, List.map h fundefs, g M.empty e) in
-(*  Asm.print_prog 3 ans;*)
+  Asm.print_prog 3 ans;
   ans

@@ -67,8 +67,8 @@ let is_loop = ref false
 (********************)
 
 (* 関数の干渉グラフをgraphvizで読み込める形式でocに書き込む書き込む *)
-let output_iGraph fundef =
-	(* graphvizで読み込めない文字を変換 *)
+let output_iGraph fundef = ()
+(*	(* graphvizで読み込めない文字を変換 *)
 	let treat_string s =
 		for i = 0 to String.length s - 1 do
 			if s.[i] = '%' then s.[i] <- 'P'
@@ -81,7 +81,7 @@ let output_iGraph fundef =
 	S.iter (fun edge -> Printf.fprintf oc "\t%s;\n" (treat_string (String.copy edge))) !adj_set;
 	Printf.fprintf oc "}\n";
 	close_out oc
-
+*)
 (***************)
 (** 補助関数群 **)
 (***************)

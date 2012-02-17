@@ -203,19 +203,94 @@ let rec div_binary_search a b left right =
 			div_binary_search a b left mid in
 
 (* print_int div命令を使わない版 *)
-(* 0 から 9999 までを出力 *)
 let rec print_int x =
-	if x >= 1000 then ()
-	else if x < 0 then
+	if x < 0 then
 		(print_char 45; print_int (-x))
 	else
+		(* 100000000の位を表示 *)
+		let tx = div_binary_search x 100000000 0 3 in
+		let dx = tx * 100000000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then false
+			else (print_char (48 + tx); true) in
+
+		(* 10000000の位を表示 *)
+		let tx = div_binary_search x 10000000 0 10 in
+		let dx = tx * 10000000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
+
+		(* 1000000の位を表示 *)
+		let tx = div_binary_search x 1000000 0 10 in
+		let dx = tx * 1000000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
+
+		(* 100000の位を表示 *)
+		let tx = div_binary_search x 100000 0 10 in
+		let dx = tx * 100000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
+
+		(* 10000の位を表示 *)
+		let tx = div_binary_search x 10000 0 10 in
+		let dx = tx * 10000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
+
+		(* 1000の位を表示 *)
+		let tx = div_binary_search x 1000 0 10 in
+		let dx = tx * 1000 in
+		let x = x - dx in
+		let flg = 
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
 		(* 100の位を表示 *)
 		let tx = div_binary_search x 100 0 10 in
 		let dx = tx * 100 in
 		let x = x - dx in
 		let flg = 
-			if tx <= 0 then false
-			else (print_char (48 + tx); true) in
+			if tx <= 0 then
+				(if flg then
+					(print_char (48 + tx); true)
+				else
+					false)
+			else
+				(print_char (48 + tx); true) in
 		(* 10の位を表示 *)
 		let tx = div_binary_search x 10 0 10 in
 		let dx = tx * 10 in

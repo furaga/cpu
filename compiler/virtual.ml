@@ -298,10 +298,10 @@ let h { Closure.name = (Id.L x, t); Closure.args = yts; Closure.formal_fv = zts;
 
 (* プログラム全体の仮想マシンコード生成 (caml2html: virtual_f) *)
 let f flg (Closure.Prog(fundefs, e)) =
-	List.map (
+(*	List.map (
 		fun fundef -> Printf.printf "<%s> nesting_tuple = %s\n" (Id.get_name (fst fundef.Closure.name)) (string_of_bool (TupleExpand.exist_nesting_tuple fundef.Closure.body))
 	) fundefs;
-
+*)
 	data := [];
 	(* fundataの初期化時点で登録されいない外部関数 *)	
 	M.iter (fun x t ->

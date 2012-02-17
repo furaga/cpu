@@ -120,9 +120,9 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		add_save_env ()
   | NonTail(_), Save(x, y) -> (* %f16とか値が固定されているレジスタは意地でも退避しない *)
   	if S.mem y !stackset || M.mem y !global_vars || Asm.is_reg x then () else (
-	  	Printf.printf "has saved (%s,%s)\n" x y;
-	  	S.iter (Printf.printf "%s ") !stackset;
-	  	print_newline ();
+	  	Printf.eprintf "has saved (%s,%s)\n" x y;
+	  	S.iter (Printf.eprintf "%s ") !stackset;
+	  	Printf.eprintf "\n";
 	  	assert false (* すでにyがセーブされている場合 *)
 	)
   (* 復帰の仮想命令の実装 (caml2html: emit_restore) *)
@@ -473,7 +473,7 @@ let f oc (Prog(data, fundefs, e)) =
 
   List.iter (fun fundef -> h oc fundef) fundefs;
 
-  M.iter (Printf.printf "GLOBAL : %s %d\n") !global_vars;
+  M.iter (Printf.eprintf "GLOBAL : %s %d\n") !global_vars;
   
   Output.optimize ();
   Output.output oc
