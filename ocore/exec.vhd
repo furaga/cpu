@@ -7,8 +7,6 @@ use ieee.std_logic_unsigned.all;
 
 use work.std_logic_1164_additional.all;
 
-
-
 entity exec is
 	port
 	(
@@ -142,7 +140,7 @@ begin
 				N_REG <= "00010"; -- g2
 				FR_FLAG <= '0';
 				RAM_WEN <= '0';
-				RAM_ADDR <= (others=>'0');
+				RAM_ADDR <= x"00000";
 				PC_OUT <= PC_IN + 1;
 			elsif heap_size > 0 then
 				heap_size<=heap_size-4;
@@ -153,7 +151,7 @@ begin
 				RAM_WEN <= '1';	
 				FR_FLAG <= '0';
 				PC_OUT <= PC_IN + 1;
-			elsif start='0' and debug_count=0 then
+			elsif start='0' then
 				FR_FLAG <= '0';
 				PC_OUT <= PC_IN;
 				REG_COND <= "0000";
@@ -175,7 +173,7 @@ begin
 								REG_COND <= "1000";
 								RAM_WEN <= '0';	
 								FR_FLAG <= '0';
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 								PC_OUT <= PC_IN + 1;
 							when "100010" => -- SUB
 								REG_IN <= REG_S - REG_T;
@@ -183,23 +181,22 @@ begin
 								REG_COND <= "1000";
 								RAM_WEN <= '0';	
 								FR_FLAG <= '0';
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 								PC_OUT <= PC_IN + 1;
 							when "011000" => -- MUL
-								v_mul := REG_S * REG_T;
-								REG_IN <= v_mul(31 downto 0);
+								REG_IN <= REG_S(15 downto 0) * REG_T(15 downto 0);
 								N_REG <= n_reg_d;
 								REG_COND <= "1000";
 								RAM_WEN <= '0';	
 								FR_FLAG <= '0';
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 								PC_OUT <= PC_IN + 1;
-							when "001000" =>	-- BRANCH
+							when "001000" =>	-- B (BRANCH)
 								REG_COND <= "0000";
 								RAM_WEN <= '0';	
 								FR_FLAG <= '0';
 								PC_OUT <= REG_S;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "110000" =>	-- CALLR
 								REG_COND <= "1010";
 								N_REG <= "00001"; -- g1
@@ -212,7 +209,7 @@ begin
 								PC_OUT <= REG_S;
 
 							when "111001" =>	-- FST
-								v32 := REG_S + REG_T;
+								v32 := signed(REG_S) + signed(REG_T);
 								RAM_ADDR <= v32(19 downto 0);
 								RAM_IN <= FREG_D;
 								FR_FLAG <= '1';
@@ -220,7 +217,7 @@ begin
 								RAM_WEN <= '1'; 
 								PC_OUT <= PC_IN + 1;	
 							when "110001" =>	-- FLD
-								v32 := REG_S + REG_T;
+								v32 := signed(REG_S) + signed(REG_T);
 								RAM_ADDR <= v32(19 downto 0);
 								N_REG <= n_reg_d;
 								FR_FLAG <= '1';
@@ -232,7 +229,7 @@ begin
 								RAM_WEN <= '0';	
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when others =>	
 						end case;
 					when "000001" =>	-- IO
@@ -262,7 +259,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000001" => -- FSUB
 								REG_IN <= fout_sub;
 								N_REG <= n_reg_d;
@@ -270,7 +267,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000010" => -- FMUL
 								REG_IN <= fout_mul;
 								N_REG <= n_reg_d;
@@ -278,7 +275,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000011" => -- FDIV
 								REG_IN <= fout_div;
 								N_REG <= n_reg_d;
@@ -286,7 +283,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000100" => -- FSQRT
 								REG_IN <= fout_sqrt;
 								N_REG <= n_reg_d;
@@ -294,7 +291,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000101" => -- FABS
 								REG_IN <= '0'&FREG_S(30 downto 0);
 								N_REG <= n_reg_d;
@@ -302,7 +299,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000110" => -- FMOV
 								REG_IN <= FREG_S;
 								N_REG <= n_reg_d;
@@ -310,7 +307,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when "000111" => -- FNEG
 								REG_IN <= (not FREG_S(31))&FREG_S(30 downto 0);
 								N_REG <= n_reg_d;
@@ -318,7 +315,7 @@ begin
 								RAM_WEN <= '0';
 								FR_FLAG <= '1';
 								PC_OUT <= PC_IN + 1;
-								RAM_ADDR <= (others=>'0');
+								RAM_ADDR <= x"00000";
 							when others=>
 						end case;
 
@@ -329,7 +326,7 @@ begin
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 					when "001111" =>	-- MVHI
 						REG_IN <= imm &  REG_S(15 downto 0);
 						N_REG <= n_reg_s;
@@ -337,32 +334,31 @@ begin
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 					when "001000" =>	-- ADDI
-						REG_IN <= REG_S + ex_imm;
+						REG_IN <= signed(REG_S) + signed(ex_imm);
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 					when "010000" =>	-- SUBI
-						REG_IN <= REG_S - ex_imm;
+						REG_IN <= signed(REG_S) - signed(ex_imm);
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 					when "011000" =>	-- MULI
-						v_mul := REG_S * ex_imm;
-						REG_IN <= v_mul(31 downto 0);
+						REG_IN <= REG_S(15 downto 0) * ex_imm(15 downto 0);
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 					when "101000" =>	-- SLLI
 						slide_num := conv_integer(imm);
 						REG_IN <= REG_S sll slide_num;
@@ -372,7 +368,7 @@ begin
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 
 					when "101010" =>	-- SRLI
 						slide_num := conv_integer(imm);
@@ -383,40 +379,40 @@ begin
 						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
 						PC_OUT <= PC_IN + 1;
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 
 					when "110010" =>	-- FJEQ
 						REG_COND <= "0000";
-						RAM_WEN <= '0';	
 						FR_FLAG <= '0'; -- ok
-						RAM_ADDR <= (others=>'0');
+						RAM_WEN <= '0';	
+						RAM_ADDR <= x"00000";
 						if (FREG_S = FREG_T) then
-							PC_OUT <= PC_IN + ex_imm;
+							PC_OUT <= signed(PC_IN) + signed(ex_imm);
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 
 					when "111010" =>	-- FJLT jump when (FREG_S < FREG_T)
 						REG_COND <= "0000";
-						RAM_WEN <= '0';	
 						FR_FLAG <= '0'; -- ok
+						RAM_WEN <= '0';	
+						RAM_ADDR <= x"00000";
 
-						RAM_ADDR <= (others=>'0');
 						if (FREG_S(31)='1') and (FREG_T(31)='0') then
-							PC_OUT <= PC_IN + ex_imm;	-- true
+							PC_OUT <= signed(PC_IN) + signed(ex_imm);	-- true
 						elsif (FREG_S(31)='0' and FREG_T(31)='1') then
 							PC_OUT <= PC_IN + 1;		-- false
 						elsif (FREG_S(31)='0' and FREG_T(31)='0') then
 
-							if (FREG_S(30 downto 0) < FREG_T(30 downto 0)) then
-								PC_OUT <= PC_IN + ex_imm;	-- true
+							if (unsigned(FREG_S(30 downto 0)) < unsigned(FREG_T(30 downto 0))) then
+								PC_OUT <= signed(PC_IN) + signed(ex_imm);	-- true
 							else
 								PC_OUT <= PC_IN + 1;		-- false
 							end if;
 
 						else --(FREG_S(31)='1' and FREG_T(31)='1')
-							if (FREG_S(30 downto 0) > FREG_T(30 downto 0)) then
-								PC_OUT <= PC_IN + ex_imm;	-- true
+							if (unsigned(FREG_S(30 downto 0)) > unsigned(FREG_T(30 downto 0))) then
+								PC_OUT <= signed(PC_IN) + signed(ex_imm);	-- true
 							else
 								PC_OUT <= PC_IN + 1;		-- false
 							end if;
@@ -442,42 +438,43 @@ begin
 						PC_OUT <= LR_OUT;
 					when "001010" =>	-- JEQ
 						REG_COND <= "0000";
-						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
-						RAM_ADDR <= (others=>'0');
+						RAM_WEN <= '0';	
+						RAM_ADDR <= x"00000";
 						if (REG_S = REG_T) then
-							PC_OUT <= PC_IN + ex_imm;
+							PC_OUT <= signed(PC_IN) + signed(ex_imm);
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
+
 					when "010010" =>	-- JNE
 						REG_COND <= "0000";
-						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
-						RAM_ADDR <= (others=>'0');
+						RAM_WEN <= '0';	
+						RAM_ADDR <= x"00000";
 						if (REG_S /= REG_T) then
-							PC_OUT <= PC_IN + ex_imm;
+							PC_OUT <= signed(PC_IN) + signed(ex_imm);
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "011010" =>	-- JLT
 						REG_COND <= "0000";
-						RAM_WEN <= '0';	
 						FR_FLAG <= '0';
-						RAM_ADDR <= (others=>'0');
+						RAM_WEN <= '0';	
+						RAM_ADDR <= x"00000";
 						if (signed(REG_S) < signed(REG_T)) then
-							PC_OUT <= PC_IN + ex_imm;
+							PC_OUT <= signed(PC_IN) + signed(ex_imm);
 						else
 							PC_OUT <= PC_IN + 1;
 						end if;
 					when "000010" =>	-- JMP
 						REG_COND <= "0000";
 						RAM_WEN <= '0';	
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"00000";
 						PC_OUT <= "000000"&target(25 downto 0);
 
 					when "011011" =>	-- ST
-						v32 := REG_S + REG_T;
+						v32 := signed(REG_S) + signed(REG_T);
 						RAM_ADDR <= v32(19 downto 0);
 						RAM_IN <= REG_D;
 						FR_FLAG <= '0';
@@ -485,7 +482,7 @@ begin
 						RAM_WEN <= '1'; 
 						PC_OUT <= PC_IN + 1;	
 					when "010011" =>	-- LD
-						v32 := REG_S + REG_T;
+						v32 := signed(REG_S) + signed(REG_T);
 						RAM_ADDR <= v32(19 downto 0);
 						N_REG <= n_reg_d;
 						FR_FLAG <= '0';
@@ -494,7 +491,7 @@ begin
 						PC_OUT <= PC_IN + 1;	
 
 					when "101011" =>	-- STI
-						v32 := REG_S - ex_imm;
+						v32 := signed(REG_S) - signed(ex_imm);
 						RAM_ADDR <= v32(19 downto 0);
 						RAM_IN <= REG_T;
 						FR_FLAG <= '0';
@@ -503,7 +500,7 @@ begin
 						PC_OUT <= PC_IN + 1;	
 
 					when "111001" =>	-- FSTI
-						v32 := REG_S - ex_imm;
+						v32 := signed(REG_S) - signed(ex_imm);
 						RAM_ADDR <= v32(19 downto 0);
 						RAM_IN <= FREG_T;
 						FR_FLAG <= '1';
@@ -512,7 +509,7 @@ begin
 						PC_OUT <= PC_IN + 1;	
 
 					when "100011" =>	-- LDI
-						v32 := REG_S - ex_imm;
+						v32 := signed(REG_S) - signed(ex_imm);
 						RAM_ADDR <= v32(19 downto 0);
 						FR_FLAG <= '0';
 						N_REG <= n_reg_t;
@@ -520,7 +517,7 @@ begin
 						RAM_WEN <= '0'; 
 						PC_OUT <= PC_IN + 1;	
 					when "110001" =>	-- FLDI
-						v32 := REG_S - ex_imm;
+						v32 := signed(REG_S) - signed(ex_imm);
 						RAM_ADDR <= v32(19 downto 0);
 						FR_FLAG <= '1';
 						N_REG <= n_reg_t;
@@ -529,9 +526,10 @@ begin
 						PC_OUT <= PC_IN + 1;	
 					when others =>	
 						REG_COND <= "0000";
-						RAM_WEN <= '0'; 
+						RAM_WEN <= '1'; 
 						FR_FLAG <= '0';
-						RAM_ADDR <= (others=>'0');
+						RAM_ADDR <= x"80000";
+						RAM_IN <= x"00000065";
 						debug_count <= x"ffffffff";
 						PC_OUT <= PC_IN;
 				end case;	

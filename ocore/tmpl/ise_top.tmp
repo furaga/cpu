@@ -1,0 +1,24 @@
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton_top.tmp"/>
+<%def name="unisim_lib()">
+library UNISIM;
+use UNISIM.VComponents.all;
+</%def>
+
+	ib: IBUFG port map (i=>MCLK1, o=>iclk);
+	bg1: BUFG port map (i=>clk0, o=>clk);
+	bg2: BUFG port map (i=>clk2, o=>clk2x);
+	dll: CLKDLL port map (
+		  CLK0 => clk0,
+		  CLK180 => open,
+		  CLK270 => open,
+		  CLK2X => clk2,
+		  CLK90 => open,
+		  CLKDV => open,
+		  LOCKED => open,
+		  CLKFB => clk,
+		  CLKIN => iclk,
+		  RST => '0'
+	);
+<%namespace name="oc" file="macro.tmp"/>
+

@@ -11,7 +11,6 @@
 	IO_OUT	:	out	${oc.io_bus_t()};
 	SRAM_ZA	:	out std_logic_vector(19 downto 0);
 	SRAM_XWA:	out std_logic;
-	SRAM_ZD	:	inout std_logic_vector(31 downto 0);
-	SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
+	SRAM_ZD	:	inout std_logic_vector(31 downto 0)
 	);				
 <%namespace name="oc" file="macro.tmp"/>

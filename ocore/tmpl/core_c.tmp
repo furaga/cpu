@@ -98,9 +98,9 @@ begin
 		 ram_wen);
 
 -- memory access phase
-	memacc_u	: mem_acc port map (CLK2X, clk_ex_dly, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+	memacc_u	: mem_acc port map (clk_ex_dly, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT,
-							SRAM_ZA,SRAM_XWA,SRAM_ZD,SRAM_ZCLKMA);
+							SRAM_ZA,SRAM_XWA,SRAM_ZD);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,

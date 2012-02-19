@@ -72,7 +72,7 @@ begin
 			recv_ready<= '0';
 			if rx = '0' then -- start bit
 				recv_state<=recv_state-1;
-				recv_timer <=wtime + 0; -- 1000
+				recv_timer <= wtime + 0;
 			end if;
         when others=> -- 8 - 0
 			recv_ready<= '0';

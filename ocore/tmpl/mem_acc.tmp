@@ -13,8 +13,6 @@ architecture behavior of mem_acc is
 	signal xwa, pre_xwa		: std_logic;
 
 begin
-	SRAM_ZCLKMA(0) <= CLK2X;
-	SRAM_ZCLKMA(1) <= CLK2X;
 
 	io_en <= ADDR(19);
 	xwa	<= io_en or (not RAM_WEN);
@@ -29,10 +27,10 @@ begin
 
 			SRAM_ZA <= ${oc.mem_acc_sram_addr()};
 			SRAM_XWA <= xwa;
-			pre_xwa	<= xwa;
+			--pre_xwa	<= xwa;
 
 			if io_en='1' and RAM_WEN='1' then
-				IO_OUT <= x"000000"&DATA_IN(7 downto 0);
+				IO_OUT <= DATA_IN;
 			end if;
 
 		end if;
@@ -42,7 +40,7 @@ begin
 	process(CLK_MA)
 	begin
 		if rising_edge(CLK_MA) then
-			if pre_xwa='0' then -- write
+			if xwa='0' then -- write
 				SRAM_ZD <= DATA_IN;
 			else
 				SRAM_ZD <= (others=>'Z');

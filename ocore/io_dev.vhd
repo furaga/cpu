@@ -38,14 +38,14 @@ architecture RTL of io_dev is
 
 	subtype buf_rec_t is std_logic_vector(7 downto 0);
 
-	type sendbuf_t is array (0 to 65535) of buf_rec_t;
+	type sendbuf_t is array (0 to 16383) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
-	signal send_head	: std_logic_vector(15 downto 0) := (others=>'0');
-	signal send_tail	: std_logic_vector(15 downto 0) := (others=>'0');
+	signal send_head	: std_logic_vector(13 downto 0) := (others=>'0');
+	signal send_tail	: std_logic_vector(13 downto 0) := (others=>'0');
 	signal send_empty : std_logic := '0';
 
 	signal recv_head	: std_logic_vector(10 downto 0) := (others=>'0');
-	signal recv_tail	: std_logic_vector(10 downto 0) := "11110111111";
+	signal recv_tail	: std_logic_vector(10 downto 0) := conv_std_logic_vector(2000, 11);
 	type recvbuf_t is array (0 to 2047) of buf_rec_t;
 	--signal recvbuf : recvbuf_t;
 	signal recvbuf : recvbuf_t := (

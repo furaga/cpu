@@ -1,0 +1,5 @@
+## -*- coding: utf-8 -*-
+<%inherit file="skeleton_u232c.tmp"/>
+<%def name="recv_timer_init()">wtime + 290</%def>
+<%namespace name="oc" file="macro.tmp"/>
+

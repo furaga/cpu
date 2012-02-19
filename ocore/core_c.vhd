@@ -17,8 +17,7 @@ entity core_c is
 	IO_OUT	:	out	std_logic_vector(31 downto 0);
 	SRAM_ZA	:	out std_logic_vector(19 downto 0);
 	SRAM_XWA:	out std_logic;
-	SRAM_ZD	:	inout std_logic_vector(31 downto 0);
-	SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
+	SRAM_ZD	:	inout std_logic_vector(31 downto 0)
 	);				
 
 
@@ -228,7 +227,6 @@ component reg_wb is
 end component;
 component mem_acc is
 	port (
-		CLK2X		: in	std_logic;
 		CLK_EX_DLY	: in	std_logic;
 		CLK_MA		: in	std_logic;
 		RAM_WEN		: in	std_logic;
@@ -241,8 +239,7 @@ component mem_acc is
 		IO_OUT	: out	std_logic_vector(31 downto 0);
 		SRAM_ZA	:	out std_logic_vector(19 downto 0);
 		SRAM_XWA:	out std_logic := '1';
-		SRAM_ZD	:	inout std_logic_vector(31 downto 0);
-		SRAM_ZCLKMA	:	out std_logic_vector(1 downto 0)
+		SRAM_ZD	:	inout std_logic_vector(31 downto 0)
 	);
 
 
@@ -406,9 +403,9 @@ begin
 		 ram_wen);
 
 -- memory access phase
-	memacc_u	: mem_acc port map (CLK2X, clk_ex_dly, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
+	memacc_u	: mem_acc port map (clk_ex_dly, clk_ma, ram_wen, RAM_ADDR, RAM_IN,
 							RAM_OUT, IO_IN, IO_WR, IO_RD, IO_OUT,
-							SRAM_ZA,SRAM_XWA,SRAM_ZD,SRAM_ZCLKMA);
+							SRAM_ZA,SRAM_XWA,SRAM_ZD);
 	
 -- write back phase
 	regwb_u	:	reg_wb port map(clk_wb, RESET,
