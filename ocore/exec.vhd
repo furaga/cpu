@@ -122,6 +122,7 @@ begin
 	n_reg_d <= op_data(15 downto 11);
 
 	process(CLK_EX, RESET) 
+		variable v64 : std_logic_vector(63 downto 0);
 		variable v32 : std_logic_vector(31 downto 0);
 		variable v20 : std_logic_vector(19 downto 0);
 		variable v_mul : std_logic_vector(63 downto 0);
@@ -184,7 +185,8 @@ begin
 								RAM_ADDR <= x"00000";
 								PC_OUT <= PC_IN + 1;
 							when "011000" => -- MUL
-								REG_IN <= REG_S(15 downto 0) * REG_T(15 downto 0);
+								v64 := signed(REG_S) * signed(REG_T);
+								REG_IN <= v64(31 downto 0);
 								N_REG <= n_reg_d;
 								REG_COND <= "1000";
 								RAM_WEN <= '0';	
@@ -352,7 +354,8 @@ begin
 						PC_OUT <= PC_IN + 1;
 						RAM_ADDR <= x"00000";
 					when "011000" =>	-- MULI
-						REG_IN <= REG_S(15 downto 0) * ex_imm(15 downto 0);
+						v64 := signed(REG_S) * signed(ex_imm);
+						REG_IN <= v64(31 downto 0);
 						N_REG <= n_reg_t;
 						REG_COND <= "1000";
 						RAM_WEN <= '0';	

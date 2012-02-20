@@ -52,7 +52,7 @@ begin
 			  or ((S1='1') and (I1(30 downto 0)>I2(30 downto 0))) 
 			  or ((S2='1') and (I1(30 downto 0)<I2(30 downto 0)))
 			  else '0';
-	SO <= '0' when EO=0 else raw_SO;
+	SO <= raw_SO;--'0' when EO=0 else raw_SO;
 ------------------------------------------------------------------------
 	
 	winnerE <= E1 when E1>E2 else E2;

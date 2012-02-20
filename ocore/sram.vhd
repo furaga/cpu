@@ -19,8 +19,8 @@ end sram;
 
 architecture RTL of sram is
 	subtype ram_rec_t is std_logic_vector(31 downto 0);
-	type ram_array_t is array (0 to 131071) of ram_rec_t;
-	signal addr_in	: integer range 0 to 131071;
+	type ram_array_t is array (0 to 4095) of ram_rec_t;
+	signal addr_in	: integer range 0 to 4095;
 
 	signal ram_data : ram_array_t;
 	signal pre_xwa : std_logic;
@@ -37,7 +37,7 @@ begin
 	begin
 		if rising_edge(clka) then
 			pre_xwa <= XWA;
-			addr_in <= conv_integer(ZA(16 downto 0));
+			addr_in <= conv_integer(ZA(11 downto 0));
 			if XWA='0' then -- write
 				ZD <= (others=>'Z');
 			else

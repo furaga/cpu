@@ -27,7 +27,6 @@ begin
 
 			SRAM_ZA <= ${oc.mem_acc_sram_addr()};
 			SRAM_XWA <= xwa;
-			--pre_xwa	<= xwa;
 
 			if io_en='1' and RAM_WEN='1' then
 				IO_OUT <= DATA_IN;

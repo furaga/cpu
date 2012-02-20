@@ -7,15 +7,15 @@
 ##  4 * 1024 =   4096 (12 bit)
 ##  1 * 1024 =   1024 (10 bit)
 
-##<%def name="reg1_init()">16380</%def>
-##<%def name="sim_sramsize()">4095</%def>
-##<%def name="sim_sramaddr()">ZA(11 downto 0)</%def>
-##<%def name="mem_acc_sram_addr()">"00000000"&ADDR(13 downto 2)</%def>
+##<%def name="reg1_init()">524284</%def>
+##<%def name="sim_sramsize()">131071</%def>
+##<%def name="sim_sramaddr()">ZA(16 downto 0)</%def>
+##<%def name="mem_acc_sram_addr()">"000"&ADDR(18 downto 2)</%def>
 
-<%def name="reg1_init()">524284</%def>
-<%def name="sim_sramsize()">131071</%def>
-<%def name="sim_sramaddr()">ZA(16 downto 0)</%def>
-<%def name="mem_acc_sram_addr()">"000"&ADDR(18 downto 2)</%def>
+<%def name="reg1_init()">16380</%def>
+<%def name="sim_sramsize()">4095</%def>
+<%def name="sim_sramaddr()">ZA(11 downto 0)</%def>
+<%def name="mem_acc_sram_addr()">"00000000"&ADDR(13 downto 2)</%def>
 
 <%def name="io_buf_rec_t()">${V8()}</%def>
 <%def name="io_wtime()">x"0000"</%def>
@@ -24,11 +24,12 @@
 ##<%def name="io_rtail()">conv_std_logic_vector(7, 11)</%def>
 
 ## sim_prom_msb_max=14
-##<%def name="prom_msb()">9</%def>
-<%def name="prom_msb()">13</%def>
 <%def name="pc_t()">${V32()}</%def>
 ##<%def name="sim_prom_max()">32767</%def>
+##<%def name="prom_msb()">13</%def>
+
 <%def name="sim_prom_max()">1023</%def>
+<%def name="prom_msb()">9</%def>
 
 <%def name="io_bus_t()">${V32()}</%def>
 <%def name="reg_t()">${V32()}</%def>

@@ -343,8 +343,6 @@ end component;
 	signal	LinkRegister	:	std_logic_vector(31 downto 0);
 	signal	fr_flag :	std_logic;
 	signal	input_flag :	std_logic;
-	signal	ram_io_wr : std_logic;
-	signal	ram_io_rd : std_logic;
 
 begin			
 

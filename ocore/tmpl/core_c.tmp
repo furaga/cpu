@@ -68,8 +68,6 @@ end component;
 	signal	LinkRegister	:	${oc.pc_t()};
 	signal	fr_flag :	std_logic;
 	signal	input_flag :	std_logic;
-	signal	ram_io_wr : std_logic;
-	signal	ram_io_rd : std_logic;
 
 begin			
 
