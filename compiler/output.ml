@@ -156,11 +156,11 @@ let output_stmt oc stmt =
 
 			| Input src -> 	Printf.fprintf oc "\tinput\t%s\n" src;
 			| InputW src -> 	Printf.fprintf oc "\tinputw\t%s\n" src;
-			| InputF src -> 	Printf.fprintf oc "\tinputw\t%s\n" src;
+			| InputF src -> 	Printf.fprintf oc "\tinputf\t%s\n" src;
 			
 			| Output dst -> Printf.fprintf oc "\toutput\t%s\n" dst;
 			| OutputW dst -> Printf.fprintf oc "\toutputw\t%s\n" dst;
-			| OutputF dst -> Printf.fprintf oc "\toutputw\t%s\n" dst;
+			| OutputF dst -> Printf.fprintf oc "\toutputf\t%s\n" dst;
 			
 			| B reg -> Printf.fprintf oc "\tb\t%s\n" reg;
 			| Jmp label -> Printf.fprintf oc "\tjmp\t%s\n" label;
