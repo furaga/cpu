@@ -1923,24 +1923,11 @@ let rec write_ppm_header _ =
     print_char 80; (* 'P' *)
     print_char (48 + 6); (* +6 if binary *) (* 48 = '0' *)
     print_char 10;
-    (*print_int (48 + image_size.(0));*)
-  
-    print_char (48 + 1); (* +6 if binary *) (* 48 = '0' *)
-    print_char (48 + 2); (* +6 if binary *) (* 48 = '0' *)
-    print_char (48 + 8); (* +6 if binary *) (* 48 = '0' *)
-  
+    print_int image_size.(0);
   	print_char 32;
-    (*print_int image_size.(1);*)
-    print_char (48 + 1); (* +6 if binary *) (* 48 = '0' *)
-    print_char (48 + 2); (* +6 if binary *) (* 48 = '0' *)
-    print_char (48 + 8); (* +6 if binary *) (* 48 = '0' *)
-   
+    print_int image_size.(1);
     print_char 32;
-     
-    print_char (48 + 2); (* +6 if binary *) (* 48 = '0' *)
-    print_char (48 + 5); (* +6 if binary *) (* 48 = '0' *)
-    print_char (48 + 5); (* +6 if binary *) (* 48 = '0' *)
-  	(*print_int 255;*)
+  	print_int 255;
     print_char 10
   )
 in
