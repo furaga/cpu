@@ -177,7 +177,7 @@ int	assemble(char *sfile) {
 				for (i = 0; i < output_line_cnt; i++) {
 					fprintf(fp, "x\"%08X\",\n", output_data[i]);
 				}
-				for (i = output_line_cnt; i < 32767; i++) {
+				for (i = output_line_cnt; i < 1023; i++) {
 					fprintf(fp, "x\"00000000\",\n");
 				}
 				fprintf(fp, "x\"00000000\"\n");

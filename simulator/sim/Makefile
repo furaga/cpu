@@ -39,7 +39,7 @@ rt:
 		ppm=$(PICT_DIR)'/ppm/'$$name'.ppm'; \
 		original=$(PICT_DIR)'/ppm0/'$$name'.ppm'; \
 		diff=$(DIFF_DIR)/$$name'.dif'; \
-		$(SIM) $(MIN_RT) $(SIM_FLAGS) < $$sld; \
+		$(SIM) $(MIN_RT) $(SIM_FLAGS) < $$sld > $$ppm; \
 		diff $$original $$ppm | cat > $$diff; \
 		cat $$diff; \
 		$(EOG) \

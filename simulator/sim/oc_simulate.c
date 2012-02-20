@@ -19,7 +19,8 @@ uint32_t lr, tmplr;
 long long unsigned cnt;
 void to_bin(uint32_t);
 #define dump(x) fprintf(stderr, "%s: ", #x); to_bin(x);
-#define EXPO 0x7f800000
+#define SIGN(x) (((x)&0x80000000)>>31)
+#define ELSE(x) ((x)&0x7fffffff)
 
 // define fetch functions ////////////////////
 DEF_ELE_GET(get_opcode, 26, 0x3f);		
@@ -43,7 +44,10 @@ int simulate(char *sfile) {
 		uint32_t i;
 		float f;
 	} a, b, out, ans;
-	int sendbuf_count = 0;
+	uint32_t sendbuf_count = 0;
+	uint32_t max_sendbuf_count = 0;
+	int fjlt_flag, fjlt_ans;
+	char c;
 #ifdef LST_FLAG
 	FILE *lst_fp;
 	char lst_name[1024];
@@ -60,6 +64,7 @@ int simulate(char *sfile) {
 
 	lr = tmplr = cnt = pc = 0;
 	reg[1] = reg[31] = 4*(RAM_NUM-1);
+	fprintf(stderr, "%d\n", reg[1]);
 	reg[2] = 0;
 
 	heap_size = rom[0];
@@ -96,7 +101,9 @@ int simulate(char *sfile) {
 			break;
 		}
 
-		if (!(cnt % 13750)) {
+		//if (!(cnt % 13750)) {
+		//if (!(cnt % 1611)) {
+		if (!(cnt % 20625)) {
 			if (sendbuf_count >0) {
 				sendbuf_count--;
 			}
@@ -126,24 +133,32 @@ int simulate(char *sfile) {
    
 		switch(opcode){
 			case LD:
-				_GRD = ram[(_GRS + _GRT)/4];
+				_GRD = ram[((_GRS + _GRT)/4)];
 				break;
 			case ST:
-				ram[(_GRS + _GRT)/4] = _GRD;
+				ram[((_GRS + _GRT)/4)] = _GRD;
 				break;
 			case LDI:
 				IF0_BREAK_S
-				_GRT = ram[(_GRS - _IMM)/4];
+				_GRT = ram[((_GRS - _IMM)/4)];
 				break;
 			case STI:
-				ram[(_GRS - _IMM)/4] = _GRT;
+				ram[((_GRS - _IMM)/4)] = _GRT;
 				break;
 			case FLDI:
-				_FRT = ram[(_GRS - _IMM)/4];
+				_FRT = ram[((_GRS - _IMM)/4)];
 				break;
 			case JNE:
-				if (_GRS != _GRT)
+				if (_GRS != _GRT) {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
 					pc += _IMM - 1;
+				} else {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
+				}
 				break;
 			case ADDI:
 				IF0_BREAK_T
@@ -159,13 +174,63 @@ int simulate(char *sfile) {
 			case FJLT:
 				a.i = _FRS;
 				b.i = _FRT;
-				if (a.f < b.f) {
+				if (((SIGN(a.i))==1) && ((SIGN(b.i))==0)) {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
+					fjlt_flag = 1;
 					pc += _IMM - 1;
+				} else if (SIGN(a.i)==0 && SIGN(b.i)==1) {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
+					fjlt_flag = 0;
+					pc = pc;
+				} else if (SIGN(a.i)==0 && SIGN(b.i)==0) {
+					if (ELSE(a.i) < ELSE(b.i)) {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
+						fjlt_flag = 1;
+						pc += _IMM - 1;
+					} else {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
+						fjlt_flag = 0;
+							pc = pc;
+					}
 				} else {
+					if (ELSE(a.i) > ELSE(b.i)) {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
+						fjlt_flag = 1;
+						pc += _IMM - 1;
+					} else {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
+					fjlt_flag = 0;
+							pc = pc;
+					}
+				}
+				if (a.f < b.f) {
+					//pc += _IMM - 1;
+					fjlt_ans = 1;
+				} else {
+					fjlt_ans = 0;
+				}
+				if (fjlt_flag != fjlt_ans) {
+					fprintf(stderr, "ans: %d, flag %d\n", fjlt_ans, fjlt_flag);
+					fprintf(stderr, "a: %f, b: %f\n", a.f, b.f);
+					fprintf(stderr, "sa: %d, sb: %d\n", SIGN(a.i), SIGN(b.i));
+					dump(a.i);
+					dump(b.i);
 				}
 				break;
 			case FSTI:
-				ram[(_GRS - _IMM)/4] = _FRT;
+				ram[((_GRS - _IMM)/4)] = _FRT;
 				break;
 			case SUBI:
 				IF0_BREAK_T
@@ -179,13 +244,27 @@ int simulate(char *sfile) {
 			case FJEQ:
 				a.i = _FRS;
 				b.i = _FRT;
-				if (a.f == b.f) 
+				if (a.f == b.f)  {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
 					pc += _IMM - 1;
+				} else {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
+				}
 				break;
 			case JLT:
 				if (_GRS < _GRT) {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
 					pc += _IMM - 1;
 				} else {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
 				}
 				break;
 			case CALL:
@@ -199,8 +278,16 @@ int simulate(char *sfile) {
 				_GRT = _GRS >> _IMM;
 				break;
 			case JEQ:
-				if (_GRS == _GRT)
+				if (_GRS == _GRT) {
+#ifdef CHECK_BRANCH
+					printf("t");
+#endif
 					pc += _IMM - 1;
+				} else {
+#ifdef CHECK_BRANCH
+					printf("f");
+#endif
+				}
 				break;
 			case MULI:
 				IF0_BREAK_T
@@ -323,32 +410,59 @@ int simulate(char *sfile) {
 			case IO:
 				switch(funct) {
 					case OUTPUT_F:
-						if (_GRS >> 8) {
-							fprintf(stderr,"output caution\n");
-						}
-						sendbuf_count++;
-						//fprintf(stderr, "%u %15llu\n", 0x1adb, sendbuf_count);
+						putchar(_GRS&0xff); fflush(stdout);
+						break;
+					case OUTPUTW_F:
+					// little endian
 						putchar(_GRS&0xff);
+						putchar((_GRS>>8)&0xff);
+						putchar((_GRS>>16)&0xff);
+						putchar((_GRS>>24)&0xff);
+						fflush(stdout);
+						break;
+					case OUTPUTF_F:
+					// little endian
+						putchar(_FRS&0xff);
+						putchar((_FRS>>8)&0xff);
+						putchar((_FRS>>16)&0xff);
+						putchar((_FRS>>24)&0xff);
 						fflush(stdout);
 						break;
 					case INPUT_F:
-						ret = scanf("%c", (char*)&_GRD);
-						//fprintf(stderr, "%15llu\n", cnt);
-						//fprintf(stderr, "x\"%02X\",\n", _GRD&0xff);
+						//ret = scanf("%c", (char*)&_GRD);
+						//if (ret==0) { fprintf(stderr,"input error\n"); }
+						c = getchar();
 						IF0_BREAK_D
-						if (ret==0) {
-							fprintf(stderr,"input error\n");
-						}
-						_GRD = _GRD & 0xff;
-
+						_GRD = c & 0xff;
 						break;
+					case INPUTW_F:
+						c = getchar();
+						_GRD = c&0xff;
+						c = getchar();
+						_GRD |= (c&0xff)<<8;
+						c = getchar();
+						_GRD |= (c&0xff)<<16;
+						c = getchar();
+						_GRD |= (c&0xff)<<24;
+						break;
+					case INPUTF_F:
+						c = getchar();
+						_FRD = c&0xff;
+						c = getchar();
+						_FRD |= (c&0xff)<<8;
+						c = getchar();
+						_FRD |= (c&0xff)<<16;
+						c = getchar();
+						_FRD |= (c&0xff)<<24;
+						break;
+					default: break;
+
 					}
 				break;
 			default	:	break;
 		}
 
 	} while(!((funct == HALT_F) && (opcode == SPECIAL)));
-
 
 #ifdef LST_FLAG
 	fclose(lst_fp);
@@ -358,14 +472,4 @@ int simulate(char *sfile) {
 	fflush(stderr);
 
 	return 0;
-
-						/*
-						if ((ans.i&EXPO) != (out.i&EXPO)) {
-							dump(a.i);
-							dump(b.i);
-							dump(out.i);
-							dump(ans.i);
-							assert(0);
-						}
-						*/
 } 

@@ -11,6 +11,7 @@ int encode_op(char *opcode, char *op_data)
 	char tmp[256];
 	const char *fi = "%s %d";
 	const char *fg = "%s %%g%d";
+	const char *ff = "%s %%f%d";
 	const char *fl = "%s %s";
 	const char *fgi = "%s %%g%d, %d";
 	const char *fgl = "%s %%g%d, %s";
@@ -81,9 +82,25 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fg, tmp, &rd) == 2)
 		    return input(0,0,rd,0);
 	}
+	if(strcmp(opcode, "inputw") == 0){
+		if(sscanf(op_data, fg, tmp, &rd) == 2)
+		    return inputw(0,0,rd,0);
+	}
+	if(strcmp(opcode, "inputf") == 0){
+		if(sscanf(op_data, ff, tmp, &rd) == 2)
+		    return inputf(0,0,rd,0);
+	}
 	if(strcmp(opcode, "output") == 0){
 		if(sscanf(op_data, fg, tmp, &rs) == 2)
 		    return output(rs,0,0,0);
+	}
+	if(strcmp(opcode, "outputw") == 0){
+		if(sscanf(op_data, fg, tmp, &rs) == 2)
+		    return outputw(rs,0,0,0);
+	}
+	if(strcmp(opcode, "outputf") == 0){
+		if(sscanf(op_data, ff, tmp, &rs) == 2)
+		    return outputf(rs,0,0,0);
 	}
 	if(strcmp(opcode, "and") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
@@ -338,8 +355,14 @@ DEFINE_I(padd,PADD);
 
 DEFINE_F(mov,SPECIAL,MOV_F);
 DEFINE_F(_not,SPECIAL,NOT_F);
+
 DEFINE_F(input,IO,INPUT_F);
+DEFINE_F(inputw,IO,INPUTW_F);
+DEFINE_F(inputf,IO,INPUTF_F);
 DEFINE_F(output,IO,OUTPUT_F);
+DEFINE_F(outputw,IO,OUTPUTW_F);
+DEFINE_F(outputf,IO,OUTPUTF_F);
+
 DEFINE_F(nop,SPECIAL,NOP_F);
 DEFINE_F(sll,SPECIAL,SLL_F);
 DEFINE_F(srl,SPECIAL,SRL_F);

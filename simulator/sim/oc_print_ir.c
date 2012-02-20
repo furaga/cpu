@@ -86,8 +86,8 @@ void print_ir(uint32_t ir, FILE *fp) {
 		if (strcmp(f_type, "ffff") == 0) {
 			// fadd fsub fmul fdiv
 			a.i = _FRD; b.i = _FRS; c.i = _FRT;
-			//fprintf(fp, ffff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
-			fprintf(fp, ffff2, f_name, get_rdi(ir), a.f, get_rsi(ir), b.f, get_rti(ir), c.f);
+			fprintf(fp, ffff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
+			//fprintf(fp, ffff2, f_name, get_rdi(ir), a.f, get_rsi(ir), b.f, get_rti(ir), c.f);
 		} else {
 			fprintf(fp, "Undefined FPI IR\n");
 		}

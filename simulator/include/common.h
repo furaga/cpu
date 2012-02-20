@@ -6,7 +6,7 @@
 #define REG_NUM 32
 //#define ROM_NUM (4 * 1024 * 1024)
 #define ROM_NUM (64 * 1024) // 2^16 Words (2^18 Bytes = 2^8 KB)
-#define RAM_NUM (128 * 1024-2)
+#define RAM_NUM (128 * 1024)
 
 ///////////////////////////////////////
 // SPECIAL funct //////////////////////
@@ -36,7 +36,11 @@
 #define IO 001
 //INPUT OUTPUT
 #define INPUT_F 000
+#define INPUTW_F 010
+#define INPUTF_F 020
 #define OUTPUT_F 001
+#define OUTPUTW_F 011
+#define OUTPUTF_F 021
 ///////////////////////////////////////
 // FP-Inst funct //////////////////////
 ///////////////////////////////////////
