@@ -270,13 +270,33 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.Output (if List.length ys <= 0 then assert false else List.hd ys));
 					Output.add_stmt Output.Return
 		  		end
+			| "min_caml_print_int" when !Global.use_binary_data ->
+				begin
+					Output.add_stmt (Output.OutputW (if List.length ys <= 0 then assert false else List.hd ys));
+					Output.add_stmt Output.Return
+				end
+			| "min_caml_print_float" when !Global.use_binary_data -> 
+				begin
+					Output.add_stmt (Output.OutputF (if List.length zs <= 0 then assert false else List.hd zs));
+					Output.add_stmt Output.Return
+				end
 			| "min_caml_input_char"
 			| "min_caml_read_char" ->
 		  		begin
 					Output.add_stmt (Output.Input "%g3");
 					Output.add_stmt Output.Return
 		  		end
-		  	| _ ->
+		 	| "min_caml_read_int" when !Global.use_binary_data ->
+				begin
+					Output.add_stmt (Output.InputW "%g3");
+					Output.add_stmt Output.Return
+				end
+			| "min_caml_read_float"  when !Global.use_binary_data ->
+				begin
+					Output.add_stmt (Output.InputF "%f0");
+					Output.add_stmt Output.Return
+				end
+		 	| _ ->
 		  		begin
 				  g'_args oc x [] ys zs;
 				  Output.add_stmt (Output.Jmp x);
@@ -329,14 +349,30 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  	| "min_caml_print_char"
 		  	| "min_caml_write" ->
 		  		begin
-				  Output.add_stmt (Output.Output (if List.length ys <= 0 then assert false else List.hd ys))
+				  	Output.add_stmt (Output.Output (if List.length ys <= 0 then assert false else List.hd ys))
+				end
+			| "min_caml_print_int" when !Global.use_binary_data ->
+				begin
+					Output.add_stmt (Output.OutputW (if List.length ys <= 0 then assert false else List.hd ys))
+				end
+			| "min_caml_print_float" when !Global.use_binary_data -> 
+				begin
+					Output.add_stmt (Output.OutputF (if List.length zs <= 0 then assert false else List.hd zs))
 				end
 			| "min_caml_input_char"
 			| "min_caml_read_char" ->
 		  		begin
-				  Output.add_stmt (Output.Input a)
+				 	Output.add_stmt (Output.Input a)
 				end
-		  	| _ ->
+			| "min_caml_read_int" when !Global.use_binary_data ->
+				begin
+					Output.add_stmt (Output.InputW a)
+				end
+			| "min_caml_read_float"  when !Global.use_binary_data ->
+				begin
+					Output.add_stmt (Output.InputF a)
+				end
+			| _ ->
 				begin
 				g'_args oc x [] ys zs;
 				let ss = stacksize () in

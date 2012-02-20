@@ -36,7 +36,11 @@ type t =
 	| LdFi of Id.t * Id.t * int
 	| StFi of Id.t * Id.t * int
 	| Input of Id.t
+	| InputW of Id.t
+	| InputF of Id.t
 	| Output of Id.t
+	| OutputW of Id.t
+	| OutputF of Id.t
 	| B of Id.t
 	| Jmp of Id.t
 	| JCmp of Id.t * Id.t * Id.t * Id.t
@@ -151,7 +155,13 @@ let output_stmt oc stmt =
 			| StFi (src, target, index) -> Printf.fprintf oc "\tfsti\t%s, %s, %d\n" src target index;
 
 			| Input src -> 	Printf.fprintf oc "\tinput\t%s\n" src;
+			| InputW src -> 	Printf.fprintf oc "\tinputw\t%s\n" src;
+			| InputF src -> 	Printf.fprintf oc "\tinputw\t%s\n" src;
+			
 			| Output dst -> Printf.fprintf oc "\toutput\t%s\n" dst;
+			| OutputW dst -> Printf.fprintf oc "\toutputw\t%s\n" dst;
+			| OutputF dst -> Printf.fprintf oc "\toutputw\t%s\n" dst;
+			
 			| B reg -> Printf.fprintf oc "\tb\t%s\n" reg;
 			| Jmp label -> Printf.fprintf oc "\tjmp\t%s\n" label;
 			| JCmp (typ, x, y, label) -> Printf.fprintf oc "\t%s\t%s, %s, %s\n" typ x y label

@@ -159,7 +159,14 @@ exp: /* °ìÈÌ¤Î¼° (caml2html: parser_exp) */
     { get_syntax (Let(addtyp $2, $4, $6)) }
 | LET REC fundef IN exp
     %prec prec_let
-    { get_syntax (LetRec($3, $5)) }
+    {
+		(* ¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿¿ *)
+		let fundef = $3 in
+		let name = fst fundef.name in
+		match name with
+			| "read_int" | "read_float" | "print_int" | "print_float" when !Global.use_binary_data -> $5
+			| _ -> get_syntax (LetRec($3, $5)) 
+	}
 | exp actual_args
     %prec prec_app
     { get_syntax (App($1, $2)) }
