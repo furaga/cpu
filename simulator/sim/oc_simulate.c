@@ -419,6 +419,7 @@ int simulate(char *sfile) {
 						putchar((_GRS>>16)&0xff);
 						putchar((_GRS>>24)&0xff);
 						fflush(stdout);
+						fprintf(stderr, " debug outputw: 0x%08X %d(dec)\n", _GRS, _GRS);
 						break;
 					case OUTPUTF_F:
 					// little endian
@@ -427,6 +428,8 @@ int simulate(char *sfile) {
 						putchar((_FRS>>16)&0xff);
 						putchar((_FRS>>24)&0xff);
 						fflush(stdout);
+						a.i = _FRS;
+						fprintf(stderr, " debug outputf: 0x%08X %f\n", a.i, a.f);
 						break;
 					case INPUT_F:
 						//ret = scanf("%c", (char*)&_GRD);
@@ -436,6 +439,7 @@ int simulate(char *sfile) {
 						_GRD = c & 0xff;
 						break;
 					case INPUTW_F:
+					/*
 						c = getchar();
 						_GRD = c&0xff;
 						c = getchar();
@@ -444,8 +448,12 @@ int simulate(char *sfile) {
 						_GRD |= (c&0xff)<<16;
 						c = getchar();
 						_GRD |= (c&0xff)<<24;
+						*/
+						ret = scanf("%u", (uint32_t*)&_GRD);
+						if (ret==0) { fprintf(stderr,"input error\n"); }
 						break;
 					case INPUTF_F:
+					/*
 						c = getchar();
 						_FRD = c&0xff;
 						c = getchar();
@@ -454,6 +462,9 @@ int simulate(char *sfile) {
 						_FRD |= (c&0xff)<<16;
 						c = getchar();
 						_FRD |= (c&0xff)<<24;
+						*/
+						ret = scanf("%f", (float*)&_FRD);
+						if (ret==0) { fprintf(stderr,"input error\n"); }
 						break;
 					default: break;
 

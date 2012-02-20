@@ -7,15 +7,15 @@ CFLAGS = -Wall -O3 -funroll-loops
 CXXFLAGS = -Wall -O3 -funroll-loops
 LDFLAGS = -Wall -O3 -lm
 
-COMPILER_DIR = $(HOME_DIR)/../compiler
 PICT_DIR = $(HOME_DIR)/pict
 DIFF_DIR = $(HOME_DIR)/pict/diff
+COMPILER_DIR = $(HOME_DIR)/../compiler_latest
 MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 ###################################
 # Set Vars below
 ###################################
 #TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
-TEST_TARGET = float inprod
+TEST_TARGET = float
 #float
 #RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
