@@ -1,9 +1,0 @@
-## -*- coding: utf-8 -*-
-	port (
-		CLKA		: in	std_logic;
-		WEA			: in	std_logic_vector(0 downto 0);
-		ADDRA		: in	${oc.ram_sim_t()};
-		DINA		: in	${oc.reg_t()};
-		DOUTA		: out	${oc.reg_t()}
-	);
-<%namespace name="oc" file="macro.tmp"/>
