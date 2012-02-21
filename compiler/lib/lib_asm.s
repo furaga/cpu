@@ -195,7 +195,31 @@ FTOI_LOOP:
 ! * truncate
 min_caml_truncate:
 	jmp min_caml_int_of_float
+	
+min_caml_read_int:
+	addi %g3, %g0, 0
+	! 24 - 31
+	input %g4
+	add %g3, %g3, %g4
+	slli %g3, %g3, 8
+	! 16 - 23
+	input %g4
+	add %g3, %g3, %g4
+	slli %g3, %g3, 8
+	! 8 - 15
+	input %g4
+	add %g3, %g3, %g4
+	slli %g3, %g3, 8
+	! 0 - 7
+	input %g4
+	add %g3, %g3, %g4
+	return
 
+min_caml_read_float:
+	call read_int
+	sti %g3, %g1, 0
+	fldi %f0, %g1, 0
+	return
 
 !#####################################################################
 !

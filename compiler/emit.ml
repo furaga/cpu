@@ -286,7 +286,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.Input "%g3");
 					Output.add_stmt Output.Return
 		  		end
-		 	| "min_caml_read_int" when !Global.use_binary_data ->
+(*		 	| "min_caml_read_int" when !Global.use_binary_data ->
 				begin
 					Output.add_stmt (Output.InputW "%g3");
 					Output.add_stmt Output.Return
@@ -296,7 +296,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.InputF "%f0");
 					Output.add_stmt Output.Return
 				end
-		 	| _ ->
+*)		 	| _ ->
 		  		begin
 				  g'_args oc x [] ys zs;
 				  Output.add_stmt (Output.Jmp x);
@@ -364,7 +364,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 		  		begin
 				 	Output.add_stmt (Output.Input a)
 				end
-			| "min_caml_read_int" when !Global.use_binary_data ->
+(*			| "min_caml_read_int" when !Global.use_binary_data ->
 				begin
 					Output.add_stmt (Output.InputW a)
 				end
@@ -372,7 +372,7 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 				begin
 					Output.add_stmt (Output.InputF a)
 				end
-			| _ ->
+*)			| _ ->
 				begin
 				g'_args oc x [] ys zs;
 				let ss = stacksize () in

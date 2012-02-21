@@ -785,7 +785,7 @@ let yyact = [|
 		let fundef = _3 in
 		let name = fst fundef.name in
 		match name with
-			| "read_int" | "read_float" | "print_int" | "print_float" when !Global.use_binary_data -> _5
+			| "read_int" | "read_float" (*| "print_int" | "print_float"*) when !Global.use_binary_data -> _5
 			| _ -> get_syntax (LetRec(_3, _5)) 
 	)
 # 792 "parser.ml"

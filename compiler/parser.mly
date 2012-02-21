@@ -164,7 +164,7 @@ exp: /* °ìÈÌ¤Î¼° (caml2html: parser_exp) */
 		let fundef = $3 in
 		let name = fst fundef.name in
 		match name with
-			| "read_int" | "read_float" | "print_int" | "print_float" when !Global.use_binary_data -> $5
+			| "read_int" | "read_float" (*| "print_int" | "print_float"*) when !Global.use_binary_data -> $5
 			| _ -> get_syntax (LetRec($3, $5)) 
 	}
 | exp actual_args
