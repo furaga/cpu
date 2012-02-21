@@ -12,25 +12,19 @@ architecture RTL of io_dev is
 	subtype buf_rec_t is std_logic_vector(7 downto 0);
 
 	type sendbuf_t is array (0 to 16383) of buf_rec_t;
-	--type sendbuf_t is array (0 to 4095) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
-	--signal sendbuf0 : sendbuf_t;
-	--signal sendbuf1 : sendbuf_t;
-	--signal sendbuf2 : sendbuf_t;
-	--signal sendbuf3 : sendbuf_t;
 	signal send_head	: std_logic_vector(13 downto 0) := (others=>'0');
 	signal send_tail	: std_logic_vector(13 downto 0) := (others=>'0');
-	--signal stail	:	integer range 0 to 4095;
 
 	signal send_empty : std_logic := '0';
 
 	signal recv_head	: std_logic_vector(10 downto 0) := (others=>'0');
 	signal recv_tail	: std_logic_vector(10 downto 0) := ${oc.io_rtail()};
 	type recvbuf_t is array (0 to 2047) of buf_rec_t;
-	--signal recvbuf : recvbuf_t;
-	signal recvbuf : recvbuf_t := (
-<%include file="contest_sld.txt"/>
-	);
+	signal recvbuf : recvbuf_t;
+	--signal recvbuf : recvbuf_t := (
+##<%include file="contest_sld.txt"/>
+	--);
 	signal u232c_o : std_logic_vector(7 downto 0);
 	signal u232c_i : std_logic_vector(7 downto 0);
 
@@ -41,7 +35,6 @@ architecture RTL of io_dev is
 
 	
 begin
-	--stail <= conv_integer(send_tail(11 downto 0));
 	
 	rs232c: u232c generic map (wtime=>${next.wtime()})
 	port map (clk, u232c_o, send_go, send_busy, RS_TX, 
@@ -54,7 +47,7 @@ begin
 	send: process(CLK)
 	begin
 		if rising_edge(CLK) then
-			if CPU_WR(0)='1' then
+			if CPU_WR(1)='1' then
 				sendbuf(conv_integer(send_tail)) <= CPU_OUT(7 downto 0);
 				send_tail <= send_tail + 1;
 			end if;
@@ -72,11 +65,12 @@ begin
 ------------------------------------------------------------------------
 ---- recv
 ------------------------------------------------------------------------
-	NYET <= '1' when recv_head=recv_tail else '0';
+	NYET(0) <= '1' when recv_head=recv_tail else '0';
+	NYET(1) <= '1' when recv_head=recv_tail else '0';
 	receive : process(CLK)
 	begin
 		if rising_edge(CLK) then
-			if CPU_RD='1' then
+			if CPU_RD(1)='1' then
 				CPU_IN <= x"000000"&recvbuf(conv_integer(recv_head));
 				recv_head <= recv_head+1;
 			end if;

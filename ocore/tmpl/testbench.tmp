@@ -59,13 +59,13 @@ BEGIN
 	ZD	=> ZD,
 	ZCLKMA => ZCLKMA
   );
-  rx : process
-  begin
-  	wait for 100 ns;
-	RS_RX <= '0';
-	wait for 4 ns;
-	RS_RX <= '1';
-  end process;
+  --rx : process
+  --begin
+  	--wait for 100 ns;
+	--RS_RX <= '0';
+	--wait for 4 ns;
+	--RS_RX <= '1';
+  --end process;
   
   clkgen: process
   begin

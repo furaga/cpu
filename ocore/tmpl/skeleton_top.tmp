@@ -44,10 +44,7 @@ ${next.body()}
 
 	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, 
 		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD);
-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
-			-- normal style.
-	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
-			-- no input. recvbuf is already filled with sld data.
+	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, ${oc.rx_en()}, RS_TX);
 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
 			-- like loopback.
 

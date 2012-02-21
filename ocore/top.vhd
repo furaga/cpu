@@ -38,10 +38,10 @@ architecture board of top is
 	CLK	:	in	std_logic;
 	CLK2X	:	in	std_logic;
 	RESET	:	in	std_logic;
-	NYET	:	in	std_logic_vector(1 downto 0);
+	NYET	:	in	std_logic;
 	IO_IN	:	in	std_logic_vector(31 downto 0);
-	IO_WR	:	out std_logic_vector(1 downto 0);
-	IO_RD	:	out std_logic_vector(1 downto 0);
+	IO_WR	:	out std_logic;
+	IO_RD	:	out std_logic;
 	IO_OUT	:	out	std_logic_vector(31 downto 0);
 	SRAM_ZA	:	out std_logic_vector(19 downto 0);
 	SRAM_XWA:	out std_logic;
@@ -53,11 +53,11 @@ architecture board of top is
 	component io_dev is
 	port(
 		CLK		:	in	std_logic;
-		CPU_WR	:	in	std_logic_vector(1 downto 0);
-		CPU_RD	:	in	std_logic_vector(1 downto 0);
+		CPU_WR	:	in	std_logic;
+		CPU_RD	:	in	std_logic;
 		CPU_OUT	:	in	std_logic_vector(31 downto 0);
 		CPU_IN	:	out	std_logic_vector(31 downto 0);
-		NYET	:	out std_logic_vector(1 downto 0);
+		NYET	:	out std_logic;
 		RS_RX	:	in	std_logic;
 		RS_TX	:	out	std_logic
 	);
@@ -71,9 +71,9 @@ architecture board of top is
 
 	signal cpu_out : std_logic_vector(31 downto 0);
 	signal cpu_in : std_logic_vector(31 downto 0);
-	signal cpu_wr : std_logic_vector(1 downto 0);
-	signal cpu_rd : std_logic_vector(1 downto 0);
-	signal nyet   : std_logic_vector(1 downto 0);
+	signal cpu_wr : std_logic;
+	signal cpu_rd : std_logic;
+	signal nyet   : std_logic;
 
 	signal pipe   :std_logic;
 
@@ -110,12 +110,9 @@ begin
 
 	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, 
 		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD);
-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
-			-- normal style.
-	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
-			-- no input. recvbuf is already filled with sld data.
+	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);
 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
-			-- like loopback.
+			-- loopback.
 
 	count_down: process(clk, count)
 	begin

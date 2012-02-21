@@ -20,17 +20,10 @@ begin
 			FP <= FP_OUT(19 downto 0);
 			LR <= LINK_OUT;
 
-			if opcode="000001" then -- I/O
-				case funct is
-					when "000000" => -- input byte
-						INPUT_FLAG <= "01";
-					when "001000" => -- input long
-						INPUT_FLAG <= "10";
-					when "010000" => -- input float
-						INPUT_FLAG <= "10";
-					when others =>
-						INPUT_FLAG <= "00";
-				end case;
+			if opcode="000001" and funct="000000" then -- I/O
+				INPUT_FLAG <= '1';
+			else
+				INPUT_FLAG <= '0';
 			end if;
 
 		end if;

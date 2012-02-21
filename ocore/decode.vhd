@@ -11,7 +11,7 @@ port (
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
 	FP_OUT	:	in std_logic_vector(31 downto 0);
 	LINK_OUT	:	in std_logic_vector(31 downto 0);
-	INPUT_FLAG	:	out std_logic_vector(1 downto 0) := "00";
+	INPUT_FLAG	:	out std_logic := '0';
 	IR	: out std_logic_vector(31 downto 0);
 	FP	:	out std_logic_vector(19 downto 0);
 	LR	:	out std_logic_vector(31 downto 0)
@@ -35,17 +35,10 @@ begin
 			FP <= FP_OUT(19 downto 0);
 			LR <= LINK_OUT;
 
-			if opcode="000001" then -- I/O
-				case funct is
-					when "000000" => -- input byte
-						INPUT_FLAG <= "01";
-					when "001000" => -- input long
-						INPUT_FLAG <= "10";
-					when "010000" => -- input float
-						INPUT_FLAG <= "10";
-					when others =>
-						INPUT_FLAG <= "00";
-				end case;
+			if opcode="000001" and funct="000000" then -- I/O
+				INPUT_FLAG <= '1';
+			else
+				INPUT_FLAG <= '0';
 			end if;
 
 		end if;

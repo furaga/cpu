@@ -2,8 +2,8 @@ RENDER = mako-render
 OCORE_DIR = ..
 ISE_SPACE = ../../ise_space
 VSIM_SPACE = ../../vsim_space
-ASM = ./asmcho2_prom10
-SIM = ./simcho3
+ASM = ./asmcho_prom10
+SIM = ./simcho
 
 OCORE_MODS = top u232c io_dev core_c clk_gen clk_delay fetch \
 			 prom decode reg_dc exec mem_acc sram reg_wb testbench
@@ -57,7 +57,7 @@ sram.vhd: sram.tmp sram_entity.tmp $(BASE)
 u232c.vhd: u232c.tmp $(BASE)
 ise_u232c.vhd: ise_u232c.tmp $(BASE)
 skeleton_u232c.tmp: u232c_entity.tmp $(BASE)
-io_dev.vhd: io_dev.tmp skeleton_io_dev.tmp $(BASE)
+io_dev.vhd: io_dev.tmp skeleton_io_dev.tmp contest_sldbin.txt contest_sld.txt $(BASE)
 ise_io_dev.vhd: ise_io_dev.tmp skeleton_io_dev.tmp $(BASE)
 skeleton_io_dev.tmp: contest_sld.txt u232c_entity.tmp io_dev_entity.tmp $(BASE)
 

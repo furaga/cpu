@@ -11,7 +11,6 @@ architecture behavior of mem_acc is
 	signal io_en : std_logic;
 
 	signal xwa : std_logic;
-	signal long_flag : std_logic;
 
 
 begin
@@ -22,20 +21,14 @@ begin
 
 	DATA_OUT <= IO_IN when io_read='1' else SRAM_ZD;
 
-	IO_WR <= "11" when io_write='1' and CLK_EX_DLY='1' and long_flag='1' else
-			 "10" when io_write='1' and CLK_EX_DLY='1' and long_flag='0' else 
-			 "00";
-
-	IO_RD <= "11" when io_read ='1' and CLK_EX_DLY='1' and long_flag='1' else 
-			 "10" when io_read ='1' and CLK_EX_DLY='1' and long_flag='0' else 
-			 "00";
+	IO_WR <= '1' when io_write='1' and CLK_EX_DLY='1' else '0';
+	IO_RD <= '1' when io_read='1' and CLK_EX_DLY='1' else '0';
 
 	process(CLK_EX_DLY)
 	begin
 		if rising_edge(CLK_EX_DLY) then
 			io_read  <= io_en and (not RAM_WEN);
 			io_write <= io_en and RAM_WEN;
-			long_flag <= ADDR(0); --
 
 			SRAM_ZA <= ${oc.mem_acc_sram_addr()};
 			SRAM_XWA <= xwa;

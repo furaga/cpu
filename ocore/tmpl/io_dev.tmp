@@ -1,4 +1,4 @@
 ## -*- coding: utf-8 -*-
 <%inherit file="skeleton_io_dev.tmp"/>
-<%def name="wtime()">${oc.io_wtime()}</%def>
+<%def name="wtime()">x"0000"</%def>
 <%namespace name="oc" file="macro.tmp"/>
