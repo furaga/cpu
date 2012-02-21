@@ -216,7 +216,7 @@ min_caml_read_int:
 	return
 
 min_caml_read_float:
-	call read_int
+	call min_caml_read_int
 	sti %g3, %g1, 0
 	fldi %f0, %g1, 0
 	return
