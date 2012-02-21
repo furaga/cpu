@@ -14,7 +14,7 @@ int main(int argc, char** argv) {
 		float f;
 	} a;
 	a.i = 0;
-	int i,nread,fd;
+	int i,nread,fd,cnt;
 	char buf[SIZE];
 	if (argc < 2) {
 		puts("USAGE: ./read_float [filename]");
@@ -32,21 +32,30 @@ int main(int argc, char** argv) {
 		exit(1);
 	}
 
-	if (buf[0] != 0xaa) {
-		printf("buf[0]:%d != 0xaa\n", buf[0]);
+/*
+	if (c != 0xaa) {
+		printf("buf[0]:0x%02x != 0xaa\n", c);
 		exit(1);
+	} else {
+		printf("0xaa received\n");
 	}
-	for(i=1;i < nread;i++) {
-		if (buf[i] == '\n') {
-			a.i = buf[i-1] << 24| 
-				  buf[i-2] << 16|
-				  buf[i-3] << 8|
-				  buf[i-4];
-			
+*/
+
+	cnt = 0;
+	for (i=0; i<nread; i++) {
+		c = buf[i];
+
+		if (cnt >= 3) {
+			a.i |= c << (cnt*8);
+			cnt++;
 			printf("%f  0x%08X\n", a.f, a.i);
 			a.i = 0;
-		} 
-	}
+			cnt = 0;
+		} else {
+			a.i |= c << (cnt*8);
+			cnt++;
+		}
+    }
 
 
 	return 0;

@@ -4,10 +4,10 @@
 	CLK	:	in	std_logic;
 	CLK2X	:	in	std_logic;
 	RESET	:	in	std_logic;
-	NYET	:	in	std_logic;
+	NYET	:	in	${oc.io_flag_t()};
 	IO_IN	:	in	${oc.io_bus_t()};
-	IO_WR	:	out std_logic;
-	IO_RD	:	out std_logic;
+	IO_WR	:	out ${oc.io_flag_t()};
+	IO_RD	:	out ${oc.io_flag_t()};
 	IO_OUT	:	out	${oc.io_bus_t()};
 	SRAM_ZA	:	out std_logic_vector(19 downto 0);
 	SRAM_XWA:	out std_logic;

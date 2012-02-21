@@ -11,6 +11,6 @@ Loop:
 	input	%g4
 	output %g4
 	output %g3
-	addi	%g3, %g3, 1
+	addi	%g3, %g3 1
 	jmp Loop
 

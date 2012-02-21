@@ -1,11 +1,11 @@
 ## -*- coding: utf-8 -*-
 	port(
 		CLK		:	in	std_logic;
-		CPU_WR	:	in	std_logic;
-		CPU_RD	:	in	std_logic;
+		CPU_WR	:	in	${oc.io_flag_t()};
+		CPU_RD	:	in	${oc.io_flag_t()};
 		CPU_OUT	:	in	${oc.reg_t()};
 		CPU_IN	:	out	${oc.reg_t()};
-		NYET	:	out std_logic;
+		NYET	:	out ${oc.io_flag_t()};
 		RS_RX	:	in	std_logic;
 		RS_TX	:	out	std_logic
 	);

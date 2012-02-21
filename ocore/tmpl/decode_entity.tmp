@@ -4,7 +4,7 @@ port (
 	PROM_OUT	:	in ${oc.ir_t()};
 	FP_OUT	:	in ${oc.reg_t()};
 	LINK_OUT	:	in ${oc.pc_t()};
-	INPUT_FLAG	:	out std_logic;
+	INPUT_FLAG	:	out ${oc.io_flag_t()} := "00";
 	IR	: out ${oc.ir_t()};
 	FP	:	out ${oc.ram_addr_t()};
 	LR	:	out ${oc.pc_t()}

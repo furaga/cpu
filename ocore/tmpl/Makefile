@@ -2,8 +2,8 @@ RENDER = mako-render
 OCORE_DIR = ..
 ISE_SPACE = ../../ise_space
 VSIM_SPACE = ../../vsim_space
-ASM = ./asmcho_prom10
-SIM = ./simcho2
+ASM = ./asmcho2_prom10
+SIM = ./simcho3
 
 OCORE_MODS = top u232c io_dev core_c clk_gen clk_delay fetch \
 			 prom decode reg_dc exec mem_acc sram reg_wb testbench

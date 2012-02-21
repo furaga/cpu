@@ -67,12 +67,12 @@ end component;
 	signal	LR_OUT	:	${oc.pc_t()};
 	signal	LinkRegister	:	${oc.pc_t()};
 	signal	fr_flag :	std_logic;
-	signal	input_flag :	std_logic;
+	signal	input_flag :	${oc.io_flag_t()};
 
 begin			
 
 -- clk(state machine)
-	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
+	clk_u	:	clk_gen port map(CLK, input_flag, NYET,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
 	delay_ft : clk_delay port map(CLK, clk_ft, clk_ft_dly);
 	delay_ex : clk_delay port map(CLK, clk_ex, clk_ex_dly);

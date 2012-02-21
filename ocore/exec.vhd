@@ -236,20 +236,49 @@ begin
 						end case;
 					when "000001" =>	-- IO
 						case funct is
-							when "000000" => -- INPUT
+							when "000000" => -- INPUT (BYTE)
 								REG_COND <= "1100";
+								N_REG <= n_reg_d;
 								RAM_WEN <= '0';
 								RAM_ADDR <= x"80000";
-								N_REG <= n_reg_d;
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
-							when "000001" => -- OUTPUT
+							when "000001" => -- OUTPUT (BYTE)
 								REG_COND <= "0000";
 								RAM_WEN <= '1'; 
 								RAM_IN <= REG_S;
 								RAM_ADDR <= x"80000";
 								FR_FLAG <= '0';
 								PC_OUT <= PC_IN + 1;	
+							when "001000" => -- INPUTW (WORD)
+								REG_COND <= "1100";
+								N_REG <= n_reg_d;
+								RAM_WEN <= '0';
+								RAM_ADDR <= x"80001";
+								FR_FLAG <= '0';
+								PC_OUT <= PC_IN + 1;	
+							when "001001" => -- OUTPUTW (WORD)
+								REG_COND <= "0000";
+								RAM_WEN <= '1'; 
+								RAM_IN <= REG_S;
+								RAM_ADDR <= x"80001";
+								FR_FLAG <= '0';
+								PC_OUT <= PC_IN + 1;	
+							when "010000" => -- INPUTF (LONG)
+								REG_COND <= "1100";
+								N_REG <= n_reg_d;
+								RAM_WEN <= '0';
+								RAM_ADDR <= x"80001";
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;	
+							when "010001" => -- OUTPUTF (LONG)
+								REG_COND <= "0000";
+								RAM_WEN <= '1'; 
+								RAM_IN <= FREG_S;
+								RAM_ADDR <= x"80001";
+								FR_FLAG <= '1';
+								PC_OUT <= PC_IN + 1;	
+
 							when others =>
 						end case;
 					when "010001" => -- FPI

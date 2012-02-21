@@ -10,10 +10,10 @@ entity core_c is
 	CLK	:	in	std_logic;
 	CLK2X	:	in	std_logic;
 	RESET	:	in	std_logic;
-	NYET	:	in	std_logic;
+	NYET	:	in	std_logic_vector(1 downto 0);
 	IO_IN	:	in	std_logic_vector(31 downto 0);
-	IO_WR	:	out std_logic;
-	IO_RD	:	out std_logic;
+	IO_WR	:	out std_logic_vector(1 downto 0);
+	IO_RD	:	out std_logic_vector(1 downto 0);
 	IO_OUT	:	out	std_logic_vector(31 downto 0);
 	SRAM_ZA	:	out std_logic_vector(19 downto 0);
 	SRAM_XWA:	out std_logic;
@@ -26,8 +26,8 @@ architecture RTL of core_c is
 component clk_gen is
 	port (
 		CLK	:	in	std_logic;
-		INPUT_FLAG	: in std_logic;
-		NYET		: in std_logic;
+		INPUT_FLAG	: in std_logic_vector(1 downto 0);
+		NYET		: in std_logic_vector(1 downto 0);
 		CLK_FT	:	out	std_logic;
 		CLK_DC	:	out	std_logic;
 		CLK_EX	:	out	std_logic;
@@ -64,7 +64,7 @@ port (
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
 	FP_OUT	:	in std_logic_vector(31 downto 0);
 	LINK_OUT	:	in std_logic_vector(31 downto 0);
-	INPUT_FLAG	:	out std_logic;
+	INPUT_FLAG	:	out std_logic_vector(1 downto 0) := "00";
 	IR	: out std_logic_vector(31 downto 0);
 	FP	:	out std_logic_vector(19 downto 0);
 	LR	:	out std_logic_vector(31 downto 0)
@@ -234,8 +234,8 @@ component mem_acc is
 		DATA_IN		: in	std_logic_vector(31 downto 0);
 		DATA_OUT	: out	std_logic_vector(31 downto 0);
 		IO_IN		: in	std_logic_vector(31 downto 0);
-		IO_WR		: out	std_logic := '0';
-		IO_RD		: out	std_logic := '0';
+		IO_WR		: out	std_logic_vector(1 downto 0) := "00";
+		IO_RD		: out	std_logic_vector(1 downto 0) := "00";
 		IO_OUT	: out	std_logic_vector(31 downto 0);
 		SRAM_ZA	:	out std_logic_vector(19 downto 0);
 		SRAM_XWA:	out std_logic := '1';
@@ -342,12 +342,12 @@ end component;
 	signal	LR_OUT	:	std_logic_vector(31 downto 0);
 	signal	LinkRegister	:	std_logic_vector(31 downto 0);
 	signal	fr_flag :	std_logic;
-	signal	input_flag :	std_logic;
+	signal	input_flag :	std_logic_vector(1 downto 0);
 
 begin			
 
 -- clk(state machine)
-	clk_u	:	clk_gen port map(CLK, input_flag, nyet,
+	clk_u	:	clk_gen port map(CLK, input_flag, NYET,
 				clk_ft, clk_dc, clk_ex, clk_ma, clk_wb);
 	delay_ft : clk_delay port map(CLK, clk_ft, clk_ft_dly);
 	delay_ex : clk_delay port map(CLK, clk_ex, clk_ex_dly);

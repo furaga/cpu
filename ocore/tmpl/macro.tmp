@@ -17,10 +17,9 @@
 <%def name="sim_sramaddr()">ZA(11 downto 0)</%def>
 <%def name="mem_acc_sram_addr()">"00000000"&ADDR(13 downto 2)</%def>
 
-<%def name="io_buf_rec_t()">${V8()}</%def>
 <%def name="io_wtime()">x"0000"</%def>
-##<%def name="io_rtail()">(others=>'0')</%def>
-<%def name="io_rtail()">conv_std_logic_vector(2000, 11)</%def>
+<%def name="io_rtail()">(others=>'0')</%def>
+##<%def name="io_rtail()">conv_std_logic_vector(2000, 11)</%def>
 ##<%def name="io_rtail()">conv_std_logic_vector(7, 11)</%def>
 
 ## sim_prom_msb_max=14
@@ -37,6 +36,7 @@
 <%def name="ir_t()">${V32()}</%def>
 <%def name="reg_index_t()">${V5()}</%def>
 <%def name="ram_addr_t()">${V20()}</%def>
+<%def name="io_flag_t()">${V('1 downto 0')}</%def>
 
 <%def name="V(size)">std_logic_vector(${size})</%def>
 <%def name="V32()">${V('31 downto 0')}</%def>

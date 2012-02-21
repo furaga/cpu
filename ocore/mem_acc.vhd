@@ -14,8 +14,8 @@ entity mem_acc is
 		DATA_IN		: in	std_logic_vector(31 downto 0);
 		DATA_OUT	: out	std_logic_vector(31 downto 0);
 		IO_IN		: in	std_logic_vector(31 downto 0);
-		IO_WR		: out	std_logic := '0';
-		IO_RD		: out	std_logic := '0';
+		IO_WR		: out	std_logic_vector(1 downto 0) := "00";
+		IO_RD		: out	std_logic_vector(1 downto 0) := "00";
 		IO_OUT	: out	std_logic_vector(31 downto 0);
 		SRAM_ZA	:	out std_logic_vector(19 downto 0);
 		SRAM_XWA:	out std_logic := '1';
@@ -31,20 +31,32 @@ architecture behavior of mem_acc is
 	signal io_read : std_logic := '0';
 	signal io_en : std_logic;
 
-	signal xwa, pre_xwa		: std_logic;
+	signal xwa : std_logic;
+	signal long_flag : std_logic;
+
 
 begin
 
 	io_en <= ADDR(19);
 	xwa	<= io_en or (not RAM_WEN);
 
+
 	DATA_OUT <= IO_IN when io_read='1' else SRAM_ZD;
+
+	IO_WR <= "11" when io_write='1' and CLK_EX_DLY='1' and long_flag='1' else
+			 "10" when io_write='1' and CLK_EX_DLY='1' and long_flag='0' else 
+			 "00";
+
+	IO_RD <= "11" when io_read ='1' and CLK_EX_DLY='1' and long_flag='1' else 
+			 "10" when io_read ='1' and CLK_EX_DLY='1' and long_flag='0' else 
+			 "00";
 
 	process(CLK_EX_DLY)
 	begin
 		if rising_edge(CLK_EX_DLY) then
 			io_read  <= io_en and (not RAM_WEN);
 			io_write <= io_en and RAM_WEN;
+			long_flag <= ADDR(0); --
 
 			SRAM_ZA <= "00000000"&ADDR(13 downto 2);
 			SRAM_XWA <= xwa;
@@ -54,7 +66,6 @@ begin
 			end if;
 
 		end if;
-
 	end process;
 
 	process(CLK_MA)
@@ -68,9 +79,6 @@ begin
 
 		end if;
 	end process;
-
-	IO_WR <= io_write and CLK_EX_DLY;
-	IO_RD <= io_read and CLK_EX_DLY;
 
 end behavior;
 

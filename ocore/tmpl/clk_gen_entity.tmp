@@ -1,8 +1,8 @@
 ## -*- coding: utf-8 -*-
 	port (
 		CLK	:	in	std_logic;
-		INPUT_FLAG	: in std_logic;
-		NYET		: in std_logic;
+		INPUT_FLAG	: in ${oc.io_flag_t()};
+		NYET		: in ${oc.io_flag_t()};
 		CLK_FT	:	out	std_logic;
 		CLK_DC	:	out	std_logic;
 		CLK_EX	:	out	std_logic;
