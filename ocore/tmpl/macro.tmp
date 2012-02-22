@@ -36,7 +36,6 @@
 <%def name="ir_t()">${V32()}</%def>
 <%def name="reg_index_t()">${V5()}</%def>
 <%def name="ram_addr_t()">${V20()}</%def>
-##<%def name="io_flag_t()">${V('1 downto 0')}</%def>
 <%def name="io_flag_t()">std_logic</%def>
 
 <%def name="V(size)">std_logic_vector(${size})</%def>

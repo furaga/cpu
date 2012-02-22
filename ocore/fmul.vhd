@@ -33,7 +33,7 @@ begin
 	F2L	<=	"00"&I2(10 downto 0);
 
 	raw_SO	<=	'0'	when S1=S2 else '1';
-	SO		<=	raw_SO; --'0' when EO=0 else raw_SO;
+	SO		<=	raw_SO;--'0' when EO=0 else raw_SO;
 
 	raw_EO	<=	(others=>'0') when E1=0 or E2=0 else
 				E1 + E2 - 126 when raw_FO(25)='1' else
