@@ -112,7 +112,7 @@ begin
 		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD);
 	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);
 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
-			-- loopback.
+			-- like loopback.
 
 	count_down: process(clk, count)
 	begin

@@ -11,11 +11,12 @@ architecture RTL of io_dev is
 
 	subtype buf_rec_t is std_logic_vector(7 downto 0);
 
-	type sendbuf_t is array (0 to 16383) of buf_rec_t;
+	type sendbuf_t is array (0 to 65535) of buf_rec_t;
 	signal sendbuf : sendbuf_t;
-	signal send_head	: std_logic_vector(13 downto 0) := (others=>'0');
-	signal send_tail	: std_logic_vector(13 downto 0) := (others=>'0');
-	signal send_empty : std_logic := '0';
+	signal send_head	: std_logic_vector(15 downto 0) := (others=>'0');
+	signal send_tail	: std_logic_vector(15 downto 0) := (others=>'0');
+
+	signal send_empty : std_logic := '1';
 
 	signal recv_head	: std_logic_vector(10 downto 0) := (others=>'0');
 	signal recv_tail	: std_logic_vector(10 downto 0) := ${oc.io_rtail()};
@@ -40,20 +41,29 @@ begin
 				   u232c_i, recv_ready, RS_RX);
 
 ------------------------------------------------------------------------
----- send
+---- send (write first)
 ------------------------------------------------------------------------
-	send_empty <= '1' when send_head=send_tail else '0';
+-- ma : increment send_tail
+-- wb : change send_empty
+-- ft : send_go
+-- async : send_head
 	send: process(CLK)
 	begin
 		if rising_edge(CLK) then
-			if CPU_WR="10" then
+			if send_head=send_tail then
+				send_empty<='1';
+			else 
+				send_empty<='0';
+			end if;
+			
+			if CPU_WR='1' then
 				sendbuf(conv_integer(send_tail)) <= CPU_OUT(7 downto 0);
-				send_tail <= send_tail + 1;
+				send_tail <= send_tail+1;
 			end if;
 
 			if send_busy='0' and send_go='0' then
 				u232c_o <= sendbuf(conv_integer(send_head));
-				send_go<=not send_empty;
+				send_go<= not send_empty;
 				send_head <= send_head + conv_integer(not send_empty);
 			else
 				send_go<='0';
@@ -64,15 +74,22 @@ begin
 ------------------------------------------------------------------------
 ---- recv
 ------------------------------------------------------------------------
-	NYET <= "10" when recv_head=recv_tail else "00";
+-- ma : increment recv_head
+-- wb : change NYET, IO_IN(mem_acc)
+-- async : recv_tail --> NYET
 	receive : process(CLK)
 	begin
 		if rising_edge(CLK) then
-			if CPU_RD="10" then
+			if recv_head=recv_tail then
+				NYET<='1';
+			else 
+				NYET<='0';
+			end if;
+
+			if CPU_RD='1' then
 				CPU_IN <= x"000000"&recvbuf(conv_integer(recv_head));
 				recv_head <= recv_head+1;
 			end if;
-
 			if recv_ready='1' then
 				recvbuf(conv_integer(recv_tail))<=u232c_i;
 				recv_tail <= recv_tail+1;

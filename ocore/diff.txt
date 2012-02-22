@@ -1,0 +1,453 @@
+diff --git a/ocore/tmpl/io_dev.tmp b/ocore/tmpl/io_dev.tmp
+index 529ea60..54fd651 100644
+--- a/ocore/tmpl/io_dev.tmp
++++ b/ocore/tmpl/io_dev.tmp
+@@ -1,4 +1,4 @@
+ ## -*- coding: utf-8 -*-
+ <%inherit file="skeleton_io_dev.tmp"/>
+-<%def name="wtime()">${oc.io_wtime()}</%def>
++<%def name="wtime()">x"0000"</%def>
+ <%namespace name="oc" file="macro.tmp"/>
+diff --git a/ocore/tmpl/io_dev_entity.tmp b/ocore/tmpl/io_dev_entity.tmp
+diff --git a/ocore/tmpl/macro.tmp b/ocore/tmpl/macro.tmp
+index 6c7c1cf..da2d304 100644
+--- a/ocore/tmpl/macro.tmp
++++ b/ocore/tmpl/macro.tmp
+@@ -7,28 +7,28 @@
+ ##  4 * 1024 =   4096 (12 bit)
+ ##  1 * 1024 =   1024 (10 bit)
+ 
+-##<%def name="reg1_init()">16380</%def>
+-##<%def name="sim_sramsize()">4095</%def>
+-##<%def name="sim_sramaddr()">ZA(11 downto 0)</%def>
+-##<%def name="mem_acc_sram_addr()">"00000000"&ADDR(13 downto 2)</%def>
+-
+ <%def name="reg1_init()">524284</%def>
+ <%def name="sim_sramsize()">131071</%def>
+ <%def name="sim_sramaddr()">ZA(16 downto 0)</%def>
+ <%def name="mem_acc_sram_addr()">"000"&ADDR(18 downto 2)</%def>
+ 
+-<%def name="io_buf_rec_t()">${V8()}</%def>
+-<%def name="io_wtime()">x"0000"</%def>
++##<%def name="reg1_init()">16380</%def>
++##<%def name="sim_sramsize()">4095</%def>
++##<%def name="sim_sramaddr()">ZA(11 downto 0)</%def>
++##<%def name="mem_acc_sram_addr()">"00000000"&ADDR(13 downto 2)</%def>
++
+ ##<%def name="io_rtail()">(others=>'0')</%def>
++##<%def name="rx_en()">RS_RX</%def>
++<%def name="rx_en()">'1'</%def>
+ <%def name="io_rtail()">conv_std_logic_vector(2000, 11)</%def>
+-##<%def name="io_rtail()">conv_std_logic_vector(7, 11)</%def>
+ 
+ ## sim_prom_msb_max=14
+-##<%def name="prom_msb()">9</%def>
+-<%def name="prom_msb()">13</%def>
+ <%def name="pc_t()">${V32()}</%def>
+-##<%def name="sim_prom_max()">32767</%def>
+-<%def name="sim_prom_max()">1023</%def>
++<%def name="sim_prom_max()">32767</%def>
++<%def name="prom_msb()">13</%def>
++
++##<%def name="sim_prom_max()">1023</%def>
++##<%def name="prom_msb()">9</%def>
+ 
+ <%def name="io_bus_t()">${V32()}</%def>
+ <%def name="reg_t()">${V32()}</%def>
+@@ -36,6 +36,8 @@
+ <%def name="ir_t()">${V32()}</%def>
+ <%def name="reg_index_t()">${V5()}</%def>
+ <%def name="ram_addr_t()">${V20()}</%def>
++##<%def name="io_flag_t()">${V('1 downto 0')}</%def>
++<%def name="io_flag_t()">std_logic</%def>
+ 
+ <%def name="V(size)">std_logic_vector(${size})</%def>
+ <%def name="V32()">${V('31 downto 0')}</%def>
+diff --git a/ocore/tmpl/mem_acc.tmp b/ocore/tmpl/mem_acc.tmp
+index d5ad4e8..8b27611 100644
+--- a/ocore/tmpl/mem_acc.tmp
++++ b/ocore/tmpl/mem_acc.tmp
+@@ -10,15 +10,20 @@ architecture behavior of mem_acc is
+ 	signal io_read : std_logic := '0';
+ 	signal io_en : std_logic;
+ 
+-	signal xwa, pre_xwa		: std_logic;
++	signal xwa : std_logic;
++
+ 
+ begin
+ 
+ 	io_en <= ADDR(19);
+ 	xwa	<= io_en or (not RAM_WEN);
+ 
++
+ 	DATA_OUT <= IO_IN when io_read='1' else SRAM_ZD;
+ 
++	IO_WR <= '1' when io_write='1' and CLK_EX_DLY='1' else '0';
++	IO_RD <= '1' when io_read='1' and CLK_EX_DLY='1' else '0';
++
+ 	process(CLK_EX_DLY)
+ 	begin
+ 		if rising_edge(CLK_EX_DLY) then
+@@ -27,14 +32,12 @@ begin
+ 
+ 			SRAM_ZA <= ${oc.mem_acc_sram_addr()};
+ 			SRAM_XWA <= xwa;
+-			--pre_xwa	<= xwa;
+ 
+ 			if io_en='1' and RAM_WEN='1' then
+ 				IO_OUT <= DATA_IN;
+ 			end if;
+ 
+ 		end if;
+-
+ 	end process;
+ 
+ 	process(CLK_MA)
+@@ -49,9 +52,6 @@ begin
+ 		end if;
+ 	end process;
+ 
+-	IO_WR <= io_write and CLK_EX_DLY;
+-	IO_RD <= io_read and CLK_EX_DLY;
+-
+ end behavior;
+ <%namespace name="oc" file="macro.tmp"/>
+diff --git a/ocore/tmpl/skeleton_io_dev.tmp b/ocore/tmpl/skeleton_io_dev.tmp
+index a1051aa..660b5a8 100644
+--- a/ocore/tmpl/skeleton_io_dev.tmp
++++ b/ocore/tmpl/skeleton_io_dev.tmp
+@@ -11,18 +11,19 @@ architecture RTL of io_dev is
+ 
+ 	subtype buf_rec_t is std_logic_vector(7 downto 0);
+ 
+-	type sendbuf_t is array (0 to 16383) of buf_rec_t;
++	type sendbuf_t is array (0 to 65535) of buf_rec_t;
+ 	signal sendbuf : sendbuf_t;
+-	signal send_head	: std_logic_vector(13 downto 0) := (others=>'0');
+-	signal send_tail	: std_logic_vector(13 downto 0) := (others=>'0');
+-	signal send_empty : std_logic := '0';
++	signal send_head	: std_logic_vector(15 downto 0) := (others=>'0');
++	signal send_tail	: std_logic_vector(15 downto 0) := (others=>'0');
++
++	signal send_empty : std_logic := '1';
+ 
+ 	signal recv_head	: std_logic_vector(10 downto 0) := (others=>'0');
+ 	signal recv_tail	: std_logic_vector(10 downto 0) := ${oc.io_rtail()};
+ 	type recvbuf_t is array (0 to 2047) of buf_rec_t;
+ 	--signal recvbuf : recvbuf_t;
+ 	signal recvbuf : recvbuf_t := (
+-<%include file="contest_sld.txt"/>
++<%include file="contest_sldbin.txt"/>
+ 	);
+ 	signal u232c_o : std_logic_vector(7 downto 0);
+ 	signal u232c_i : std_logic_vector(7 downto 0);
+@@ -40,20 +41,29 @@ begin
+ 				   u232c_i, recv_ready, RS_RX);
+ 
+ ------------------------------------------------------------------------
+----- send
++---- send (write first)
+ ------------------------------------------------------------------------
+-	send_empty <= '1' when send_head=send_tail else '0';
++-- ma : increment send_tail
++-- wb : change send_empty
++-- ft : send_go
++-- async : send_head
+ 	send: process(CLK)
+ 	begin
+ 		if rising_edge(CLK) then
++			if send_head=send_tail then
++				send_empty<='1';
++			else 
++				send_empty<='0';
++			end if;
++			
+ 			if CPU_WR='1' then
+ 				sendbuf(conv_integer(send_tail)) <= CPU_OUT(7 downto 0);
+-				send_tail <= send_tail + 1;
++				send_tail <= send_tail+1;
+ 			end if;
+ 
+ 			if send_busy='0' and send_go='0' then
+ 				u232c_o <= sendbuf(conv_integer(send_head));
+-				send_go<=not send_empty;
++				send_go<= not send_empty;
+ 				send_head <= send_head + conv_integer(not send_empty);
+ 			else
+ 				send_go<='0';
+@@ -64,15 +74,22 @@ begin
+ ------------------------------------------------------------------------
+ ---- recv
+ ------------------------------------------------------------------------
+-	NYET <= '1' when recv_head=recv_tail else '0';
++-- ma : increment recv_head
++-- wb : change NYET, IO_IN(mem_acc)
++-- async : recv_tail --> NYET
+ 	receive : process(CLK)
+ 	begin
+ 		if rising_edge(CLK) then
++			if recv_head=recv_tail then
++				NYET<='1';
++			else 
++				NYET<='0';
++			end if;
++
+ 			if CPU_RD='1' then
+ 				CPU_IN <= x"000000"&recvbuf(conv_integer(recv_head));
+ 				recv_head <= recv_head+1;
+ 			end if;
+-
+ 			if recv_ready='1' then
+ 				recvbuf(conv_integer(recv_tail))<=u232c_i;
+ 				recv_tail <= recv_tail+1;
+diff --git a/ocore/tmpl/skeleton_top.tmp b/ocore/tmpl/skeleton_top.tmp
+index dbf0b8f..8938440 100644
+--- a/ocore/tmpl/skeleton_top.tmp
++++ b/ocore/tmpl/skeleton_top.tmp
+@@ -17,10 +17,10 @@ architecture board of top is
+ 
+ 	signal cpu_out : ${oc.io_bus_t()};
+ 	signal cpu_in : ${oc.io_bus_t()};
+-	signal cpu_wr :std_logic;
+-	signal cpu_rd :std_logic;
++	signal cpu_wr : ${oc.io_flag_t()};
++	signal cpu_rd : ${oc.io_flag_t()};
++	signal nyet   : ${oc.io_flag_t()};
+ 
+-	signal nyet   :std_logic;
+ 	signal pipe   :std_logic;
+ 
+ 	signal clk,iclk : std_logic;
+@@ -44,10 +44,7 @@ ${next.body()}
+ 
+ 	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, 
+ 		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD);
+-	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
+-			-- normal style.
+-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
+-			-- no input. recvbuf is already filled with sld data.
++	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, ${oc.rx_en()}, RS_TX);
+ 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
+ 			-- like loopback.
+ 
+
+diff --git a/ocore/tmpl/tmp_io_dev.tmp b/ocore/tmpl/tmp_io_dev.tmp
+new file mode 100644
+index 0000000..1de9f30
+--- /dev/null
++++ b/ocore/tmpl/tmp_io_dev.tmp
+@@ -0,0 +1,87 @@
++## -*- coding: utf-8 -*-
++<%inherit file="skeleton.tmp"/>
++entity io_dev is
++<%include file="io_dev_entity.tmp"/>
++end io_dev;
++
++architecture RTL of io_dev is
++	component u232c is
++<%include file="u232c_entity.tmp"/>
++	end component;
++
++	subtype buf_rec_t is std_logic_vector(7 downto 0);
++
++	type sendbuf_t is array (0 to 16383) of buf_rec_t;
++	signal sendbuf : sendbuf_t;
++	signal send_head	: std_logic_vector(13 downto 0) := (others=>'0');
++	signal send_tail	: std_logic_vector(13 downto 0) := (others=>'0');
++
++	signal send_empty : std_logic := '0';
++
++	signal recv_head	: std_logic_vector(10 downto 0) := (others=>'0');
++	signal recv_tail	: std_logic_vector(10 downto 0) := ${oc.io_rtail()};
++	type recvbuf_t is array (0 to 2047) of buf_rec_t;
++	signal recvbuf : recvbuf_t;
++	--signal recvbuf : recvbuf_t := (
++##<%include file="contest_sld.txt"/>
++	--);
++	signal u232c_o : std_logic_vector(7 downto 0);
++	signal u232c_i : std_logic_vector(7 downto 0);
++
++	signal send_go : std_logic;
++	signal send_busy : std_logic := '0';
++
++	signal recv_ready : std_logic;
++
++	
++begin
++	
++	rs232c: u232c generic map (wtime=>${next.wtime()})
++	port map (clk, u232c_o, send_go, send_busy, RS_TX, 
++				   u232c_i, recv_ready, RS_RX);
++
++------------------------------------------------------------------------
++---- send
++------------------------------------------------------------------------
++	send_empty <= '1' when send_head=send_tail else '0';
++	send: process(CLK)
++	begin
++		if rising_edge(CLK) then
++			if CPU_WR(1)='1' then
++				sendbuf(conv_integer(send_tail)) <= CPU_OUT(7 downto 0);
++				send_tail <= send_tail + 1;
++			end if;
++
++			if send_busy='0' and send_go='0' then
++				u232c_o <= sendbuf(conv_integer(send_head));
++				send_go<=not send_empty;
++				send_head <= send_head + conv_integer(not send_empty);
++			else
++				send_go<='0';
++			end if;
++		end if;
++	end process;
++
++------------------------------------------------------------------------
++---- recv
++------------------------------------------------------------------------
++	NYET(0) <= '1' when recv_head=recv_tail else '0';
++	NYET(1) <= '1' when recv_head=recv_tail else '0';
++	receive : process(CLK)
++	begin
++		if rising_edge(CLK) then
++			if CPU_RD(1)='1' then
++				CPU_IN <= x"000000"&recvbuf(conv_integer(recv_head));
++				recv_head <= recv_head+1;
++			end if;
++
++			if recv_ready='1' then
++				recvbuf(conv_integer(recv_tail))<=u232c_i;
++				recv_tail <= recv_tail+1;
++			end if;
++		end if;
++	end process;
++
++
++end RTL;
++<%namespace name="oc" file="macro.tmp"/>
+diff --git a/ocore/top.vhd b/ocore/top.vhd
+index 63e428d..a4b7f8a 100644
+--- a/ocore/top.vhd
++++ b/ocore/top.vhd
+@@ -71,10 +71,10 @@ architecture board of top is
+ 
+ 	signal cpu_out : std_logic_vector(31 downto 0);
+ 	signal cpu_in : std_logic_vector(31 downto 0);
+-	signal cpu_wr :std_logic;
+-	signal cpu_rd :std_logic;
++	signal cpu_wr : std_logic;
++	signal cpu_rd : std_logic;
++	signal nyet   : std_logic;
+ 
+-	signal nyet   :std_logic;
+ 	signal pipe   :std_logic;
+ 
+ 	signal clk,iclk : std_logic;
+@@ -110,12 +110,9 @@ begin
+ 
+ 	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, 
+ 		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD);
+-	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
+-			-- normal style.
+-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);  
+-			-- no input. recvbuf is already filled with sld data.
++	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);
+ 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
+-			-- like loopback.
++			-- loopback.
+ 
+ 	count_down: process(clk, count)
+ 	begin
+diff --git a/ocore/top_ocore.vhd b/ocore/top_ocore.vhd
+deleted file mode 100644
+index 1c0f202..0000000
+--- a/ocore/top_ocore.vhd
++++ /dev/null
+@@ -1,89 +0,0 @@
+-library ieee;
+-use ieee.std_logic_1164.all;
+-use ieee.std_logic_unsigned.all;
+-use ieee.std_logic_arith.all;
+-
+-
+---library UNISIM;
+---use UNISIM.VComponents.all;
+-
+-entity top is
+-	Port (
+-		MCLK1 : in  STD_LOGIC;
+-		RS_RX : in  STD_LOGIC;
+-		RS_TX : out  STD_LOGIC
+-	);
+-
+-
+-
+-end top;
+-
+-architecture cpu of top is
+-
+-signal clk,iclk: std_logic;
+-
+-	component cpu is
+-	port
+-	(			
+-	CLK	:	in	std_logic;
+-	RESET	:	in	std_logic;
+-	IO65_IN	:	in	std_logic_vector (31 downto 0);
+-	IO64_OUT	:	out	std_logic_vector (31 downto 0)
+-	);				
+-
+-
+-
+-	end component;
+-
+-	--component u232c is
+-	  --generic (wtime: std_logic_vector(15 downto 0) := x"0001");
+-	  --Port ( clk  : in  STD_LOGIC;
+-			 --data : in  STD_LOGIC_VECTOR (7 downto 0);
+-			 --go   : in  STD_LOGIC;
+-			 --busy : out STD_LOGIC;
+-			 --tx   : out STD_LOGIC);
+-	--end component;
+-
+-	signal reset : std_logic := '1';
+-	signal send_data : std_logic_vector(31 downto 0);
+-	signal count : std_logic_vector(3 downto 0) := "1111";
+-
+-begin
+-
+-
+---ib: IBUFG port map (i=>MCLK1, o=>iclk);
+---bg: BUFG port map (i=>iclk, o=>clk);
+-clk <= MCLK1;
+-
+-
+-	count_down: process(clk, count)
+-	begin
+-		if rising_edge(clk) then
+-			case count  is
+-				when "0000"=>
+-					count <= count;
+-					reset <= '0';
+-				when others =>
+-					count <= count - 1;
+-			end case;
+-		end if;
+-	end process;
+-
+-	cpunit : cpu port map (
+-				CLK => clk,
+-				RESET => reset,
+-				IO65_IN  => (others=>'0'),
+-				IO64_OUT  => send_data);
+-
+-
+-	--send_u : u232c port map (
+-				--clk =>clk,
+-				--data=>send_in(7 downto 0),
+-				--go=>send_go,
+-				--busy=>send_busy,
+-				--tx=>RS_TX);
+-end cpu;
+-
+

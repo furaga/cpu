@@ -31,7 +31,7 @@ architecture behavior of mem_acc is
 	signal io_read : std_logic := '0';
 	signal io_en : std_logic;
 
-	signal xwa : std_logic;
+	signal xwa,pre_xwa : std_logic;
 
 
 begin
@@ -42,8 +42,8 @@ begin
 
 	DATA_OUT <= IO_IN when io_read='1' else SRAM_ZD;
 
-	IO_WR <= '1' when io_write='1' and CLK_EX_DLY='1' else '0';
-	IO_RD <= '1' when io_read='1' and CLK_EX_DLY='1' else '0';
+	IO_WR <= io_write and CLK_EX_DLY;
+	IO_RD <= io_read and CLK_EX_DLY;
 
 	process(CLK_EX_DLY)
 	begin
@@ -53,6 +53,7 @@ begin
 
 			SRAM_ZA <= "000"&ADDR(18 downto 2);
 			SRAM_XWA <= xwa;
+			pre_xwa <= xwa;
 
 			if io_en='1' and RAM_WEN='1' then
 				IO_OUT <= DATA_IN;
@@ -64,7 +65,7 @@ begin
 	process(CLK_MA)
 	begin
 		if rising_edge(CLK_MA) then
-			if xwa='0' then -- write
+			if pre_xwa='0' then -- write
 				SRAM_ZD <= DATA_IN;
 			else
 				SRAM_ZD <= (others=>'Z');
