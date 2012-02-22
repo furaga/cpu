@@ -96,7 +96,7 @@ begin
 			else
 				V := (others=>'1');
 				count := count;
-				lswE <= varE-"00000001";
+				lswE <= varE-1;
 				lshiftwidth <= count;
 			end if;
 		end loop;

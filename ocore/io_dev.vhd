@@ -312,8 +312,9 @@ x"00", x"00", x"00", x"00", x"00", x"00", x"00", x"00"
 	signal u232c_o : std_logic_vector(7 downto 0);
 	signal u232c_i : std_logic_vector(7 downto 0);
 
-	signal send_go : std_logic := '0';
+	signal send_go : std_logic;
 	signal send_busy : std_logic := '0';
+
 	signal recv_ready : std_logic;
 
 	

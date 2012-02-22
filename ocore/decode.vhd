@@ -11,7 +11,7 @@ port (
 	PROM_OUT	:	in std_logic_vector(31 downto 0);
 	FP_OUT	:	in std_logic_vector(31 downto 0);
 	LINK_OUT	:	in std_logic_vector(31 downto 0);
-	INPUT_FLAG	:	out std_logic := '0';
+	INPUT_FLAG	:	out std_logic;
 	IR	: out std_logic_vector(31 downto 0);
 	FP	:	out std_logic_vector(19 downto 0);
 	LR	:	out std_logic_vector(31 downto 0)
