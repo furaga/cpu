@@ -28,9 +28,13 @@ all: $(TARGET)
 ocore: .ocore.stamp
 .ocore.stamp: $(OCORE_MODS:%=%.vhd)
 	cp $? $(OCORE_DIR)/
-	touch ocore.stamp
-ise: $(ISE_MODS:%=%.vhd) $(SIM_TARGET).coe
+	touch .ocore.stamp
+
+ise: .ise.stamp
+.ise.stamp: $(ISE_MODS:%=%.vhd) $(SIM_TARGET).coe
 	cp $? $(ISE_SPACE)/
+	touch .ise.stamp
+
 vsim: $(OCORE_MODS:%=%.vhd)
 	cp $? $(VSIM_SPACE)/
 
@@ -54,8 +58,8 @@ ise_top.vhd: ise_top.tmp skeleton_top.tmp $(BASE)
 skeleton_top.tmp: top_entity.tmp io_dev_entity.tmp core_c_entity.tmp $(BASE)
 testbench.vhd: testbench.tmp top_entity.tmp sram_entity.tmp $(BASE)
 sram.vhd: sram.tmp sram_entity.tmp $(BASE)
-u232c.vhd: u232c.tmp $(BASE)
-ise_u232c.vhd: ise_u232c.tmp $(BASE)
+u232c.vhd: u232c.tmp skeleton_u232c.tmp $(BASE)
+ise_u232c.vhd: ise_u232c.tmp skeleton_u232c.tmp $(BASE)
 skeleton_u232c.tmp: u232c_entity.tmp $(BASE)
 io_dev.vhd: io_dev.tmp skeleton_io_dev.tmp contest_sldbin.txt contest_sld.txt $(BASE)
 ise_io_dev.vhd: ise_io_dev.tmp skeleton_io_dev.tmp $(BASE)

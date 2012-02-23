@@ -22,13 +22,20 @@ TIME = 100us
 
 default: ocore read_float
 
+rt :
+	./cserver contest.sld contest.ppm -b
+cmp :
+	cmp contest.ppm ppm/sim_contest_p6.ppm
+
 ocore :
 	make -C tmpl ocore
+
+##cp $(ISE_VHDL:%=%.vhd) $(ISE_SPACE)
 ise :
-	make -sC tmpl ise
-	cp $(ISE_VHDL:%=%.vhd) $(ISE_SPACE)
+	make -C tmpl ise
+
 vsim :
-	make -sC tmpl vsim
+	make -C tmpl vsim
 	cp $(VSIM_VHDL:%=%.vhd) $(VSIM_SPACE)
 
 wave:

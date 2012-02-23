@@ -24,7 +24,7 @@ architecture RTL of io_dev is
 
 	--signal recvbuf : recvbuf_t;
 	signal recvbuf : recvbuf_t := (
-<%include file="contest_sld.txt"/>
+<%include file="contest_sldbin.txt"/>
 	);
 	signal u232c_o : std_logic_vector(7 downto 0);
 	signal u232c_i : std_logic_vector(7 downto 0);

@@ -1,9 +1,6 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ieee.std_logic_arith.all;
 use ieee.std_logic_unsigned.all;
---use ieee.std_logic_signed.all;
-
 
 entity u232c is
   generic (wtime: std_logic_vector(15 downto 0) := x"1ADB");
@@ -89,6 +86,5 @@ begin
 
 
 end blackbox;
-
 
 
