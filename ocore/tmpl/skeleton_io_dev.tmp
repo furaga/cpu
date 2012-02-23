@@ -22,10 +22,10 @@ architecture RTL of io_dev is
 	signal recv_tail	: std_logic_vector(10 downto 0) := ${oc.io_rtail()};
 	type recvbuf_t is array (0 to 2047) of buf_rec_t;
 
-	--signal recvbuf : recvbuf_t;
-	signal recvbuf : recvbuf_t := (
-<%include file="contest_sldbin.txt"/>
-	);
+	signal recvbuf : recvbuf_t;
+	--signal recvbuf : recvbuf_t := (
+##<%include file="contest_sldbin.txt"/>
+	--);
 	signal u232c_o : std_logic_vector(7 downto 0);
 	signal u232c_i : std_logic_vector(7 downto 0);
 
@@ -76,6 +76,11 @@ begin
 			end if;
 
 			if recv_ready='1' then
+				--if u232c_i=recvbuf(conv_integer(recv_tail)) then
+					--recvbuf(conv_integer(recv_tail))<=x"74";
+				--else
+					--recvbuf(conv_integer(recv_tail))<=x"66";
+				--end if;
 				recvbuf(conv_integer(recv_tail))<=u232c_i;
 				recv_tail <= recv_tail+1;
 			end if;

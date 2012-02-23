@@ -47,7 +47,7 @@ begin
 			io_read  <= io_en and (not RAM_WEN);
 			io_write <= io_en and RAM_WEN;
 
-			SRAM_ZA <= "000"&ADDR(18 downto 2);
+			SRAM_ZA <= "00000000"&ADDR(13 downto 2);
 			SRAM_XWA <= xwa;
 			pre_xwa <= xwa;
 

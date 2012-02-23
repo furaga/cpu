@@ -6,6 +6,20 @@
 #include <fcntl.h>
 #include <string.h>
 
+#include <unistd.h>
+#include <stdint.h>
+
+#define N 8
+void to_bin8(uint32_t a) {
+	int i,n = N;
+	char buf[N];
+	for (i = 0; i < N; i++) {
+		buf[N-i-1] = (a&1)+'0';
+		a>>=1;
+	}
+	while (n -= write(1, buf, n));
+}
+
 #define SIZE 32768
 int main(int argc, char** argv) {
 	unsigned char c;
@@ -40,21 +54,26 @@ int main(int argc, char** argv) {
 		printf("0xaa received\n");
 	}
 */
-
 	cnt = 0;
 	for (i=0; i<nread; i++) {
 		c = buf[i];
+		to_bin8(c&0xff);
+		printf("  %3d(dec) 0x%02x %c\n", c&0xff, c&0xff, c&0xff);
+		fflush(stdout);
 
+
+/*
 		if (cnt >= 3) {
 			a.i |= c << (cnt*8);
 			cnt++;
-			printf("%f  0x%08X\n", a.f, a.i);
+			printf("%c  0x%08X\n", a.f, a.i);
 			a.i = 0;
 			cnt = 0;
 		} else {
 			a.i |= c << (cnt*8);
 			cnt++;
 		}
+ */
     }
 
 

@@ -14,8 +14,9 @@ architecture blackbox of u232c is
 
   signal recv_timer : std_logic_vector(15 downto 0) := (others=>'0');
   signal recvbuf: std_logic_vector(8 downto 0) := (others=>'0');
-  signal recv_state: std_logic_vector(3 downto 0) := "1001";
-  signal rxdata: std_logic_vector(7 downto 0) := (others=>'0');
+  signal recv_state: std_logic_vector(3 downto 0) := x"9";
+  signal rxsample : std_logic_vector(4 downto 0) := (others=>'1');
+  signal rx_in : std_logic;
 begin
 
   send : process(clk)
@@ -45,26 +46,27 @@ begin
   recv : process(clk)
   begin
     if rising_edge(clk) then
+		rxsample <= rx&rxsample(4 downto 1);
       case recv_state is
-        when "1111"=> -- recv_data set
-			recv_data<= recvbuf(7 downto 0);
-			recv_ready<= '1';
+        when x"f"=> -- recv_data set
+			if rx_in='1' then -- rx should be '1' (stop bit)
+				recv_data<= recvbuf(7 downto 0);
+			else
+				recv_data<= x"ff";
+			end if;
 			recv_state <= recv_state-1;
-		when "1110"=> -- wait stop bit
-			recv_ready<= '0';
-			if rx='1' then 
+		when x"e"=> -- redundunt ?
+			if rx_in='0' then 
 				recv_state<="1001";
 			end if;
-        when "1001"=> -- 9 wait start bit
-			recv_ready<= '0';
-			if rx = '0' then -- start bit
+        when x"9"=> -- 9 wait start bit
+			if rx_in='0' then -- start bit
 				recv_state<=recv_state-1;
 				recv_timer <= ${next.recv_timer_init()};
 			end if;
         when others=> -- 8 - 0
-			recv_ready<= '0';
 			if recv_timer=0 then
-				recvbuf <= rx&recvbuf(8 downto 1);
+				recvbuf <= rx_in&recvbuf(8 downto 1);
 				recv_timer<=wtime;
 				recv_state<=recv_state-1;
 			else
@@ -73,6 +75,26 @@ begin
       end case;
     end if;
   end process;
+  rx_in <= rxsample(4) when rxsample(4)=rxsample(3) else
+  		   '1' when rxsample(2 downto 0)="111" or 
+		   			rxsample(2 downto 0)="110" or 
+		   			rxsample(2 downto 0)="101" or 
+		   			rxsample(2 downto 0)="011" else
+			'0';
+  		
+
+
+	assert_ready : process(clk)
+	begin
+		if rising_edge(clk) then
+			case recv_state is
+				when x"f" =>
+					recv_ready <= '1';
+				when others =>
+					recv_ready <= '0';
+			end case;
+		end if;
+	end process;
 
 
 end blackbox;

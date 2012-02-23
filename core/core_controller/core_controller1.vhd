@@ -1,43 +1,18 @@
---------------------------------------------------------------------------------
--- Company: 
--- Engineer:
---
--- Create Date:   11:48:47 11/18/2011
--- Design Name:   
--- Module Name:   /home/nu-ma/class/CPU/CORE/CORE_ISE/CPU/coretest.vhd
--- Project Name:  CPU
--- Target Device:  
--- Tool versions:  
--- Description:   
--- 
--- VHDL Test Bench Created by ISE for module: ProgramCounter
--- 
--- Dependencies:
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
---
--- Notes: 
--- This testbench has been automatically generated using types std_logic and
--- std_logic_vector for the ports of the unit under test.  Xilinx recommends
--- that these types always be used for the top-level I/O of a design in order
--- to guarantee that the testbench will bind correctly to the post-implementation 
--- simulation model.
---------------------------------------------------------------------------------
-LIBRARY ieee;
-USE ieee.std_logic_1164.ALL;
-use IEEE.std_logic_unsigned.all;
-use IEEE.std_logic_arith.all;
- 
--- Uncomment the following library declaration if using
--- arithmetic functions with Signed or Unsigned values
---USE ieee.numeric_std.ALL;
- 
-ENTITY coretest IS
-END coretest;
- 
-ARCHITECTURE behavior OF coretest IS 
+library IEEE;
+use IEEE.STD_LOGIC_1164.all;
+use IEEE.STD_LOGIC_ARITH.all;
+use IEEE.STD_LOGIC_UNSIGNED.all;
+
+entity core_controller is
+  port ( 
+    clk   : in  std_logic;
+    locked: in  std_logic;
+    rx    : in  std_logic;
+    tx    : out std_logic);
+end core_controller; 
+
+architecture cctrl of core_controller is
+  
   component ProgramCounter
     port (
       clk      : in std_logic;
@@ -128,16 +103,14 @@ ARCHITECTURE behavior OF coretest IS
       InData : out std_logic_vector(31 downto 0));
   end component;
 
-  signal clk : std_logic := '1';
 
-  constant clk_period : time := 30 ns;
 
   --signals
 
-  signal chst,init : std_logic := '1';
-  signal CVDBG: std_logic_vector(4 downto 0) := "00000";
-
-  signal CV : std_logic_vector(2 downto 0) := "010";
+  signal chst : std_logic := '1';
+  signal CV: std_logic_vector(2 downto 0) := "000";
+  signal substate : std_logic_vector(1 downto 0) := "11";
+  signal init : std_logic := '1';       -- init
   signal RorW, Mem, RamAddr : std_logic := '0';  -- RAM制御線
   signal RamData : std_logic_vector(1 downto 0) := "00";
   signal RamOut : std_logic_vector(31 downto 0) := x"FFFFFFFF";
@@ -155,21 +128,21 @@ ARCHITECTURE behavior OF coretest IS
   signal MBCtrl : std_logic_vector(1 downto 0);  --ALU制御線
   signal condreg : std_logic_vector(2 downto 0);
 
+  signal Jflg : std_logic := '0';       -- JUMP成立なら1
   signal ALUControl : std_logic_vector(3 downto 0) := "1111";
   signal A,B : std_logic_vector(31 downto 0);
   signal ALUout, PCout : std_logic_vector(31 downto 0) := x"00000000";
   signal LRout : std_logic_vector(31 downto 0);
   signal wait_clk : std_logic_vector(3 downto 0) := "0000";
 
-  signal Jflg : std_logic := '0';       -- JUMP成立なら1
   signal PCWrite : std_logic := '0';
   signal PCChange : std_logic := '0';
   signal PCSource : std_logic_vector(1 downto 0);  -- PC制御線
 
   signal RegWrite, GorF : std_logic := '0';  -- Register制御線
   signal RegDst : std_logic_vector(1 downto 0) := "01";
-  signal memtoReg : std_logic_vector(1 downto 0) := "11";
   signal BAddr, movlr, LR, LRflg, LRWrite : std_logic := '0';
+  signal memtoReg : std_logic_vector(1 downto 0) := "11";
   signal OPflg : std_logic := '1';
   signal InData : std_logic_vector(31 downto 0);
 
@@ -181,7 +154,7 @@ ARCHITECTURE behavior OF coretest IS
   signal send_busy : std_logic := '0';
 
   signal OutData : std_logic_vector(7 downto 0);
-  signal rx,tx,locked : std_logic := '1';
+
 
   type OProm is array (0 to 7) of std_logic_vector(31 downto 0);
   constant init_op : OProm :=
@@ -206,7 +179,6 @@ ARCHITECTURE behavior OF coretest IS
 
 
   -- Clock period definitions
-  constant clk_period : time := 10 ns;
   
 BEGIN
   
@@ -329,7 +301,7 @@ BEGIN
     if rising_edge(clk) then
       case CV is
         when "100" =>                     -- FETCH_STEP
-          CVDBG <= "10000"; dcount <= dcount+1;
+--          CVDBG <= "10000"; dcount <= dcount+1;
           GorF <= '0'; PCChange <= '0'; LRWrite <= '0'; LRflg <= '0';
           PCWrite <= '0'; OPflg <= '1'; RamAddr <= '1';
           IRWrite <= '1'; ALUControl <= "0000"; MBCtrl <= "01"; Mem <= '1';
@@ -341,258 +313,16 @@ BEGIN
           else
             IRin <= '1';
             coreop <= init_op(conv_integer(PCout(31 downto 2)));
-<<<<<<< HEAD
-            if PCout(4 downto 2) = "110" then
-              init <= '0';
-            end if;
-          end if;
--------------------------------------------------------------------------------
--- Instruction Decode and Register Fetch
--------------------------------------------------------------------------------
-        when "0001" =>                  -- Inst. Decode and Register Fetch
-          MACtrl <= '0'; MBCtrl <= "10"; branch <= '1'; PCWrite <= '1';
-          IRWrite <= '0'; Mem <= '0';
-          case op is
-            when "000000" => cstate <= x"3";  -- SPECIAL
-            when "000001" => cstate <= x"5";  -- I/O
-            when "000011" => cstate <= x"3";  -- padd(I
-                             Iflg <= '1';
-            when "000111" => cstate <= x"3";  -- mvlo
-            when "001111" => cstate <= x"3";  -- mvhi
-            when "001000" => cstate <= x"3";  -- addi
-                             Iflg <= '1';
-            when "001011" => cstate <= x"3";  -- bri branch to rs + imm
-            when "010000" => cstate <= x"3";  -- subi
-                             Iflg <= '1';
-            when "011000" => cstate <= x"3";  -- muli
-                             Iflg <= '1';
-            when "100000" => cstate <= x"2";  -- ldrom (ROMから読み出す(初期化用
-            when "101000" => cstate <= x"3";  -- slli
-                             Iflg <= '1';
-            when "010001" => cstate <= x"0";  -- FP inst.
-            when "010011" => cstate <= x"2";  -- ld
-            when "011011" => cstate <= x"2";  -- st
-            when "100011" => cstate <= x"2";  -- ldi
-                             Iflg <= '1';
-            when "101010" => cstate <= x"3";
-                             Iflg <= '1';
-            when "101011" => cstate <= x"2";  -- sti
-                             Iflg <= '1';
-            when "110011" => cstate <= x"2";  -- ldlr
-            when "111011" => cstate <= x"2";  -- stlr
-            when "110001" => cstate <= x"2";  -- fld
-            when "111001" => cstate <= x"2";  -- fst
-            when "000010" => cstate <= x"4";  -- jmp
-                             JumpCond <= "111";
-            when "001010" => cstate <= x"4";  -- jeq
-                             JumpCond <= "010";
-            when "010010" => cstate <= x"4";  -- jne
-                             JumpCond <= "101";
-            when "011010" => cstate <= x"4";  -- jlt
-                             JumpCond <= "100";
-            when "100010" => cstate <= x"4";  -- jle
-                             JumpCond <= "110";
-            when "111101" => cstate <= x"3";  -- link ( lr <- pc + imm)
-                             Iflg <= '1';
-            when others => null;
-          end case;
--------------------------------------------------------------------------------
--- load or store
--- 010011 ld
--- 011011 st
--- 100011 ldi
--- 101011 sti
--- 110011 ldlr
--- 111011 stlr
--- 100000 ldrom (romからldする
--- op(5)=0 -> R, op(5)=1 -> I.
--- op(3)=0 -> ld系, op(3)=1 -> st系
--- op(5 downto 4)=11 -> LR, else -> grobal
--------------------------------------------------------------------------------
-        when "0010" =>
-          PCWrite <= '0';
-          RamAddr <= '0';
-          case substate is
-            when "00" =>
-              substate <= "01";
-              if op(3) = '0' or op = "100000" then     -- load 2
-                 MemtoReg <= "01"; RorW <= '0'; Mem <= '1';  -- 読み込んで、レジスタに書く準備をする。
-              else                      -- store 2
-                RorW <= '1';
-                if op(5 downto 4)="11" then
-                  RamData <= "10";
-                else
-                  RamData <= "00";
-                end if;
-              end if;
-            when "01" =>
-              if op(3) = '0' or op = "100000" then  -- load 3
-                RegDst <= "01"; Mem <= '0'; RorW <= '0';
-              end if;
-              cstate <= "0110"; substate <= "11";
-            when "10" => substate <= "00";
-            when "11" =>                -- load/store 1 (アドレス計算
-              if op = "100000" then     -- ROMから読み込む場合(init?
-                OPflg <= '1';
-              else
-                OPflg <= '0';
-              end if;
-              PCWrite <= '0'; branch <= '0';
-              MACtrl <= '1';
-              if op(5) = '1' then       -- I形式
-                MBCtrl <= "10"; ALUControl <= "0001";
-              else                      -- R形式
-                MBCtrl <= "00"; ALUControl <= "0000";
-              end if;
-              substate <= "10";
-            when others => cstate <= "0000";
-          end case;
--------------------------------------------------------------------------------
--- Calculate (R/I)
--------------------------------------------------------------------------------
-        when "0011" =>  
-          PCWrite <= '0';
-          case substate is
-            when "00" => branch <= '1'; substate <= "11"; cstate <= "0110";
-            when "11" =>  
-              case op is
-                when "000000" =>           -- SPECIAL
-                  MACtrl <= '1'; MBCtrl <= "00";        
-                  MemtoReg <= "00";
-                  CState <= "0110";
-                  case funct is
-                    when "000000" => ALUControl <= "0100";  -- S_L
-                                     branch <= '0';RegDst <= "10"; 
-                    when "110011" => movlr <= '1'; CState <= "0000";
-                    when "000010" => ALUControl <= "0101";  -- S_R
-                                     branch <= '0';RegDst <= "10"; 
-                    when "011000" => ALUControl <= "0010";  -- MUL
-                                     branch <= '0';RegDst <= "10"; 
-                    when "011011" => ALUControl <= "1000";  -- NOR
-                                     branch <= '0';RegDst <= "10"; 
-                    when "100000" => ALUControl <= "0000";  -- ADD
-                                     branch <= '0';RegDst <= "10"; 
-                    when "100010" => ALUControl <= "0001";  -- SUB
-                                     branch <= '0';RegDst <= "10"; 
-                    when "100100" => ALUControl <= "0110";  -- AND
-                                     branch <= '0';RegDst <= "10"; 
-                    when "100101" => ALUControl <= "0111";  -- OR
-                                     branch <= '0';RegDst <= "10"; 
--- 特別 ------
-                                     -- memo:
-                                     -- 前に計算した値と違うものへ飛ぶので、branchを0にしてから1にしてWrite Backへ入る
-                    when "001000" =>        -- branch(PCの値をrs(in1)の値に
-                      ALUControl <= "1111";
-                      branch <= '0'; substate <= "00";
-                    when "010000" =>    -- btmplr
-                      ALUControl <= "1111"; branch <= '0';
-                      LR <= '1'; substate <= "00";
-                    when "111111" => null;
-                    when others => null;
-                  end case;
--------------------------------------------------------------------------------
--- I形式
--------------------------------------------------------------------------------
-                when "000011" =>          -- padd
-                  ALUControl <= "0000"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MACtrl <= '0'; MBCtrl <= "10"; MemtoReg <= "00";
-                when "001000" =>            -- ADD Immediate
-                  ALUControl <= "0000"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "001011" =>            -- branch reg and immediate
-                  ALUControl <= "0000";     -- branch to rs + imm
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10";
-                  substate <= "00";
-                when "010000" =>            -- SUB Immediate
-                  ALUControl <= "0001"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "011000" =>            -- MUL Immediate
-                  ALUControl <= "0010"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "101000" =>            -- SLL Immediate
-                  ALUControl <= "0100"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "101010" =>            -- SRL Immediate
-                  ALUControl <= "0101"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "000111" =>            -- mvlo
-                  ALUControl <= "1010"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "001111" =>            -- mvhi
-                  ALUControl <= "1001"; CState <= "0110";
-                  branch <= '0'; RegDst <= "01"; MBCtrl <= "10"; MemtoReg <= "00";
-                when "111101" =>            -- link 
-                  ALUControl <= "0000";
-                  MACtrl <= '0'; MBCtrl <= "10";
-                  branch <= '1'; CState <= "0110";
-                when "111111" => CState <= "1111";
-                when others => null;
-              end case;
-            when others => null;
-          end case;
--------------------------------------------------------------------------------
--- Jump 命令
--------------------------------------------------------------------------------          
-        when "0100" =>
-          PCWrite <= '0'; branch <= '1';
-          case substate is
-            when "00" => substate <= substate+1;
-            when "01" =>
-              if (JumpCond and condreg) /= "000" then
-                PCWrite <= '1'; substate <= "11";
-              else
-                branch <= '0';
-              end if;
-              substate <= "11"; CState <= "0110";
-            when "11" => 
-              ALUControl <= "0001"; MACtrl <= '1';
-              substate <= "00"; MBCtrl <= "00";
-              if op = "000010" then
-                PCSource <= "10";
-              else
-                PCSource <= "01";
-              end if;
-            when others => substate <= "11";
-          end case;
--------------------------------------------------------------------------------
--- I/O 命令
--------------------------------------------------------------------------------          
-        when "0101" => 
-          PCWrite <= '0'; branch <= '0';
-          case funct is
-            when "000000" =>            -- input
-              MemtoReg <= "10";
-              case substate is
-                when "00" => substate <= substate+1;
-                when "01" => get <= '0'; substate <= substate+1;
-                when "10" => 
-                  if recv_busy='0' then
-                    RegDst <= "10"; MemtoReg <= "10";
-                    substate <= substate+1;
-                    CState <= "0110";
-                  end if;
-                when "11" => get <= '1'; substate <= substate+1;
-                when others => null;
-              end case;
-            when "000001" =>            -- output
-              case substate is
-                when "00" => 
-                  send <= '0';
-                  substate <= "11"; CState <= "0110";
-                when "11" => 
-                  if send_busy='0' then
-                    send <= '1'; substate <= substate+1;
-=======
             if PCout(4 downto 2) = "111" then
-              init <= '0'; dcount <= x"FFFF";
+              init <= '0';-- dcount <= x"FFFF";
             end if;
           end if;
         when "110" =>                     -- DECODE_STEP
-          CVDBG <= "01000";
+--          CVDBG <= "01000";
           MACtrl <= '0'; MBCtrl <= "10"; branch <= '0'; PCWrite <= '1';
           IRWrite <= '0'; Mem <= '0'; JumpCond <= "000";
         when "111" =>                     -- EXEC_STEP
-          CVDBG <= "00100";
+--          CVDBG <= "00100";
           PCWrite <= '0';
           case op is
 --SPECIAL
@@ -630,7 +360,6 @@ BEGIN
                     chst <= '0';
                   else
                     send <= '1'; chst <= '1';
->>>>>>> 3c6b684... fib6が（シミュレータで）動く新しい制御部(core_controller1, coretest
                   end if;
                 when others => null;
               end case;
@@ -699,20 +428,26 @@ BEGIN
               RegDst <= "11"; RamData <= "10"; RorW <= '1'; branch <= '0';
             when others => null;
           end case;
--------------------------------------------------------------------------------
--- Write back
--------------------------------------------------------------------------------
-        when "0110" =>
-          CState <= "0000"; PCChange <= '1'; 
-          if branch='1' then
-            PCWrite <= '1';
+        when "011" =>                     -- MEMORY_ACCESS_STEP
+--          CVDBG <= "00010";
+          branch <= '1';
+          if op="011011" then             -- store rd to [rs+rt]
+            BAddr <= '1';
           else
-            if op="111101" then
-              LRWrite <= '1';
-            else
-              RegWrite <= '1';
-            end if;
-            Mem <= '1';
+            Mem<='1';
+          end if;
+        when "001" =>                   -- JUMP_DECISION_STEP（あまり要らない
+          Mem <= '1';
+          if Jflg='1' then
+            PCWrite <= '1';
+          end if;
+        when "000" =>                     -- WRITE_BACK_STEP
+--          CVDBG <= "00001";
+          PCChange <= '1';
+          Mem <= '0'; RorW <= '0'; RamAddr <= '1';
+          RegWrite <= '1'; 
+          if LRflg='1' then
+            LRWrite <= '1';
           end if;
         when others => null;
       end case;
@@ -728,24 +463,5 @@ BEGIN
     end if;
   end process Jump_decision;
 
-  -- Clock process definitions
-  clk_process :process
-  begin
-    clk <= '0';
-    wait for clk_period/2;
-    clk <= '1';
-    wait for clk_period/2;
-  end process;
-  
 
-  -- Stimulus process
-  stim_proc: process
-  begin		
-    -- hold reset state for 100 ns.
-    wait for 100 ns;	
-    wait for clk_period*10;
-    -- insert stimulus here 
-    wait;
-  end process;
-
-END;
+end cctrl;

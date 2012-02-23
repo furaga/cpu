@@ -46,7 +46,7 @@ architecture RTL of io_dev is
 	signal send_empty : std_logic := '0';
 
 	signal recv_head	: std_logic_vector(10 downto 0) := (others=>'0');
-	signal recv_tail	: std_logic_vector(10 downto 0) := conv_std_logic_vector(2000, 11);
+	signal recv_tail	: std_logic_vector(10 downto 0) := (others=>'0');
 	type recvbuf_t is array (0 to 2047) of buf_rec_t;
 
 	--signal recvbuf : recvbuf_t;
@@ -359,7 +359,11 @@ begin
 			end if;
 
 			if recv_ready='1' then
-				recvbuf(conv_integer(recv_tail))<=u232c_i;
+				if u232c_i=recvbuf(conv_integer(recv_tail)) then
+					recvbuf(conv_integer(recv_tail))<=x"74";
+				else
+					recvbuf(conv_integer(recv_tail))<=x"66";
+				end if;
 				recv_tail <= recv_tail+1;
 			end if;
 		end if;

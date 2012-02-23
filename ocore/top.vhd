@@ -110,7 +110,7 @@ begin
 
 	cpunit : core_c port map(clk, clk2x, reset, nyet, cpu_in, 
 		cpu_wr, cpu_rd, cpu_out, ZA, XWA, ZD);
-	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, '1', RS_TX);
+	iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, RS_RX, RS_TX);
 	--iounit : io_dev port map (clk, cpu_wr, cpu_rd, cpu_out, cpu_in, nyet, pipe, pipe);
 			-- like loopback.
 
