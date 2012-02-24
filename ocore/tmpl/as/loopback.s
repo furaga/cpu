@@ -1,11 +1,10 @@
 .init_heap_size	0
 
-	addi	%g3, %g0, 48
-	addi	%g3, %g0, 48
-	addi	%g3, %g0, 48
+	addi	%g6, %g0, 96
+	addi	%g7, %g0, 97
+	addi	%g8, %g0, 98
 Loop:
 	input	%g4
 	output %g4
-	addi	%g3, %g3, 1
 	jmp Loop
 

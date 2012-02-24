@@ -1,5 +1,5 @@
 TB = testbench
-FPU = fadd fmul fsqrt finv 
+FPU = fadd fmul fsqrt finv lzc
 FPU_SIM = $(FPU) finv_table fsqrt_table
 OBJS = top.o clk_gen.o core_c.o decode.o reg_dc.o \
 	std_logic_1164_additional.o \
@@ -25,7 +25,7 @@ default: ocore read_float
 rt :
 	./cserver contest.sld contest.ppm -b
 cmp :
-	cmp contest.ppm ppm/sim_contest_p6.ppm
+	cmp contest.ppm ppm/sim_contest_p6.ppm -l | less
 
 ocore :
 	make -C tmpl ocore

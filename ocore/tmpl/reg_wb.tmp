@@ -8,7 +8,6 @@ architecture RTL of reg_wb is
 				:= conv_std_logic_vector(${oc.reg1_init()}, 32);
 	signal reg_v : ${oc.reg_t()};
 	signal lr_v : ${oc.pc_t()};
-	signal from_ram : std_logic;
 	signal reg_wen :std_logic;
 	signal reg_src :std_logic;
 	signal lr_wen :std_logic;

@@ -78,7 +78,6 @@ port (
 	signal op_code : std_logic_vector(5 downto 0);
 	signal op_data : std_logic_vector(25 downto 0);
 
-	signal cmp_flag : std_logic;
 	signal shamt : std_logic_vector(4 downto 0);
 	signal funct : std_logic_vector(5 downto 0);
 	signal imm : std_logic_vector(15 downto 0);

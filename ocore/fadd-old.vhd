@@ -11,12 +11,6 @@ entity myfadd is
 end myfadd;
 
 architecture op of myfadd is
-	component lzc is
-	port (
-		FRAC : in std_logic_vector(24 downto 0);
-		COUNT : out std_logic_vector(4 downto 0);
-		LSW : out std_logic_vector(4 downto 0));
-	end component;
 
 	signal S1, S2, SO, raw_SO: std_logic;
 	signal E1, E2, EO : std_logic_vector(7 downto 0);
@@ -32,10 +26,9 @@ architecture op of myfadd is
 
 	signal raw_frac : std_logic_vector(24 downto 0);
 
-	signal lswi : integer range 0 to 31; -- left shift width
-	signal lsw : std_logic_vector(4 downto 0);
+	signal lshiftwidth : integer range 0 to 25; -- left shift width
+	signal lswE : std_logic_vector(7 downto 0);
 	signal rshiftwidth 	: integer range 0 to 255; -- right shift width
-	signal zero_count : std_logic_vector(4 downto 0);
 
 begin
 	F1 <= '1'&I1(22 downto 0);
@@ -68,25 +61,46 @@ begin
 	loserF  <= F2 when E1>E2 else F1;
 
 
-	raw_frac <= ('0'&rshiftedF) - ('0'&winnerF) when S1/=S2 and (rshiftedF > winnerF) else 
-			    ('0'&winnerF) - ('0'&rshiftedF) when S1/=S2 and (rshiftedF <= winnerF) else 
-				('0'&rshiftedF) + ('0'&winnerF);
+	raw_frac <= ('0'&rshiftedF) + ('0'&winnerF) 
+				when S1=S2 else
+			  ('0'&rshiftedF) - ('0'&winnerF)
+			  	when S1/=S2 and (rshiftedF > winnerF) else 
+			  ('0'&winnerF) - ('0'&rshiftedF)
+			  	when S1/=S2 and (rshiftedF <= winnerF) else 
+				raw_frac;
 	
-	EO	<=	winnerE+1  when zero_count="00000" else
-			(others=>'0') when zero_count="11001" or (unsigned(winnerE)<=unsigned("000"&lsw)) else
-			unsigned(winnerE)-unsigned("000"&lsw);
+	EO	<=	winnerE+1  when lshiftwidth=0 else
+			(others=>'0') when lshiftwidth=25 or (unsigned(winnerE)<=unsigned(lswE)) else
+			unsigned(winnerE)-unsigned(lswE);
 
 
 	rshiftwidth	<= conv_integer(winnerE - loserE);
 	rshiftedF <= loserF srl rshiftwidth when rshiftwidth < 24 else (others=>'0');
 
-	FO	<=	'0'&raw_frac(24 downto 1) when zero_count="00000" else
-			(others=>'0') when zero_count="11001" else
-			raw_frac sll lswi when lswi < 25 else
-			(others=>'0');
+	FO	<=	'0'&raw_frac(24 downto 1) when lshiftwidth=0 else
+			(others=>'0') when lshiftwidth=25 else
+			raw_frac sll (lshiftwidth-1);
 			
-	lswi <= conv_integer(lsw);
-	lzc_u : lzc port map(raw_frac, zero_count, lsw);
+	LZC : process(raw_frac)
+		variable V : std_logic_vector(25 downto 0);
+		variable count : integer range 0 to 25;
+		variable varE : std_logic_vector(7 downto 0);
+	begin
+		V := raw_frac&'1';
+		count := 0;
+		varE := (others=>'0');
+		for I in 25 downto 0 loop
+			if V(I)='0' then
+				count := count + 1;
+				varE := varE+1;
+			else
+				V := (others=>'1');
+				count := count;
+				lswE <= varE-1;
+				lshiftwidth <= count;
+			end if;
+		end loop;
+	end process;
 
 
 end op;

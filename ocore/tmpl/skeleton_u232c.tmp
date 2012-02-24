@@ -23,7 +23,7 @@ begin
   begin
     if rising_edge(clk) then
       case send_state is
-        when "1011"=> -- wait
+        when "1011"=> -- 11: wait
           if send_go='1' then
             sendbuf<=send_data&"0";
             send_state<=send_state-1;
@@ -49,13 +49,13 @@ begin
 		rxsample <= rx&rxsample(4 downto 1);
       case recv_state is
         when x"f"=> -- recv_data set
-			if rx_in='1' then -- rx should be '1' (stop bit)
-				recv_data<= recvbuf(7 downto 0);
-			else
-				recv_data<= x"ff";
-			end if;
+			recv_data<= recvbuf(7 downto 0);
 			recv_state <= recv_state-1;
-		when x"e"=> -- redundunt ?
+			--if rx_in='1' then -- rx should be '1' (stop bit)
+			--else
+				--recv_data<= x"ff";
+			--end if;
+		when x"e"=>
 			if rx_in='0' then 
 				recv_state<="1001";
 			end if;
