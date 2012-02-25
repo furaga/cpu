@@ -10,7 +10,7 @@ let current_fun = ref ""
 (* 各関数がスタックに変数を積みうるか。絶対に積まないなら、その変数を呼ぶときスタックを上下させる必要はない *)
 let save_env = ref M.empty
 let add_save_env () = save_env := M.add !current_fun true !save_env
-let find_save_env x = if M.mem x !save_env then M.find x !save_env else true
+let find_save_env x = true(*if M.mem x !save_env then M.find x !save_env else true*)
 
 let stackset = ref S.empty (* すでにSaveされた変数の集合 (caml2html: emit_stackset) *)
 let stackmap = ref [] (* Saveされた変数の、スタックにおける位置 (caml2html: emit_stackmap) *)
