@@ -511,5 +511,5 @@ let f oc (Prog(data, fundefs, e)) =
 
   M.iter (Printf.eprintf "GLOBAL : %s %d\n") !global_vars;
   
-  Output.optimize ();
+  (*Output.optimize ();*)
   Output.output oc
