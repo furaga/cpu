@@ -1,1 +1,0 @@
-constArray.cmi: kNormal.cmi 

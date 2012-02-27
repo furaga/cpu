@@ -2,21 +2,23 @@
 
 .PHONY: all asm clean sim fsim xsim frt rt xrt
 MAKE_OPTION = -s
+
+ASM = oc_asm
 all:
-	cd asm; make $(MAKE_OPTION)
+	cd $(ASM); make $(MAKE_OPTION)
 	cd sim; make $(MAKE_OPTION)
 	cd fpu; make $(MAKE_OPTION)
 	cd xsim; make $(MAKE_OPTION)
 
 asm:
-	cd asm; make $(MAKE_OPTION) asm
+	cd $(ASM); make $(MAKE_OPTION) asm
 sim:
 	cd sim; make $(MAKE_OPTION) sim
 xsim:
 	cd xsim; make $(MAKE_OPTION) sim
 
 rt:
-	@cd asm; make $(MAKE_OPTION) rt
+	@cd $(ASM); make $(MAKE_OPTION) rt
 	@cd sim; make $(MAKE_OPTION) rt
 
 xrt:
@@ -24,6 +26,7 @@ xrt:
 
 clean:
 	cd asm; make $(MAKE_OPTION) clean
+	cd oc_asm; make $(MAKE_OPTION) clean
 	cd sim; make $(MAKE_OPTION) clean
 	cd fpu; make $(MAKE_OPTION) clean
 	cd xsim; make $(MAKE_OPTION) clean
