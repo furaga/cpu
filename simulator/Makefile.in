@@ -1,33 +1,35 @@
-# Makefile.in
 CC = g++
 CXX = g++
 LD = g++
-RM = rm -f
 CFLAGS = -Wall -O3 -funroll-loops
 CXXFLAGS = -Wall -O3 -funroll-loops
-LDFLAGS = -Wall -O3 -lm
+LDFLAGS = -Wall -O3
+
+CACHE = ./cache
+PPM_DIR = $(CACHE)/ppm_p6
+PPM_ANS_DIR = $(CACHE)/ppm_p6_ans
+SLDBIN_DIR = $(CACHE)/sldbin
+SLD_DIR = $(CACHE)/sld
 
 PICT_DIR = $(HOME_DIR)/pict
 DIFF_DIR = $(HOME_DIR)/pict/diff
-COMPILER_DIR = $(HOME_DIR)/../compiler_latest
+COMPILER_DIR = $(HOME_DIR)/../compiler
 MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
-###################################
+########################################################################
 # Set Vars below
-###################################
+########################################################################
 #TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
 TEST_TARGET = float
-#float
-#RT_TARGET = $(subst .sld,, $(shell ls $(HOME_DIR)/pict/sld))
+#RT_TARGET = $(basename $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
 #DEBUG_MACRO = -D DEBUG_FLAG
 #DEBUG_MACRO = -D LST_FLAG
-#DEBUG_MACRO += -D STATS_FLAG
+##DEBUG_MACRO += -D STATS_FLAG
 #DEBUG_MACRO += -D CHECK_BRANCH
 #ASM_FLAGS = -b
 #XSIM_FLAGS = -cnt
-#EOG =   (eog $$ppm &);
-###################################
-###################################
+EOG =   (eog $$ppm &);
+########################################################################
 
 
 .PHONY: all asm sim clean rt

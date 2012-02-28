@@ -1,12 +1,10 @@
 
 #ifndef _COMMON_HEAD
 #define _COMMON_HEAD
-#include <stdint.h>
 #define INST_NUM 64	// 6bit 63
 #define REG_NUM 32
-//#define ROM_NUM (4 * 1024 * 1024)
-#define ROM_NUM (64 * 1024) // 2^16 Words (2^18 Bytes = 2^8 KB)
-#define RAM_NUM (128 * 1024)
+#define ROM_NUM (64 * 1024) // words(32bit)
+#define RAM_NUM (256 * 1024)
 
 ///////////////////////////////////////
 // SPECIAL funct //////////////////////
@@ -100,4 +98,6 @@
 #define I_OF_F 036
 #define F_OF_I 046
 #define SQRT 056
+
+
 #endif

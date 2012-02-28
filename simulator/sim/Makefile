@@ -11,8 +11,8 @@ CXXFLAGS += -I ../include/
 vpath %.h ../include/
 SIM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%)
 
-FPU_DIR = ../fpu
-FPU =  $(FPU_DIR)/finv.o $(FPU_DIR)/fsqrt.o $(FPU_DIR)/fadd.o $(FPU_DIR)/uutfmul.o
+FPU_DIR = ./fpu
+FPU =  $(FPU_DIR)/finv.o $(FPU_DIR)/fsqrt.o $(FPU_DIR)/fadd.o $(FPU_DIR)/fmul.o
 
 simcho: simcho.o simulate.o print_ir.o print_state.o statistics.o imap.o  $(FPU) debug.o
 simcho.o: $(SIMH) simulate.o imap.o print_ir.o debug.o
@@ -36,12 +36,11 @@ sim:
 rt:
 	@for name in $(RT_TARGET) ; do \
 		sld=$(PICT_DIR)'/sld/'$$name'.sld'; \
+		sldbin=$(PICT_DIR)'/sldbin/'$$name'.bin'; \
 		ppm=$(PICT_DIR)'/ppm/'$$name'.ppm'; \
 		original=$(PICT_DIR)'/ppm0/'$$name'.ppm'; \
 		diff=$(DIFF_DIR)/$$name'.dif'; \
-		$(SIM) $(MIN_RT) $(SIM_FLAGS) < $$sld > $$ppm; \
-		diff $$original $$ppm | cat > $$diff; \
-		cat $$diff; \
-		$(EOG) \
+		$(SIM) $(MIN_RT) $(SIM_FLAGS) < $$sldbin > $$ppm; \
 	done 
 
+RM_TARGET += $(FPU)

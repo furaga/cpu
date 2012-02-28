@@ -8,7 +8,7 @@
 #include <fcntl.h>
 #include <signal.h>
 #include "asm.h"
-#include "reasm3.h"
+#include "geso.h"
 
 
 int convert_op(char *, char *);

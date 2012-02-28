@@ -2,7 +2,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "asm.h"
-#include "reasm3.h"
+#include "geso.h"
 
 const char *fg = "%s %%g%d";
 const char *fl = "%s %s";

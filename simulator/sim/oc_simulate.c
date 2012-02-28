@@ -15,7 +15,7 @@ uint32_t freg[REG_NUM];
 uint32_t rom[ROM_NUM];
 uint32_t ram[RAM_NUM];
 uint32_t pc;
-uint32_t lr, tmplr;
+int32_t lr, tmplr;
 long long unsigned cnt;
 void to_bin(uint32_t);
 #define dump(x) fprintf(stderr, "%s: ", #x); to_bin(x);
@@ -102,8 +102,8 @@ int simulate(char *sfile) {
 		}
 
 		//if (!(cnt % 13750)) {
-		//if (!(cnt % 1611)) {
-		if (!(cnt % 20625)) {
+		if (!(cnt % 1611)) {
+		//if (!(cnt % 20625)) {
 			if (sendbuf_count >0) {
 				sendbuf_count--;
 			}
@@ -410,61 +410,19 @@ int simulate(char *sfile) {
 			case IO:
 				switch(funct) {
 					case OUTPUT_F:
-						putchar(_GRS&0xff); fflush(stdout);
-						break;
-					case OUTPUTW_F:
-					// little endian
 						putchar(_GRS&0xff);
-						putchar((_GRS>>8)&0xff);
-						putchar((_GRS>>16)&0xff);
-						putchar((_GRS>>24)&0xff);
 						fflush(stdout);
-						fprintf(stderr, " debug outputw: 0x%08X %d(dec)\n", _GRS, _GRS);
-						break;
-					case OUTPUTF_F:
-					// little endian
-						putchar(_FRS&0xff);
-						putchar((_FRS>>8)&0xff);
-						putchar((_FRS>>16)&0xff);
-						putchar((_FRS>>24)&0xff);
-						fflush(stdout);
-						a.i = _FRS;
-						fprintf(stderr, " debug outputf: 0x%08X %f\n", a.i, a.f);
+						sendbuf_count++;
+						max_sendbuf_count = (max_sendbuf_count > sendbuf_count) ?
+								max_sendbuf_count : sendbuf_count;
 						break;
 					case INPUT_F:
-						//ret = scanf("%c", (char*)&_GRD);
+						//ret = scanf("0x%02x", (char*)&c);
 						//if (ret==0) { fprintf(stderr,"input error\n"); }
 						c = getchar();
+						//fprintf(stderr, " debug input: 0x%08X\n", c);
 						IF0_BREAK_D
 						_GRD = c & 0xff;
-						break;
-					case INPUTW_F:
-					/*
-						c = getchar();
-						_GRD = c&0xff;
-						c = getchar();
-						_GRD |= (c&0xff)<<8;
-						c = getchar();
-						_GRD |= (c&0xff)<<16;
-						c = getchar();
-						_GRD |= (c&0xff)<<24;
-						*/
-						ret = scanf("%u", (uint32_t*)&_GRD);
-						if (ret==0) { fprintf(stderr,"input error\n"); }
-						break;
-					case INPUTF_F:
-					/*
-						c = getchar();
-						_FRD = c&0xff;
-						c = getchar();
-						_FRD |= (c&0xff)<<8;
-						c = getchar();
-						_FRD |= (c&0xff)<<16;
-						c = getchar();
-						_FRD |= (c&0xff)<<24;
-						*/
-						ret = scanf("%f", (float*)&_FRD);
-						if (ret==0) { fprintf(stderr,"input error\n"); }
 						break;
 					default: break;
 
@@ -474,6 +432,7 @@ int simulate(char *sfile) {
 		}
 
 	} while(!((funct == HALT_F) && (opcode == SPECIAL)));
+	fprintf(stderr, "max_sendbuf: %d\n", max_sendbuf_count);
 
 #ifdef LST_FLAG
 	fclose(lst_fp);

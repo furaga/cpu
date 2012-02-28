@@ -1,7 +1,9 @@
-ASMH = common.h asm.h reasm3.h
+ASMH = common.h asm.h geso.h
 TARGET = geso
 HOME_DIR = ../
 include $(HOME_DIR)/Makefile.in
+CACHE = ../../cache
+
 CFLAGS += -I $(HOME_DIR)/include/
 CXXFLAGS += -I $(HOME_DIR)/include/
 XSIM_FLAGS += -lm
@@ -26,14 +28,11 @@ xrt: $(MIN_RT:%=%.s) geso  $(LIB_OBJ) $(HOME_DIR:%=%/Makefile.in)
 #./xrt < $$sld;
 rt: xrt
 	for name in $(RT_TARGET) ; do \
-		echo $$name; \
-		sld=$(PICT_DIR)'/sld/'$$name'.sld'; \
-		ppm=$(PICT_DIR)'/ppm/'$$name'.ppm'; \
-		original=$(PICT_DIR)'/ppm0/'$$name'.ppm'; \
-		diff=$(DIFF_DIR)/$$name'.dif'; \
-		./xrt < $$sld > $$ppm; \
-		diff $$original $$ppm | cat > $$diff; \
-		cat $$diff; \
+		sld=$(SLD_DIR)/$$name'.sld'; \
+		sldbin=$(SLDBIN_DIR)/$$name'.sldbin'; \
+		ppm=$(PPM_DIR)/$$name'.ppm'; \
+		original=$(PPM_ANS)/$$name'.ppm'; \
+		./xrt < $$sldbin > $$ppm; \
 		$(EOG) \
 	done 
 

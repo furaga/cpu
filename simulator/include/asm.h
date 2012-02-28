@@ -2,6 +2,7 @@
 #ifndef _ASM_HEAD
 #define _ASM_HEAD
 #include "common.h"
+#include <stdint.h>
 #define ASM_LOG "asmlog"
 #define LABEL_MAX (128 * 1024)
 #define	LINE_MAX	512	// asmの一行の長さの最大値
