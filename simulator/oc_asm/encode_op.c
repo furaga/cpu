@@ -71,7 +71,7 @@ uint32_t encode_op(char *asm_line, char *inst)
 	}
 
 	if (inst_is("callR")) {
-		if (myscan(ig, &rs) == 2) {
+		if (myscan(ig, &rs) == 1) {
 			return fmt_sp(rs,0,0,CALLR_F);
 		}
 	}

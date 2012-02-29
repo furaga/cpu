@@ -35,11 +35,10 @@ sim:
 	$(SIM) $(SIM_TARGET) $(SIM_FLAGS)
 rt:
 	@for name in $(RT_TARGET) ; do \
-		sld=$(PICT_DIR)'/sld/'$$name'.sld'; \
-		sldbin=$(PICT_DIR)'/sldbin/'$$name'.bin'; \
-		ppm=$(PICT_DIR)'/ppm/'$$name'.ppm'; \
-		original=$(PICT_DIR)'/ppm0/'$$name'.ppm'; \
-		diff=$(DIFF_DIR)/$$name'.dif'; \
+		sld=$(SLD_DIR)/$$name'.sld'; \
+		sldbin=$(SLDBIN_DIR)/$$name'.sldbin'; \
+		ppm=$(PPM_DIR)/$$name'.ppm'; \
+		original=$(PPM_ANS_DIR)/$$name'.ppm'; \
 		$(SIM) $(MIN_RT) $(SIM_FLAGS) < $$sldbin > $$ppm; \
 	done 
 

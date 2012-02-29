@@ -2,157 +2,148 @@
 #include <string.h>
 #include "oc_sim.h"
 
+#define print_val(fmt, ...) \
+	fprintf(fp, print_fmt_##fmt"\n", name, ##__VA_ARGS__)
+#define unknown_ir() \
+	fprintf(fp, "Unknown ir : opcode:%d  name:%s\n", opcode, name);
+
+
 void _print_ir(uint32_t ir, FILE *fp) {
-	static const char *f = "%s\n";
-	static const char *fi = "%s\t8\n";
-	static const char *fg = "%s\tg%d=%d\n";
-	static const char *fl = "%s\t%x\n";
-	static const char *fgi = "%s\tg%d=%d %d\n";
-	static const char *fgg = "%s\tg%d=%d g%d=%d\n";
-	static const char *fggg = "%s\tg%d=%d g%d=%d g%d=%d\n";
-	static const char *fggi = "%s\tg%d=%d g%d=%d %d\n";
-	static const char *fggl = "%s\tg%d=%d g%d=%d %x\n";
-	static const char *fff = "%s\tf%d=%08X f%d=%08X\n";
-	static const char *fffl = "%s\tf%d=%08X f%d=%08X %x\n";
-	static const char *ffff = "%s\tf%d=%08X f%d=%08X f%d=%08X\n";
-	//static const char *ffff2 = "%s\tf%d=%13.10f f%d=%13.10f f%d=%13.10f\n";
-	static const char *ffgi = "%s\tf%d=%08X g%d=%d %d\n";
-	uint32_t opcode,funct;
-	const char *name,*type,*f_type,*f_name;
-	//union {
-		//uint32_t i;
-		//float f;
-	//} a, b, c;
+	uint8_t opcode,funct;
+	const char *name;
+	/*
+	union {
+		uint32_t i;
+		float f;
+	} a, b, c;
+	*/
 	
-	fprintf(fp, "ram:%d %4lu.[%4x] sp:%d lr:%d ram:%d ", 
-				ram[1046796/4], cnt, pc, reg[1]/4, lr, ram[261539]);
+	fprintf(fp, "%4lx.[%4x] ", cnt, pc);
 
 	opcode = get_opcode(ir);
 	funct = get_funct(ir);
-	name = InstMap[opcode];
-	type = InstTyMap[opcode];
 	switch (opcode) {
-		case 0 :
-			f_type = SFunctTyMap[funct];
-			f_name = SFunctMap[funct];
+		case SPECIAL :
+			name = SFunctMap[funct];
 			break;
-		case 1 :
-			f_type = IOFunctTyMap[funct];
-			f_name = IOFunctMap[funct];
+		case IO :
+			name = IOFunctMap[funct];
 			break;
-		case 17:
-			f_type = FFunctTyMap[funct];
-			f_name = FFunctMap[funct];
+		case FPI :
+			name = FFunctMap[funct];
 			break;
 		default: 
-			f_type = NULL;
-			f_name = NULL;
+			name = InstMap[opcode];
 			break;
 	}
 
-	if (opcode == 0) {
-		if (strcmp(f_type, "fggg") == 0) {
-			// add,sub,mul,div,and,or, sll, srl
-			fprintf(fp, fggg, f_name, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
-		}else 
-		if (strcmp(f_type, "fgg") == 0) {
-			// padd
-			fprintf(fp, fgg, f_name, get_rdi(ir), _GRD, get_rti(ir), _GRT);
-		} else 
-		if (strcmp(f_type, "fg") == 0) {
-			// b, callR 
-			fprintf(fp, fg, f_name, get_rsi(ir), _GRS);
-		} else 
-		if (strcmp(f_type, "f") == 0) {
-			// halt
-			fprintf(fp, f, f_name);
-		} else {
-			fprintf(fp, "Undefined SPECIAL ir\n");
-		}
-	} else 
-	if (opcode == 1) {
-		if (strcmp(f_type, "fg") == 0) {
-			if (strcmp(name, "input") == 0) {
-				fprintf(fp, fg, f_name, get_rdi(ir), _GRD);
-			} else {
-				fprintf(fp, fg, f_name, get_rsi(ir), _GRS);
-			}
-		} else{
-			fprintf(fp, "Undefined I/O ir\n");
-		}
-	} else
-	if (opcode == 17) {
-		if (strcmp(f_type, "fff") == 0) {
-			// fmov fneg fsqrt
-			fprintf(fp, fff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
-		}else 
-		if (strcmp(f_type, "ffff") == 0) {
-			// fadd fsub fmul fdiv
-			//a.i = _FRD; b.i = _FRS; c.i = _FRT;
-			fprintf(fp, ffff, f_name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
-			//fprintf(fp, ffff2, f_name, get_rdi(ir), a.f, get_rsi(ir), b.f, get_rti(ir), c.f);
-		} else {
-			fprintf(fp, "Undefined FPI IR\n");
-		}
-	} else 
-	if (strcmp(type, "f") == 0) {
-		// nop, halt, return 3
-		fprintf(fp, f, name);
-	} else 
-	if (strcmp(type, "fi") == 0) {
-		fprintf(fp, fi, name);
-	} else 
 
-	if (strcmp(type, "fg") == 0) {
-		fprintf(fp, fg, name, get_rsi(ir), _GRS);
-	} else 
-	if (strcmp(type, "fl") == 0) {
-		// jump, call 2
-		fprintf(fp, fl, name, get_target(ir));
-	} else
-	if (strcmp(type, "fgi") == 0) {
-		// mvhi, mvlo
-		fprintf(fp, fgi, name, get_rsi(ir), _GRS, _IMM);
-	}else 
-	if (strcmp(type, "fgg") == 0) {
-		// mov, not
-		fprintf(fp, fgg, name, get_rdi(ir), _GRD, get_rsi(ir), _GRS);
-	}else 
-	if (strcmp(type, "fggg") == 0) {
-		// add,sub,mul,div,and,or, sll, srl
-		fprintf(fp, fggg, name, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
-	}else 
-	if (strcmp(type, "fggi") == 0) {
-		
-		// addi,subi,muli,divi,slli,st,ld
-		if ((strcmp(name, "ldi") == 0) ||
-			(strcmp(name, "sti") == 0)) {
-			fprintf(fp, fggi, name, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
-		} else {
-			fprintf(fp, fggi, name, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
-		}
-	}else 
-	if (strcmp(type, "fggl") == 0) {
-		// jeq, jne, jlt, jle
-		fprintf(fp, fggl, name, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
-	}else 
-	if (strcmp(type, "fff") == 0) {
-		// fmov fneg fsqrt
-		fprintf(fp, fff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
-	}else 
-	if (strcmp(type, "fffl") == 0) {
-		// fjeq, fjlt
-		fprintf(fp, fffl, name, get_rsi(ir), _FRS, get_rti(ir), _FRT, _IMM);
-	}else 
-	if (strcmp(type, "ffff") == 0) {
-		// fadd fsub fmul fdiv
-		fprintf(fp, ffff, name, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
-	}else 
-	if (strcmp(type, "ffgi") == 0) {
-		// fldi fsti
-		fprintf(fp, ffgi, name, get_rti(ir), _FRT, get_rsi(ir), _GRS, _IMM);
-	}else{
-		fprintf(fp, "Undefined ir\n");
+	switch (opcode) {
+		case SPECIAL :
+			switch (funct) {
+				case ADD_F : case SUB_F : case MUL_F : case NOR_F :
+				case AND_F : case OR_F : case SLL_F : case SRL_F :
+					print_val(iggg, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
+					break;
+				case CALLR_F : case B_F : 
+					print_val(ig, get_rsi(ir), _GRS);
+					break;
+				case FLD_F : case FST_F :
+					print_val(ifgg, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
+					break;
+				case HALT_F :
+					print_val(i);
+					break;
+				default :
+					unknown_ir();
+					break;
+			}
+			break;
+		case IO :
+			switch (funct) {
+				case INPUT_F :
+					print_val(ig, get_rdi(ir), _GRD);
+					break;
+				case OUTPUT_F :
+					print_val(ig, get_rsi(ir), _GRS);
+					break;
+				default :
+					unknown_ir();
+					break;
+			}
+			break;
+		case FPI :
+			switch (funct) {
+				case FADD_F: case FSUB_F: case FMUL_F: case FDIV_F:
+					print_val(ifff, get_rdi(ir), _FRD, get_rsi(ir), _FRS, get_rti(ir), _FRT);
+					break;
+				case FSQRT_F: case FABS_F: case FMOV_F: case FNEG_F:
+					print_val(iff, get_rdi(ir), _FRD, get_rsi(ir), _FRS);
+					break;
+				default :
+					unknown_ir();
+					break;
+			}
+			break;
+		case ADDI: case SUBI: case MULI: case SLLI:
+		case SRLI: case LDI: case STI:
+			print_val(iggi, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
+			break;
+		case JMP: case CALL:
+			print_val(il, get_target(ir));
+			break;
+		case MVLO: case MVHI:
+			print_val(igi, get_rsi(ir), _GRS, _IMM);
+			break;
+		case JEQ: case JNE: case JLT: case JLE:
+			print_val(iggl, get_rsi(ir), _GRS, get_rti(ir), _GRT, _IMM);
+			break;
+		case LD: case ST:
+			print_val(iggg, get_rdi(ir), _GRD, get_rsi(ir), _GRS, get_rti(ir), _GRT);
+			break;
+		case RETURN :
+			print_val(i);
+			break;
+		case FLDI: case FSTI:
+			print_val(ifgi, get_rti(ir), _FRT, get_rsi(ir), _GRS, _IMM);
+			break;
+		case FJEQ: case FJLT:
+			print_val(iffl, get_rsi(ir), _FRS, get_rti(ir), _GRT, _IMM);
+			break;
+
+		default :
+			unknown_ir();
+			break;
 	}
-	fflush(fp);
+
 }
+#undef unknown_ir
+#undef printf_val
+#define BLANK "blank"
+const char *InstMap[INST_NUM] = {
+BLANK,   BLANK, "jmp", BLANK, BLANK, BLANK, BLANK, "mvlo",
+"addi",  BLANK, "jeq", BLANK, BLANK, BLANK, BLANK, "mvhi",
+"subi",  BLANK, "jne", "ld",  BLANK, BLANK, BLANK, BLANK,
+"muli",  BLANK, "jlt", "st",  BLANK, BLANK, BLANK, BLANK,
+BLANK,   BLANK, "jle", "ldi", BLANK, BLANK, BLANK, BLANK,
+"slli",  BLANK, "srli","sti", BLANK, BLANK, BLANK, BLANK,
+"call",  "fldi","fjeq",BLANK, BLANK, BLANK, BLANK, BLANK,
+"return","fsti","fjlt",BLANK, BLANK, BLANK, BLANK, BLANK,
+};
+const char *SFunctMap[INST_NUM] = {
+"sll",   BLANK, "srl", BLANK,   BLANK, BLANK, BLANK, BLANK,
+"b",     BLANK, BLANK, BLANK,   BLANK, BLANK, BLANK, BLANK,
+"btmplr",BLANK, BLANK, BLANK,   BLANK, BLANK, BLANK, BLANK,
+"mul",   BLANK, BLANK, "nor",   BLANK, BLANK, BLANK, BLANK,
+"add",   BLANK, "sub", BLANK,   "and", "or",  BLANK, BLANK,
+BLANK,   BLANK, BLANK, BLANK,   BLANK, BLANK, BLANK, BLANK,
+"callR", "fld", BLANK, "movlr", BLANK, BLANK, BLANK, BLANK,
+BLANK,   "fst", BLANK, BLANK,   BLANK, BLANK, BLANK, "halt",
+};
+const char *FFunctMap[INST_NUM] = {
+"fadd","fsub","fmul","fdiv","fsqrt","fabs","fmov","fneg",
+};
+const char *IOFunctMap[INST_NUM] = {
+"input","output",
+};
+#undef BLANK

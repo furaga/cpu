@@ -30,10 +30,6 @@ int encode_op(char *opcode, char *op_data)
 
 	shaft = funct = target = 0;
 
-	if(strcmp(opcode, "mov") == 0){
-		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
-		    return mov(rs,0,rd,0);
-	}
 	if(strcmp(opcode, "mvhi") == 0){
 		if(sscanf(op_data, fgi, tmp, &rs, &imm) == 3)
 		    return mvhi(rs,0,imm);
@@ -58,10 +54,6 @@ int encode_op(char *opcode, char *op_data)
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
 		    return mul(rs,rt,rd,0);
 	}
-	if(strcmp(opcode, "div") == 0){
-		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
-		    return _div(rs,rt,rd,0);
-	}
 	if(strcmp(opcode, "addi") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
 		    return addi(rs,rt,imm);
@@ -73,10 +65,6 @@ int encode_op(char *opcode, char *op_data)
 	if(strcmp(opcode, "muli") == 0){
 		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
 		    return muli(rs,rt,imm);
-	}
-	if(strcmp(opcode, "divi") == 0){
-		if(sscanf(op_data, fggi, tmp, &rt, &rs, &imm) == 4)
-		    return divi(rs,rt,imm);
 	}
 	if(strcmp(opcode, "input") == 0){
 		if(sscanf(op_data, fg, tmp, &rd) == 2)
@@ -109,10 +97,6 @@ int encode_op(char *opcode, char *op_data)
 	if(strcmp(opcode, "or") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
 		    return _or(rs,rt,rd,0);
-	}
-	if(strcmp(opcode, "not") == 0){
-		if(sscanf(op_data, fgg, tmp, &rd, &rs) == 3)
-		    return _not(rs,0,rd,0);
 	}
 	if(strcmp(opcode, "sll") == 0){
 		if(sscanf(op_data, fggg, tmp, &rd, &rs,&rt) == 4)
@@ -261,9 +245,6 @@ int encode_op(char *opcode, char *op_data)
 		    return fjlt(rs,rt,label_cnt++);
 		}
 	}
-	if(strcmp(opcode, "nop") == 0){
-		    return nop(0,0,0,0);
-	}
 	if(strcmp(opcode, "halt") == 0){
 		    return halt(0,0,0,0);
 	}
@@ -296,32 +277,6 @@ int encode_op(char *opcode, char *op_data)
 		}
 	}
 	*/
-	/*
-	if(strcmp(opcode, "sqrt") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _sin(rs,0,rd,0,0);
-	}
-	if(strcmp(opcode, "sin") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _sin(rs,0,rd,0,0);
-	}
-	if(strcmp(opcode, "cos") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _cos(rs,0,rd,0,0);
-	}
-	if(strcmp(opcode, "atan") == 0){
-		if(sscanf(op_data, fff, tmp, &rd, &rs) == 3)
-		    return _atan(rs,0,rd,0,0);
-	}
-	if(strcmp(opcode, "int_of_float") == 0){
-		if(sscanf(op_data, fgf, tmp, &rd, &rs) == 3)
-		    return _int_of_float(rs,0,rd,0,0);
-	}
-	if(strcmp(opcode, "float_of_int") == 0){
-		if(sscanf(op_data, ffg, tmp, &rd, &rs) == 3)
-		    return _float_of_int(rs,0,rd,0,0);
-	}
-	*/
 
 	return -1;
 }
@@ -331,7 +286,6 @@ DEFINE_I(mvlo, MVLO);
 DEFINE_I(addi,ADDI);
 DEFINE_I(subi,SUBI);
 DEFINE_I(muli,MULI);
-DEFINE_I(divi,DIVI);
 DEFINE_I(slli,SLLI);
 DEFINE_I(srli,SRLI);
 DEFINE_J(jmp,JMP);
@@ -351,10 +305,6 @@ DEFINE_I(fjeq,FJEQ);
 DEFINE_I(fjlt,FJLT);
 DEFINE_I(setl,SETL);
 DEFINE_I(padd,PADD);
-//DEFINE_F(padd,SPECIAL,PADD_F);
-
-DEFINE_F(mov,SPECIAL,MOV_F);
-DEFINE_F(_not,SPECIAL,NOT_F);
 
 DEFINE_F(input,IO,INPUT_F);
 DEFINE_F(inputw,IO,INPUTW_F);
@@ -363,7 +313,6 @@ DEFINE_F(output,IO,OUTPUT_F);
 DEFINE_F(outputw,IO,OUTPUTW_F);
 DEFINE_F(outputf,IO,OUTPUTF_F);
 
-DEFINE_F(nop,SPECIAL,NOP_F);
 DEFINE_F(sll,SPECIAL,SLL_F);
 DEFINE_F(srl,SPECIAL,SRL_F);
 DEFINE_F(b,SPECIAL,B_F);
@@ -377,7 +326,6 @@ DEFINE_F(fld,SPECIAL,FLD_F);
 DEFINE_F(fst,SPECIAL,FST_F);
 DEFINE_F(movlr,SPECIAL,MOVLR_F);
 DEFINE_F(mul,SPECIAL,MUL_F);
-DEFINE_F(_div,SPECIAL,DIV_F);
 DEFINE_F(_and,SPECIAL,AND_F);
 DEFINE_F(_or,SPECIAL,OR_F);
 DEFINE_F(halt,SPECIAL,HALT_F);
@@ -393,11 +341,3 @@ DEFINE_F(_fabs,FPI,FABS_F);
 DEFINE_F(fmov,FPI,FMOV_F);
 DEFINE_F(fneg,FPI,FNEG_F);
 
-///////////////////////////////
-//DEFINE_R(_sin,SIN);
-//DEFINE_R(_cos,COS);
-//DEFINE_R(_atan,ATAN);
-//DEFINE_R(_sqrt,SQRT);
-//DEFINE_R(_int_of_float,I_OF_F);
-//DEFINE_R(_float_of_int,F_OF_I);
-//////////////////////////////

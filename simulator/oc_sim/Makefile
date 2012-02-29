@@ -2,12 +2,11 @@
 SIM = ./simcho
 TARGET = simcho
 SIMH = common.h oc_sim.h
-HOME_DIR = ../
+HOME_DIR = ..
 include ../Makefile.in
 CC = gcc
 CACHE = ../../cache
-CFLAGS += -I ../include/ $(DEBUG_MACRO)
-CXXFLAGS += -I ../include/
+CFLAGS += -I ../include/ $(SIM_MACRO)
 vpath %.h ../include/
 SIM_TARGET = $(TEST_TARGET:%=$(COMPILER_DIR)/test/%)
 
@@ -15,14 +14,15 @@ FPU_DIR = ./fpu
 FPU_ = finv fsqrt fadd fmul
 FPU =  $(FPU_:%=$(FPU_DIR)/%.o)
 
+
+FLAGS = ../Makefile.sim
 UTIL = sim_util.o 
-simcho: simcho.o simulate.o print_ir.o statistics.o imap.o  $(FPU) $(UTIL)
-simcho.o: $(SIMH) simulate.o imap.o print_ir.o $(UTIL)
-simulate.o: $(SIMH) statistics.o $(FPU)  $(UTIL)
-statistics.o: $(SIMH) imap.o $(UTIL)
-print_ir.o: $(SIMH) imap.o $(UTIL)
+simcho: simcho.o simulate.o print_ir.o analyse.o $(FPU) $(UTIL)
+simcho.o: $(SIMH) simulate.o print_ir.o $(UTIL) $(FLAGS)
+simulate.o: $(SIMH) analyse.o $(FPU)  $(UTIL) $(FLAGS)
+analyse.o: $(SIMH) $(UTIL)
+print_ir.o: $(SIMH) $(UTIL)
 sim_util.o: $(SIMH)
-imap.o: $(SIMH)
 
 sim:
 	$(SIM) $(SIM_TARGET) $(SIM_FLAGS)
@@ -36,4 +36,4 @@ rt:
 		$(EOG) \
 	done 
 
-RM_TARGET = $(FPU)
+RM_TARGET = $(FPU) *.log

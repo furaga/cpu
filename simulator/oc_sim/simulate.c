@@ -27,30 +27,36 @@ static inline void init(void) {
 // register init
 	reg[1] = 4*(RAM_NUM-1);
 	reg[2] = prom[0];
-
 // heap init
 	for (pc = 1; pc*4 <= reg[2]; pc++) {
 		ram[pc-1] = prom[pc];
 	}
 }
 
-static inline int exec(uint32_t ir);
+static inline int exec_op(uint32_t ir);
 
 int simulate(void) {
 	init();
 	do{
 		reg[0] = 0;
 		ir = prom[pc];
+#ifdef LOG_FLAG
+		_print_ir(ir, log_fp);
+#endif
+#ifdef ANALYSE_FLAG
+		analyse(ir);
+#endif
 		cnt++;
 		pc++;
-		if (!(cnt % 100000000)) { warning("."); }
-	} while (exec(ir)==0);
-	warning("\n");
+		if (!(cnt % 100000000)) { 
+			warning("."); 
+		}
+	} while (exec_op(ir)==0);
 	return 0;
 } 
 
 
-static inline int exec(uint32_t ir) {
+static inline int exec_op(uint32_t ir) {
 	uint8_t opcode, funct;
 	union {
 		uint32_t i;
@@ -113,7 +119,6 @@ static inline int exec(uint32_t ir) {
 			switch(funct) {
 				case OUTPUT_F:
 					putchar(_GRS&0xff);
-					fflush(stdout);
 					break;
 				case INPUT_F:
 					c = getchar();

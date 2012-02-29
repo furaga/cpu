@@ -223,35 +223,6 @@ int statistics(FILE* fp,int init) {
 					reg_cnt[0][get_rsi(ir)]++;
 					reg_cnt[0][get_rti(ir)]++;
 					break;
-				case SIN:
-					//a.i = _FRS;
-					//ans.f = sinf(a.f);
-					//_FRD = ans.i;
-		//fprintf(stderr, "sin before:%f after:%f\n", a.f,ans.f);
-					break;
-				case COS:
-					//a.i = _FRS;
-					//ans.f = cosf(a.f);
-					//_FRD = ans.i;
-		//fprintf(stderr, "cos before:%f after:%f\n", a.f,ans.f);
-					break;
-				case ATAN:
-					//a.i = _FRS;
-					//ans.f = atanf(a.f);
-					//_FRD = ans.i;
-		//fprintf(stderr, "atan before:%f after:%f\n", a.f,ans.f);
-					break;
-				case I_OF_F:
-					//IF0_BREAK_D
-					//a.i = _FRS;
-					//_GRD = (int32_t) a.f;
-		//fprintf(stderr, "ioff before:%X after:%f\n", _FRS, _GRD);
-					break;
-				case F_OF_I:
-					//a.f = (float) _GRS;
-					//_FRD = a.i;
-		//fprintf(stderr, "fofi before:%X after:%f\n", _GRS, _FRD);
-					break;
 				default: break;
 			}
 		break;

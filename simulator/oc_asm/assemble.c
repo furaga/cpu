@@ -84,21 +84,22 @@ static void resolve_label(void) {
 
 		switch (linst.acc) {
 			case REL_ACC :
+				output_alias[linst.line] &= 0xffff0000;
 				output_alias[linst.line] |= eff_dig(16,(label_line - linst.line));
 				break;
 			case ABS_ACC :
-				output_alias[linst.line] |= eff_dig(26, (label_line));
+				output_alias[linst.line] &= 0xfc000000;
+				output_alias[linst.line] |= eff_dig(26, label_line);
 				break;
 			case LINST_SETL :
-				output_alias[linst.line] |= eff_dig(16, (label_line-1)*4);
+				output_alias[linst.line] &= 0xffff0000;
+				output_alias[linst.line] |= eff_dig(16, label_line);
 				break;
 			default :
 				warning("Unexpected case @ resolve_label.linst.acc\n");
 				break;
 		}
-
 	}
-
 }
 
 void register_linst_abs(char* lname) { _register_linst(lname, ABS_ACC); }
@@ -120,7 +121,11 @@ static inline void register_label(char *asm_line, char *term0) {
 	if ((label_name = strtok(term0, ":")) != NULL) {
 		label.len = strlen(label_name);
 		strcpy(label.name, label_name);
-		label.line = output_cnt;
+		if (output_cnt*4 <= output_alias[0]) {
+			label.line = (output_cnt-1)*4;
+		} else {
+			label.line = output_cnt;
+		}
 		if (hash_insert(label)<0) {
 			myerr("duplicate label @ register_label.hash_insert");
 		}

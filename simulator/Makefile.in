@@ -5,7 +5,7 @@ CFLAGS = -Wall -O3 -funroll-loops
 CXXFLAGS = -Wall -O3 -funroll-loops
 LDFLAGS = -Wall -O3
 
-CACHE = ./cache
+CACHE = $(HOME_DIR)/cache
 PPM_DIR = $(CACHE)/ppm_p6
 PPM_ANS_DIR = $(CACHE)/ppm_p6_ans
 SLDBIN_DIR = $(CACHE)/sldbin
@@ -19,14 +19,12 @@ MIN_RT = $(COMPILER_DIR)/test/min-rt/min-rt
 # Set Vars below
 ########################################################################
 #TEST_TARGET = $(subst $(COMPILER_DIR)/test/,, $(subst .s,, $(shell ls $(HOME_DIR)/../compiler/test/*.s)))
-TEST_TARGET = float
+TEST_TARGET = matmul
 #RT_TARGET = $(basename $(shell ls $(HOME_DIR)/pict/sld))
 RT_TARGET = contest
-#DEBUG_MACRO = -D DEBUG_FLAG
-#DEBUG_MACRO = -D LST_FLAG
-##DEBUG_MACRO += -D STATS_FLAG
-#DEBUG_MACRO += -D CHECK_BRANCH
-#ASM_FLAGS = -b
+include $(HOME_DIR)/Makefile.sim
+ASM_FLAGS = -l ./ika.lst
+#SIM_FLAGS = -l ./a.log
 #XSIM_FLAGS = -cnt
 EOG =   (eog $$ppm &);
 ########################################################################

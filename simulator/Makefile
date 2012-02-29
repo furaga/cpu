@@ -3,8 +3,8 @@
 .PHONY: all asm clean sim fsim xsim frt rt xrt
 MAKE_OPTION = -s
 
-ASM = asm
-SIM = sim
+ASM = oc_asm
+SIM = oc_sim
 all:
 	cd $(ASM); make $(MAKE_OPTION)
 	cd $(SIM); make $(MAKE_OPTION)
