@@ -18,9 +18,9 @@ rt:
 
 
 UTIL = asm_util.o
-asmcho: asmcho.o expand_mnemonic.o assemble.o label_hash_map.o encode_op.o $(UTIL)
+asmcho: asmcho.o expand_mnemonic.o assemble.o label_hash_map.o encode_op.o $(UTIL) asm_fmt.o
 asmcho.o: $(ASMH) expand_mnemonic.o assemble.o $(UTIL)
-assemble.o: $(ASMH) label_hash_map.o encode_op.o $(UTIL)
+assemble.o: $(ASMH) label_hash_map.o encode_op.o $(UTIL) asm_fmt.o
 expand_mnemonic.o: $(ASMH) $(UTIL)
 encode_op.o: $(ASMH) $(UTIL)
 label_hash_map.o: $(ASMH) $(UTIL)

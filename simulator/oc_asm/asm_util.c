@@ -12,7 +12,7 @@ void *mygets(char *dst, char *src, int n) {
 		src_ptr = src;
 	}
 	if (src_cache == NULL || src_ptr == NULL) { return NULL; }
-	ret = memccpy(dst, src_ptr, '\n', n);
+	ret = (char*) memccpy(dst, src_ptr, '\n', n);
 	if (ret == NULL) { 
 	    src_ptr = src;
 	    return NULL; 

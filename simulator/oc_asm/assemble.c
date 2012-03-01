@@ -12,10 +12,6 @@ typedef struct inst_with_label_t {
 	enum linst_access_t acc;
 } linst_t;
 
-static inline int set_term0(char*,char*);
-static inline int is_directive(char*,char*);
-static inline int is_label(char*,char*);
-static inline int is_comment(char*,char*);
 static inline void output_data(uint32_t data);
 static inline void register_label(char*, char*);
 static inline void encode_and_output(char*, char*);
@@ -145,9 +141,6 @@ static inline void encode_and_output(char*asm_line, char*term0) {
 	}
 	output_data(ir);
 }
-static inline int _directive_is(char *line, const char* str) {
-	return strstr(line, str) != NULL;
-}
 #define directive_is(str) _directive_is(asm_line, "."str)
 static void exec_directive(char *asm_line, char *term0) {
 	int heap_size;
@@ -177,18 +170,6 @@ static void exec_directive(char *asm_line, char *term0) {
 			myerr("setL directive");
 		}
 	}
-}
-static inline int set_term0(char *line, char *term0) {
-	return sscanf(line, "%s", term0);
-}
-static inline int is_directive(char*line, char *term0) {
-	return term0[0] == '.';
-}
-static inline int is_label(char*line, char *term0) {
-	return strchr(line,':') != NULL;
-}
-static inline int is_comment(char*line, char *term0) {
-	return term0[0] == '!';
 }
 
 

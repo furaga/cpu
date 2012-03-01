@@ -25,7 +25,7 @@ RT_TARGET = contest
 include $(HOME_DIR)/Makefile.sim
 ASM_FLAGS = -l ./ika.lst
 #SIM_FLAGS = -l ./a.log
-#XSIM_FLAGS = -cnt
+#XSIM_FLAGS = -c
 EOG =   (eog $$ppm &);
 ########################################################################
 
