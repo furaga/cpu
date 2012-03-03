@@ -57,6 +57,7 @@ let fundata = ref (M.add_list
    ("min_caml_print_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
    ("min_caml_write", { arg_regs = ["%g3"]; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
    ("min_caml_sqrt", { arg_regs = ["%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%f0"]});
+   ("min_caml_fdiv", { arg_regs = ["%f1"; "%f0"]; ret_reg = "%f0"; use_regs = S.of_list ["%f0"; "%f1"]});
    ("min_caml_newline", { arg_regs = []; ret_reg = "%dummy"; use_regs = S.of_list ["%g3"]});
    ("min_caml_read_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]});
    ("min_caml_input_char", { arg_regs = []; ret_reg = "%g3"; use_regs = S.of_list ["%g3"]})

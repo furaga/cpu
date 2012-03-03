@@ -99,8 +99,30 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
   | NonTail(x), FAddD(y, z) -> Output.add_stmt (Output.FAdd (x, y, z))
   | NonTail(x), FSubD(y, z) -> Output.add_stmt (Output.FSub (x, y, z))
   | NonTail(x), FMulD(y, z) -> Output.add_stmt (Output.FMul (x, y, z))
-  | NonTail(x), FDivD(y, z) -> Output.add_stmt (Output.FDiv (x, y, z))
-  
+  | NonTail(x), FDivD(y, z) ->
+  	begin
+		if z = "%f0" then
+			Output.add_stmt (Output.FDiv (x, y, z))
+		else begin
+			let ss = stacksize() in
+			(if x <> "%f1" then
+				Output.add_stmt (Output.StFi ("%f1", reg_sp, ss));
+			);
+			(if x <> "%f0" then
+				Output.add_stmt (Output.StFi ("%f0", reg_sp, ss + 4));
+			);
+			Output.add_stmt (Output.FMov (reg_fsw, z));
+			Output.add_stmt (Output.FMov ("%f1", y));
+			Output.add_stmt (Output.FMov ("%f0", reg_fsw));
+			Output.add_stmt (Output.FDiv (x, "%f1", "%f0"));
+			(if x <> "%f0" then
+				Output.add_stmt (Output.LdFi ("%f0", reg_sp, ss + 4))
+			);
+			(if x <> "%f1" then
+				Output.add_stmt (Output.LdFi ("%f1", reg_sp, ss))
+			)
+		end
+  	end
   | NonTail(x), LdDF(y, V(z)) -> Output.add_stmt (Output.LdF (x, y, z))
   | NonTail(x), LdDF(y, C(z)) -> Output.add_stmt (Output.LdFi (x, y, z))
   | NonTail(_), StDF(x, y, V(z)) -> Output.add_stmt (Output.StF (x, y, z))
@@ -240,7 +262,14 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 					Output.add_stmt (Output.FAbs ("%f0", if List.length zs  <= 0 then assert false else List.hd zs));
 					Output.add_stmt Output.Return
 				end
-	  		| "min_caml_sqrt" ->
+	  		| "min_caml_fdiv" ->
+				begin
+					Printf.printf "hello\n";
+					flush(stdout);
+					Output.add_stmt (Output.FDiv ("%f0", List.nth zs 0, List.nth zs 1));
+					Output.add_stmt Output.Return
+				end
+			| "min_caml_sqrt" ->
 		  		begin
 					Output.add_stmt (Output.FSqrt ("%f0", if List.length zs  <= 0 then assert false else List.hd zs));
 					Output.add_stmt Output.Return
@@ -321,6 +350,12 @@ and g' oc = function (* 各命令のアセンブリ生成 (caml2html: emit_gprim
 	  		| "min_caml_fabs" | "min_caml_abs_float" ->
 		  		begin
 					Output.add_stmt (Output.FAbs (a, if List.length zs <= 0 then assert false else List.hd zs));
+				end
+	  		| "min_caml_fdiv" ->
+				begin
+					Printf.printf "hello2\n";
+					flush(stdout);
+					Output.add_stmt (Output.FDiv (a, List.nth zs 0, List.nth zs 1))
 				end
 	  		| "min_caml_sqrt" ->
 		  		begin
@@ -511,5 +546,5 @@ let f oc (Prog(data, fundefs, e)) =
 
   M.iter (Printf.eprintf "GLOBAL : %s %d\n") !global_vars;
   
-  (*Output.optimize ();*)
+(*  Output.optimize ();*)
   Output.output oc

@@ -137,5 +137,4 @@ let h { name = l; args = xs; fargs = ys; body = e; ret = t } = (* トップレベル関
 
 let f (Prog(data, fundefs, e)) = (* プログラム全体の13bit即値最適化 *)
   let ans = Prog(data, List.map h fundefs, g M.empty e) in
-  Asm.print_prog 3 ans;
   ans

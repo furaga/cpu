@@ -11,7 +11,7 @@ let current_line = ref 1
 
 let current_cols = ref [0]
 
-let use_binary_data = ref true 
+let use_binary_data = ref false 
 
 let get_position n =
 (*	Printf.printf "get_position : n = %d\n" n;*)
